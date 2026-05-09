@@ -37,27 +37,19 @@ class FloatingCaption:
         self.frame = tk.Frame(self.root, bg="#1a1a1a", highlightthickness=2, highlightbackground="#0078d4")
         self.frame.pack(fill=tk.BOTH, expand=True)
         
-        # 原文显示区域 (3个 Label 实现滚动和淡化)
-        self.raw_frame = tk.Frame(self.frame, bg="#1a1a1a")
-        self.raw_frame.pack(expand=True, fill=tk.X, pady=(5, 0))
-        self.raw_labels = []
-        self.raw_colors = ["#444444", "#008800", "#00ff00"] # 旧 -> 新 的颜色梯度
-        for i in range(3):
-            lbl = tk.Label(self.raw_frame, text="", font=("Microsoft YaHei", 18, "bold"),
-                         fg=self.raw_colors[i], bg="#1a1a1a", wraplength=1050)
-            lbl.pack(fill=tk.X)
-            self.raw_labels.append(lbl)
+        # 原文显示 (绿色)
+        self.raw_label = tk.Label(
+            self.frame, text="等待识别...", font=("Microsoft YaHei", 18, "bold"),
+            fg="#00ff00", bg="#1a1a1a", wraplength=1050, justify="center"
+        )
+        self.raw_label.pack(expand=True, fill=tk.X, pady=(10, 0))
         
-        # 翻译显示区域 (3个 Label)
-        self.trans_frame = tk.Frame(self.frame, bg="#1a1a1a")
-        self.trans_frame.pack(expand=True, fill=tk.X, pady=(0, 5))
-        self.trans_labels = []
-        self.trans_colors = ["#444444", "#00aaaa", "#00ffff"] # 旧 -> 新
-        for i in range(3):
-            lbl = tk.Label(self.trans_frame, text="", font=("Microsoft YaHei", 20, "bold"),
-                         fg=self.trans_colors[i], bg="#1a1a1a", wraplength=1050)
-            lbl.pack(fill=tk.X)
-            self.trans_labels.append(lbl)
+        # 翻译显示 (青色)
+        self.trans_label = tk.Label(
+            self.frame, text="等待翻译...", font=("Microsoft YaHei", 20, "bold"),
+            fg="#00ffff", bg="#1a1a1a", wraplength=1050, justify="center"
+        )
+        self.trans_label.pack(expand=True, fill=tk.X, pady=(0, 10))
 
         # 关闭按钮
         self.close_btn = tk.Label(self.frame, text=" × ", font=("Arial", 14), fg="#555", bg="#1a1a1a", cursor="hand2")
@@ -66,10 +58,11 @@ class FloatingCaption:
 
         self.frame.bind("<Button-1>", self.start_move)
         self.frame.bind("<B1-Motion>", self.do_move)
-        # 绑定拖动到所有标签
-        for lbl in self.raw_labels + self.trans_labels:
-            lbl.bind("<Button-1>", self.start_move)
-            lbl.bind("<B1-Motion>", self.do_move)
+        # 绑定拖动到标签
+        self.raw_label.bind("<Button-1>", self.start_move)
+        self.raw_label.bind("<B1-Motion>", self.do_move)
+        self.trans_label.bind("<Button-1>", self.start_move)
+        self.trans_label.bind("<B1-Motion>", self.do_move)
         
         # 模式状态
         self.display_mode = 0
@@ -120,30 +113,19 @@ class FloatingCaption:
 
     def refresh_display(self):
         """根据当前模式和行数强制刷新显示内容"""
-        # 控制 Frame 显隐
+        # 切换布局显隐
         if self.display_mode == 1: # 仅原文
-            self.trans_frame.pack_forget()
-            self.raw_frame.pack(expand=True, fill=tk.BOTH)
+            self.trans_label.pack_forget()
+            self.raw_label.pack(expand=True, fill=tk.BOTH)
         elif self.display_mode == 2: # 仅译文
-            self.raw_frame.pack_forget()
-            self.trans_frame.pack(expand=True, fill=tk.BOTH)
+            self.raw_label.pack_forget()
+            self.trans_label.pack(expand=True, fill=tk.BOTH)
         else: # 双语
-            self.raw_frame.pack_forget()
-            self.trans_frame.pack_forget()
-            self.raw_frame.pack(expand=True, fill=tk.X, pady=(5, 0))
-            self.trans_frame.pack(expand=True, fill=tk.X, pady=(0, 5))
+            self.raw_label.pack_forget()
+            self.trans_label.pack_forget()
+            self.raw_label.pack(expand=True, fill=tk.X, pady=(10, 0))
+            self.trans_label.pack(expand=True, fill=tk.X, pady=(0, 10))
         
-        # 控制 Label 显隐 (根据 max_display_lines)
-        for i in range(3):
-            # 只有最后 N 个 label 显示
-            show = (i >= (3 - self.max_display_lines))
-            if show:
-                self.raw_labels[i].pack(fill=tk.X)
-                self.trans_labels[i].pack(fill=tk.X)
-            else:
-                self.raw_labels[i].pack_forget()
-                self.trans_labels[i].pack_forget()
-
         self.update_raw("") 
         self.update_trans("")
 
@@ -165,25 +147,16 @@ class FloatingCaption:
             self.raw_history_list.append(text)
             if len(self.raw_history_list) > 3: self.raw_history_list.pop(0)
         
-        # 将历史记录分配给 3 个 Label
-        history = self.raw_history_list
-        for i in range(3):
-            # 这里的逻辑是：最新的永远在 raw_labels[2]
-            # 索引换算：history[-1] -> labels[2], history[-2] -> labels[1]...
-            idx_in_hist = len(history) - (3 - i)
-            val = history[idx_in_hist] if idx_in_hist >= 0 else ""
-            self.raw_labels[i].config(text=val if self.display_mode != 2 else "")
+        display_text = "\n".join(self.raw_history_list[-self.max_display_lines:])
+        self.raw_label.config(text=display_text if self.display_mode != 2 else "")
 
     def update_trans(self, text):
         if text:
             self.trans_history_list.append(text)
             if len(self.trans_history_list) > 3: self.trans_history_list.pop(0)
-            
-        history = self.trans_history_list
-        for i in range(3):
-            idx_in_hist = len(history) - (3 - i)
-            val = history[idx_in_hist] if idx_in_hist >= 0 else ""
-            self.trans_labels[i].config(text=val if self.display_mode != 1 else "")
+        
+        display_text = "\n".join(self.trans_history_list[-self.max_display_lines:])
+        self.trans_label.config(text=display_text if self.display_mode != 1 else "")
 
     def run(self):
         self.root.mainloop()
