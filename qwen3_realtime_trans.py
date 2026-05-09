@@ -64,9 +64,13 @@ class FloatingCaption:
         self.trans_label.bind("<Button-1>", self.start_move)
         self.trans_label.bind("<B1-Motion>", self.do_move)
         
-        # 模式状态: 0:双语, 1:仅原文, 2:仅译文
+        # 模式状态
         self.display_mode = 0
         self.mode_names = ["双", "原", "译"]
+        self.max_display_lines = 1 # 默认显示行数
+        
+        self.raw_history_list = [] # 存储原文历史
+        self.trans_history_list = [] # 存储译文历史
         
         # 语种选择
         self.lang_list = [None, "Japanese", "English", "Chinese"]
@@ -89,9 +93,26 @@ class FloatingCaption:
         self.mode_btn.pack(side=tk.LEFT, padx=2)
         self.mode_btn.bind("<Button-1>", self.cycle_mode)
 
+        # 行数切换按钮
+        self.line_btn = tk.Label(self.btn_frame, text=f"{self.max_display_lines}L", font=("Arial", 10, "bold"),
+                               fg="#eee", bg="#444", cursor="hand2", padx=8, pady=2)
+        self.line_btn.pack(side=tk.LEFT, padx=2)
+        self.line_btn.bind("<Button-1>", self.cycle_lines)
+
+    def cycle_lines(self, event):
+        self.max_display_lines = (self.max_display_lines % 3) + 1
+        self.line_btn.config(text=f"{self.max_display_lines}L")
+        self.refresh_display()
+        print(f" >>> 显示行数: {self.max_display_lines}")
+
     def cycle_mode(self, event):
         self.display_mode = (self.display_mode + 1) % 3
         self.mode_btn.config(text=self.mode_names[self.display_mode])
+        self.refresh_display()
+        print(f" >>> 显示模式: {self.mode_names[self.display_mode]}")
+
+    def refresh_display(self):
+        """根据当前模式和行数强制刷新显示内容"""
         # 切换布局显隐
         if self.display_mode == 1: # 仅原文
             self.trans_label.pack_forget()
@@ -102,9 +123,12 @@ class FloatingCaption:
         else: # 双语
             self.raw_label.pack_forget()
             self.trans_label.pack_forget()
-            self.raw_label.pack(expand=True, pady=(10, 0))
-            self.trans_label.pack(expand=True, pady=(0, 10))
-        print(f" >>> 显示模式: {self.mode_names[self.display_mode]}")
+            self.raw_label.pack(expand=True, pady=(5, 0))
+            self.trans_label.pack(expand=True, pady=(0, 5))
+        
+        # 刷新现有文本内容
+        self.update_raw("") 
+        self.update_trans("")
 
     def cycle_lang(self, event):
         self.lang_idx = (self.lang_idx + 1) % len(self.lang_list)
@@ -120,9 +144,20 @@ class FloatingCaption:
         self.root.geometry(f"+{x}+{y}")
 
     def update_raw(self, text):
-        self.raw_label.config(text=f"原: {text}")
+        if text:
+            self.raw_history_list.append(text)
+            if len(self.raw_history_list) > 3: self.raw_history_list.pop(0)
+        
+        display_text = "\n".join(self.raw_history_list[-self.max_display_lines:])
+        self.raw_label.config(text=display_text if self.display_mode != 2 else "")
+
     def update_trans(self, text):
-        self.trans_label.config(text=f"译: {text}")
+        if text:
+            self.trans_history_list.append(text)
+            if len(self.trans_history_list) > 3: self.trans_history_list.pop(0)
+        
+        display_text = "\n".join(self.trans_history_list[-self.max_display_lines:])
+        self.trans_label.config(text=display_text if self.display_mode != 1 else "")
 
     def run(self):
         self.root.mainloop()
