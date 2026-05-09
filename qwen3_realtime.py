@@ -21,7 +21,7 @@ class FloatingCaption:
         # 窗口大小和位置
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
-        width, height = 1000, 120
+        width, height = 1000, 160
         x = (screen_width - width) // 2
         y = screen_height - height - 100
         self.root.geometry(f"{width}x{height}+{x}+{y}")
@@ -33,11 +33,12 @@ class FloatingCaption:
         self.label = tk.Label(
             self.frame, 
             text="Qwen3-ASR 实时字幕准备中...", 
-            font=("Microsoft YaHei", 22, "bold"), 
-            fg="#00ff00", # 经典的亮绿色
+            font=("Microsoft YaHei", 20, "bold"), 
+            fg="#00ff00", 
             bg="#1a1a1a", 
             wraplength=950,
-            justify="center"
+            justify="center",
+            pady=10
         )
         self.label.pack(expand=True, pady=10)
 
@@ -59,7 +60,29 @@ class FloatingCaption:
         self.frame.bind("<Button-1>", self.start_move)
         self.frame.bind("<B1-Motion>", self.do_move)
         
-        self.last_text = ""
+        self.history = ["", ""] # 存储最近两行
+        self.lang_list = [None, "Japanese", "English", "Chinese"]
+        self.lang_names = ["Auto", "Ja", "En", "Zh"]
+        self.lang_idx = 0
+        
+        # 语言选择按钮
+        self.lang_btn = tk.Label(
+            self.frame,
+            text=self.lang_names[self.lang_idx],
+            font=("Arial", 11, "bold"),
+            fg="#aaa",
+            bg="#222",
+            cursor="hand2",
+            padx=8,
+            pady=4
+        )
+        self.lang_btn.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
+        self.lang_btn.bind("<Button-1>", self.cycle_lang)
+
+    def cycle_lang(self, event):
+        self.lang_idx = (self.lang_idx + 1) % len(self.lang_list)
+        self.lang_btn.config(text=self.lang_names[self.lang_idx])
+        print(f" >>> 语种锁定: {self.lang_names[self.lang_idx]}")
 
     def start_move(self, event):
         self.x = event.x
@@ -73,9 +96,10 @@ class FloatingCaption:
         self.root.geometry(f"+{x}+{y}")
 
     def update_text(self, text):
-        if text and text != self.last_text:
-            self.label.config(text=text)
-            self.last_text = text
+        if text and text != self.history[-1]:
+            self.history = [self.history[1], text]
+            display_text = f"{self.history[0]}\n{self.history[1]}" if self.history[0] else self.history[1]
+            self.label.config(text=display_text)
 
     def run(self):
         self.root.mainloop()
@@ -199,7 +223,14 @@ def main():
                     
                     try:
                         t0 = time.time()
-                        results = model.transcribe(audio=[temp_wav], language=None)
+                        # 使用 GUI 选定的语种，不添加额外 context 指令
+                        target_lang = gui.lang_list[gui.lang_idx]
+                            
+                        results = model.transcribe(
+                            audio=[temp_wav], 
+                            context="", 
+                            language=target_lang
+                        )
                         dt = time.time() - t0
                         
                         if results:
