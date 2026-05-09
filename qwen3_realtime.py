@@ -261,8 +261,10 @@ def main():
                         t0 = time.time()
                         # 联动 GUI 的状态
                         if gui.is_translating:
-                            # 采用 Qwen3 官方推荐的任务标签格式
-                            context_msg = "Speech Translation: <|zh|>"
+                            # 针对 1.7B 的对话模式优化：构造显式指令
+                            # 注意：Qwen3-ASR 在 transcribe 内部会将 context 作为 prompt
+                            # 我们使用模型最敏感的“指令对话”格式
+                            context_msg = "User: <audio>\nTranslate the audio to Chinese.\nAssistant: <|translation|>"
                             target_lang = None
                         else:
                             context_msg = "" # 原文模式下保持纯净
