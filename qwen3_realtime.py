@@ -61,6 +61,7 @@ class FloatingCaption:
         self.frame.bind("<B1-Motion>", self.do_move)
         
         self.history = ["", ""] # 存储最近两行
+        self.is_translating = False # 翻译状态同步
         self.lang_list = [None, "Japanese", "English", "Chinese"]
         self.lang_names = ["Auto", "Ja", "En", "Zh"]
         self.lang_idx = 0
@@ -69,17 +70,47 @@ class FloatingCaption:
         self.lang_btn = tk.Label(
             self.frame,
             text=self.lang_names[self.lang_idx],
-            font=("Arial", 11, "bold"),
+            font=("Arial", 10, "bold"),
             fg="#aaa",
             bg="#222",
             cursor="hand2",
-            padx=8,
-            pady=4
+            padx=5,
+            pady=2
         )
-        self.lang_btn.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
+        self.lang_btn.place(relx=1.0, rely=1.0, anchor="se", x=-55, y=-10)
         self.lang_btn.bind("<Button-1>", self.cycle_lang)
 
+        # 翻译切换按钮
+        self.trans_btn = tk.Label(
+            self.frame,
+            text=" 原 ",
+            font=("Arial", 11, "bold"),
+            fg="white",
+            bg="#444",
+            cursor="hand2",
+            padx=5,
+            pady=2
+        )
+        self.trans_btn.place(relx=1.0, rely=1.0, anchor="se", x=-10, y=-10)
+        self.trans_btn.bind("<Button-1>", self.toggle_translate)
+
+    def toggle_translate(self, event):
+        self.is_translating = not self.is_translating
+        self.trans_btn.config(
+            text=" 译 " if self.is_translating else " 原 ", 
+            bg="#0078d4" if self.is_translating else "#444"
+        )
+        # 翻译模式下置灰语言选择
+        if self.is_translating:
+            self.lang_btn.config(fg="#555", bg="#111")
+        else:
+            self.lang_btn.config(fg="#aaa", bg="#222")
+            
+        mode = "翻译" if self.is_translating else "原文"
+        print(f"\n >>> 已切换至 [{mode}] 模式")
+
     def cycle_lang(self, event):
+        if self.is_translating: return
         self.lang_idx = (self.lang_idx + 1) % len(self.lang_list)
         self.lang_btn.config(text=self.lang_names[self.lang_idx])
         print(f" >>> 语种锁定: {self.lang_names[self.lang_idx]}")
@@ -228,12 +259,17 @@ def main():
                     
                     try:
                         t0 = time.time()
-                        # 使用 GUI 选定的语种，不添加额外 context 指令
-                        target_lang = gui.lang_list[gui.lang_idx]
+                        # 联动 GUI 的状态
+                        if gui.is_translating:
+                            context_msg = "Translate to Chinese"
+                            target_lang = None
+                        else:
+                            context_msg = "" # 原文模式下保持纯净
+                            target_lang = gui.lang_list[gui.lang_idx]
                             
                         results = model.transcribe(
                             audio=[temp_wav], 
-                            context="", 
+                            context=context_msg, 
                             language=target_lang
                         )
                         dt = time.time() - t0
