@@ -41,6 +41,20 @@ class FloatingCaption:
         )
         self.label.pack(expand=True, pady=10)
 
+        # 右上角关闭按钮
+        self.close_button = tk.Label(
+            self.frame,
+            text=" × ",
+            font=("Arial", 16, "bold"),
+            fg="#666",
+            bg="#1a1a1a",
+            cursor="hand2"
+        )
+        self.close_button.place(relx=1.0, rely=0.0, anchor="ne")
+        self.close_button.bind("<Button-1>", lambda e: self.root.destroy())
+        self.close_button.bind("<Enter>", lambda e: self.close_button.config(fg="white", bg="red"))
+        self.close_button.bind("<Leave>", lambda e: self.close_button.config(fg="#666", bg="#1a1a1a"))
+
         # 鼠标拖动功能
         self.frame.bind("<Button-1>", self.start_move)
         self.frame.bind("<B1-Motion>", self.do_move)
@@ -126,31 +140,53 @@ def main():
         devices = sd.query_devices()
         for i, dev in enumerate(devices):
             if "WASAPI" in sd.query_hostapis(dev['hostapi'])['name'] and dev['max_input_channels'] > 0:
-                # 某些驱动会将 Loopback 标记为输入设备
                 if "Loopback" in dev['name'] or "回放" in dev['name']:
                     print(f"自动选择内录设备: {dev['name']}")
                     target_device = i
                     break
 
+    # 获取设备详细参数以避免 Invalid Sample Rate / Channel 错误
+    try:
+        dev_info = sd.query_devices(target_device, 'input')
+        device_samplerate = int(dev_info['default_samplerate'])
+        device_channels = int(dev_info['max_input_channels'])
+        print(f"设备参数: ID {target_device} | 采样率 {device_samplerate}Hz | 声道 {device_channels}")
+    except Exception as e:
+        print(f"获取设备信息失败: {e}")
+        return
+
     def transcription_worker():
-        print(f"开始录音，采样率: {samplerate}Hz")
+        print(f"录音已启动...")
         buffer = []
-        samples_per_chunk = int(samplerate * args.chunk)
+        # 计算对应设备采样率下的片段长度
+        samples_per_chunk = int(device_samplerate * args.chunk)
         
-        with sd.InputStream(device=target_device, channels=channels, samplerate=samplerate, callback=callback):
+        from scipy.signal import resample
+
+        with sd.InputStream(device=target_device, channels=device_channels, samplerate=device_samplerate, callback=callback):
             while True:
                 data = audio_queue.get()
                 buffer.append(data)
                 
-                # 积攒足够长度后处理
                 current_samples = sum(len(b) for b in buffer)
                 if current_samples >= samples_per_chunk:
                     chunk = np.concatenate(buffer)
-                    buffer = [] # 清空缓存
+                    buffer = []
                     
-                    # 临时保存用于推理
+                    # 1. 如果是多声道，取平均值转为单声道
+                    if device_channels > 1:
+                        chunk = np.mean(chunk, axis=1)
+                    else:
+                        chunk = chunk.flatten()
+
+                    # 2. 重采样到 16000Hz (Qwen3 必需)
+                    if device_samplerate != 16000:
+                        num_samples = int(len(chunk) * 16000 / device_samplerate)
+                        chunk = resample(chunk, num_samples)
+                    
+                    # 3. 临时保存用于推理
                     temp_wav = f"rt_chunk_{int(time.time())}.wav"
-                    sf.write(temp_wav, chunk, samplerate)
+                    sf.write(temp_wav, chunk, 16000)
                     
                     try:
                         t0 = time.time()
