@@ -261,8 +261,8 @@ def main():
                         t0 = time.time()
                         # 联动 GUI 的状态
                         if gui.is_translating:
-                            # 使用更强力的中文指令引导翻译
-                            context_msg = "请将以下音频翻译成中文，只输出翻译后的中文内容。"
+                            # 采用 Qwen3 官方推荐的任务标签格式
+                            context_msg = "Speech Translation: <|zh|>"
                             target_lang = None
                         else:
                             context_msg = "" # 原文模式下保持纯净
