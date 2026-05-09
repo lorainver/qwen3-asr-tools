@@ -64,6 +64,8 @@ class FloatingCaption:
         self.trans_label.bind("<Button-1>", self.start_move)
         self.trans_label.bind("<B1-Motion>", self.do_move)
         
+        self.root.bind("<Configure>", self.on_window_resize)
+        
         # 模式状态
         self.display_mode = 0
         self.mode_names = ["双", "原", "译"]
@@ -98,6 +100,33 @@ class FloatingCaption:
                                fg="#eee", bg="#444", cursor="hand2", padx=8, pady=2)
         self.line_btn.pack(side=tk.LEFT, padx=2)
         self.line_btn.bind("<Button-1>", self.cycle_lines)
+
+        # 拉伸按钮 (右下角手柄)
+        self.resizer = tk.Label(self.btn_frame, text="◢", font=("Arial", 10),
+                              fg="#666", bg="#222", cursor="size_nw_se")
+        self.resizer.pack(side=tk.LEFT, padx=(5, 0))
+        self.resizer.bind("<Button-1>", self.start_resize)
+        self.resizer.bind("<B1-Motion>", self.do_resize)
+
+    def on_window_resize(self, event):
+        """窗口大小变化时，自动调整文字换行宽度"""
+        new_width = self.root.winfo_width()
+        # 留出 50 像素的边距防止文字顶满
+        self.raw_label.config(wraplength=new_width - 50)
+        self.trans_label.config(wraplength=new_width - 50)
+
+    def start_resize(self, event):
+        self.start_x = event.x_root
+        self.start_y = event.y_root
+        self.start_width = self.root.winfo_width()
+        self.start_height = self.root.winfo_height()
+
+    def do_resize(self, event):
+        dx = event.x_root - self.start_x
+        dy = event.y_root - self.start_y
+        new_w = max(400, self.start_width + dx)
+        new_h = max(100, self.start_height + dy)
+        self.root.geometry(f"{new_w}x{new_h}")
 
     def cycle_lines(self, event):
         self.max_display_lines = (self.max_display_lines % 3) + 1
