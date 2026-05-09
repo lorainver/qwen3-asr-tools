@@ -144,9 +144,14 @@ class LocalTranslator:
         )
         print("翻译模型加载完毕！")
 
-    def translate(self, text):
+    def translate(self, text, history=""):
         if not text: return ""
-        prompt = f"请将以下内容直接翻译成中文，不要输出任何解释：\n{text}"
+        # 构造带上下文的 Prompt
+        if history:
+            prompt = f"上下文：{history}\n请结合上下文，将以下新内容翻译成中文（只输出译文）：\n{text}"
+        else:
+            prompt = f"请将以下内容直接翻译成中文（只输出译文）：\n{text}"
+        
         messages = [{"role": "user", "content": prompt}]
         input_ids = self.tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors="pt").to("cuda")
         
@@ -194,6 +199,7 @@ def main():
     def worker():
         print("录音同传系统已启动...")
         buffer = []
+        trans_history = [] # 存储最近几句识别结果作为上下文
         samples_per_chunk = int(samplerate * args.chunk)
         from scipy.signal import resample
 
@@ -229,9 +235,16 @@ def main():
                                 # 只有在双语或仅译文模式下才翻译
                                 if gui.display_mode != 1:
                                     t_start = time.time()
-                                    cn_text = translator.translate(raw_text)
+                                    # 构造上下文字符串（取最近 3 句）
+                                    context_str = " ".join(trans_history[-3:]) if trans_history else ""
+                                    cn_text = translator.translate(raw_text, history=context_str)
+                                    
                                     print(f"译: {cn_text} (耗时: {time.time()-t_start:.2f}s)")
                                     gui.update_trans(cn_text)
+                                    
+                                    # 更新历史记录
+                                    trans_history.append(raw_text)
+                                    if len(trans_history) > 10: trans_history.pop(0)
                                 else:
                                     gui.update_trans("") # 清空译文行
                                 
