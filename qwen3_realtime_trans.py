@@ -106,6 +106,10 @@ class FloatingCaption:
         self.lang_idx = (self.lang_idx + 1) % len(self.lang_list)
         self.lang_btn.config(text=self.lang_names[self.lang_idx])
         print(f" >>> 语种锁定: {self.lang_names[self.lang_idx]}")
+
+    def start_move(self, event):
+        self.x, self.y = event.x, event.y
+
     def do_move(self, event):
         x = self.root.winfo_x() + event.x - self.x
         y = self.root.winfo_y() + event.y - self.y
