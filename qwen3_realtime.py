@@ -181,8 +181,11 @@ def main():
 
                     # 2. 静音检测 (防止“嗯”刷屏)
                     max_amplitude = np.abs(chunk).max()
-                    if max_amplitude < 0.005: # 阈值可调
-                        # print(f"静音跳过 (强度: {max_amplitude:.4f})")
+                    # 在后台打印微弱的电平提示，方便调试（可选）
+                    # sys.stdout.write(f"\r[当前信号强度: {max_amplitude:.4f}]")
+                    # sys.stdout.flush()
+
+                    if max_amplitude < 0.001: # 阈值降低到 0.001
                         continue
 
                     # 3. 重采样到 16000Hz (Qwen3 必需)
