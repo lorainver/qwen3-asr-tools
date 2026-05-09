@@ -57,8 +57,12 @@ class FloatingCaption:
         self.close_btn.bind("<Button-1>", lambda e: self.root.destroy())
 
         self.frame.bind("<Button-1>", self.start_move)
-        self.frame.bind("<Button-1>", self.start_move)
         self.frame.bind("<B1-Motion>", self.do_move)
+        # 同时也绑定到标签上，防止标签挡住拖动事件
+        self.raw_label.bind("<Button-1>", self.start_move)
+        self.raw_label.bind("<B1-Motion>", self.do_move)
+        self.trans_label.bind("<Button-1>", self.start_move)
+        self.trans_label.bind("<B1-Motion>", self.do_move)
         
         # 模式状态: 0:双语, 1:仅原文, 2:仅译文
         self.display_mode = 0
