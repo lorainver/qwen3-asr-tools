@@ -179,12 +179,18 @@ def main():
                     else:
                         chunk = chunk.flatten()
 
-                    # 2. 重采样到 16000Hz (Qwen3 必需)
+                    # 2. 静音检测 (防止“嗯”刷屏)
+                    max_amplitude = np.abs(chunk).max()
+                    if max_amplitude < 0.005: # 阈值可调
+                        # print(f"静音跳过 (强度: {max_amplitude:.4f})")
+                        continue
+
+                    # 3. 重采样到 16000Hz (Qwen3 必需)
                     if device_samplerate != 16000:
                         num_samples = int(len(chunk) * 16000 / device_samplerate)
                         chunk = resample(chunk, num_samples)
                     
-                    # 3. 临时保存用于推理
+                    # 4. 临时保存用于推理
                     temp_wav = f"rt_chunk_{int(time.time())}.wav"
                     sf.write(temp_wav, chunk, 16000)
                     
