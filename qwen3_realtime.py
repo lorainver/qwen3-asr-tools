@@ -137,15 +137,17 @@ def main():
     gui = FloatingCaption()
 
     # 2. 加载模型
-    print(f"正在加载 Qwen3-ASR {args.model_size} 模型 (CUDA)...")
+    print(f"正在加载 Qwen3-ASR {args.model_size} 模型 (FP16/CUDA)...")
     from qwen_asr import Qwen3ASRModel
     import transformers
+    import torch
     transformers.logging.set_verbosity_error()
     
-    # 显存优化配置
+    # 显存优化配置：强制开启 FP16 半精度加速
     model = Qwen3ASRModel.from_pretrained(
         model_path, 
         device_map='cuda', 
+        torch_dtype=torch.float16,
         max_new_tokens=256
     )
     print("模型加载完毕！")
@@ -235,6 +237,10 @@ def main():
                             language=target_lang
                         )
                         dt = time.time() - t0
+                        
+                        # 定期清理显存
+                        if torch.cuda.is_available():
+                            torch.cuda.empty_cache()
                         
                         if results:
                             res = results[0] if isinstance(results, list) else results
