@@ -1,0 +1,38 @@
+# 忽略虚拟环境
+venv/
+.venv/
+
+# 忽略大模型权重
+models/
+
+# 忽略临时文件和缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 忽略转录生成的临时文件和输出
+chunk_*.wav
+rt_chunk_*.wav
+temp_realtime.wav
+*.srt
+*.txt
+*_ckpt.json
+
+# 忽略日志
+*.log
