@@ -118,6 +118,7 @@ def list_devices():
 def main():
     parser = argparse.ArgumentParser(description="Qwen3-ASR 实时语音转文字 (GUI)")
     parser.add_argument("--model_dir", default=r"D:\qwen3-asr\models")
+    parser.add_argument("--model_size", default="1.7B", choices=["0.6B", "1.7B"], help="选择模型大小 (0.6B 速度快, 1.7B 精度高)")
     parser.add_argument("--device_id", type=int, default=None, help="指定音频设备ID")
     parser.add_argument("--chunk", type=float, default=2.5, help="录音片段长度(秒)，建议 2-4 秒")
     parser.add_argument("--loopback", action="store_true", help="尝试自动开启声卡内录 (Windows WASAPI)")
@@ -128,13 +129,15 @@ def main():
         list_devices()
         return
 
-    model_path = str(Path(args.model_dir) / "Qwen" / "Qwen3-ASR-0___6B")
+    # 适配模型路径
+    m_name = "Qwen3-ASR-1___7B" if args.model_size == "1.7B" else "Qwen3-ASR-0___6B"
+    model_path = str(Path(args.model_dir) / "Qwen" / m_name)
 
     # 1. 初始化 GUI
     gui = FloatingCaption()
 
     # 2. 加载模型
-    print("正在加载 Qwen3-ASR 模型 (CUDA)...")
+    print(f"正在加载 Qwen3-ASR {args.model_size} 模型 (CUDA)...")
     from qwen_asr import Qwen3ASRModel
     import transformers
     transformers.logging.set_verbosity_error()
