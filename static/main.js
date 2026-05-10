@@ -149,7 +149,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatHistory = document.getElementById('chat-history');
     const chatInput = document.getElementById('chat-input');
     const btnChatSend = document.getElementById('btn-chat-send');
+    const btnNewChat = document.getElementById('btn-new-chat');
+
     let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。" }];
+
+    // 新建对话逻辑
+    btnNewChat.addEventListener('click', () => {
+        if (messages.length > 1) {
+            if (!confirm("确定要清空当前的对话记录并开始新对话吗？")) return;
+        }
+        // 1. 重置数据
+        messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。" }];
+        // 2. 清空 UI 并显示欢迎语
+        chatHistory.innerHTML = "";
+        appendMessage('assistant', messages[0].content);
+    });
 
     async function sendChatMessage() {
         const text = chatInput.value.trim();
@@ -208,5 +222,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    // === 6. 停止服务器 ===
+    const btnShutdown = document.getElementById('btn-shutdown');
+    if (btnShutdown) {
+        btnShutdown.addEventListener('click', async () => {
+            if (!confirm("确定要停止服务器并释放显存吗？停止后你需要在终端重新启动。")) return;
+            try {
+                btnShutdown.innerText = "正在停止...";
+                btnShutdown.disabled = true;
+                await fetch('/api/shutdown', { method: 'POST' });
+                alert("服务器已停止。");
+            } catch (e) {
+                alert("服务器已关闭。");
+            }
+        });
+    }
 
 });

@@ -39,6 +39,10 @@
                     <span id="temp-val">0°C</span>
                 </div>
             </div>
+            
+            <div class="mt-15" style="margin-top: auto; padding-top: 20px;">
+                <button id="btn-shutdown" class="btn-stop">🛑 停止服务器并释放显存</button>
+            </div>
         </aside>
 
         <!-- 主内容区 -->
@@ -97,9 +101,12 @@
                 </div>
                 <!-- 聊天卡片 (全宽布局) -->
                 <div class="card glass-panel chat-card" id="chat-card">
-                    <div class="card-header">
-                        <div class="icon chat-icon"></div>
-                        <h3>AI 智能助理</h3>
+                    <div class="card-header" style="justify-content: space-between; display: flex; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="icon chat-icon"></div>
+                            <h3>AI 智能助理 <small class="model-tag">Qwen2.5-1.5B-Instruct</small></h3>
+                        </div>
+                        <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
                     </div>
                     <div class="card-body">
                         <div id="chat-history" class="chat-history">
@@ -116,16 +123,24 @@
                 <div class="card glass-panel cli-card">
                     <div class="card-header">
                         <div class="icon cli-icon"></div>
-                        <h3>终端实战命令参考</h3>
+                        <h3>终端实战命令参考 <small class="model-tag">CLI Toolbox</small></h3>
                     </div>
                     <div class="card-body">
                         <div class="cli-section">
+                            <h4>🛠️ 基础工具</h4>
+                            <div class="code-block" data-tooltip="列出当前系统所有可用的音频输入设备 ID，用于实时监控脚本。">
+                                <span class="label">查询音频设备列表:</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --list</code>
+                            </div>
+                        </div>
+
+                        <div class="cli-section">
                             <h4>🎬 离线字幕提取 (SRT)</h4>
-                            <div class="code-block">
+                            <div class="code-block" data-tooltip="模型: Qwen3-ASR-1.7B。特点: 极速批处理，支持长视频自动切分转录。参数: --batch 控制并发量，越大速度越快。">
                                 <span class="label">Qwen3 GPU 极速版:</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频路径" --chunk 10 --batch 12</code>
                             </div>
-                            <div class="code-block">
+                            <div class="code-block" data-tooltip="模型: Faster-Whisper-Large-v3。特点: 经典的语音识别引擎，CPU 兼容性好。参数: --beam 1 为贪婪搜索，速度最快。">
                                 <span class="label">Whisper CPU/通用版:</span>
                                 <code>D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频路径" --beam 1</code>
                             </div>
@@ -133,15 +148,15 @@
 
                         <div class="cli-section">
                             <h4>🎤 实时语音监听 (GUI)</h4>
-                            <div class="code-block">
+                            <div class="code-block" data-tooltip="模型: Qwen3-ASR + Qwen2.5 翻译。特点: 边听边译，双语同步显示。参数: --chunk 1.5 平衡延迟与准确度。">
                                 <span class="label">带翻译 (双语对照):</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5</code>
                             </div>
-                            <div class="code-block">
+                            <div class="code-block" data-tooltip="模型: Qwen3-ASR-1.7B。特点: 监听系统声音（如浏览器、播放器）并实时输出字幕。参数: --device_id 对应虚拟音频线。">
                                 <span class="label">系统声音识别 (无翻译):</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.0</code>
                             </div>
-                            <div class="code-block">
+                            <div class="code-block" data-tooltip="模型: Qwen3-ASR-1.7B。特点: 使用麦克风进行个人演讲或会议录音实时转文字。">
                                 <span class="label">麦克风录音识别:</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 1 --chunk 2.0</code>
                             </div>

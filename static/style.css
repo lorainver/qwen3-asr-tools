@@ -412,4 +412,110 @@ textarea:focus {
 
 .cli-icon::before {
     content: '💻';
+}
+
+/* 模型名称标签 */
+.model-tag {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-left: 10px;
+    font-weight: 500;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    vertical-align: middle;
+}
+
+/* 悬浮提示 Tooltip 样式 */
+.code-block {
+    position: relative;
+}
+
+.code-block::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: #f8fafc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    width: 280px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.code-block:hover::after {
+    opacity: 1;
+    bottom: 110%;
+}
+
+/* 提示框的小箭头 */
+.code-block::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1e293b;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.code-block:hover::before {
+    opacity: 1;
+    bottom: 95%;
+}
+
+/* 小按钮样式 */
+.btn-small {
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-small:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+}
+
+/* 停止服务器按钮样式 */
+.btn-stop {
+    width: 100%;
+    padding: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    color: #ef4444;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.btn-stop:hover {
+    background: #ef4444;
+    color: white;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
 }

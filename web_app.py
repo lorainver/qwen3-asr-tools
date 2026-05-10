@@ -2,6 +2,7 @@ import os
 import pynvml
 import asyncio
 import json
+import signal
 from fastapi import FastAPI, UploadFile, File, Request, Form
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -30,6 +31,16 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 pynvml.nvmlInit()
 summarizer = LongTextSummarizer()
+
+@app.post("/api/shutdown")
+async def shutdown():
+    """彻底关闭服务器并释放显存"""
+    print("收到关闭指令，正在释放显存并退出...")
+    # 尝试卸载模型
+    summarizer._unload_model()
+    # 给系统 0.5 秒时间返回响应
+    os.kill(os.getpid(), signal.SIGINT)
+    return {"status": "shutdown"}
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index(request: Request):
