@@ -1,26 +1,51 @@
+"""
+web_app.py - 主 Web 服务（无 CUDA 依赖）
+
+端口 8000，处理：
+- 静态页面、TTS、GPU 监控、文件下载
+- AI 请求代理到 ai_worker（端口 8001）
+
+架构：
+┌──────────────────────┐     ┌──────────────────────┐
+│  web_app.py (8000)    │     │  ai_worker.py (8001)  │
+│  FastAPI + TTS        │ ←→ │  torch + AI模型       │
+│  GPU监控（pynvml）     │     │  chat / summarize     │
+│  不导入 torch          │     │  transcribe          │
+│  显存 ≈ 0             │     │  显存 ≈ 2.5GB        │
+└──────────────────────┘     └──────────────────────┘
+                                      ↓ 释放显存
+                               kill 子进程 → 显存归 0 ✅
+"""
+
 import os
-import pynvml
+import sys
+import subprocess
+import time
 import asyncio
 import json
 import signal
-import torch
+import atexit
+import httpx
 from fastapi import FastAPI, UploadFile, File, Request, Form
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from summarizer import LongTextSummarizer
-from transcriber import run_transcription
+import pynvml
 from tts_engine import TTSEngine
-from model_manager import model_manager
+
+# ========== 配置 ==========
+
+AI_WORKER_PORT = 8001
+AI_WORKER_HOST = "127.0.0.1"
+AI_WORKER_URL = f"http://{AI_WORKER_HOST}:{AI_WORKER_PORT}"
+
+# ========== FastAPI 初始化 ==========
 
 app = FastAPI(title="Qwen3 ASR Web Console")
 
-# 获取当前脚本所在的绝对路径
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# 使用绝对路径创建和挂载目录
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 RECORDINGS_DIR = os.path.join(BASE_DIR, "recordings")
@@ -34,70 +59,208 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
+# ========== 初始化 ==========
+
 pynvml.nvmlInit()
-summarizer = LongTextSummarizer()
 tts_engine = TTSEngine()
+
+# ========== AI Worker 进程管理 ==========
+
+class AIWorkerManager:
+    """管理 AI Worker 子进程的生命周期"""
+    
+    def __init__(self):
+        self.process = None
+        self._start_time = 0
+        atexit.register(self.kill)
+    
+    def is_running(self) -> bool:
+        """检查 worker 是否运行中"""
+        if self.process is None:
+            return False
+        return self.process.poll() is None
+    
+    def start(self) -> dict:
+        """启动 AI Worker 子进程"""
+        if self.is_running():
+            return {"status": "already_running", "message": "AI Worker 已在运行"}
+        
+        print("\n[WebApp] 启动 AI Worker 子进程...")
+        
+        # 使用当前 Python 解释器
+        python_exe = sys.executable
+        worker_script = os.path.join(BASE_DIR, "ai_worker.py")
+        
+        self.process = subprocess.Popen(
+            [python_exe, worker_script, "--port", str(AI_WORKER_PORT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True
+        )
+        self._start_time = time.time()
+        
+        # 等待启动（最多 30 秒）
+        print("[WebApp] 等待 AI Worker 就绪...")
+        for i in range(30):
+            time.sleep(1)
+            if not self.is_running():
+                # 进程已退出，启动失败
+                print("[WebApp] AI Worker 启动失败")
+                return {"status": "error", "message": "AI Worker 启动失败"}
+            
+            # 尝试健康检查
+            try:
+                import requests
+                resp = requests.get(f"{AI_WORKER_URL}/health", timeout=1)
+                if resp.status_code == 200:
+                    print(f"[WebApp] AI Worker 已就绪 ({i+1}秒)")
+                    return {"status": "started", "message": f"AI Worker 启动成功 ({i+1}秒)"}
+            except:
+                pass
+        
+        return {"status": "timeout", "message": "AI Worker 启动超时"}
+    
+    def kill(self) -> dict:
+        """终止 AI Worker 子进程（完全释放显存）"""
+        if self.process is None:
+            return {"status": "not_running", "message": "AI Worker 未运行"}
+        
+        if not self.is_running():
+            self.process = None
+            return {"status": "already_stopped", "message": "AI Worker 已停止"}
+        
+        print("\n[WebApp] 终止 AI Worker 子进程...")
+        
+        # Windows: 使用 terminate() 或 taskkill
+        self.process.terminate()
+        
+        # 等待进程退出（最多 5 秒）
+        try:
+            self.process.wait(timeout=5)
+            print("[WebApp] AI Worker 已正常终止")
+        except subprocess.TimeoutExpired:
+            # 强制杀死
+            self.process.kill()
+            print("[WebApp] AI Worker 已强制终止")
+        
+        self.process = None
+        
+        # 确认 GPU 显存已释放（给系统一点时间）
+        time.sleep(0.5)
+        
+        return {"status": "killed", "message": "AI Worker 已终止，显存已释放"}
+    
+    def ensure_running(self) -> bool:
+        """确保 worker 运行，如果没运行则启动"""
+        if self.is_running():
+            return True
+        
+        result = self.start()
+        return result["status"] in ["started", "already_running"]
+    
+    def get_status(self) -> dict:
+        """获取 worker 状态"""
+        running = self.is_running()
+        uptime = time.time() - self._start_time if running and self._start_time > 0 else 0
+        return {
+            "running": running,
+            "uptime_seconds": int(uptime),
+            "url": AI_WORKER_URL if running else None
+        }
+
+ai_worker = AIWorkerManager()
+
+# ========== 代理工具函数 ==========
+
+async def proxy_to_worker(method: str, path: str, **kwargs):
+    """代理请求到 AI Worker"""
+    if not ai_worker.ensure_running():
+        return {"error": "AI Worker 启动失败"}
+    
+    url = f"{AI_WORKER_URL}{path}"
+    
+    async with httpx.AsyncClient(timeout=300.0) as client:
+        try:
+            if method.upper() == "GET":
+                resp = await client.get(url, **kwargs)
+            else:
+                resp = await client.post(url, **kwargs)
+            return resp.json()
+        except httpx.ConnectError:
+            # Worker 可能刚启动，重试一次
+            await asyncio.sleep(2)
+            if method.upper() == "GET":
+                resp = await client.get(url, **kwargs)
+            else:
+                resp = await client.post(url, **kwargs)
+            return resp.json()
+        except Exception as e:
+            return {"error": str(e)}
+
+async def proxy_stream_to_worker(method: str, path: str, **kwargs):
+    """代理流式请求到 AI Worker"""
+    if not ai_worker.ensure_running():
+        async def error_gen():
+            yield json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n"
+        return StreamingResponse(error_gen(), media_type="text/plain")
+    
+    url = f"{AI_WORKER_URL}{path}"
+    
+    async with httpx.AsyncClient(timeout=300.0) as client:
+        try:
+            if method.upper() == "GET":
+                async with client.stream("GET", url, **kwargs) as resp:
+                    async def stream_gen():
+                        async for chunk in resp.aiter_text():
+                            yield chunk
+                    return StreamingResponse(stream_gen(), media_type="text/plain")
+            else:
+                async with client.stream("POST", url, **kwargs) as resp:
+                    async def stream_gen():
+                        async for chunk in resp.aiter_text():
+                            yield chunk
+                    return StreamingResponse(stream_gen(), media_type="text/plain")
+        except Exception as e:
+            async def error_gen():
+                yield json.dumps({"status": "error", "message": str(e)}) + "\n"
+            return StreamingResponse(error_gen(), media_type="text/plain")
+
+# ========== Pydantic 模型 ==========
+
+class ChatRequest(BaseModel):
+    messages: list
+
+class SummarizeRequest(BaseModel):
+    text: str
+
+# ========== 页面端点 ==========
+
+@app.get("/", response_class=HTMLResponse)
+async def get_index(request: Request):
+    return templates.TemplateResponse(request=request, name="index.html", context={"request": request})
+
+# ========== TTS 端点（本地处理） ==========
 
 @app.get("/api/tts")
 async def api_tts(text: str, engine: str = "edge"):
-    """根据文本流式生成语音或返回缓存"""
+    """TTS 语音合成（本地处理，不经过 AI Worker）"""
     import hashlib
-
-    # 根据引擎决定缓存文件格式
     ext = ".wav" if engine == "sherpa" else ".mp3"
     media_type = "audio/wav" if engine == "sherpa" else "audio/mpeg"
     filename = hashlib.md5(f"{engine}:{text}".encode()).hexdigest() + ext
     filepath = os.path.join(AUDIO_DIR, filename)
-
-    # 1. 如果有缓存,直接返回(秒开)
+    
     if os.path.exists(filepath):
         return FileResponse(filepath, media_type=media_type)
-
-    # 2. 没有缓存,流式生成
+    
     tts_engine.set_mode(engine)
     return StreamingResponse(tts_engine.stream_speech(text), media_type=media_type)
 
-@app.post("/api/release_gpu")
-async def release_gpu():
-    """释放所有 AI 模型占用的 GPU 显存，但不关闭 Web 服务
-    
-    流程：
-    1. 发送取消信号（中断正在执行的任务）
-    2. 通过 model_manager 释放所有模型显存
-    3. Web 服务继续运行，其他功能仍可使用
-    """
-    result = model_manager.release_all()
-    return result
-
-@app.get("/api/model_status")
-async def model_status():
-    """查询当前模型加载状态"""
-    return model_manager.get_status()
-
-@app.get("/api/pytorch_memory")
-async def pytorch_memory():
-    """查询 PyTorch 内部显存使用（allocated vs reserved）"""
-    try:
-        allocated = torch.cuda.memory_allocated() / 1024**3
-        reserved = torch.cuda.memory_reserved() / 1024**3
-        max_allocated = torch.cuda.max_memory_allocated() / 1024**3
-        return {
-            "allocated_gb": round(allocated, 3),
-            "reserved_gb": round(reserved, 3),
-            "max_allocated_gb": round(max_allocated, 3),
-            "note": "allocated=实际使用, reserved=向GPU申请(含context)"
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/", response_class=HTMLResponse)
-async def get_index(request: Request):
-    # 显式指定 request 参数
-    return templates.TemplateResponse(request=request, name="index.html", context={"request": request})
+# ========== GPU 监控（本地处理） ==========
 
 @app.get("/api/gpu_stats")
 async def gpu_stats():
-    """Stream GPU memory and utilization via Server-Sent Events"""
+    """GPU 显存监控（SSE 流）"""
     async def event_generator():
         handle = pynvml.nvmlDeviceGetHandleByIndex(0)
         while True:
@@ -105,7 +268,7 @@ async def gpu_stats():
                 mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
                 util_info = pynvml.nvmlDeviceGetUtilizationRates(handle)
                 temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
-
+                
                 data = {
                     "memory_used": round(mem_info.used / (1024**3), 2),
                     "memory_total": round(mem_info.total / (1024**3), 2),
@@ -116,94 +279,127 @@ async def gpu_stats():
             except Exception:
                 pass
             await asyncio.sleep(1)
-
+    
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
-class SummarizeRequest(BaseModel):
-    text: str
+# ========== AI 代理端点 ==========
+
+@app.post("/api/release_gpu")
+async def release_gpu():
+    """释放显存 — 终止 AI Worker 子进程，显存归零"""
+    result = ai_worker.kill()
+    return result
+
+@app.get("/api/worker_status")
+async def worker_status():
+    """查询 AI Worker 状态"""
+    return ai_worker.get_status()
+
+@app.get("/api/model_status")
+async def model_status():
+    """查询模型状态（代理到 worker）"""
+    return await proxy_to_worker("GET", "/gpu_stats")
+
+@app.get("/api/pytorch_memory")
+async def pytorch_memory():
+    """查询 PyTorch 内存（代理到 worker）"""
+    return await proxy_to_worker("GET", "/gpu_stats")
+
+@app.post("/api/chat")
+async def api_chat(request: ChatRequest):
+    """AI 对话（代理到 worker）"""
+    if not ai_worker.ensure_running():
+        return {"response": "⚠️ AI Worker 启动中，请稍后重试..."}
+    
+    try:
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            resp = await client.post(f"{AI_WORKER_URL}/api/chat", json=request.dict())
+            return resp.json()
+    except Exception as e:
+        return {"response": f"❌ AI Worker 连接失败: {e}"}
 
 @app.post("/api/summarize")
 async def api_summarize(request: SummarizeRequest):
-    """Stream summarize progress"""
-    def generate():
-        for res in summarizer.summarize(request.text, yield_progress=True):
-            yield res + "\n"
-    return StreamingResponse(generate(), media_type="text/plain")
-
-@app.post("/api/transcribe_path")
-async def api_transcribe_path(path: str = Form(...)):
-    """直接根据本地绝对路径进行转录,不产生副本"""
-    path = path.strip('"').strip("'")
-    if not os.path.exists(path) and not os.path.isabs(path):
-        path = os.path.join(BASE_DIR, path)
-    if not os.path.exists(path):
-        def error_gen():
-            yield json.dumps({"status": "error", "message": f"错误:找不到文件 - {path}"}) + "\n"
+    """文本总结（代理到 worker，流式）"""
+    if not ai_worker.ensure_running():
+        async def error_gen():
+            yield json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n"
         return StreamingResponse(error_gen(), media_type="text/plain")
-    filename_stem = os.path.basename(path).rsplit('.', 1)[0]
-    srt_location = os.path.join(os.path.dirname(path), f"{filename_stem}.srt")
-    def generate():
-        for res in run_transcription(path, srt_location, yield_progress=True):
-            yield res
-    return StreamingResponse(generate(), media_type="text/plain")
-
-class ChatRequest(BaseModel):
-    messages: list
-
-# 必须添加这个接口
-@app.post("/api/chat")
-async def api_chat(request: ChatRequest):
-    """通用对话接口"""
-    # 这里的 summarizer 是你在文件上方已经创建好的对象
-    response_text = summarizer.chat(request.messages)
-    return {"response": response_text}
-
+    
+    async with httpx.AsyncClient(timeout=300.0) as client:
+        async with client.stream("POST", f"{AI_WORKER_URL}/api/summarize", json=request.dict()) as resp:
+            async def stream_gen():
+                async for chunk in resp.aiter_text():
+                    yield chunk
+            return StreamingResponse(stream_gen(), media_type="text/plain")
 
 @app.post("/api/transcribe")
 async def api_transcribe(file: UploadFile = File(...)):
-    file_location = os.path.join(RECORDINGS_DIR, file.filename)
-    with open(file_location, "wb+") as file_object:
-        file_object.write(file.file.read())
+    """视频转录（代理到 worker）"""
+    if not ai_worker.ensure_running():
+        async def error_gen():
+            yield json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n"
+        return StreamingResponse(error_gen(), media_type="text/plain")
+    
+    # 直接转发文件到 worker
+    async with httpx.AsyncClient(timeout=600.0) as client:
+        files = {"file": (file.filename, await file.read(), file.content_type)}
+        async with client.stream("POST", f"{AI_WORKER_URL}/api/transcribe", files=files) as resp:
+            async def stream_gen():
+                async for chunk in resp.aiter_text():
+                    yield chunk
+            return StreamingResponse(stream_gen(), media_type="text/plain")
 
-    srt_location = os.path.join(RECORDINGS_DIR, f"{file.filename.rsplit('.', 1)[0]}.srt")
+@app.post("/api/transcribe_path")
+async def api_transcribe_path(path: str = Form(...)):
+    """本地路径转录（代理到 worker）"""
+    if not ai_worker.ensure_running():
+        async def error_gen():
+            yield json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n"
+        return StreamingResponse(error_gen(), media_type="text/plain")
+    
+    async with httpx.AsyncClient(timeout=600.0) as client:
+        data = {"path": path}
+        async with client.stream("POST", f"{AI_WORKER_URL}/api/transcribe_path", data=data) as resp:
+            async def stream_gen():
+                async for chunk in resp.aiter_text():
+                    yield chunk
+            return StreamingResponse(stream_gen(), media_type="text/plain")
 
-    def generate():
-        for res in run_transcription(file_location, srt_location, yield_progress=True):
-            yield res
-
+# ========== 文件操作端点 ==========
 
 @app.get("/api/download_srt")
 async def download_srt(path: str):
-    """下载 SRT 字幕,处理文件名乱码并确保正确的文件名"""
+    """下载 SRT 字幕"""
     if not os.path.isabs(path):
         path = os.path.join(BASE_DIR, path)
-
+    
     if not os.path.exists(path):
         return {"error": "File not found"}
-
-    filename = os.path.basename(path)
-    # 使用 quote 对文件名进行 URL 编码,解决浏览器下载中文名乱码问题
+    
     import urllib.parse
+    filename = os.path.basename(path)
     encoded_filename = urllib.parse.quote(filename)
-
-    headers = {
-        "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
-    }
-    # 使用 application/x-subrip 作为 SRT 的标准媒体类型
+    
+    headers = {"Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"}
     return FileResponse(path, media_type='application/x-subrip', headers=headers)
 
 @app.post("/api/open_recordings")
 async def open_recordings():
-    """在本地打开录音/字幕文件夹 (Windows)"""
+    """打开录音文件夹"""
     try:
         import subprocess
-        # 使用 explorer 直接打开文件夹
         subprocess.Popen(f'explorer "{RECORDINGS_DIR}"')
         return {"status": "success"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+# ========== 启动 ==========
+
 if __name__ == "__main__":
     import uvicorn
-    # 启动时依然可以在 D 盘运行
+    print(f"\n[WebApp] 主服务启动在 http://0.0.0.0:8000")
+    print(f"[WebApp] AI Worker 将在首次使用时启动（端口 {AI_WORKER_PORT}）")
+    print(f"[WebApp] 点击「释放显存」将终止 AI Worker，显存完全释放\n")
+    
     uvicorn.run(app, host="0.0.0.0", port=8000)

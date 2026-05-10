@@ -244,26 +244,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnChatSend) btnChatSend.addEventListener('click', sendChatMessage);
     if (chatInput) chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
 
-    // === 6. 释放显存 ===
+    // === 6. 释放显存（终止 AI Worker 子进程） ===
     const btnRelease = document.getElementById('btn-shutdown');
     if (btnRelease) {
         btnRelease.addEventListener('click', async () => {
             console.log('[ReleaseGPU] Button clicked');
             btnRelease.disabled = true;
-            btnRelease.innerText = "🚀 正在释放显存...";
+            btnRelease.innerText = "🚀 正在终止 AI 进程...";
             btnRelease.style.backgroundColor = "#ff5252";
             try {
                 const resp = await fetch('/api/release_gpu', { method: 'POST' });
                 const data = await resp.json();
                 console.log('[ReleaseGPU] Response:', data);
-                btnRelease.innerText = "✅ 显存已释放";
+                btnRelease.innerText = "✅ 显存已完全释放";
                 btnRelease.style.backgroundColor = "#4caf50";
-                // 显示提示（不遮挡页面）
-                showToast("✅ 显存已释放，Web 服务继续运行");
-                // 3秒后恢复按钮状态
+                showToast("✅ AI 进程已终止，显存已完全释放（含 CUDA context）");
+                // 3秒后恢复按钮
                 setTimeout(() => {
                     btnRelease.disabled = false;
-                    btnRelease.innerText = "🛑 释放显存（保留 Web 服务）";
+                    btnRelease.innerText = "🛑 释放显存（终止 AI 进程）";
                     btnRelease.style.backgroundColor = "";
                 }, 3000);
             } catch (e) {
@@ -272,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnRelease.style.backgroundColor = "#f44336";
                 setTimeout(() => {
                     btnRelease.disabled = false;
-                    btnRelease.innerText = "🛑 释放显存（保留 Web 服务）";
+                    btnRelease.innerText = "🛑 释放显存（终止 AI 进程）";
                     btnRelease.style.backgroundColor = "";
                 }, 2000);
             }
