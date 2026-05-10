@@ -1,0 +1,200 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // === 1. GPU 监控 (SSE) ===
+    const evtSource = new EventSource('/api/gpu_stats');
+    const vramVal = document.getElementById('vram-val');
+    const vramBar = document.getElementById('vram-bar');
+    const utilVal = document.getElementById('util-val');
+    const utilBar = document.getElementById('util-bar');
+    const tempVal = document.getElementById('temp-val');
+
+    evtSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        vramVal.innerText = `${data.memory_used.toFixed(1)} / ${data.memory_total.toFixed(1)} GB`;
+        vramBar.style.width = `${(data.memory_used / data.memory_total) * 100}%`;
+
+        utilVal.innerText = `${data.utilization}%`;
+        utilBar.style.width = `${data.utilization}%`;
+
+        tempVal.innerText = `${data.temperature}°C`;
+    };
+
+    // === 2. 智库摘要逻辑 ===
+    const btnSummarize = document.getElementById('btn-summarize');
+    const meetingText = document.getElementById('meeting-text');
+    const sumProgCont = document.getElementById('sum-progress-container');
+    const sumStatus = document.getElementById('sum-status');
+    const sumResult = document.getElementById('sum-result');
+
+    btnSummarize.addEventListener('click', async () => {
+        const text = meetingText.value.trim();
+        if (!text) return alert("请先粘贴文本内容！");
+
+        // UI 切换
+        meetingText.classList.add('hidden');
+        btnSummarize.classList.add('hidden');
+        sumProgCont.classList.remove('hidden');
+        sumResult.classList.remove('hidden');
+        sumResult.innerText = "";
+
+        try {
+            const response = await fetch('/api/summarize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n').filter(line => line.trim());
+
+                for (let line of lines) {
+                    try {
+                        const data = JSON.parse(line);
+                        if (data.status === 'processing') {
+                            sumStatus.innerText = data.message;
+                        } else if (data.status === 'done') {
+                            sumProgCont.classList.add('hidden');
+                            sumResult.innerText = data.result;
+                        }
+                    } catch (e) { }
+                }
+            }
+        } catch (error) {
+            sumStatus.innerText = "处理出错: " + error.message;
+        }
+    });
+
+    // === 3. 转录上传逻辑 ===
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const transProgCont = document.getElementById('trans-progress-container');
+    const transStatus = document.getElementById('trans-status');
+    const transBar = document.getElementById('trans-bar');
+    const downloadCont = document.getElementById('download-container');
+    const btnDownload = document.getElementById('btn-download');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) handleUpload(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) handleUpload(e.target.files[0]);
+    });
+
+    async function handleUpload(file) {
+        dropZone.classList.add('hidden');
+        transProgCont.classList.remove('hidden');
+        transStatus.innerText = "正在上传并启动模型...";
+        transBar.style.width = "5%";
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('/api/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n').filter(line => line.trim());
+
+                for (let line of lines) {
+                    try {
+                        const data = JSON.parse(line);
+                        if (data.status === 'processing') {
+                            transStatus.innerText = data.message;
+                            transBar.style.width = `${data.progress}%`;
+                        } else if (data.status === 'done') {
+                            transStatus.innerText = data.message;
+                            transBar.style.width = "100%";
+
+                            // 显示下载按钮
+                            downloadCont.classList.remove('hidden');
+                            btnDownload.href = `/api/download_srt?path=${encodeURIComponent(data.srt_path)}`;
+                        }
+                    } catch (e) { }
+                }
+            }
+        } catch (error) {
+            transStatus.innerText = "处理出错: " + error.message;
+            transBar.style.backgroundColor = "red";
+        }
+    }
+    // === 4. AI 聊天逻辑 ===
+    const chatHistory = document.getElementById('chat-history');
+    const chatInput = document.getElementById('chat-input');
+    const btnChatSend = document.getElementById('btn-chat-send');
+    let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。" }];
+
+    async function sendChatMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        // 1. 添加用户消息到 UI
+        appendMessage('user', text);
+        chatInput.value = "";
+        messages.push({ "role": "user", "content": text });
+
+        // 2. 显示加载状态
+        const loadingMsg = appendMessage('assistant', '正在思考...');
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages: messages })
+            });
+
+            const data = await response.json();
+
+            // 3. 更新回复
+            loadingMsg.innerText = data.response;
+            messages.push({ "role": "assistant", "content": data.response });
+
+            // 保持滚动到底部
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        } catch (error) {
+            loadingMsg.innerText = "出错了: " + error.message;
+        }
+    }
+
+    function appendMessage(role, text) {
+        const div = document.createElement('div');
+        div.className = `msg ${role}`;
+        div.innerText = text;
+        chatHistory.appendChild(div);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        return div;
+    }
+
+    btnChatSend.addEventListener('click', sendChatMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendChatMessage();
+    });
+
+});

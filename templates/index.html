@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qwen3-ASR 高级控制台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏：GPU 监控 -->
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h2>Qwen AI</h2>
+            </div>
+            
+            <div class="gpu-monitor">
+                <h3>RTX 5060 状态</h3>
+                <div class="metric">
+                    <span>显存使用 (VRAM)</span>
+                    <span id="vram-val" class="highlight">0.0 / 8.0 GB</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="vram-bar" class="progress-fill" style="width: 0%;"></div>
+                </div>
+
+                <div class="metric mt-15">
+                    <span>GPU 核心利用率</span>
+                    <span id="util-val">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="util-bar" class="progress-fill util" style="width: 0%;"></div>
+                </div>
+
+                <div class="metric mt-15">
+                    <span>温度</span>
+                    <span id="temp-val">0°C</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="content">
+            <header>
+                <h1>智能音视频工作站</h1>
+                <p>长文本总结与 GPU 批处理转录</p>
+            </header>
+
+            <div class="cards-grid">
+                <!-- 总结卡片 -->
+                <div class="card glass-panel" id="summary-card">
+                    <div class="card-header">
+                        <div class="icon sum-icon"></div>
+                        <h3>AI 智库摘要</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="subtitle">粘贴长达 1 小时的会议内容，自动分段提炼“一页纸精华”。</p>
+                        <textarea id="meeting-text" placeholder="在此粘贴长文本..."></textarea>
+                        <button id="btn-summarize" class="btn primary">生成总结</button>
+                        
+                        <div id="sum-progress-container" class="hidden">
+                            <div class="status-text" id="sum-status">正在准备数据...</div>
+                            <div class="progress-bar active"></div>
+                        </div>
+                        
+                        <div id="sum-result" class="result-box hidden"></div>
+                    </div>
+                </div>
+
+                <!-- 转录卡片 -->
+                <div class="card glass-panel" id="transcribe-card">
+                    <div class="card-header">
+                        <div class="icon trans-icon"></div>
+                        <h3>视频提取文本 (Qwen3-ASR)</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="subtitle">拖拽视频文件至此，使用 RTX 5060 批处理极速提取字幕。</p>
+                        <div id="drop-zone" class="drop-zone">
+                            <div class="upload-icon">📁</div>
+                            <p>点击选择或将视频文件拖拽到这里</p>
+                            <input type="file" id="file-input" class="hidden" accept="video/*,audio/*">
+                        </div>
+                        
+                        <div id="trans-progress-container" class="hidden">
+                            <div class="status-text" id="trans-status">等待上传...</div>
+                            <div class="progress-bar">
+                                <div id="trans-bar" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="download-container" class="hidden mt-15">
+                            <a id="btn-download" class="btn success" href="#" download>下载 SRT 字幕</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 聊天卡片 (全宽布局) -->
+                <div class="card glass-panel chat-card" id="chat-card">
+                    <div class="card-header">
+                        <div class="icon chat-icon"></div>
+                        <h3>AI 智能助理</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="chat-history" class="chat-history">
+                            <div class="msg assistant">你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。</div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
+                            <button id="btn-chat-send" class="btn primary">发送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/static/main.js"></script>
+</body>
+</html>
