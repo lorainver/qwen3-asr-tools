@@ -40,21 +40,23 @@ tts_engine = TTSEngine()
 async def api_tts(text: str, engine: str = "edge"):
     """根据文本流式生成语音或返回缓存"""
     import hashlib
-    # 缓存文件名包含引擎名称，防止混淆
-    filename = hashlib.md5(f"{engine}:{text}".encode()).hexdigest() + ".mp3"
+
+    # 根据引擎决定缓存文件格式
+    ext = ".wav" if engine == "sherpa" else ".mp3"
+    media_type = "audio/wav" if engine == "sherpa" else "audio/mpeg"
+    filename = hashlib.md5(f"{engine}:{text}".encode()).hexdigest() + ext
     filepath = os.path.join(AUDIO_DIR, filename)
     
-    # 1. 如果有缓存，直接返回文件
+    # 1. 如果有缓存，直接返回（秒开）
     if os.path.exists(filepath):
-        return FileResponse(filepath, media_type="audio/mpeg")
+        return FileResponse(filepath, media_type=media_type)
             
-    # 2. 如果没有缓存，根据引擎模式生成
+    # 2. 没有缓存，流式生成
     tts_engine.set_mode(engine)
-    media_type = "audio/mpeg" if engine == "edge" else "audio/wav"
-    
     return StreamingResponse(tts_engine.stream_speech(text), media_type=media_type)
 
 @app.post("/api/shutdown")
+
 async def shutdown():
     """彻底关闭服务器并释放显存 (Windows 兼容版)"""
     import threading

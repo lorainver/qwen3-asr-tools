@@ -20,14 +20,21 @@ class EdgeEngine:
 class SherpaEngine:
     def __init__(self):
         self.tts = None
-        # 使用绝对路径定位模型
+        # 使用绝对路径定位模型组件
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.model_path = os.path.join(self.base_dir, "models", "tts", "vits-icefall-zh-aishell3", "model.onnx")
-        self.tokens_path = os.path.join(self.base_dir, "models", "tts", "vits-icefall-zh-aishell3", "tokens.txt")
+        model_root = os.path.join(self.base_dir, "models", "tts", "vits-icefall-zh-aishell3")
+        
+        self.model_path = os.path.join(model_root, "model.onnx")
+        self.tokens_path = os.path.join(model_root, "tokens.txt")
+        self.lexicon_path = os.path.join(model_root, "lexicon.txt")
+        # 规则文件
+        self.date_fst = os.path.join(model_root, "date.fst")
+        self.number_fst = os.path.join(model_root, "number.fst")
+        self.phone_fst = os.path.join(model_root, "phone.fst")
+        
         self._initialized = False
 
     def _lazy_init(self):
-        """延迟初始化，只有第一次使用离线引擎时才加载模型，节省内存"""
         if self._initialized:
             return
         
@@ -36,11 +43,10 @@ class SherpaEngine:
             return
 
         import sherpa_onnx
-        # 配置离线模型参数
         vits_config = sherpa_onnx.OfflineTtsVitsModelConfig(
             model=self.model_path,
             tokens=self.tokens_path,
-            lexicon="",
+            lexicon=self.lexicon_path,
             data_dir="",
             noise_scale=0.667,
             noise_scale_w=0.8,
@@ -49,14 +55,14 @@ class SherpaEngine:
         
         model_config = sherpa_onnx.OfflineTtsModelConfig(
             vits=vits_config,
-            num_threads=1,
+            num_threads=2,
             debug=False,
-            provider="cpu", # 离线语音建议用 CPU，足够快且不占显存
+            provider="cpu",
         )
         
         config = sherpa_onnx.OfflineTtsConfig(
             model=model_config,
-            rule_fsts="",
+            rule_fsts=f"{self.date_fst},{self.number_fst},{self.phone_fst}",
             max_num_sentences=1,
         )
         
@@ -65,20 +71,42 @@ class SherpaEngine:
         print("Sherpa-ONNX 离线语音引擎初始化完成。")
 
     async def stream_speech(self, text):
-        """
-        Sherpa-ONNX 的推理极快，但通常是一次性生成的。
-        为了兼容流式接口，我们将生成后的 wav 数据分块返回。
-        """
         self._lazy_init()
         if not self.tts:
             return
 
+        # 文本预清洗
+        import re
+        # 1. 去掉 Markdown 标记
+        clean_text = re.sub(r'[*#>`\-]', '', text)
+        # 2. 全角标点转换，所有引号类直接删掉（模型不认识）
+        replacements = {
+            '（': '(', '）': ')', '，': ',', '。': '.',
+            '：': ':', '；': ';', '？': '?', '！': '!',
+            '\u201c': '', '\u201d': '', '\u2018': '', '\u2019': '',
+            '"': '', "'": '',
+            '－': '-', '—': '-'
+        }
+        for old, new in replacements.items():
+            clean_text = clean_text.replace(old, new)
+        
+        # 3. 只保留中文、英文、数字和基础标点
+        clean_text = re.sub(r'[^\u4e00-\u9fa5a-zA-Z0-9\s,.:;?!()\-\/]', '', clean_text)
+        
+        # 4. 合并空格
+        clean_text = re.sub(r'\s+', ' ', clean_text).strip()
+        
+        if not clean_text:
+            return
+
         try:
-            # 在单独的线程中运行 CPU 密集型推理，避免阻塞事件循环
             loop = asyncio.get_event_loop()
-            audio = await loop.run_in_executor(None, self.tts.generate, text)
+            audio = await loop.run_in_executor(None, self.tts.generate, clean_text)
             
-            # 将采样数据转换为 MP3/WAV 字节流 (这里简单处理为带头的 WAV)
+            if audio is None or not hasattr(audio, 'samples'):
+                print("SherpaTTS Error: 推理返回结果无效")
+                return
+
             import io
             import wave
             
@@ -87,25 +115,29 @@ class SherpaEngine:
                     wav_file.setnchannels(1)
                     wav_file.setsampwidth(2)
                     wav_file.setframerate(self.tts.sample_rate)
-                    # 转换 float32 采样到 int16
-                    samples = (audio.samples * 32767).astype(np.int16)
+                    samples_np = np.array(audio.samples, dtype=np.float32)
+                    # 音量增益，放大 5 倍后限幅防破音
+                    VOLUME_GAIN = 5.0
+                    samples_np = np.clip(samples_np * VOLUME_GAIN, -1.0, 1.0)
+                    samples = (samples_np * 32767).astype(np.int16)
                     wav_file.writeframes(samples.tobytes())
                 
                 wav_data = wav_io.getvalue()
                 
-            # 分块 yield，模拟流式效果
             chunk_size = 4096
             for i in range(0, len(wav_data), chunk_size):
                 yield wav_data[i:i+chunk_size]
                 
         except Exception as e:
-            print(f"SherpaTTS Error: {e}")
+            import traceback
+            print("SherpaTTS Exception details:")
+            traceback.print_exc()
 
 class TTSEngine:
     def __init__(self):
         self.edge = EdgeEngine()
         self.sherpa = SherpaEngine()
-        self.mode = "edge" # 默认在线模式
+        self.mode = "edge"  # 默认在线模式
 
     def set_mode(self, mode):
         if mode in ["edge", "sherpa"]:
@@ -122,7 +154,6 @@ class TTSEngine:
 
     async def generate_speech(self, text, output_path):
         """全量保存功能，用于缓存"""
-        # 简单实现：通过流式接口收集并保存
         try:
             with open(output_path, "wb") as f:
                 async for chunk in self.stream_speech(text):
