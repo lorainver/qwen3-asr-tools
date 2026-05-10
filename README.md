@@ -1,72 +1,75 @@
 # Qwen3-ASR AI 智能音视频工作站
 
-这是一个基于 **Qwen3-ASR** 和 **Qwen2.5** 大模型构建的本地化音视频处理工作站。支持 Web 界面交互和多种强大的命令行脚本工具。
+这是一个基于 **Qwen3-ASR** 和 **Qwen2.5** 大模型构建的本地化音视频处理工作站。
 
 ---
 
 ## 🖥️ Web 界面功能 (快速启动)
 
 ### 核心功能
-- **🚀 极速视频转录 (ASR)**: 基于 `Qwen3-ASR-0.6B` 模型，支持 GPU 批处理加速。
-- **📝 智库级文本总结**: 集成 `Qwen2.5-1.5B-Instruct` 模型，支持超长文本分段总结。
-- **💬 本地 AI 助理**: 类似 ChatGPT 的对话界面，支持上下文记忆。
-- **📊 GPU 实时看板**: SSE 技术监控显存、利用率及温度。
+- **🚀 极速视频转录 (ASR)**: 自动批处理加速。
+- **📝 智库级文本总结**: 处理超长会议纪要。
+- **💬 本地 AI 助理**: 具备上下文记忆的对话模式。
+- **📊 GPU 实时看板**: 监控显存、利用率及温度。
 
 ### 启动方式
 ```powershell
-python web_app.py
+D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\web_app.py
 ```
 访问：`http://127.0.0.1:8000`
 
 ---
 
-## ⌨️ 命令行脚本工具 (高级功能)
+## ⌨️ 命令行实战命令范例 (CLI)
 
-除了 Web 页面，你还可以直接运行以下 Python 脚本来实现更专业的任务：
+以下是针对不同场景优化的命令示例，请根据需要复制使用：
 
-### 1. 视频转录工具 (生成 SRT 字幕)
+### 1. 字幕提取 (生成 SRT 文件)
 
-#### **CPU 版本 (Faster-Whisper)**
-适用于没有显卡或想节省显存的场景，使用 `faster-whisper` 引擎。
-- **脚本**: `fw_srt.py`
-- **运行方式**: `python fw_srt.py`
+#### **Qwen3 高精度转录 (推荐 GPU 用户)**
+*支持批处理，速度极快：*
+```powershell
+D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "F:\屏幕录制\乐学猫直播 2026-05-07 20-04-21-162.mp4" --chunk 10 --batch 12
+```
 
-#### **GPU 版本 (Qwen3-ASR)**
-利用 RTX 显卡进行高精度极速转录，支持批处理模式。
-- **脚本**: `qwen3_full_srt.py`
-- **运行方式**: `python qwen3_full_srt.py`
-
----
-
-### 2. 实时语音监控工具 (GUI 界面)
-
-#### **实时字幕显示 (大模型版)**
-使用参数量更大的模型进行实时语音流识别，适合对精度要求极高的直播或会议场景。
-- **脚本**: `qwen3_realtime.py`
-- **特点**: 低延迟、高精度。
-- **运行方式**: `python qwen3_realtime.py`
-
-#### **带翻译的实时字幕显示**
-在实时识别语音的同时，自动将识别结果翻译为目标语言，双语同步显示。
-- **脚本**: `qwen3_realtime_trans.py`
-- **特点**: 集成 Qwen2.5 翻译引擎，支持双语对照。
-- **运行方式**: `python qwen3_realtime_trans.py`
+#### **Whisper 转录 (CPU/通用)**
+*建议使用 `--beam 1` 以获得最快识别速度：*
+```powershell
+D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "F:\屏幕录制\bandicam 2026-05-07 20-04-21-162.mp4" --beam 1
+```
 
 ---
 
-## 🛠️ 环境要求
+### 2. 实时字幕显示 (GUI)
 
-- **Python**: 3.10+ (建议在虚拟环境 `venv` 下运行)
-- **GPU**: NVIDIA RTX 系列 (建议 8GB+ 显存)
-- **依赖**: 见 `requirements.txt` (核心包含 `transformers`, `torch`, `fastapi`, `pynvml`, `bitsandbytes`)
+#### **带翻译的实时显示 (双语对照)**
+*适用于观看外语直播或外语会议，设备 ID 30 为虚拟音频输入：*
+```powershell
+D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5
+```
 
-## 📂 项目说明
+#### **Chrome/系统声音实时识别 (不带翻译)**
+*实时监听系统播放的内容：*
+```powershell
+D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.0
+```
 
-- `web_app.py`: Web 后端。
-- `summarizer.py`: 总结/对话引擎。
-- `transcriber.py`: Web 端转录封装。
-- `models/`: 存放 Qwen 系列本地模型。
+#### **麦克风实时录音识别**
+*适用于现场演讲、个人录音场景（假设麦克风设备 ID 为 1）：*
+```powershell
+D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 1 --chunk 2.0
+```
 
-## 🔒 隐私声明
+---
 
-100% 本地化运行，数据不出本地，确保隐私安全。
+## 💡 参数说明
+
+- `--device_id`: 输入音频设备 ID（可用相关的 list 命令查询）。
+- `--chunk`: 处理的音频块长度（秒），越小延迟越低，越大识别越稳。
+- `--batch`: 批处理大小，越大越压榨 GPU 性能。
+- `--beam`: 束搜索宽度，`1` 为贪婪搜索（速度最快）。
+
+## 🔒 隐私与运行环境
+
+- **运行环境**: `D:\qwen3-asr\venv` (已预装所有依赖)。
+- **隐私**: 100% 本地运行，无需网络连接。
