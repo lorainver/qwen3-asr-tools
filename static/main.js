@@ -244,47 +244,53 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnChatSend) btnChatSend.addEventListener('click', sendChatMessage);
     if (chatInput) chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
 
-    // === 6. 停止服务器 ===
-    const btnShutdown = document.getElementById('btn-shutdown');
-    if (btnShutdown) {
-        btnShutdown.addEventListener('click', async () => {
-            console.log('[Shutdown] Button clicked');
-            btnShutdown.disabled = true;
-            btnShutdown.innerText = "🚀 正在释放显存并关闭...";
-            btnShutdown.style.backgroundColor = "#ff5252";
+    // === 6. 释放显存 ===
+    const btnRelease = document.getElementById('btn-shutdown');
+    if (btnRelease) {
+        btnRelease.addEventListener('click', async () => {
+            console.log('[ReleaseGPU] Button clicked');
+            btnRelease.disabled = true;
+            btnRelease.innerText = "🚀 正在释放显存...";
+            btnRelease.style.backgroundColor = "#ff5252";
             try {
-                const resp = await fetch('/api/shutdown', { method: 'POST' });
+                const resp = await fetch('/api/release_gpu', { method: 'POST' });
                 const data = await resp.json();
-                console.log('[Shutdown] Response:', data);
-                btnShutdown.innerText = "✅ 已关闭";
-                btnShutdown.style.backgroundColor = "#4caf50";
-                // 显示全屏提示
-                showServerStopped();
+                console.log('[ReleaseGPU] Response:', data);
+                btnRelease.innerText = "✅ 显存已释放";
+                btnRelease.style.backgroundColor = "#4caf50";
+                // 显示提示（不遮挡页面）
+                showToast("✅ 显存已释放，Web 服务继续运行");
+                // 3秒后恢复按钮状态
+                setTimeout(() => {
+                    btnRelease.disabled = false;
+                    btnRelease.innerText = "🛑 释放显存（保留 Web 服务）";
+                    btnRelease.style.backgroundColor = "";
+                }, 3000);
             } catch (e) {
-                console.error('[Shutdown] Error:', e);
-                btnShutdown.innerText = "✅ 已关闭";
-                btnShutdown.style.backgroundColor = "#4caf50";
-                showServerStopped();
+                console.error('[ReleaseGPU] Error:', e);
+                btnRelease.innerText = "❌ 释放失败";
+                btnRelease.style.backgroundColor = "#f44336";
+                setTimeout(() => {
+                    btnRelease.disabled = false;
+                    btnRelease.innerText = "🛑 释放显存（保留 Web 服务）";
+                    btnRelease.style.backgroundColor = "";
+                }, 2000);
             }
         });
     } else {
-        console.error('[Shutdown] Button not found!');
+        console.error('[ReleaseGPU] Button not found!');
     }
     
-    function showServerStopped() {
-        // 创建全屏遮罩
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 10000;
-            color: white; font-family: Inter, sans-serif;
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.85); color: white; padding: 12px 24px;
+            border-radius: 8px; z-index: 10000; font-family: Inter, sans-serif;
+            animation: fadeInOut 3s ease;
         `;
-        overlay.innerHTML = `
-            <div style="font-size: 48px; margin-bottom: 20px;">🛑</div>
-            <div style="font-size: 24px; margin-bottom: 10px;">服务器已停止</div>
-            <div style="font-size: 14px; color: #aaa;">显存已释放，可安全关闭此页面</div>
-        `;
-        document.body.appendChild(overlay);
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     }
 });

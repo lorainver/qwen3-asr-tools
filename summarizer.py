@@ -2,6 +2,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import gc
 import json
+from model_manager import model_manager
 
 class LongTextSummarizer:
     def __init__(self, model_path=r"D:\qwen3-asr\models\Qwen\Qwen2.5-1.5B-Instruct"):
@@ -12,6 +13,7 @@ class LongTextSummarizer:
     def _load_model(self):
         if self.model is None:
             print("Loading Summarizer Model...")
+            model_manager.set_processing(True)
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit=True,
@@ -23,6 +25,7 @@ class LongTextSummarizer:
                 quantization_config=bnb_config,
                 device_map="auto"
             )
+            model_manager.register_summarizer(self.model)
             print("Summarizer Model loaded.")
 
     def _unload_model(self):
@@ -32,9 +35,13 @@ class LongTextSummarizer:
             del self.tokenizer
             self.model = None
             self.tokenizer = None
+            model_manager.unregister_summarizer()
             gc.collect()
             torch.cuda.empty_cache()
+            model_manager.set_processing(False)
             print("Summarizer Model unloaded.")
+        else:
+            model_manager.set_processing(False)
 
     def summarize(self, text, chunk_size=1500, yield_progress=None):
         """
@@ -53,6 +60,11 @@ class LongTextSummarizer:
 
             # 2. 局部总结
             for i, chunk in enumerate(chunks):
+                # 检查取消信号
+                if model_manager.is_cancelled():
+                    if yield_progress:
+                        yield json.dumps({"status": "cancelled", "message": "任务已被用户取消"})
+                    return
                 prompt = f"请简要总结以下会议记录片段的核心内容，提取关键信息（字数控制在200字内）：\n{chunk}"
                 messages = [{"role": "user", "content": prompt}]
                 input_ids = self.tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors="pt").to("cuda")
@@ -95,7 +107,8 @@ class LongTextSummarizer:
         finally:
             # 🔑 无论如何都卸载模型，防止显存泄漏
             self._unload_model()
-        
+
+        # 返回最终结果
         if yield_progress and final_result:
             yield json.dumps({"status": "done", "result": final_result})
         elif not yield_progress:
@@ -106,6 +119,10 @@ class LongTextSummarizer:
         通用对话接口
         messages 格式为: [{"role": "user", "content": "你好"}, {"role": "assistant", "content": "你好！"}]
         """
+        # 如果被取消，直接返回提示
+        if model_manager.is_cancelled():
+            return "（任务已被取消）"
+            
         self._load_model()
         try:
             input_ids = self.tokenizer.apply_chat_template(
@@ -135,4 +152,4 @@ class LongTextSummarizer:
         finally:
             # 对话频率高暂不卸载（显存充裕），若需释放去掉下面注释
             # self._unload_model()
-            pass
+            model_manager.set_processing(False)

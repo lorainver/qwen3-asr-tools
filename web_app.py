@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from summarizer import LongTextSummarizer
 from transcriber import run_transcription
 from tts_engine import TTSEngine
+from model_manager import model_manager
 
 app = FastAPI(title="Qwen3 ASR Web Console")
 
@@ -55,7 +56,22 @@ async def api_tts(text: str, engine: str = "edge"):
     tts_engine.set_mode(engine)
     return StreamingResponse(tts_engine.stream_speech(text), media_type=media_type)
 
-# /api/shutdown 端点在文件末尾统一定义
+@app.post("/api/release_gpu")
+async def release_gpu():
+    """释放所有 AI 模型占用的 GPU 显存，但不关闭 Web 服务
+    
+    流程：
+    1. 发送取消信号（中断正在执行的任务）
+    2. 通过 model_manager 释放所有模型显存
+    3. Web 服务继续运行，其他功能仍可使用
+    """
+    result = model_manager.release_all()
+    return result
+
+@app.get("/api/model_status")
+async def model_status():
+    """查询当前模型加载状态"""
+    return model_manager.get_status()
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index(request: Request):
@@ -169,43 +185,6 @@ async def open_recordings():
         return {"status": "success"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-@app.post("/api/shutdown")
-async def shutdown():
-    """彻底关闭服务器并强制释放显存"""
-    print("\n[System] ========== 收到关闭指令 ==========")
-    
-    # 1. 先清理 PyTorch 显存
-    try:
-        import torch
-        import gc
-        gc.collect()
-        torch.cuda.empty_cache()
-        torch.cuda.synchronize()
-        print("[System] ✓ CUDA 显存已释放")
-    except Exception as e:
-        print(f"[System] CUDA 清理失败: {e}")
-    
-    # 2. 关闭 NVML 监控
-    try:
-        pynvml.nvmlShutdown()
-        print("[System] ✓ NVML 已关闭")
-    except Exception as e:
-        print(f"[System] NVML 关闭失败: {e}")
-    
-    # 3. 延迟退出（给前端响应时间）
-    import threading
-    import time
-    
-    def kill_process():
-        time.sleep(1.5)
-        print("[System] ========== 进程终止 ==========")
-        os._exit(0)
-    
-    t = threading.Thread(target=kill_process)
-    t.daemon = True
-    t.start()
-    return {"status": "ok", "message": "Server shutting down"}
 
 if __name__ == "__main__":
     import uvicorn
