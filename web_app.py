@@ -37,19 +37,22 @@ summarizer = LongTextSummarizer()
 tts_engine = TTSEngine()
 
 @app.get("/api/tts")
-async def api_tts(text: str):
+async def api_tts(text: str, engine: str = "edge"):
     """根据文本流式生成语音或返回缓存"""
     import hashlib
-    filename = hashlib.md5(text.encode()).hexdigest() + ".mp3"
+    # 缓存文件名包含引擎名称，防止混淆
+    filename = hashlib.md5(f"{engine}:{text}".encode()).hexdigest() + ".mp3"
     filepath = os.path.join(AUDIO_DIR, filename)
     
-    # 1. 如果有缓存，直接返回文件响应
+    # 1. 如果有缓存，直接返回文件
     if os.path.exists(filepath):
         return FileResponse(filepath, media_type="audio/mpeg")
             
-    # 2. 如果没有缓存，采用流式传输
-    # 注意：流式传输不保存文件，以换取极致的响应速度
-    return StreamingResponse(tts_engine.stream_speech(text), media_type="audio/mpeg")
+    # 2. 如果没有缓存，根据引擎模式生成
+    tts_engine.set_mode(engine)
+    media_type = "audio/mpeg" if engine == "edge" else "audio/wav"
+    
+    return StreamingResponse(tts_engine.stream_speech(text), media_type=media_type)
 
 @app.post("/api/shutdown")
 async def shutdown():

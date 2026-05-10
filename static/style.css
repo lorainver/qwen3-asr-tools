@@ -585,4 +585,27 @@ textarea:focus {
     font-size: 0.8rem;
     color: var(--text-secondary);
 }
+
+/* 简约下拉菜单样式 */
+.select-minimal {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-primary);
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.select-minimal:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+}
+
+.select-minimal option {
+    background: #1e1e2e;
+    color: white;
+}
 

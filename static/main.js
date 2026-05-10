@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnChatSend = document.getElementById('btn-chat-send');
     const btnNewChat = document.getElementById('btn-new-chat');
     const checkAutoSpeak = document.getElementById('check-auto-speak');
+    const selectTTSEngine = document.getElementById('select-tts-engine');
 
     let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。" }];
 
@@ -159,9 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function playTTS(text, btn) {
         if (!text || text === '正在思考...') return;
-        const ttsUrl = `/api/tts?text=${encodeURIComponent(text)}`;
         
-        // 如果当前正在播放的就是这一段，且没暂停，则执行停止
+        const engine = selectTTSEngine ? selectTTSEngine.value : 'edge';
+        const ttsUrl = `/api/tts?text=${encodeURIComponent(text)}&engine=${engine}`;
+        
+        // 如果当前正在播放的就是这一段
         if (audioPlayer.src.includes(encodeURIComponent(text)) && !audioPlayer.paused) {
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
