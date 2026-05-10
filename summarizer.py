@@ -25,7 +25,8 @@ class LongTextSummarizer:
                 quantization_config=bnb_config,
                 device_map="auto"
             )
-            model_manager.register_summarizer(self.model)
+            # 注册实例（而非模型对象），这样 release_all 可以调用 _unload_model
+            model_manager.register_summarizer(self)
             print("Summarizer Model loaded.")
 
     def _unload_model(self):
