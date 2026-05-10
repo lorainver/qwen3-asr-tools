@@ -38,3 +38,19 @@ temp_realtime.wav
 
 # 忽略日志
 *.log
+
+# 忽略用户上传和缓存
+recordings/
+static/audio/*.mp3
+
+# 忽略备份副本
+*-副本.py
+
+# 忽略测试输出
+test_*.err
+test_*.out
+
+# 忽略分析报告
+*_analysis*.html
+*_analysis*.md
+Enhancing Qwen3-ASR*.md
