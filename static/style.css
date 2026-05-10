@@ -518,4 +518,33 @@ textarea:focus {
     background: #ef4444;
     color: white;
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-}
+}
+
+/* 朗读按钮样式 */
+.btn-speak {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 1.1rem;
+    padding: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-speak:hover {
+    color: var(--accent);
+    transform: scale(1.2);
+}
+
+.msg.assistant {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.msg.assistant span {
+    flex: 1;
+}
+

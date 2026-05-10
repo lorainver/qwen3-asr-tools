@@ -11,6 +11,7 @@ from pydantic import BaseModel
 
 from summarizer import LongTextSummarizer
 from transcriber import run_transcription
+from tts_engine import TTSEngine
 
 app = FastAPI(title="Qwen3 ASR Web Console")
 
@@ -21,26 +22,49 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 RECORDINGS_DIR = os.path.join(BASE_DIR, "recordings")
+AUDIO_DIR = os.path.join(STATIC_DIR, "audio")
 
 os.makedirs(STATIC_DIR, exist_ok=True)
 os.makedirs(TEMPLATES_DIR, exist_ok=True)
 os.makedirs(RECORDINGS_DIR, exist_ok=True)
+os.makedirs(AUDIO_DIR, exist_ok=True)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 pynvml.nvmlInit()
 summarizer = LongTextSummarizer()
+tts_engine = TTSEngine()
+
+@app.get("/api/tts")
+async def api_tts(text: str):
+    """根据文本生成语音文件并返回路径"""
+    import hashlib
+    # 使用 MD5 确保相同文本不重复生成，节省时间
+    filename = hashlib.md5(text.encode()).hexdigest() + ".mp3"
+    filepath = os.path.join(AUDIO_DIR, filename)
+    
+    if not os.path.exists(filepath):
+        success = await tts_engine.generate_speech(text, filepath)
+        if not success:
+            return {"error": "TTS generation failed"}
+            
+    return {"url": f"/static/audio/{filename}"}
 
 @app.post("/api/shutdown")
 async def shutdown():
-    """彻底关闭服务器并释放显存"""
-    print("收到关闭指令，正在释放显存并退出...")
-    # 尝试卸载模型
-    summarizer._unload_model()
-    # 给系统 0.5 秒时间返回响应
-    os.kill(os.getpid(), signal.SIGINT)
-    return {"status": "shutdown"}
+    """彻底关闭服务器并释放显存 (Windows 兼容版)"""
+    import threading
+    import time
+
+    def delayed_exit():
+        time.sleep(1) # 给前端 1 秒钟显示“服务器已停止”的提示
+        print("正在强制退出并释放显存...")
+        os._exit(0) # 强制结束进程，最有效释放显存的方式
+
+    print("收到网页端关闭指令...")
+    threading.Thread(target=delayed_exit).start()
+    return {"status": "shutdown", "message": "Server will exit in 1s"}
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index(request: Request):

@@ -153,6 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。" }];
 
+    // 全局音频播放器
+    const audioPlayer = new Audio();
+
     // 新建对话逻辑
     btnNewChat.addEventListener('click', () => {
         if (messages.length > 1) {
@@ -200,10 +203,39 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendMessage(role, text) {
         const div = document.createElement('div');
         div.className = `msg ${role}`;
-        div.innerText = text;
+        
+        const contentSpan = document.createElement('span');
+        contentSpan.innerText = text;
+        div.appendChild(contentSpan);
+
+        // 如果是助手消息，添加朗读按钮
+        if (role === 'assistant') {
+            const speakBtn = document.createElement('button');
+            speakBtn.className = 'btn-speak';
+            speakBtn.innerHTML = '🔊';
+            speakBtn.title = '朗读此段';
+            speakBtn.onclick = async () => {
+                // 实时获取当前气泡里的最新文字
+                const currentText = contentSpan.innerText;
+                if (currentText === '正在思考...') return;
+
+                speakBtn.innerText = '⏳';
+                try {
+                    const res = await fetch(`/api/tts?text=${encodeURIComponent(currentText)}`);
+                    const data = await res.json();
+                    if (data.url) {
+                        audioPlayer.src = data.url;
+                        audioPlayer.play();
+                    }
+                } catch (e) { console.error(e); }
+                speakBtn.innerHTML = '🔊';
+            };
+            div.appendChild(speakBtn);
+        }
+
         chatHistory.appendChild(div);
         chatHistory.scrollTop = chatHistory.scrollHeight;
-        return div;
+        return contentSpan;
     }
 
     btnChatSend.addEventListener('click', sendChatMessage);
@@ -226,17 +258,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 6. 停止服务器 ===
     const btnShutdown = document.getElementById('btn-shutdown');
     if (btnShutdown) {
-        btnShutdown.addEventListener('click', async () => {
-            if (!confirm("确定要停止服务器并释放显存吗？停止后你需要在终端重新启动。")) return;
+        btnShutdown.onclick = async () => {
+            if (!confirm("确定要停止服务器并释放显存吗？\n停止后你需要在终端手动重新启动。")) return;
+            
             try {
                 btnShutdown.innerText = "正在停止...";
                 btnShutdown.disabled = true;
-                await fetch('/api/shutdown', { method: 'POST' });
-                alert("服务器已停止。");
+                
+                // 使用 fetch 发送指令，设置一个较短的超时
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+                await fetch('/api/shutdown', { 
+                    method: 'POST',
+                    signal: controller.signal 
+                });
+                
+                alert("指令已发送，服务器正在关闭中...\n(终端窗口随后会自动退出)");
             } catch (e) {
-                alert("服务器已关闭。");
+                // 如果 fetch 报错（通常是因为服务器关得太快了），也认为成功
+                alert("服务器已接收关闭指令并正在退出。");
             }
-        });
+        };
     }
 
 });
