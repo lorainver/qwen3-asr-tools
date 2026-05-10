@@ -46,30 +46,16 @@ async def api_tts(text: str, engine: str = "edge"):
     media_type = "audio/wav" if engine == "sherpa" else "audio/mpeg"
     filename = hashlib.md5(f"{engine}:{text}".encode()).hexdigest() + ext
     filepath = os.path.join(AUDIO_DIR, filename)
-    
-    # 1. 如果有缓存，直接返回（秒开）
+
+    # 1. 如果有缓存,直接返回(秒开)
     if os.path.exists(filepath):
         return FileResponse(filepath, media_type=media_type)
-            
-    # 2. 没有缓存，流式生成
+
+    # 2. 没有缓存,流式生成
     tts_engine.set_mode(engine)
     return StreamingResponse(tts_engine.stream_speech(text), media_type=media_type)
 
-@app.post("/api/shutdown")
-
-async def shutdown():
-    """彻底关闭服务器并释放显存 (Windows 兼容版)"""
-    import threading
-    import time
-
-    def delayed_exit():
-        time.sleep(1) # 给前端 1 秒钟显示“服务器已停止”的提示
-        print("正在强制退出并释放显存...")
-        os._exit(0) # 强制结束进程，最有效释放显存的方式
-
-    print("收到网页端关闭指令...")
-    threading.Thread(target=delayed_exit).start()
-    return {"status": "shutdown", "message": "Server will exit in 1s"}
+# /api/shutdown 端点在文件末尾统一定义
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index(request: Request):
@@ -86,7 +72,7 @@ async def gpu_stats():
                 mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
                 util_info = pynvml.nvmlDeviceGetUtilizationRates(handle)
                 temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
-                
+
                 data = {
                     "memory_used": round(mem_info.used / (1024**3), 2),
                     "memory_total": round(mem_info.total / (1024**3), 2),
@@ -97,7 +83,7 @@ async def gpu_stats():
             except Exception:
                 pass
             await asyncio.sleep(1)
-            
+
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 class SummarizeRequest(BaseModel):
@@ -113,13 +99,13 @@ async def api_summarize(request: SummarizeRequest):
 
 @app.post("/api/transcribe_path")
 async def api_transcribe_path(path: str = Form(...)):
-    """直接根据本地绝对路径进行转录，不产生副本"""
+    """直接根据本地绝对路径进行转录,不产生副本"""
     path = path.strip('"').strip("'")
     if not os.path.exists(path) and not os.path.isabs(path):
         path = os.path.join(BASE_DIR, path)
     if not os.path.exists(path):
         def error_gen():
-            yield json.dumps({"status": "error", "message": f"错误：找不到文件 - {path}"}) + "\n"
+            yield json.dumps({"status": "error", "message": f"错误:找不到文件 - {path}"}) + "\n"
         return StreamingResponse(error_gen(), media_type="text/plain")
     filename_stem = os.path.basename(path).rsplit('.', 1)[0]
     srt_location = os.path.join(os.path.dirname(path), f"{filename_stem}.srt")
@@ -145,28 +131,28 @@ async def api_transcribe(file: UploadFile = File(...)):
     file_location = os.path.join(RECORDINGS_DIR, file.filename)
     with open(file_location, "wb+") as file_object:
         file_object.write(file.file.read())
-        
+
     srt_location = os.path.join(RECORDINGS_DIR, f"{file.filename.rsplit('.', 1)[0]}.srt")
 
     def generate():
         for res in run_transcription(file_location, srt_location, yield_progress=True):
             yield res
-            
+
 
 @app.get("/api/download_srt")
 async def download_srt(path: str):
-    """下载 SRT 字幕，处理文件名乱码并确保正确的文件名"""
+    """下载 SRT 字幕,处理文件名乱码并确保正确的文件名"""
     if not os.path.isabs(path):
         path = os.path.join(BASE_DIR, path)
-    
+
     if not os.path.exists(path):
         return {"error": "File not found"}
 
     filename = os.path.basename(path)
-    # 使用 quote 对文件名进行 URL 编码，解决浏览器下载中文名乱码问题
+    # 使用 quote 对文件名进行 URL 编码,解决浏览器下载中文名乱码问题
     import urllib.parse
     encoded_filename = urllib.parse.quote(filename)
-    
+
     headers = {
         "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
     }
@@ -183,6 +169,43 @@ async def open_recordings():
         return {"status": "success"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+@app.post("/api/shutdown")
+async def shutdown():
+    """彻底关闭服务器并强制释放显存"""
+    print("\n[System] ========== 收到关闭指令 ==========")
+    
+    # 1. 先清理 PyTorch 显存
+    try:
+        import torch
+        import gc
+        gc.collect()
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+        print("[System] ✓ CUDA 显存已释放")
+    except Exception as e:
+        print(f"[System] CUDA 清理失败: {e}")
+    
+    # 2. 关闭 NVML 监控
+    try:
+        pynvml.nvmlShutdown()
+        print("[System] ✓ NVML 已关闭")
+    except Exception as e:
+        print(f"[System] NVML 关闭失败: {e}")
+    
+    # 3. 延迟退出（给前端响应时间）
+    import threading
+    import time
+    
+    def kill_process():
+        time.sleep(1.5)
+        print("[System] ========== 进程终止 ==========")
+        os._exit(0)
+    
+    t = threading.Thread(target=kill_process)
+    t.daemon = True
+    t.start()
+    return {"status": "ok", "message": "Server shutting down"}
 
 if __name__ == "__main__":
     import uvicorn

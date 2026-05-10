@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     evtSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
-        vramVal.innerText = `${data.memory_used.toFixed(1)} / ${data.memory_total.toFixed(1)} GB`;
-        vramBar.style.width = `${(data.memory_used / data.memory_total) * 100}%`;
-        utilVal.innerText = `${data.utilization}%`;
-        utilBar.style.width = `${data.utilization}%`;
+        if (vramVal) vramVal.innerText = `${data.memory_used.toFixed(1)} / ${data.memory_total.toFixed(1)} GB`;
+        if (vramBar) vramBar.style.width = `${(data.memory_used / data.memory_total) * 100}%`;
+        if (utilVal) utilVal.innerText = `${data.utilization}%`;
+        if (utilBar) utilBar.style.width = `${data.utilization}%`;
         if (tempVal) tempVal.innerText = `${data.temperature}°C`;
     };
 
@@ -27,30 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSummarize.addEventListener('click', async () => {
             const text = meetingText.value.trim();
             if (!text) return alert("请先粘贴文本内容！");
-
             meetingText.classList.add('hidden');
             btnSummarize.classList.add('hidden');
             sumProgCont.classList.remove('hidden');
             sumResult.classList.remove('hidden');
             sumResult.innerText = "";
-
             try {
                 const response = await fetch('/api/summarize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: text })
                 });
-
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');
-
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
-
                     const chunk = decoder.decode(value);
                     const lines = chunk.split('\n').filter(line => line.trim());
-
                     for (let line of lines) {
                         try {
                             const data = JSON.parse(line);
@@ -93,16 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function handleUpload(file) {
-        // 隐藏输入模式，显示进度
         if (document.querySelector('.path-input-mode')) document.querySelector('.path-input-mode').classList.add('hidden');
         dropZone.classList.add('hidden');
         transProgCont.classList.remove('hidden');
         transStatus.innerText = "正在上传并启动模型...";
         transBar.style.width = "5%";
-
         const formData = new FormData();
         formData.append('file', file);
-
         try {
             const response = await fetch('/api/transcribe', { method: 'POST', body: formData });
             await processStream(response);
@@ -112,24 +103,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // === 4. 本地路径转录逻辑 (新增) ===
+    // === 4. 本地路径转录逻辑 ===
     const btnStartPath = document.getElementById('btn-start-path');
     const localPathInput = document.getElementById('local-video-path');
-
     if (btnStartPath) {
         btnStartPath.addEventListener('click', async () => {
             const path = localPathInput.value.trim();
             if (!path) return alert("请输入完整路径！");
-
             if (document.querySelector('.path-input-mode')) document.querySelector('.path-input-mode').classList.add('hidden');
             dropZone.classList.add('hidden');
             transProgCont.classList.remove('hidden');
             transStatus.innerText = "正在定位文件并启动...";
             transBar.style.width = "5%";
-
             const formData = new FormData();
             formData.append('path', path);
-
             try {
                 const response = await fetch('/api/transcribe_path', { method: 'POST', body: formData });
                 await processStream(response);
@@ -140,18 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 通用流处理函数
     async function processStream(response) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder('utf-8');
-
         while (true) {
             const { value, done } = await reader.read();
             if (done) break;
-
             const chunk = decoder.decode(value);
             const lines = chunk.split('\n').filter(line => line.trim());
-
             for (let line of lines) {
                 try {
                     const data = JSON.parse(line);
@@ -164,8 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         downloadCont.classList.remove('hidden');
                         document.getElementById('srt-path-display').innerText = data.srt_path;
                         btnDownload.href = `/api/download_srt?path=${encodeURIComponent(data.srt_path)}`;
-                        
-                        // 绑定打开文件夹
                         const btnOpenFolder = document.getElementById('btn-open-folder');
                         if (btnOpenFolder) {
                             btnOpenFolder.onclick = async () => {
@@ -189,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkAutoSpeak = document.getElementById('check-auto-speak');
     const selectTTSEngine = document.getElementById('select-tts-engine');
 
-    let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。" }];
+    let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
     const audioPlayer = new Audio();
 
     async function playTTS(text, btn) {
@@ -213,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnNewChat) {
         btnNewChat.addEventListener('click', () => {
-            if (messages.length > 1 && !confirm("确定要清空对话吗？")) return;
             messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
             chatHistory.innerHTML = "";
             appendMessage('assistant', messages[0].content);
@@ -264,16 +244,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnChatSend) btnChatSend.addEventListener('click', sendChatMessage);
     if (chatInput) chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
 
-    // === 6. 停止服务器 ===
+    // === 6. 停止服务器 (已修复：无确认，直接退出) ===
     const btnShutdown = document.getElementById('btn-shutdown');
     if (btnShutdown) {
-        btnShutdown.onclick = async () => {
-            if (!confirm("确定要停止服务器吗？")) return;
+        btnShutdown.addEventListener('click', async () => {
+            console.log('[Shutdown] Button clicked');
+            btnShutdown.disabled = true;
+            btnShutdown.innerText = "🚀 正在释放显存并关闭...";
+            btnShutdown.style.backgroundColor = "#ff5252";
             try {
-                btnShutdown.innerText = "正在停止...";
-                await fetch('/api/shutdown', { method: 'POST' });
-                alert("服务器已接收关闭指令。");
-            } catch (e) { alert("服务器已接收关闭指令并正在退出。"); }
-        };
+                const resp = await fetch('/api/shutdown', { method: 'POST' });
+                const data = await resp.json();
+                console.log('[Shutdown] Response:', data);
+                alert("✅ 指令已发送，服务器正在退出。");
+            } catch (e) {
+                console.error('[Shutdown] Error:', e);
+                alert("⚠️ 服务器正在关闭...");
+            }
+        });
+    } else {
+        console.error('[Shutdown] Button not found!');
     }
 });
