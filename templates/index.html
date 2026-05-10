@@ -106,7 +106,14 @@
                             <div class="icon chat-icon"></div>
                             <h3>AI 智能助理 <small class="model-tag">Qwen2.5-1.5B-Instruct</small></h3>
                         </div>
-                        <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
+                        <div class="chat-header-actions" style="display: flex; align-items: center; gap: 15px;">
+                            <label class="auto-speak-toggle">
+                                <input type="checkbox" id="check-auto-speak">
+                                <span class="toggle-icon">🔊</span>
+                                <span class="toggle-text">自动朗读</span>
+                            </label>
+                            <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div id="chat-history" class="chat-history">

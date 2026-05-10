@@ -150,11 +150,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chat-input');
     const btnChatSend = document.getElementById('btn-chat-send');
     const btnNewChat = document.getElementById('btn-new-chat');
+    const checkAutoSpeak = document.getElementById('check-auto-speak');
 
     let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。" }];
 
     // 全局音频播放器
     const audioPlayer = new Audio();
+
+    async function playTTS(text, btn) {
+        if (!text || text === '正在思考...') return;
+        const ttsUrl = `/api/tts?text=${encodeURIComponent(text)}`;
+        
+        // 如果当前正在播放的就是这一段，且没暂停，则执行停止
+        if (audioPlayer.src.includes(encodeURIComponent(text)) && !audioPlayer.paused) {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            if (btn) btn.innerHTML = '🔊';
+            return;
+        }
+
+        // 停止之前可能正在播放的其他段落图标（如果有的话）
+        document.querySelectorAll('.btn-speak').forEach(b => b.innerHTML = '🔊');
+
+        audioPlayer.src = ttsUrl;
+        if (btn) btn.innerHTML = '⏹️';
+        
+        try {
+            await audioPlayer.play();
+            // 播放结束自动切回图标
+            audioPlayer.onended = () => {
+                if (btn) btn.innerHTML = '🔊';
+            };
+        } catch (e) {
+            console.error("播放失败:", e);
+            if (btn) btn.innerHTML = '🔊';
+        }
+    }
 
     // 新建对话逻辑
     btnNewChat.addEventListener('click', () => {
@@ -193,6 +224,12 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingMsg.innerText = data.response;
             messages.push({ "role": "assistant", "content": data.response });
 
+            // 4. 自动朗读逻辑
+            if (checkAutoSpeak && checkAutoSpeak.checked) {
+                const btn = loadingMsg.parentElement.querySelector('.btn-speak');
+                playTTS(data.response, btn);
+            }
+
             // 保持滚动到底部
             chatHistory.scrollTop = chatHistory.scrollHeight;
         } catch (error) {
@@ -216,18 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             speakBtn.title = '朗读此段';
             speakBtn.onclick = () => {
                 const currentText = contentSpan.innerText;
-                if (currentText === '正在思考...') return;
-
-                const ttsUrl = `/api/tts?text=${encodeURIComponent(currentText)}`;
-                
-                // 简单的防抖：如果正在放同一段，则停止
-                if (audioPlayer.src.includes(encodeURIComponent(currentText)) && !audioPlayer.paused) {
-                    audioPlayer.pause();
-                    return;
-                }
-
-                audioPlayer.src = ttsUrl;
-                audioPlayer.play().catch(e => console.error("播放失败:", e));
+                playTTS(currentText, speakBtn);
             };
             div.appendChild(speakBtn);
         }

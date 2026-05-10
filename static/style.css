@@ -547,4 +547,42 @@ textarea:focus {
 .msg.assistant span {
     flex: 1;
 }
+
+/* 自动朗读开关样式 */
+.auto-speak-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.auto-speak-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.auto-speak-toggle input {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+}
+
+.auto-speak-toggle .toggle-icon {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.auto-speak-toggle input:checked + .toggle-icon {
+    opacity: 1;
+}
+
+.auto-speak-toggle .toggle-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
 
