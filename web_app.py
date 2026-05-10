@@ -38,18 +38,18 @@ tts_engine = TTSEngine()
 
 @app.get("/api/tts")
 async def api_tts(text: str):
-    """根据文本生成语音文件并返回路径"""
+    """根据文本流式生成语音或返回缓存"""
     import hashlib
-    # 使用 MD5 确保相同文本不重复生成，节省时间
     filename = hashlib.md5(text.encode()).hexdigest() + ".mp3"
     filepath = os.path.join(AUDIO_DIR, filename)
     
-    if not os.path.exists(filepath):
-        success = await tts_engine.generate_speech(text, filepath)
-        if not success:
-            return {"error": "TTS generation failed"}
+    # 1. 如果有缓存，直接返回文件响应
+    if os.path.exists(filepath):
+        return FileResponse(filepath, media_type="audio/mpeg")
             
-    return {"url": f"/static/audio/{filename}"}
+    # 2. 如果没有缓存，采用流式传输
+    # 注意：流式传输不保存文件，以换取极致的响应速度
+    return StreamingResponse(tts_engine.stream_speech(text), media_type="audio/mpeg")
 
 @app.post("/api/shutdown")
 async def shutdown():

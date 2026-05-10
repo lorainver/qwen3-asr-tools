@@ -214,21 +214,20 @@ document.addEventListener('DOMContentLoaded', () => {
             speakBtn.className = 'btn-speak';
             speakBtn.innerHTML = '🔊';
             speakBtn.title = '朗读此段';
-            speakBtn.onclick = async () => {
-                // 实时获取当前气泡里的最新文字
+            speakBtn.onclick = () => {
                 const currentText = contentSpan.innerText;
                 if (currentText === '正在思考...') return;
 
-                speakBtn.innerText = '⏳';
-                try {
-                    const res = await fetch(`/api/tts?text=${encodeURIComponent(currentText)}`);
-                    const data = await res.json();
-                    if (data.url) {
-                        audioPlayer.src = data.url;
-                        audioPlayer.play();
-                    }
-                } catch (e) { console.error(e); }
-                speakBtn.innerHTML = '🔊';
+                const ttsUrl = `/api/tts?text=${encodeURIComponent(currentText)}`;
+                
+                // 简单的防抖：如果正在放同一段，则停止
+                if (audioPlayer.src.includes(encodeURIComponent(currentText)) && !audioPlayer.paused) {
+                    audioPlayer.pause();
+                    return;
+                }
+
+                audioPlayer.src = ttsUrl;
+                audioPlayer.play().catch(e => console.error("播放失败:", e));
             };
             div.appendChild(speakBtn);
         }
