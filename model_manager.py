@@ -123,11 +123,14 @@ class ModelManager:
             except Exception as e:
                 print(f"[ModelManager] Transcriber 清理失败: {e}")
         
-        # 4. 强制清理 GPU 缓存
+        # 4. 强制清理 GPU 缓存（多次尝试）
         gc.collect()
-        torch.cuda.empty_cache()
         try:
             torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+            torch.cuda.reset_peak_memory_stats()
+            gc.collect()
+            torch.cuda.empty_cache()  # 再次清理
         except Exception:
             pass
         

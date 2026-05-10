@@ -3,6 +3,7 @@ import pynvml
 import asyncio
 import json
 import signal
+import torch
 from fastapi import FastAPI, UploadFile, File, Request, Form
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -72,6 +73,22 @@ async def release_gpu():
 async def model_status():
     """查询当前模型加载状态"""
     return model_manager.get_status()
+
+@app.get("/api/pytorch_memory")
+async def pytorch_memory():
+    """查询 PyTorch 内部显存使用（allocated vs reserved）"""
+    try:
+        allocated = torch.cuda.memory_allocated() / 1024**3
+        reserved = torch.cuda.memory_reserved() / 1024**3
+        max_allocated = torch.cuda.max_memory_allocated() / 1024**3
+        return {
+            "allocated_gb": round(allocated, 3),
+            "reserved_gb": round(reserved, 3),
+            "max_allocated_gb": round(max_allocated, 3),
+            "note": "allocated=实际使用, reserved=向GPU申请(含context)"
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index(request: Request):

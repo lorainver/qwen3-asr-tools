@@ -32,15 +32,23 @@ class LongTextSummarizer:
     def _unload_model(self):
         if self.model is not None:
             print("Unloading Summarizer Model...")
+            # 先删除模型和分词器
             del self.model
             del self.tokenizer
             self.model = None
             self.tokenizer = None
             model_manager.unregister_summarizer()
+            # 强制清理显存（多次 GC + synchronize + empty_cache）
             gc.collect()
+            torch.cuda.synchronize()
             torch.cuda.empty_cache()
+            torch.cuda.reset_peak_memory_stats()
+            gc.collect()
             model_manager.set_processing(False)
-            print("Summarizer Model unloaded.")
+            # 打印清理后的内存状态
+            allocated = torch.cuda.memory_allocated() / 1024**3
+            reserved = torch.cuda.memory_reserved() / 1024**3
+            print(f"Summarizer Model unloaded. Allocated: {allocated:.2f}GB, Reserved: {reserved:.2f}GB")
         else:
             model_manager.set_processing(False)
 
