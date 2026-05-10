@@ -72,7 +72,7 @@ class LongTextSummarizer:
                 yield json.dumps({"status": "processing", "step": total_steps, "total": total_steps, "message": "正在生成最终的全局精华摘要..."})
                 
             combined_summaries = "\n\n".join([f"片段{i+1}: {s}" for i, s in enumerate(local_summaries)])
-            final_prompt = f"以下是长篇会议记录的各个分段总结。请你将它们整合成一份有条理、带 Point（项目符号）的"一页纸精华"（需要包含：会议主题猜测、核心要点梳理、结论或行动项）：\n\n{combined_summaries}"
+            final_prompt = f'以下是长篇会议记录的各个分段总结。请你将它们整合成一份有条理、带 Point（项目符号）的"一页纸精华"（需要包含：会议主题猜测、核心要点梳理、结论或行动项）：\n\n{combined_summaries}'
             
             messages = [{"role": "user", "content": final_prompt}]
             input_ids = self.tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors="pt").to("cuda")
@@ -135,3 +135,4 @@ class LongTextSummarizer:
         finally:
             # 对话频率高暂不卸载（显存充裕），若需释放去掉下面注释
             # self._unload_model()
+            pass
