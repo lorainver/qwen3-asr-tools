@@ -111,7 +111,23 @@ async def api_summarize(request: SummarizeRequest):
             yield res + "\n"
     return StreamingResponse(generate(), media_type="text/plain")
 
-# 必须添加这个类定义
+@app.post("/api/transcribe_path")
+async def api_transcribe_path(path: str = Form(...)):
+    """直接根据本地绝对路径进行转录，不产生副本"""
+    path = path.strip('"').strip("'")
+    if not os.path.exists(path) and not os.path.isabs(path):
+        path = os.path.join(BASE_DIR, path)
+    if not os.path.exists(path):
+        def error_gen():
+            yield json.dumps({"status": "error", "message": f"错误：找不到文件 - {path}"}) + "\n"
+        return StreamingResponse(error_gen(), media_type="text/plain")
+    filename_stem = os.path.basename(path).rsplit('.', 1)[0]
+    srt_location = os.path.join(os.path.dirname(path), f"{filename_stem}.srt")
+    def generate():
+        for res in run_transcription(path, srt_location, yield_progress=True):
+            yield res
+    return StreamingResponse(generate(), media_type="text/plain")
+
 class ChatRequest(BaseModel):
     messages: list
 
@@ -136,14 +152,37 @@ async def api_transcribe(file: UploadFile = File(...)):
         for res in run_transcription(file_location, srt_location, yield_progress=True):
             yield res
             
-    return StreamingResponse(generate(), media_type="text/plain")
 
 @app.get("/api/download_srt")
 async def download_srt(path: str):
-    # path 如果是相对路径，转为绝对路径
+    """下载 SRT 字幕，处理文件名乱码并确保正确的文件名"""
     if not os.path.isabs(path):
         path = os.path.join(BASE_DIR, path)
-    return FileResponse(path, media_type='text/plain', filename=os.path.basename(path))
+    
+    if not os.path.exists(path):
+        return {"error": "File not found"}
+
+    filename = os.path.basename(path)
+    # 使用 quote 对文件名进行 URL 编码，解决浏览器下载中文名乱码问题
+    import urllib.parse
+    encoded_filename = urllib.parse.quote(filename)
+    
+    headers = {
+        "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
+    }
+    # 使用 application/x-subrip 作为 SRT 的标准媒体类型
+    return FileResponse(path, media_type='application/x-subrip', headers=headers)
+
+@app.post("/api/open_recordings")
+async def open_recordings():
+    """在本地打开录音/字幕文件夹 (Windows)"""
+    try:
+        import subprocess
+        # 使用 explorer 直接打开文件夹
+        subprocess.Popen(f'explorer "{RECORDINGS_DIR}"')
+        return {"status": "success"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
     import uvicorn

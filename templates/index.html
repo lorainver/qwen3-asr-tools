@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
 </head>
+
 <body>
     <div class="app-container">
         <!-- 侧边栏：GPU 监控 -->
@@ -16,7 +18,6 @@
                 <div class="logo-icon"></div>
                 <h2>Qwen AI</h2>
             </div>
-            
             <div class="gpu-monitor">
                 <h3>RTX 5060 状态</h3>
                 <div class="metric">
@@ -26,7 +27,6 @@
                 <div class="progress-bar">
                     <div id="vram-bar" class="progress-fill" style="width: 0%;"></div>
                 </div>
-
                 <div class="metric mt-15">
                     <span>GPU 核心利用率</span>
                     <span id="util-val">0%</span>
@@ -34,13 +34,11 @@
                 <div class="progress-bar">
                     <div id="util-bar" class="progress-fill util" style="width: 0%;"></div>
                 </div>
-
                 <div class="metric mt-15">
                     <span>温度</span>
                     <span id="temp-val">0°C</span>
                 </div>
             </div>
-            
             <div class="mt-15" style="margin-top: auto; padding-top: 20px;">
                 <button id="btn-shutdown" class="btn-stop">🛑 停止服务器并释放显存</button>
             </div>
@@ -61,15 +59,13 @@
                         <h3>AI 智库摘要</h3>
                     </div>
                     <div class="card-body">
-                        <p class="subtitle">粘贴长达 1 小时的会议内容，自动分段提炼“一页纸精华”。</p>
+                        <p class="subtitle">粘贴长文本，自动提炼“一页纸精华”。</p>
                         <textarea id="meeting-text" placeholder="在此粘贴长文本..."></textarea>
                         <button id="btn-summarize" class="btn primary">生成总结</button>
-                        
                         <div id="sum-progress-container" class="hidden">
                             <div class="status-text" id="sum-status">正在准备数据...</div>
                             <div class="progress-bar active"></div>
                         </div>
-                        
                         <div id="sum-result" class="result-box hidden"></div>
                     </div>
                 </div>
@@ -81,28 +77,49 @@
                         <h3>视频提取文本 (Qwen3-ASR)</h3>
                     </div>
                     <div class="card-body">
-                        <p class="subtitle">拖拽视频文件至此，使用 RTX 5060 批处理极速提取字幕。</p>
+                        <p class="subtitle">支持拖拽视频上传，或直接输入本地路径（免上传）。</p>
                         <div id="drop-zone" class="drop-zone">
                             <div class="upload-icon">📁</div>
                             <p>点击选择或将视频文件拖拽到这里</p>
                             <input type="file" id="file-input" class="hidden" accept="video/*,audio/*">
                         </div>
-                        
+
+                        <div class="path-input-mode"
+                            style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.85em; color: #888; margin-bottom: 8px;">直接输入视频绝对路径（原地读取，不占用额外空间）：
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="local-video-path" placeholder="例如 F:\录制\视频.mp4"
+                                    style="flex: 1; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: white; font-family: monospace;">
+                                <button id="btn-start-path" class="btn primary"
+                                    style="padding: 0 20px; white-space: nowrap;">开始转录</button>
+                            </div>
+                        </div>
+
                         <div id="trans-progress-container" class="hidden">
                             <div class="status-text" id="trans-status">等待上传...</div>
                             <div class="progress-bar">
                                 <div id="trans-bar" class="progress-fill" style="width: 0%;"></div>
                             </div>
                         </div>
-                        
+
                         <div id="download-container" class="hidden mt-15">
-                            <a id="btn-download" class="btn success" href="#" download>下载 SRT 字幕</a>
+                            <div class="path-info" style="font-size: 0.85em; color: #aaa; margin-bottom: 8px;">
+                                默认保存至: <code id="srt-path-display" style="color: #64ffda;"></code>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <a id="btn-download" class="btn success" href="#" download
+                                    style="text-decoration: none; flex: 1; text-align: center;">💾 下载 SRT 字幕</a>
+                                <button id="btn-open-folder" class="btn secondary" style="flex: 1;">📂 打开所在目录</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- 聊天卡片 (全宽布局) -->
+
+                <!-- 聊天卡片 (AI 助手) -->
                 <div class="card glass-panel chat-card" id="chat-card">
-                    <div class="card-header" style="justify-content: space-between; display: flex; align-items: center;">
+                    <div class="card-header"
+                        style="justify-content: space-between; display: flex; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div class="icon chat-icon"></div>
                             <h3>AI 智能助理 <small class="model-tag">Qwen2.5-1.5B-Instruct</small></h3>
@@ -131,7 +148,7 @@
                     </div>
                 </div>
 
-                <!-- 终端命令参考卡片 (全宽布局) -->
+<!-- 终端命令参考卡片 (全量恢复) -->
                 <div class="card glass-panel cli-card">
                     <div class="card-header">
                         <div class="icon cli-icon"></div>
@@ -145,7 +162,6 @@
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --list</code>
                             </div>
                         </div>
-
                         <div class="cli-section">
                             <h4>🎬 离线字幕提取 (SRT)</h4>
                             <div class="code-block" data-tooltip="模型: Qwen3-ASR-1.7B。特点: 极速批处理，支持长视频自动切分转录。参数: --batch 控制并发量，越大速度越快。">
@@ -157,7 +173,6 @@
                                 <code>D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频路径" --beam 1</code>
                             </div>
                         </div>
-
                         <div class="cli-section">
                             <h4>🎤 实时语音监听 (GUI)</h4>
                             <div class="code-block" data-tooltip="模型: Qwen3-ASR + Qwen2.5 翻译。特点: 边听边译，双语同步显示。参数: --chunk 1.5 平衡延迟与准确度。">
@@ -174,10 +189,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
         </main>
     </div>
     <script src="/static/main.js"></script>
 </body>
+
 </html>
