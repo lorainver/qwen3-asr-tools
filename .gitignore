@@ -29,6 +29,7 @@ var/
 # 忽略转录生成的临时文件和输出
 chunk_*.wav
 rt_chunk_*.wav
+trans_chunk_*.wav
 temp_realtime.wav
 *.srt
 *.txt
