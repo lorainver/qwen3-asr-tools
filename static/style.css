@@ -361,3 +361,55 @@ textarea:focus {
 .chat-icon::before {
     content: '💬';
 }
+
+/* 终端参考卡片样式 */
+.cli-card {
+    grid-column: span 2;
+    margin-top: 20px;
+}
+
+.cli-section {
+    margin-bottom: 24px;
+}
+
+.cli-section h4 {
+    color: var(--accent);
+    font-size: 1rem;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+}
+
+.code-block {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: background 0.3s;
+}
+
+.code-block:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.code-block .label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+.code-block code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem;
+    color: #4ec9b0;
+    /* 类似 VSCode 的青色 */
+    word-break: break-all;
+}
+
+.cli-icon::before {
+    content: '💻';
+}

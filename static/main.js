@@ -197,4 +197,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') sendChatMessage();
     });
 
+    // === 5. 点击代码块自动复制 ===
+    document.querySelectorAll('.code-block code').forEach(codeEl => {
+        codeEl.style.cursor = 'pointer';
+        codeEl.addEventListener('click', () => {
+            navigator.clipboard.writeText(codeEl.innerText).then(() => {
+                const originalColor = codeEl.style.color;
+                codeEl.style.color = '#ffffff';
+                setTimeout(() => { codeEl.style.color = originalColor; }, 500);
+            });
+        });
+    });
+
 });

@@ -111,6 +111,43 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 终端命令参考卡片 (全宽布局) -->
+                <div class="card glass-panel cli-card">
+                    <div class="card-header">
+                        <div class="icon cli-icon"></div>
+                        <h3>终端实战命令参考</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="cli-section">
+                            <h4>🎬 离线字幕提取 (SRT)</h4>
+                            <div class="code-block">
+                                <span class="label">Qwen3 GPU 极速版:</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频路径" --chunk 10 --batch 12</code>
+                            </div>
+                            <div class="code-block">
+                                <span class="label">Whisper CPU/通用版:</span>
+                                <code>D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频路径" --beam 1</code>
+                            </div>
+                        </div>
+
+                        <div class="cli-section">
+                            <h4>🎤 实时语音监听 (GUI)</h4>
+                            <div class="code-block">
+                                <span class="label">带翻译 (双语对照):</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5</code>
+                            </div>
+                            <div class="code-block">
+                                <span class="label">系统声音识别 (无翻译):</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.0</code>
+                            </div>
+                            <div class="code-block">
+                                <span class="label">麦克风录音识别:</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 1 --chunk 2.0</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
