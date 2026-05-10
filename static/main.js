@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnChatSend) btnChatSend.addEventListener('click', sendChatMessage);
     if (chatInput) chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
 
-    // === 6. 停止服务器 (已修复：无确认，直接退出) ===
+    // === 6. 停止服务器 ===
     const btnShutdown = document.getElementById('btn-shutdown');
     if (btnShutdown) {
         btnShutdown.addEventListener('click', async () => {
@@ -256,13 +256,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 const resp = await fetch('/api/shutdown', { method: 'POST' });
                 const data = await resp.json();
                 console.log('[Shutdown] Response:', data);
-                alert("✅ 指令已发送，服务器正在退出。");
+                btnShutdown.innerText = "✅ 已关闭";
+                btnShutdown.style.backgroundColor = "#4caf50";
+                // 显示全屏提示
+                showServerStopped();
             } catch (e) {
                 console.error('[Shutdown] Error:', e);
-                alert("⚠️ 服务器正在关闭...");
+                btnShutdown.innerText = "✅ 已关闭";
+                btnShutdown.style.backgroundColor = "#4caf50";
+                showServerStopped();
             }
         });
     } else {
         console.error('[Shutdown] Button not found!');
+    }
+    
+    function showServerStopped() {
+        // 创建全屏遮罩
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 10000;
+            color: white; font-family: Inter, sans-serif;
+        `;
+        overlay.innerHTML = `
+            <div style="font-size: 48px; margin-bottom: 20px;">🛑</div>
+            <div style="font-size: 24px; margin-bottom: 10px;">服务器已停止</div>
+            <div style="font-size: 14px; color: #aaa;">显存已释放，可安全关闭此页面</div>
+        `;
+        document.body.appendChild(overlay);
     }
 });
