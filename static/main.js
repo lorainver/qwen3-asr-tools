@@ -16,6 +16,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tempVal) tempVal.innerText = `${data.temperature}°C`;
     };
 
+    // === 1.5 AI Worker 状态轮询 ===
+    const workerDot = document.getElementById('worker-status-dot');
+    const workerText = document.getElementById('worker-status-text');
+    const workerUptime = document.getElementById('worker-uptime');
+
+    setInterval(async () => {
+        try {
+            const resp = await fetch('/api/worker_status');
+            const data = await resp.json();
+            if (workerDot && workerText) {
+                if (data.running) {
+                    workerDot.style.background = '#4caf50';
+                    workerText.textContent = '● 运行中';
+                    workerText.style.color = '#4caf50';
+                    if (workerUptime) {
+                        const mins = Math.floor(data.uptime_seconds / 60);
+                        const secs = data.uptime_seconds % 60;
+                        workerUptime.textContent = `已运行 ${mins}分${secs}秒`;
+                    }
+                } else {
+                    workerDot.style.background = '#555';
+                    workerText.textContent = '○ 未启动';
+                    workerText.style.color = '#aaa';
+                    if (workerUptime) workerUptime.textContent = '';
+                }
+            }
+        } catch (e) {
+            // 忽略轮询错误
+        }
+    }, 2000);
+
     // === 2. 智库摘要逻辑 ===
     const btnSummarize = document.getElementById('btn-summarize');
     const meetingText = document.getElementById('meeting-text');

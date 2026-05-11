@@ -39,6 +39,15 @@
                     <span id="temp-val">0°C</span>
                 </div>
             </div>
+            <!-- AI Worker 状态指示器 -->
+            <div class="worker-status" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.85em; color: #888; margin-bottom: 8px;">AI Worker 状态</div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div id="worker-status-dot" style="width: 10px; height: 10px; border-radius: 50%; background: #555;"></div>
+                    <span id="worker-status-text" style="font-size: 0.9em; color: #aaa;">未启动</span>
+                </div>
+                <div id="worker-uptime" style="font-size: 0.8em; color: #666; margin-top: 4px;"></div>
+            </div>
             <div class="mt-15" style="margin-top: auto; padding-top: 20px;">
                 <button id="btn-shutdown" class="btn-stop">🛑 释放显存（终止 AI 进程）</button>
             </div>
