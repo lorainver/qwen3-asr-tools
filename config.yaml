@@ -1,3 +1,6 @@
+
+
+
 # Qwen3-ASR Web 配置文件
 # 所有路径使用绝对路径，确保从任何目录运行都能正确加载
 
@@ -7,18 +10,26 @@ models:
   asr: "D:/qwen3-asr/models/Qwen/Qwen3-ASR-0___6B"
   
   # Qwen2.5 大语言模型（对话/总结用）- 默认模型
-  llm: "D:/qwen3-asr/models/Qwen/Qwen2.5-1.5B-Instruct"
+  llm: "D:/qwen3-asr/models/Qwen/Qwen2.5-3B-Instruct"
   
   # 可选的 LLM 模型列表（用于对话切换）
   llm_models:
     qwen-general:
-      name: "Qwen2.5-1.5B (通用)"
-      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-1.5B-Instruct"
-      description: "通用对话模型，适合日常问答"
+      name: "Qwen2.5-3B (增强版)"
+      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-3B-Instruct"
+      description: "当前默认模型，逻辑能力更强"
     qwen-coder:
       name: "Qwen2.5-Coder-1.5B (代码)"
       path: "D:/qwen3-asr/models/Qwen/Qwen2.5-Coder-1.5B-Instruct"
       description: "代码专用模型，编程问题表现更优"
+    qwen-3b:
+      name: "Qwen2.5-3B (增强版)"
+      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-3B-Instruct"
+      description: "3B 参数全量模型，自动 4-bit 量化，逻辑能力更强"
+    qwen-vl:
+      name: "Qwen2.5-VL (视觉版)"
+      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-VL-3B-Instruct"
+      description: "多模态大模型，支持图片分析和试卷识别"
   
   # Sherpa-ONNX 离线 TTS 模型
   tts: "D:/qwen3-asr/models/tts/vits-icefall-zh-aishell3"
