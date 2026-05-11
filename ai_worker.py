@@ -1,128 +1,104 @@
-"""
-ai_worker.py - AI 推理独立子进程
-
-运行在端口 8001，处理所有需要 GPU 的任务：
-- /api/chat — AI 对话
-- /api/summarize — 文本总结
-- /api/transcribe — 视频转录
-- /api/transcribe_path — 本地路径转录
-
-进程生命周期：
-- 由 web_app.py 启动（需要 AI 时）
-- 由 web_app.py 终止（释放显存）
-- 进程退出后，CUDA context 完全释放 → 显存归零
-"""
-
 import os
-import argparse
+import sys
 import json
-import torch
-import pynvml
+import time
+import uuid
 import logging
-from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+import asyncio
+from typing import List, Optional, Any, Dict, Union
 
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
+from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+# 导入我们的核心模型类
 from summarizer import LongTextSummarizer
-from transcriber import run_transcription
-from config_loader import config
 
 # 配置日志
-logging.basicConfig(
-    level=logging.getLevelName(config.get('logging.level', 'INFO')),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(config.get('logging.file', 'logs/ai_worker.log'), encoding='utf-8'),
-        logging.StreamHandler()
-    ]
-)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# 初始化 FastAPI
-app = FastAPI(title="AI Worker (GPU Inference)")
+app = FastAPI(title="Qwen3-ASR AI Worker")
 
-# 初始化 NVML（用于 GPU 状态上报）
-pynvml.nvmlInit()
+# 配置 CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# 初始化模型
+# 初始化模型 (单例模式)
 summarizer = LongTextSummarizer()
 
-# ========== Pydantic 模型 ==========
+# ========== Pydantic 模型 (简化版，避免 Pydantic 验证错误) ==========
+
+class OpenAIModelInfo(BaseModel):
+    id: str
+    object: str = "model"
+    created: int = 1677610602
+    owned_by: str = "qwen"
+
+class OpenAIModelList(BaseModel):
+    object: str = "list"
+    data: List[OpenAIModelInfo]
+
+class OpenAICompletionRequest(BaseModel):
+    model: str
+    messages: List[Dict[str, Any]] # 使用字典列表，避开嵌套解析问题
+    stream: Optional[bool] = False
+    temperature: Optional[float] = 0.7
+    top_p: Optional[float] = 1.0
+    max_tokens: Optional[int] = 2048
 
 class ChatRequest(BaseModel):
-    messages: list
-    model_id: str = None  # 可选：指定使用的模型 ID
-
-class SummarizeRequest(BaseModel):
-    text: str
+    messages: List[Dict[str, Any]]
+    model_id: Optional[str] = None
 
 class SwitchModelRequest(BaseModel):
     model_id: str
 
-# ========== API 端点 ==========
+# ========== API 路由 ==========
 
 @app.get("/health")
-async def health():
-    """健康检查，web_app.py 用于判断 worker 是否存活"""
-    logger.info("Health check requested")
-    return {"status": "ok", "service": "ai_worker"}
+async def health_check():
+    return {"status": "ok", "model": summarizer.current_model_id}
 
-@app.get("/gpu_stats")
-async def gpu_stats():
-    """返回 GPU 状态（供 web_app.py 代理）"""
-    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-    mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
-    util_info = pynvml.nvmlDeviceGetUtilizationRates(handle)
-    temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
-    
-    # PyTorch 内存详情
-    allocated = torch.cuda.memory_allocated() / 1024**3
-    reserved = torch.cuda.memory_reserved() / 1024**3
-    
-    logger.debug(f"GPU stats: allocated={allocated:.2f}GB, reserved={reserved:.2f}GB")
-    return {
-        "memory_used": round(mem_info.used / (1024**3), 2),
-        "memory_total": round(mem_info.total / (1024**3), 2),
-        "utilization": util_info.gpu,
-        "temperature": temp,
-        "allocated_gb": round(allocated, 3),
-        "reserved_gb": round(reserved, 3)
-    }
-
-@app.post("/api/chat")
-async def api_chat(request: ChatRequest):
-    """AI 对话"""
-    # 如果请求指定了模型，先切换
-    if request.model_id and request.model_id != summarizer.current_model_id:
-        logger.info(f"切换模型: {summarizer.current_model_id} → {request.model_id}")
-        summarizer.switch_model(request.model_id)
-    
-    logger.info(f"Chat request received (model: {summarizer.current_model_id})")
-    response_text = summarizer.chat(request.messages)
-    return {"response": response_text, "model": summarizer.current_model_id}
+# 非流式 不用
+# @app.post("/api/chat")
+# async def api_chat(request: ChatRequest):
+#     """非流式对话接口"""
+#     if request.model_id and request.model_id != summarizer.current_model_id:
+#         summarizer.switch_model(request.model_id)
+#     
+#     response = summarizer.chat(request.messages)
+#     return {"response": response, "model": summarizer.current_model_id}
 
 @app.post("/api/chat_stream")
 async def api_chat_stream(request: ChatRequest):
-    """流式对话 - 逐 token 返回"""
-    # 如果请求指定了模型，先切换
+    """流式对话接口"""
     if request.model_id and request.model_id != summarizer.current_model_id:
-        logger.info(f"切换模型: {summarizer.current_model_id} → {request.model_id}")
         summarizer.switch_model(request.model_id)
     
-    logger.info(f"Chat stream request (model: {summarizer.current_model_id})")
-    
-    def generate():
+    async def generate():
         for token in summarizer.chat_stream(request.messages):
-            # SSE 格式: 每行以 "data: " 开头
-            yield f"data: {json.dumps({'token': token})}\n\n"
-        # 发送结束标记
+            yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
+            # 添加微小延迟，确保每个 token 分开发送（打字机效果）
+            await asyncio.sleep(0.02)
         yield "data: [DONE]\n\n"
     
-    return StreamingResponse(generate(), media_type="text/event-stream")
+    return StreamingResponse(
+        generate(), 
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no"
+        }
+    )
 
 @app.get("/api/models")
 async def api_models():
-    """返回可用模型列表和当前模型"""
     return {
         "current": summarizer.get_current_model(),
         "available": summarizer.get_available_models()
@@ -130,78 +106,77 @@ async def api_models():
 
 @app.post("/api/switch_model")
 async def api_switch_model(request: SwitchModelRequest):
-    """切换对话模型"""
-    old_model = summarizer.current_model_id
     success = summarizer.switch_model(request.model_id)
     if success:
-        return {
-            "status": "ok",
-            "old_model": old_model,
-            "current_model": summarizer.get_current_model()
-        }
+        return {"status": "ok", "current_model": summarizer.get_current_model()}
     return {"status": "error", "message": f"未知模型: {request.model_id}"}
 
-@app.post("/api/summarize")
-async def api_summarize(request: SummarizeRequest):
-    """文本总结（流式）"""
-    logger.info(f"Summarize request: text length={len(request.text)}")
-    
-    def generate():
-        for res in summarizer.summarize(request.text, yield_progress=True):
-            yield res + "\n"
-    
-    return StreamingResponse(generate(), media_type="text/plain")
+# ========== OpenAI 兼容接口 ==========
 
-@app.post("/api/transcribe")
-async def api_transcribe(file: UploadFile = File(...)):
-    """视频转录（上传文件）"""
-    logger.info(f"Transcribe request: filename={file.filename}")
-    
-    # 保存上传文件
-    recordings_dir = os.path.join(os.path.dirname(__file__), "recordings")
-    os.makedirs(recordings_dir, exist_ok=True)
-    
-    file_location = os.path.join(recordings_dir, file.filename)
-    with open(file_location, "wb") as f:
-        f.write(await file.read())
-    
-    srt_location = os.path.join(recordings_dir, f"{file.filename.rsplit('.', 1)[0]}.srt")
-    
-    def generate():
-        for res in run_transcription(file_location, srt_location, yield_progress=True):
-            yield res
-    
-    return StreamingResponse(generate(), media_type="text/plain")
+@app.get("/v1/models")
+async def v1_models():
+    available = summarizer.get_available_models()
+    return {
+        "object": "list",
+        "data": [{"id": m['id'], "object": "model", "created": 1677610602, "owned_by": "qwen"} for m in available]
+    }
 
-@app.post("/api/transcribe_path")
-async def api_transcribe_path(path: str = Form(...)):
-    """本地路径转录"""
-    path = path.strip('"').strip("'")
-    logger.info(f"Transcribe path request: {path}")
-    
-    if not os.path.exists(path):
-        def error_gen():
-            import json
-            yield json.dumps({"status": "error", "message": f"文件不存在: {path}"}) + "\n"
-        return StreamingResponse(error_gen(), media_type="text/plain")
-    
-    filename_stem = os.path.basename(path).rsplit('.', 1)[0]
-    srt_location = os.path.join(os.path.dirname(path), f"{filename_stem}.srt")
-    
-    def generate():
-        for res in run_transcription(path, srt_location, yield_progress=True):
-            yield res
-    
-    return StreamingResponse(generate(), media_type="text/plain")
+@app.post("/v1/chat/completions")
+async def v1_chat_completions(request: OpenAICompletionRequest):
+    # 1. 自动切换模型
+    if request.model and request.model != summarizer.current_model_id:
+        logger.info(f"[OpenAI API] 切换模型至: {request.model}")
+        summarizer.switch_model(request.model)
 
-# ========== 启动 ==========
+    # 2. 流式响应
+    if request.stream:
+        async def openai_stream_generator():
+            request_id = f"chatcmpl-{uuid.uuid4()}"
+            created_time = int(time.time())
+            
+            for token in summarizer.chat_stream(request.messages):
+                chunk = {
+                    "id": request_id,
+                    "object": "chat.completion.chunk",
+                    "created": created_time,
+                    "model": summarizer.current_model_id,
+                    "choices": [{"index": 0, "delta": {"content": token}, "finish_reason": None}]
+                }
+                yield f"data: {json.dumps(chunk, ensure_ascii=False)}\n\n"
+            
+            done_chunk = {
+                "id": request_id, "object": "chat.completion.chunk", "created": created_time,
+                "model": summarizer.current_model_id,
+                "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}]
+            }
+            yield f"data: {json.dumps(done_chunk)}\n\n"
+            yield "data: [DONE]\n\n"
+
+        return StreamingResponse(
+            openai_stream_generator(), 
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "X-Accel-Buffering": "no"
+            }
+        )
+
+    # 3. 非流式响应
+    else:
+        response_text = summarizer.chat(request.messages)
+        return {
+            "id": f"chatcmpl-{uuid.uuid4()}",
+            "object": "chat.completion",
+            "created": int(time.time()),
+            "model": summarizer.current_model_id,
+            "choices": [{
+                "index": 0,
+                "message": {"role": "assistant", "content": response_text},
+                "finish_reason": "stop"
+            }]
+        }
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=8001, help="Worker 端口")
-    parser.add_argument("--host", type=str, default="127.0.0.1", help="Worker 主机")
-    args = parser.parse_args()
-    
     import uvicorn
-    logger.info(f"[AI Worker] 启动在 {args.host}:{args.port}")
-    uvicorn.run(app, host=args.host, port=args.port)
+    uvicorn.run(app, host="127.0.0.1", port=8001)
+
