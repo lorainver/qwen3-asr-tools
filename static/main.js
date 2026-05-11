@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (workerDot && workerText) {
                 if (data.running) {
                     workerDot.style.background = '#4caf50';
-                    workerText.textContent = '● 运行中';
+                    workerText.textContent = '运行中';
                     workerText.style.color = '#4caf50';
                     if (workerUptime) {
                         const mins = Math.floor(data.uptime_seconds / 60);
@@ -406,10 +406,46 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 5. AI 聊天逻辑 ===
     const chatHistory = document.getElementById('chat-history');
     const chatInput = document.getElementById('chat-input');
+    const chatInputExpanded = document.getElementById('chat-input-expanded');
+    const btnExpandInput = document.getElementById('btn-expand-input');
     const btnChatSend = document.getElementById('btn-chat-send');
     const btnNewChat = document.getElementById('btn-new-chat');
     const checkAutoSpeak = document.getElementById('check-auto-speak');
     const selectTTSEngine = document.getElementById('select-tts-engine');
+
+    let isInputExpanded = false;
+
+    // 输入框展开/收起逻辑
+    if (btnExpandInput) {
+        btnExpandInput.addEventListener('click', () => {
+            isInputExpanded = !isInputExpanded;
+            if (isInputExpanded) {
+                chatInput.classList.add('hidden');
+                chatInputExpanded.classList.remove('hidden');
+                chatInputExpanded.value = chatInput.value;
+                chatInputExpanded.focus();
+                btnExpandInput.innerHTML = '📓';
+                btnExpandInput.title = '收起为单行';
+            } else {
+                chatInput.classList.remove('hidden');
+                chatInputExpanded.classList.add('hidden');
+                chatInput.value = chatInputExpanded.value;
+                chatInput.focus();
+                btnExpandInput.innerHTML = '📝';
+                btnExpandInput.title = '展开多行输入';
+            }
+        });
+    }
+
+    // 多行输入的键盘事件
+    if (chatInputExpanded) {
+        chatInputExpanded.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+    }
 
     let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
     const audioPlayer = new Audio();
@@ -516,12 +552,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function sendChatMessage() {
-        const text = chatInput.value.trim();
+        // 从当前活动的输入框获取文本
+        const activeInput = isInputExpanded ? chatInputExpanded : chatInput;
+        const text = activeInput.value.trim();
         if (!text) return;
         appendMessage('user', text);
-        chatInput.value = "";
+        activeInput.value = "";
+        // 同步另一个输入框
+        if (isInputExpanded) chatInput.value = "";
+        else chatInputExpanded.value = "";
         messages.push({ "role": "user", "content": text });
         const loadingMsg = appendMessage('assistant', '');
+        
+        // 显示“正在思考...”动画
+        loadingMsg.innerHTML = '<span class="thinking-dots">正在思考<span class="dot dot-1">.</span><span class="dot dot-2">.</span><span class="dot dot-3">.</span></span>';
         
         // 重置流式 TTS 状态
         streamingAudioQueue.clear();
@@ -664,28 +708,28 @@ document.addEventListener('DOMContentLoaded', () => {
         btnRelease.addEventListener('click', async () => {
             console.log('[ReleaseGPU] Button clicked');
             btnRelease.disabled = true;
-            btnRelease.innerText = "🚀 正在终止 AI 进程...";
+            btnRelease.innerText = "正在终止...";
             btnRelease.style.backgroundColor = "#ff5252";
             try {
                 const resp = await fetch('/api/release_gpu', { method: 'POST' });
                 const data = await resp.json();
                 console.log('[ReleaseGPU] Response:', data);
-                btnRelease.innerText = "✅ 显存已完全释放";
+                btnRelease.innerText = "已释放";
                 btnRelease.style.backgroundColor = "#4caf50";
                 showToast("✅ AI 进程已终止，显存已完全释放（含 CUDA context）");
                 // 3秒后恢复按钮
                 setTimeout(() => {
                     btnRelease.disabled = false;
-                    btnRelease.innerText = "🛑 释放显存（终止 AI 进程）";
+                    btnRelease.innerText = "🛑 释放显存";
                     btnRelease.style.backgroundColor = "";
                 }, 3000);
             } catch (e) {
                 console.error('[ReleaseGPU] Error:', e);
-                btnRelease.innerText = "❌ 释放失败";
+                btnRelease.innerText = "释放失败";
                 btnRelease.style.backgroundColor = "#f44336";
                 setTimeout(() => {
                     btnRelease.disabled = false;
-                    btnRelease.innerText = "🛑 释放显存（终止 AI 进程）";
+                    btnRelease.innerText = "🛑 释放显存";
                     btnRelease.style.backgroundColor = "";
                 }, 2000);
             }

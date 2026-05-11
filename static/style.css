@@ -400,6 +400,80 @@ textarea:focus {
     color: var(--accent);
 }
 
+/* ========== 输入框展开按钮样式 ========== */
+.chat-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-icon-expand {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-icon-expand:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent);
+}
+
+.chat-input-expanded {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    min-height: 80px;
+    margin-top: 10px;
+    transition: border-color 0.2s;
+}
+
+.chat-input-expanded:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.chat-input-expanded::placeholder {
+    color: var(--text-secondary);
+}
+
+/* ========== 正在思考动画 ========== */
+.thinking-dots {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.thinking-dots .dot {
+    animation: dotBounce 1.4s infinite ease-in-out;
+    font-weight: bold;
+}
+
+.thinking-dots .dot-1 { animation-delay: 0s; }
+.thinking-dots .dot-2 { animation-delay: 0.2s; }
+.thinking-dots .dot-3 { animation-delay: 0.4s; }
+
+@keyframes dotBounce {
+    0%, 80%, 100% { 
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    40% { 
+        opacity: 1;
+        transform: translateY(-4px);
+    }
+}
+
+
 .msg-toolbar .btn-icon.copied {
     color: var(--success);
 }

@@ -52,14 +52,13 @@
             <!-- AI Worker 状态指示器 -->
             <div class="worker-status" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
                 <div style="font-size: 0.85em; color: #888; margin-bottom: 8px;">AI Worker 状态</div>
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                     <div id="worker-status-dot" style="width: 10px; height: 10px; border-radius: 50%; background: #555;"></div>
                     <span id="worker-status-text" style="font-size: 0.9em; color: #aaa;">未启动</span>
                 </div>
-                <div id="worker-uptime" style="font-size: 0.8em; color: #666; margin-top: 4px;"></div>
-            </div>
-            <div class="mt-15" style="margin-top: auto; padding-top: 20px;">
-                <button id="btn-shutdown" class="btn-stop">🛑 释放显存（终止 AI 进程）</button>
+                <div id="worker-uptime" style="font-size: 0.8em; color: #666; margin-bottom: 12px;"></div>
+                <!-- 释放显存按钮移到这里 -->
+                <button id="btn-shutdown" class="btn-stop">🛑 释放显存</button>
             </div>
         </aside>
 
@@ -216,8 +215,12 @@
                         <div class="msg-wrapper assistant"><div class="msg-content assistant"><span class="markdown-content"><p>你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。</p></span></div><div class="msg-toolbar"><button class="btn-icon btn-copy-inline">📋 复制</button><button class="btn-icon">🔊 朗读</button></div></div>
                     </div>
                     <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
-                        <button id="btn-chat-send" class="btn primary">发送</button>
+                        <div class="chat-input-row">
+                            <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
+                            <button id="btn-expand-input" class="btn-icon-expand" title="展开多行输入">📝</button>
+                            <button id="btn-chat-send" class="btn primary">发送</button>
+                        </div>
+                        <textarea id="chat-input-expanded" class="chat-input-expanded hidden" placeholder="多行输入... Shift+Enter 换行，Enter 发送" rows="4"></textarea>
                     </div>
                 </div>
             </div><!-- end page-assistant -->
