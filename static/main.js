@@ -228,8 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 页面加载时加载模型列表
+    // 页面加载时加载模型列表和历史记录
     loadModels();
+    loadHistoryList();
 
     setInterval(async () => {
         try {
@@ -470,11 +471,115 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (btnNewChat) {
-        btnNewChat.addEventListener('click', () => {
+        btnNewChat.addEventListener('click', async () => {
+            // 如果当前有对话内容（不仅仅是默认的第一条），则尝试保存
+            if (messages.length > 1) {
+                const originalText = btnNewChat.innerHTML;
+                btnNewChat.innerHTML = '💾 保存中...';
+                btnNewChat.disabled = true;
+                
+                try {
+                    await saveCurrentChat();
+                } catch (e) {
+                    console.error('保存历史失败:', e);
+                } finally {
+                    btnNewChat.innerHTML = originalText;
+                    btnNewChat.disabled = false;
+                }
+            }
+            
             messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
             chatHistory.innerHTML = "";
             appendMessage('assistant', messages[0].content);
             streamingAudioQueue.clear();
+        });
+    }
+
+    // === 5.1 对话历史管理逻辑 ===
+    const selectHistory = document.getElementById('select-history');
+
+    async function loadHistoryList() {
+        if (!selectHistory) return;
+        try {
+            const resp = await fetch('/api/history/list');
+            const list = await resp.json();
+            
+            // 保留第一项默认项
+            selectHistory.innerHTML = '<option value="">📜 历史对话</option>';
+            list.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.path;
+                opt.textContent = item.title;
+                selectHistory.appendChild(opt);
+            });
+        } catch (e) {
+            console.error('加载历史列表失败:', e);
+        }
+    }
+
+    async function saveCurrentChat() {
+        if (messages.length <= 1) return;
+
+        // 1. 获取第一条用户消息作为标题基础
+        const firstUserMsg = messages.find(m => m.role === 'user')?.content || "新对话";
+        let title = firstUserMsg.substring(0, 10);
+
+        // 2. 尝试让 AI 生成一个更智能的标题 (非流式请求)
+        try {
+            const titlePrompt = `请为以下对话生成一个5字以内的简短标题。对话内容：${firstUserMsg.substring(0, 100)}`;
+            const resp = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages: [{ role: 'user', content: titlePrompt }],
+                    model_id: currentModelId
+                })
+            });
+            const data = await resp.json();
+            if (data.response) {
+                title = data.response.replace(/[#"'\n\r]/g, '').substring(0, 15);
+            }
+        } catch (e) {
+            console.warn('AI 生成标题失败，使用默认标题');
+        }
+
+        // 3. 提交保存
+        const saveResp = await fetch('/api/history/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: title,
+                messages: messages
+            })
+        });
+        const saveResult = await saveResp.json();
+        if (saveResult.status === 'success') {
+            loadHistoryList(); // 刷新列表
+        }
+    }
+
+    if (selectHistory) {
+        selectHistory.addEventListener('change', async (e) => {
+            const path = e.target.value;
+            if (!path) return;
+
+            try {
+                const resp = await fetch(`/api/history/load?path=${encodeURIComponent(path)}`);
+                const data = await resp.json();
+                if (data.messages) {
+                    // 清空并重新加载消息
+                    messages = data.messages;
+                    chatHistory.innerHTML = "";
+                    messages.forEach(msg => {
+                        appendMessage(msg.role, msg.content);
+                    });
+                    showToast(`📂 已加载历史: ${data.title}`);
+                }
+            } catch (e) {
+                showToast('❌ 加载失败: ' + e.message);
+            } finally {
+                selectHistory.value = ""; // 重置下拉框
+            }
         });
     }
 

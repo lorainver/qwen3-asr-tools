@@ -290,6 +290,78 @@ class SummarizeRequest(BaseModel):
 class SwitchModelRequest(BaseModel):
     model_id: str
 
+class SaveChatRequest(BaseModel):
+    title: str
+    messages: list
+
+# ========== 对话历史存储逻辑 ==========
+
+CHATS_DIR = os.path.join(BASE_DIR, "chats")
+os.makedirs(CHATS_DIR, exist_ok=True)
+
+@app.post("/api/history/save")
+async def save_history(request: SaveChatRequest):
+    """保存对话到本地磁盘"""
+    try:
+        from datetime import datetime
+        today = datetime.now().strftime("%Y-%m-%d")
+        now_time = datetime.now().strftime("%H-%M-%S")
+        
+        date_dir = os.path.join(CHATS_DIR, today)
+        os.makedirs(date_dir, exist_ok=True)
+        
+        safe_title = "".join([c for c in request.title if c.isalnum() or c in " _-"]).strip()
+        if not safe_title: safe_title = "未命名对话"
+        
+        filename = f"{now_time}_{safe_title}.json"
+        filepath = os.path.join(date_dir, filename)
+        
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump({
+                "title": request.title,
+                "timestamp": datetime.now().isoformat(),
+                "messages": request.messages
+            }, f, ensure_ascii=False, indent=2)
+            
+        return {"status": "success", "path": f"{today}/{filename}"}
+    except Exception as e:
+        logger.error(f"保存对话失败: {e}")
+        return {"status": "error", "message": str(e)}
+
+@app.get("/api/history/list")
+async def list_history():
+    """获取最近 6 个对话列表"""
+    import glob
+    all_files = []
+    for file_path in glob.glob(os.path.join(CHATS_DIR, "**", "*.json"), recursive=True):
+        mtime = os.path.getmtime(file_path)
+        rel_path = os.path.relpath(file_path, CHATS_DIR)
+        parts = rel_path.split(os.sep)
+        if len(parts) >= 2:
+            date_str = parts[0]
+            filename = parts[1]
+            title = filename.split("_", 1)[1].rsplit(".", 1)[0] if "_" in filename else filename
+            all_files.append({
+                "path": rel_path.replace(os.sep, "/"),
+                "title": f"[{date_str}] {title}",
+                "mtime": mtime
+            })
+    all_files.sort(key=lambda x: x["mtime"], reverse=True)
+    return all_files[:6]
+
+@app.get("/api/history/load")
+async def load_history(path: str):
+    """读取指定对话内容"""
+    try:
+        safe_path = os.path.normpath(path).lstrip(os.sep + "/")
+        filepath = os.path.join(CHATS_DIR, safe_path)
+        if not filepath.startswith(CHATS_DIR) or not os.path.exists(filepath):
+            return {"status": "error", "message": "文件不存在"}
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 # ========== 页面端点 ==========
 
 @app.get("/", response_class=HTMLResponse)
@@ -401,12 +473,21 @@ async def api_chat_stream(request: ChatRequest):
     async def stream_gen():
         try:
             async for chunk in resp.aiter_bytes():
-                yield chunk
+                if chunk:
+                    yield chunk
         finally:
             await resp.aclose()
             await client.aclose()
     
-    return StreamingResponse(stream_gen(), media_type="text/event-stream")
+    return StreamingResponse(
+        stream_gen(), 
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive"
+        }
+    )
 
 @app.post("/api/summarize")
 async def api_summarize(request: SummarizeRequest):
