@@ -200,13 +200,18 @@ class LongTextSummarizer:
                 return_tensors="pt"
             ).to("cuda")
             
+            # 从配置读取生成参数
+            max_tokens = config.get('chat.max_new_tokens', 4096)
+            temperature = config.get('chat.temperature', 0.7)
+            top_p = config.get('chat.top_p', 0.9)
+            
             with torch.no_grad():
                 output_ids = self.model.generate(
                     input_ids, 
-                    max_new_tokens=512, 
+                    max_new_tokens=max_tokens, 
                     do_sample=True, 
-                    temperature=0.7,
-                    top_p=0.9
+                    temperature=temperature,
+                    top_p=top_p
                 )
                 
             response = self.tokenizer.decode(output_ids[0][len(input_ids[0]):], skip_special_tokens=True)
@@ -248,13 +253,18 @@ class LongTextSummarizer:
                 skip_special_tokens=True
             )
             
+            # 从配置读取生成参数
+            max_tokens = config.get('chat.max_new_tokens', 4096)
+            temperature = config.get('chat.temperature', 0.7)
+            top_p = config.get('chat.top_p', 0.9)
+            
             # 生成参数
             generation_kwargs = dict(
                 input_ids=input_ids,
-                max_new_tokens=512,
+                max_new_tokens=max_tokens,
                 do_sample=True,
-                temperature=0.7,
-                top_p=0.9,
+                temperature=temperature,
+                top_p=top_p,
                 streamer=streamer,
             )
             
