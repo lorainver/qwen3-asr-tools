@@ -50,9 +50,13 @@ summarizer = LongTextSummarizer()
 
 class ChatRequest(BaseModel):
     messages: list
+    model_id: str = None  # 可选：指定使用的模型 ID
 
 class SummarizeRequest(BaseModel):
     text: str
+
+class SwitchModelRequest(BaseModel):
+    model_id: str
 
 # ========== API 端点 ==========
 
@@ -87,9 +91,35 @@ async def gpu_stats():
 @app.post("/api/chat")
 async def api_chat(request: ChatRequest):
     """AI 对话"""
-    logger.info("Chat request received")
+    # 如果请求指定了模型，先切换
+    if request.model_id and request.model_id != summarizer.current_model_id:
+        logger.info(f"切换模型: {summarizer.current_model_id} → {request.model_id}")
+        summarizer.switch_model(request.model_id)
+    
+    logger.info(f"Chat request received (model: {summarizer.current_model_id})")
     response_text = summarizer.chat(request.messages)
-    return {"response": response_text}
+    return {"response": response_text, "model": summarizer.current_model_id}
+
+@app.get("/api/models")
+async def api_models():
+    """返回可用模型列表和当前模型"""
+    return {
+        "current": summarizer.get_current_model(),
+        "available": summarizer.get_available_models()
+    }
+
+@app.post("/api/switch_model")
+async def api_switch_model(request: SwitchModelRequest):
+    """切换对话模型"""
+    old_model = summarizer.current_model_id
+    success = summarizer.switch_model(request.model_id)
+    if success:
+        return {
+            "status": "ok",
+            "old_model": old_model,
+            "current_model": summarizer.get_current_model()
+        }
+    return {"status": "error", "message": f"未知模型: {request.model_id}"}
 
 @app.post("/api/summarize")
 async def api_summarize(request: SummarizeRequest):

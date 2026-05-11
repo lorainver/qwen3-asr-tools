@@ -21,6 +21,82 @@ document.addEventListener('DOMContentLoaded', () => {
     const workerText = document.getElementById('worker-status-text');
     const workerUptime = document.getElementById('worker-uptime');
 
+    // === 1.6 模型选择器 ===
+    const selectModel = document.getElementById('select-model');
+    const currentModelTag = document.getElementById('current-model-tag');
+    let currentModelId = 'qwen-general';
+
+    async function loadModels() {
+        try {
+            const resp = await fetch('/api/models');
+            const data = await resp.json();
+            
+            // 清空并填充下拉框
+            if (selectModel) {
+                selectModel.innerHTML = '';
+                for (const model of data.available || []) {
+                    const option = document.createElement('option');
+                    option.value = model.id;
+                    option.textContent = model.name;
+                    if (model.current) {
+                        option.selected = true;
+                        currentModelId = model.id;
+                    }
+                    selectModel.appendChild(option);
+                }
+            }
+            
+            // 更新标签
+            if (currentModelTag && data.current) {
+                currentModelTag.textContent = data.current.name;
+            }
+        } catch (e) {
+            console.error('加载模型列表失败:', e);
+            if (selectModel) {
+                selectModel.innerHTML = '<option value="">加载失败</option>';
+            }
+        }
+    }
+
+    // 模型选择变化时切换
+    if (selectModel) {
+        selectModel.addEventListener('change', async (e) => {
+            const newModelId = e.target.value;
+            if (!newModelId || newModelId === currentModelId) return;
+            
+            selectModel.disabled = true;
+            currentModelTag.textContent = '切换中...';
+            
+            try {
+                const resp = await fetch('/api/switch_model', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model_id: newModelId })
+                });
+                const data = await resp.json();
+                
+                if (data.status === 'ok' && data.current_model) {
+                    currentModelId = newModelId;
+                    currentModelTag.textContent = data.current_model.name;
+                    showToast(`✅ 已切换到 ${data.current_model.name}`);
+                } else {
+                    showToast('❌ 切换失败: ' + (data.message || '未知错误'));
+                    selectModel.value = currentModelId;
+                    loadModels(); // 重新加载
+                }
+            } catch (e) {
+                showToast('❌ 切换失败: ' + e.message);
+                selectModel.value = currentModelId;
+                loadModels();
+            } finally {
+                selectModel.disabled = false;
+            }
+        });
+    }
+
+    // 页面加载时加载模型列表
+    loadModels();
+
     setInterval(async () => {
         try {
             const resp = await fetch('/api/worker_status');
@@ -242,7 +318,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ messages: messages })
+                body: JSON.stringify({ 
+                    messages: messages,
+                    model_id: currentModelId  // 传递当前模型
+                })
             });
             const data = await response.json();
             loadingMsg.innerText = data.response;

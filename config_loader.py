@@ -44,7 +44,15 @@ class ConfigLoader:
         # 模型路径
         if 'models' in self._config:
             for key, path in self._config['models'].items():
-                if path and not os.path.isabs(path):
+                # 跳过非字符串值（如 llm_models 字典）
+                if isinstance(path, dict):
+                    # 递归处理嵌套字典中的路径
+                    for sub_key, sub_path in path.items():
+                        if isinstance(sub_path, dict) and 'path' in sub_path:
+                            model_path = sub_path['path']
+                            if model_path and not os.path.isabs(model_path):
+                                sub_path['path'] = str(self._base_dir / model_path)
+                elif path and not os.path.isabs(path):
                     self._config['models'][key] = str(self._base_dir / path)
         
         # 文件路径

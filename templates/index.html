@@ -131,9 +131,12 @@
                         style="justify-content: space-between; display: flex; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div class="icon chat-icon"></div>
-                            <h3>AI 智能助理 <small class="model-tag">Qwen2.5-1.5B-Instruct</small></h3>
+                            <h3>AI 智能助理 <small id="current-model-tag" class="model-tag">加载中...</small></h3>
                         </div>
                         <div class="chat-header-actions" style="display: flex; align-items: center; gap: 15px;">
+                            <select id="select-model" class="select-minimal" title="选择对话模型">
+                                <option value="">-- 加载中 --</option>
+                            </select>
                             <select id="select-tts-engine" class="select-minimal">
                                 <option value="edge">🌐 微软在线</option>
                                 <option value="sherpa">🏠 本地离线</option>

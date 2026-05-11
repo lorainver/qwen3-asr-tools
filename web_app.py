@@ -282,9 +282,13 @@ async def proxy_stream_to_worker(method: str, path: str, **kwargs):
 
 class ChatRequest(BaseModel):
     messages: list
+    model_id: str = None  # 可选：指定模型
 
 class SummarizeRequest(BaseModel):
     text: str
+
+class SwitchModelRequest(BaseModel):
+    model_id: str
 
 # ========== 页面端点 ==========
 
@@ -357,6 +361,16 @@ async def model_status():
 async def pytorch_memory():
     """查询 PyTorch 内存（代理到 worker）"""
     return await proxy_to_worker("GET", "/gpu_stats")
+
+@app.get("/api/models")
+async def api_models():
+    """查询可用模型列表（代理到 worker）"""
+    return await proxy_to_worker("GET", "/api/models")
+
+@app.post("/api/switch_model")
+async def api_switch_model(request: SwitchModelRequest):
+    """切换对话模型（代理到 worker）"""
+    return await proxy_to_worker("POST", "/api/switch_model", json=request.dict())
 
 @app.post("/api/chat")
 async def api_chat(request: ChatRequest):

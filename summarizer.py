@@ -12,10 +12,61 @@ logger = logging.getLogger(__name__)
 class LongTextSummarizer:
     def __init__(self):
         # 从配置文件读取模型路径
-        self.model_path = config['models']['llm']
-        logger.info(f"Summarizer 使用模型: {self.model_path}")
+        self.default_model_path = config['models']['llm']
+        self.model_path = self.default_model_path
+        self.current_model_id = 'qwen-general'  # 当前模型 ID
+        
+        # 可用模型列表
+        self.available_models = config.get('models.llm_models', {})
+        
+        logger.info(f"Summarizer 默认模型: {self.model_path}")
         self.tokenizer = None
         self.model = None
+
+    def get_available_models(self):
+        """返回可用模型列表"""
+        result = []
+        for model_id, model_info in self.available_models.items():
+            result.append({
+                'id': model_id,
+                'name': model_info.get('name', model_id),
+                'description': model_info.get('description', ''),
+                'current': model_id == self.current_model_id
+            })
+        return result
+
+    def get_current_model(self):
+        """返回当前模型信息"""
+        if self.current_model_id in self.available_models:
+            model_info = self.available_models[self.current_model_id]
+            return {
+                'id': self.current_model_id,
+                'name': model_info.get('name', self.current_model_id),
+                'path': model_info.get('path', self.model_path)
+            }
+        return {'id': self.current_model_id, 'name': 'Unknown', 'path': self.model_path}
+
+    def switch_model(self, model_id):
+        """切换模型（卸载当前模型，设置新模型路径）"""
+        if model_id not in self.available_models:
+            logger.warning(f"未知模型 ID: {model_id}")
+            return False
+        
+        if model_id == self.current_model_id and self.model is not None:
+            logger.info(f"模型 {model_id} 已加载，无需切换")
+            return True
+        
+        # 卸载当前模型
+        if self.model is not None:
+            logger.info(f"卸载当前模型 {self.current_model_id}...")
+            self._unload_model()
+        
+        # 设置新模型
+        model_info = self.available_models[model_id]
+        self.model_path = model_info.get('path', self.default_model_path)
+        self.current_model_id = model_id
+        logger.info(f"已切换到模型 {model_id}: {self.model_path}")
+        return True
 
     def _load_model(self):
         if self.model is None:

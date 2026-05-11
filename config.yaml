@@ -6,8 +6,19 @@ models:
   # Qwen3-ASR 语音识别模型（转录用）
   asr: "D:/qwen3-asr/models/Qwen/Qwen3-ASR-0___6B"
   
-  # Qwen2.5 大语言模型（对话/总结用）
+  # Qwen2.5 大语言模型（对话/总结用）- 默认模型
   llm: "D:/qwen3-asr/models/Qwen/Qwen2.5-1.5B-Instruct"
+  
+  # 可选的 LLM 模型列表（用于对话切换）
+  llm_models:
+    qwen-general:
+      name: "Qwen2.5-1.5B (通用)"
+      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-1.5B-Instruct"
+      description: "通用对话模型，适合日常问答"
+    qwen-coder:
+      name: "Qwen2.5-Coder-1.5B (代码)"
+      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-Coder-1.5B-Instruct"
+      description: "代码专用模型，编程问题表现更优"
   
   # Sherpa-ONNX 离线 TTS 模型
   tts: "D:/qwen3-asr/models/tts/vits-icefall-zh-aishell3"
