@@ -46,6 +46,7 @@ static/audio/*.mp3
 
 # 忽略备份副本
 *-副本.py
+*副本*.py
 *copy*.py
 *Copy*.py
 
