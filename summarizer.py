@@ -42,14 +42,18 @@ class LongTextSummarizer:
 
     def switch_model(self, model_id):
         if model_id not in self.available_models:
+            logger.warning(f"⚠️ 切换失败: 未知的模型 ID '{model_id}'")
             return False
         if model_id == self.current_model_id and self.model is not None:
+            logger.info(f"✓ 模型 '{model_id}' 已加载，无需切换")
             return True
         if self.model is not None:
+            logger.info(f"⏳ 卸载当前模型 '{self.current_model_id}'...")
             self._unload_model()
         model_info = self.available_models[model_id]
         self.model_path = model_info.get('path', self.default_model_path)
         self.current_model_id = model_id
+        logger.info(f"✅ 已切换到模型 '{model_id}' -> {self.model_path}")
         return True
 
     def _load_model(self):
