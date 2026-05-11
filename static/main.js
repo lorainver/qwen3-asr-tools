@@ -304,7 +304,81 @@ document.addEventListener('DOMContentLoaded', () => {
             messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
             chatHistory.innerHTML = "";
             appendMessage('assistant', messages[0].content);
+            streamingAudioQueue.clear();
         });
+    }
+
+    // === 流式语音队列（带预加载） ===
+    const streamingAudioQueue = {
+        queue: [],         // [{sentence, audio, audioPromise}]
+        isPlaying: false,
+        currentAudio: null,
+
+        enqueue(sentence) {
+            if (!sentence.trim()) return;
+            // 立即开始预加载音频（不等播放）
+            const engine = selectTTSEngine ? selectTTSEngine.value : 'edge';
+            const audio = new Audio(`/api/tts?text=${encodeURIComponent(sentence)}&engine=${engine}`);
+            const audioPromise = new Promise((resolve) => {
+                audio.addEventListener('canplaythrough', () => resolve(audio), { once: true });
+                audio.addEventListener('error', () => resolve(null), { once: true });
+                audio.load(); // 触发浏览器预加载
+            });
+            this.queue.push({ sentence, audio, audioPromise });
+            if (!this.isPlaying) this.processNext();
+        },
+
+        async processNext() {
+            if (this.queue.length === 0) {
+                this.isPlaying = false;
+                return;
+            }
+            this.isPlaying = true;
+            const { sentence, audio, audioPromise } = this.queue.shift();
+
+            try {
+                // 等音频加载完（预加载已提前开始，通常立即可用）
+                const readyAudio = await audioPromise;
+                if (readyAudio) {
+                    this.currentAudio = readyAudio;
+                    await readyAudio.play();
+                    await new Promise(resolve => { readyAudio.onended = resolve; });
+                }
+            } catch (e) {
+                console.warn('流式 TTS 播放失败:', e);
+            }
+
+            this.currentAudio = null;
+            this.processNext();
+        },
+
+        clear() {
+            this.queue = [];
+            if (this.currentAudio) {
+                this.currentAudio.pause();
+                this.currentAudio = null;
+            }
+            this.isPlaying = false;
+        }
+    };
+
+    // 句子边界检测
+    const SENTENCE_ENDS = '。！？.!?\n';
+    let ttsPointer = 0;
+
+    function extractNewSentences(fullText) {
+        const pending = fullText.substring(ttsPointer);
+        const sentences = [];
+        let currentStart = 0;
+        for (let i = 0; i < pending.length; i++) {
+            if (SENTENCE_ENDS.includes(pending[i])) {
+                const s = pending.substring(currentStart, i + 1).trim();
+                if (s) sentences.push(s);
+                currentStart = i + 1;
+            }
+        }
+        ttsPointer += currentStart;
+        return sentences;
     }
 
     async function sendChatMessage() {
@@ -314,6 +388,11 @@ document.addEventListener('DOMContentLoaded', () => {
         chatInput.value = "";
         messages.push({ "role": "user", "content": text });
         const loadingMsg = appendMessage('assistant', '');
+        
+        // 重置流式 TTS 状态
+        streamingAudioQueue.clear();
+        ttsPointer = 0;
+        const useStreamingTTS = checkAutoSpeak && checkAutoSpeak.checked;
         
         try {
             const response = await fetch('/api/chat_stream', {
@@ -348,6 +427,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 fullResponse += json.token;
                                 loadingMsg.innerText = fullResponse;
                                 chatHistory.scrollTop = chatHistory.scrollHeight;
+                                
+                                // 流式语音：检测到完整句子立即送 TTS
+                                if (useStreamingTTS) {
+                                    const newSentences = extractNewSentences(fullResponse);
+                                    newSentences.forEach(s => streamingAudioQueue.enqueue(s));
+                                }
                             }
                         } catch (e) {
                             // 忽略解析错误
@@ -359,10 +444,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // 完成后将回复加入消息历史
             messages.push({ "role": "assistant", "content": fullResponse });
             
-            // 自动朗读
-            if (checkAutoSpeak && checkAutoSpeak.checked && fullResponse) {
-                const btn = loadingMsg.parentElement.querySelector('.btn-speak');
-                playTTS(fullResponse, btn);
+            // 流式 TTS：刷入剩余未完句子
+            if (useStreamingTTS && fullResponse.substring(ttsPointer).trim()) {
+                streamingAudioQueue.enqueue(fullResponse.substring(ttsPointer).trim());
             }
         } catch (error) { 
             loadingMsg.innerText = "出错了: " + error.message; 
