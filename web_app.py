@@ -385,6 +385,29 @@ async def api_chat(request: ChatRequest):
     except Exception as e:
         return {"response": f"❌ AI Worker 连接失败: {e}"}
 
+@app.post("/api/chat_stream")
+async def api_chat_stream(request: ChatRequest):
+    """流式对话（代理到 worker，SSE 流）"""
+    if not ai_worker.ensure_running():
+        async def error_gen():
+            yield 'data: {"token": "⚠️ AI Worker 启动中，请稍后重试..."}\n\n'
+            yield "data: [DONE]\n\n"
+        return StreamingResponse(error_gen(), media_type="text/event-stream")
+    
+    client = httpx.AsyncClient(timeout=120.0)
+    req = client.build_request("POST", f"{AI_WORKER_URL}/api/chat_stream", json=request.dict())
+    resp = await client.send(req, stream=True)
+    
+    async def stream_gen():
+        try:
+            async for chunk in resp.aiter_bytes():
+                yield chunk
+        finally:
+            await resp.aclose()
+            await client.aclose()
+    
+    return StreamingResponse(stream_gen(), media_type="text/event-stream")
+
 @app.post("/api/summarize")
 async def api_summarize(request: SummarizeRequest):
     """文本总结（代理到 worker，流式）"""

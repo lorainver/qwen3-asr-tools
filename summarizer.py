@@ -1,6 +1,7 @@
 import torch
 import logging
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TextIteratorStreamer
+from threading import Thread
 import gc
 import json
 from model_manager import model_manager
@@ -220,4 +221,58 @@ class LongTextSummarizer:
         finally:
             # 对话频率高暂不卸载（显存充裕），若需释放去掉下面注释
             # self._unload_model()
+            model_manager.set_processing(False)
+
+    def chat_stream(self, messages):
+        """
+        流式对话接口 - 逐 token 生成，实时返回
+        适合需要打字机效果的前端场景
+        """
+        if model_manager.is_cancelled():
+            yield "（任务已被取消）"
+            return
+            
+        self._load_model()
+        try:
+            input_ids = self.tokenizer.apply_chat_template(
+                messages, 
+                tokenize=True, 
+                add_generation_prompt=True, 
+                return_tensors="pt"
+            ).to("cuda")
+            
+            # 创建流式输出器
+            streamer = TextIteratorStreamer(
+                self.tokenizer, 
+                skip_prompt=True, 
+                skip_special_tokens=True
+            )
+            
+            # 生成参数
+            generation_kwargs = dict(
+                input_ids=input_ids,
+                max_new_tokens=512,
+                do_sample=True,
+                temperature=0.7,
+                top_p=0.9,
+                streamer=streamer,
+            )
+            
+            # 在独立线程中运行生成
+            thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
+            thread.start()
+            
+            # 逐 token 输出
+            for text in streamer:
+                yield text
+            
+            thread.join()
+            
+        except torch.cuda.OutOfMemoryError:
+            logger.error("GPU 显存不足！")
+            yield "\n[错误] GPU 显存不足，请释放显存后重试"
+        except Exception as e:
+            logger.error(f"流式对话出错: {e}")
+            yield f"\n[错误] {e}"
+        finally:
             model_manager.set_processing(False)

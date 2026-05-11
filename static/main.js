@@ -313,24 +313,60 @@ document.addEventListener('DOMContentLoaded', () => {
         appendMessage('user', text);
         chatInput.value = "";
         messages.push({ "role": "user", "content": text });
-        const loadingMsg = appendMessage('assistant', '正在思考...');
+        const loadingMsg = appendMessage('assistant', '');
+        
         try {
-            const response = await fetch('/api/chat', {
+            const response = await fetch('/api/chat_stream', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     messages: messages,
-                    model_id: currentModelId  // 传递当前模型
+                    model_id: currentModelId
                 })
             });
-            const data = await response.json();
-            loadingMsg.innerText = data.response;
-            messages.push({ "role": "assistant", "content": data.response });
-            if (checkAutoSpeak && checkAutoSpeak.checked) {
-                const btn = loadingMsg.parentElement.querySelector('.btn-speak');
-                playTTS(data.response, btn);
+            
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let fullResponse = '';
+            
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n');
+                
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.slice(6);
+                        if (data === '[DONE]') {
+                            break;
+                        }
+                        try {
+                            const json = JSON.parse(data);
+                            if (json.token) {
+                                fullResponse += json.token;
+                                loadingMsg.innerText = fullResponse;
+                                chatHistory.scrollTop = chatHistory.scrollHeight;
+                            }
+                        } catch (e) {
+                            // 忽略解析错误
+                        }
+                    }
+                }
             }
-        } catch (error) { loadingMsg.innerText = "出错了: " + error.message; }
+            
+            // 完成后将回复加入消息历史
+            messages.push({ "role": "assistant", "content": fullResponse });
+            
+            // 自动朗读
+            if (checkAutoSpeak && checkAutoSpeak.checked && fullResponse) {
+                const btn = loadingMsg.parentElement.querySelector('.btn-speak');
+                playTTS(fullResponse, btn);
+            }
+        } catch (error) { 
+            loadingMsg.innerText = "出错了: " + error.message; 
+        }
     }
 
     function appendMessage(role, text) {

@@ -15,6 +15,7 @@ ai_worker.py - AI 推理独立子进程
 
 import os
 import argparse
+import json
 import torch
 import pynvml
 import logging
@@ -99,6 +100,25 @@ async def api_chat(request: ChatRequest):
     logger.info(f"Chat request received (model: {summarizer.current_model_id})")
     response_text = summarizer.chat(request.messages)
     return {"response": response_text, "model": summarizer.current_model_id}
+
+@app.post("/api/chat_stream")
+async def api_chat_stream(request: ChatRequest):
+    """流式对话 - 逐 token 返回"""
+    # 如果请求指定了模型，先切换
+    if request.model_id and request.model_id != summarizer.current_model_id:
+        logger.info(f"切换模型: {summarizer.current_model_id} → {request.model_id}")
+        summarizer.switch_model(request.model_id)
+    
+    logger.info(f"Chat stream request (model: {summarizer.current_model_id})")
+    
+    def generate():
+        for token in summarizer.chat_stream(request.messages):
+            # SSE 格式: 每行以 "data: " 开头
+            yield f"data: {json.dumps({'token': token})}\n\n"
+        # 发送结束标记
+        yield "data: [DONE]\n\n"
+    
+    return StreamingResponse(generate(), media_type="text/event-stream")
 
 @app.get("/api/models")
 async def api_models():
