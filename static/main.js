@@ -1,4 +1,119 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // === 0. Markdown 渲染配置 ===
+    // 配置 marked
+    marked.setOptions({
+        highlight: function(code, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                try { return hljs.highlight(code, { language: lang }).value; } catch (e) {}
+            }
+            return hljs.highlightAuto(code).value;
+        },
+        breaks: true,
+        gfm: true
+    });
+
+    // 配置 Mermaid
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        themeVariables: {
+            primaryColor: '#0ea5e9',
+            primaryTextColor: '#f0f4f8',
+            primaryBorderColor: '#1e293b',
+            lineColor: '#64748b',
+            secondaryColor: '#1e293b',
+            tertiaryColor: '#0f172a'
+        }
+    });
+
+    // 全局 Mermaid 计数器
+    let mermaidCounter = 0;
+
+    /**
+     * 渲染 Markdown 文本为 HTML
+     * 支持：标准 Markdown + KaTeX 数学公式 + Mermaid 图表
+     * @param {string} text - 原始 Markdown 文本
+     * @returns {string} 渲染后的 HTML
+     */
+    function renderMarkdown(text) {
+        if (!text) return '';
+        
+        // 1. 保护 Mermaid 代码块，避免被 marked 解析
+        const mermaidBlocks = [];
+        text = text.replace(/```mermaid\n([\s\S]*?)```/g, (match, code) => {
+            const placeholder = `%%MERMAID_${mermaidBlocks.length}%%`;
+            mermaidBlocks.push(code.trim());
+            return placeholder;
+        });
+
+        // 2. 保护数学公式，避免被 marked 解析
+        const mathBlocks = [];
+        // 块级公式 $$...$$
+        text = text.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+            const placeholder = `%%MATH_BLOCK_${mathBlocks.length}%%`;
+            mathBlocks.push({ formula: formula.trim(), display: true });
+            return placeholder;
+        });
+        // 行内公式 $...$
+        text = text.replace(/\$([^$\n]+?)\$/g, (match, formula) => {
+            const placeholder = `%%MATH_INLINE_${mathBlocks.length}%%`;
+            mathBlocks.push({ formula: formula.trim(), display: false });
+            return placeholder;
+        });
+
+        // 3. 用 marked 渲染 Markdown
+        let html = marked.parse(text);
+
+        // 4. 还原并渲染 KaTeX 数学公式
+        mathBlocks.forEach((item, i) => {
+            const blockKey = `%%MATH_BLOCK_${i}%%`;
+            const inlineKey = `%%MATH_INLINE_${i}%%`;
+            const key = item.display ? blockKey : inlineKey;
+            try {
+                const rendered = katex.renderToString(item.formula, {
+                    displayMode: item.display,
+                    throwOnError: false,
+                    trust: true
+                });
+                html = html.replace(key, rendered);
+            } catch (e) {
+                html = html.replace(key, item.display 
+                    ? `$$${item.formula}$$` 
+                    : `$${item.formula}$`);
+            }
+        });
+
+        // 5. 还原 Mermaid 占位符为容器（异步渲染）
+        mermaidBlocks.forEach((code, i) => {
+            const placeholder = `%%MERMAID_${i}%%`;
+            const containerId = `mermaid-${Date.now()}-${i}`;
+            const container = `<div class="mermaid-container" id="${containerId}" data-mermaid-code="${encodeURIComponent(code)}">` +
+                `<div class="mermaid-loading">🔄 图表加载中...</div></div>`;
+            html = html.replace(placeholder, container);
+        });
+
+        return html;
+    }
+
+    /**
+     * 异步渲染页面中所有未渲染的 Mermaid 图表
+     */
+    async function renderMermaidDiagrams() {
+        const containers = document.querySelectorAll('.mermaid-container:not(.mermaid-rendered)');
+        for (const container of containers) {
+            const code = decodeURIComponent(container.dataset.mermaidCode);
+            try {
+                const id = `mermaid-svg-${mermaidCounter++}`;
+                const { svg } = await mermaid.render(id, code);
+                container.innerHTML = svg;
+                container.classList.add('mermaid-rendered');
+            } catch (e) {
+                container.innerHTML = `<div class="mermaid-error">⚠️ Mermaid 语法错误: <code>${e.message}</code></div>`;
+                container.classList.add('mermaid-rendered');
+            }
+        }
+    }
+
     // === 1. GPU 监控 (SSE) ===
     const evtSource = new EventSource('/api/gpu_stats');
     const vramVal = document.getElementById('vram-val');
@@ -425,7 +540,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             const json = JSON.parse(data);
                             if (json.token) {
                                 fullResponse += json.token;
-                                loadingMsg.innerText = fullResponse;
+                                // 流式更新：渲染 Markdown
+                                loadingMsg.innerHTML = renderMarkdown(fullResponse);
                                 chatHistory.scrollTop = chatHistory.scrollHeight;
                                 
                                 // 流式语音：检测到完整句子立即送 TTS
@@ -444,6 +560,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // 完成后将回复加入消息历史
             messages.push({ "role": "assistant", "content": fullResponse });
             
+            // 渲染 Mermaid 图表（流式结束后可能有未渲染的图表）
+            renderMermaidDiagrams();
+            
             // 流式 TTS：刷入剩余未完句子
             if (useStreamingTTS && fullResponse.substring(ttsPointer).trim()) {
                 streamingAudioQueue.enqueue(fullResponse.substring(ttsPointer).trim());
@@ -457,12 +576,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = `msg ${role}`;
         const contentSpan = document.createElement('span');
-        contentSpan.innerText = text;
+        
+        if (role === 'assistant') {
+            // 助手消息：渲染 Markdown
+            contentSpan.className = 'markdown-content';
+            contentSpan.innerHTML = renderMarkdown(text);
+            // 异步渲染 Mermaid 图表
+            setTimeout(renderMermaidDiagrams, 50);
+        } else {
+            // 用户消息：纯文本
+            contentSpan.innerText = text;
+        }
+        
         div.appendChild(contentSpan);
         if (role === 'assistant') {
             const speakBtn = document.createElement('button');
             speakBtn.className = 'btn-speak';
             speakBtn.innerHTML = '🔊';
+            // TTS 朗读时使用纯文本（去除 markdown 格式）
             speakBtn.onclick = () => playTTS(contentSpan.innerText, speakBtn);
             div.appendChild(speakBtn);
         }
