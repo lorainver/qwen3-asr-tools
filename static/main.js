@@ -133,13 +133,57 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // === 1. GPU 监控 (SSE) ===
-    const evtSource = new EventSource('/api/gpu_stats');
+    // === 0.6 DOM 元素初始化 ===
+    // GPU 监控
     const vramVal = document.getElementById('vram-val');
     const vramBar = document.getElementById('vram-bar');
     const utilVal = document.getElementById('util-val');
     const utilBar = document.getElementById('util-bar');
     const tempVal = document.getElementById('temp-val');
+
+    // AI Worker
+    const workerDot = document.getElementById('worker-status-dot');
+    const workerText = document.getElementById('worker-status-text');
+    const workerUptime = document.getElementById('worker-uptime');
+    const btnShutdown = document.getElementById('btn-shutdown');
+
+    // 模型选择
+    const selectModel = document.getElementById('select-model');
+    const currentModelTag = document.getElementById('current-model-tag');
+
+    // 总结卡片
+    const btnSummarize = document.getElementById('btn-summarize');
+    const meetingText = document.getElementById('meeting-text');
+    const sumProgCont = document.getElementById('sum-progress-container');
+    const sumStatus = document.getElementById('sum-status');
+    const sumResult = document.getElementById('sum-result');
+
+    // 转录卡片
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const transProgCont = document.getElementById('trans-progress-container');
+    const transStatus = document.getElementById('trans-status');
+    const transBar = document.getElementById('trans-bar');
+    const downloadCont = document.getElementById('download-container');
+    const btnDownload = document.getElementById('btn-download');
+    const btnStartPath = document.getElementById('btn-start-path');
+    const localPathInput = document.getElementById('local-video-path');
+
+    // AI 聊天
+    const chatHistory = document.getElementById('chat-history');
+    const chatInput = document.getElementById('chat-input');
+    const chatInputExpanded = document.getElementById('chat-input-expanded');
+    const btnExpandInput = document.getElementById('btn-expand-input');
+    const btnChatSend = document.getElementById('btn-chat-send');
+    const btnNewChat = document.getElementById('btn-new-chat');
+    const checkAutoSpeak = document.getElementById('check-auto-speak');
+    const selectTTSEngine = document.getElementById('select-tts-engine');
+    const selectHistory = document.getElementById('select-history');
+
+    let currentModelId = 'qwen-general';
+
+    // === 1. GPU 监控 (SSE) ===
+    const evtSource = new EventSource('/api/gpu_stats');
 
     evtSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
@@ -150,15 +194,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tempVal) tempVal.innerText = `${data.temperature}°C`;
     };
 
-    // === 1.5 AI Worker 状态轮询 ===
-    const workerDot = document.getElementById('worker-status-dot');
-    const workerText = document.getElementById('worker-status-text');
-    const workerUptime = document.getElementById('worker-uptime');
-
-    // === 1.6 模型选择器 ===
-    const selectModel = document.getElementById('select-model');
-    const currentModelTag = document.getElementById('current-model-tag');
-    let currentModelId = 'qwen-general';
+    // === 1.5 AI Worker 状态逻辑 ===
+    if (btnShutdown) {
+        btnShutdown.addEventListener('click', async () => {
+            if (!confirm('确定要释放显存吗？这会关闭正在运行的 AI 模型。')) return;
+            btnShutdown.disabled = true;
+            btnShutdown.textContent = '⌛ 正在释放...';
+            try {
+                const resp = await fetch('/api/release_gpu', { method: 'POST' });
+                const data = await resp.json();
+                showToast(data.message || '显存已释放');
+            } catch (e) {
+                showToast('释放失败: ' + e.message);
+            } finally {
+                btnShutdown.disabled = false;
+                btnShutdown.textContent = '🛑 释放显存';
+            }
+        });
+    }
 
     async function loadModels() {
         try {
@@ -259,11 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
 
     // === 2. 智库摘要逻辑 ===
-    const btnSummarize = document.getElementById('btn-summarize');
-    const meetingText = document.getElementById('meeting-text');
-    const sumProgCont = document.getElementById('sum-progress-container');
-    const sumStatus = document.getElementById('sum-status');
-    const sumResult = document.getElementById('sum-result');
 
     if (btnSummarize) {
         btnSummarize.addEventListener('click', async () => {
@@ -306,13 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === 3. 转录上传逻辑 (文件拖拽) ===
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const transProgCont = document.getElementById('trans-progress-container');
-    const transStatus = document.getElementById('trans-status');
-    const transBar = document.getElementById('trans-bar');
-    const downloadCont = document.getElementById('download-container');
-    const btnDownload = document.getElementById('btn-download');
 
     if (dropZone) {
         dropZone.addEventListener('click', () => fileInput.click());
@@ -346,8 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === 4. 本地路径转录逻辑 ===
-    const btnStartPath = document.getElementById('btn-start-path');
-    const localPathInput = document.getElementById('local-video-path');
     if (btnStartPath) {
         btnStartPath.addEventListener('click', async () => {
             const path = localPathInput.value.trim();
@@ -405,14 +444,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === 5. AI 聊天逻辑 ===
-    const chatHistory = document.getElementById('chat-history');
-    const chatInput = document.getElementById('chat-input');
-    const chatInputExpanded = document.getElementById('chat-input-expanded');
-    const btnExpandInput = document.getElementById('btn-expand-input');
-    const btnChatSend = document.getElementById('btn-chat-send');
-    const btnNewChat = document.getElementById('btn-new-chat');
-    const checkAutoSpeak = document.getElementById('check-auto-speak');
-    const selectTTSEngine = document.getElementById('select-tts-engine');
 
     let isInputExpanded = false;
 
@@ -496,7 +527,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === 5.1 对话历史管理逻辑 ===
-    const selectHistory = document.getElementById('select-history');
 
     async function loadHistoryList() {
         if (!selectHistory) return;
