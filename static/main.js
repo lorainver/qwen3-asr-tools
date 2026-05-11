@@ -180,6 +180,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectTTSEngine = document.getElementById('select-tts-engine');
     const selectHistory = document.getElementById('select-history');
 
+    // 新增图片上传相关
+    const btnImageUpload = document.getElementById('btn-image-upload');
+    const imageInput = document.getElementById('image-input');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const btnRemoveImage = document.getElementById('btn-remove-image');
+    let selectedImageBase64 = null;
+
     let currentModelId = 'qwen-general';
 
     // === 1. GPU 监控 (SSE) ===
@@ -284,6 +292,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // 页面加载时加载模型列表和历史记录
     loadModels();
     loadHistoryList();
+
+    // === 1.7 图片上传处理逻辑 ===
+    if (btnImageUpload) {
+        btnImageUpload.addEventListener('click', () => imageInput.click());
+    }
+
+    if (imageInput) {
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast('❌ 请选择有效的图片文件');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                selectedImageBase64 = event.target.result;
+                imagePreview.src = selectedImageBase64;
+                imagePreviewContainer.classList.remove('hidden');
+                // 如果当前不是视觉模型，自动切换
+                if (currentModelId !== 'qwen-vl' && selectModel) {
+                    selectModel.value = 'qwen-vl';
+                    selectModel.dispatchEvent(new Event('change'));
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    if (btnRemoveImage) {
+        btnRemoveImage.addEventListener('click', () => {
+            selectedImageBase64 = null;
+            imageInput.value = '';
+            imagePreviewContainer.classList.add('hidden');
+        });
+    }
 
     setInterval(async () => {
         try {
@@ -691,12 +737,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const activeInput = isInputExpanded ? chatInputExpanded : chatInput;
         const text = activeInput.value.trim();
         if (!text) return;
-        appendMessage('user', text);
-        activeInput.value = "";
-        // 同步另一个输入框
         if (isInputExpanded) chatInput.value = "";
         else chatInputExpanded.value = "";
-        messages.push({ "role": "user", "content": text });
+
+        // 构建消息内容
+        let messageContent;
+        if (selectedImageBase64) {
+            // 多模态消息格式
+            messageContent = [
+                { 
+                    type: 'image', 
+                    image: selectedImageBase64,
+                    // 针对 8GB 显存进行优化，限制最大像素点，防止 OOM
+                    max_pixels: 600 * 600 
+                },
+                { type: 'text', text: text }
+            ];
+            // 在对话历史中显示图片
+            const userMsgSpan = appendMessage('user', text);
+            const img = document.createElement('img');
+            img.src = selectedImageBase64;
+            img.className = 'chat-image';
+            img.onclick = () => window.open(img.src, '_blank');
+            userMsgSpan.parentElement.insertBefore(img, userMsgSpan);
+            
+            // 清理图片预览
+            btnRemoveImage.click();
+        } else {
+            // 纯文本消息格式
+            messageContent = text;
+            appendMessage('user', text);
+        }
+
+        messages.push({ "role": "user", "content": messageContent });
         const loadingMsg = appendMessage('assistant', '');
         
         // 显示“正在思考...”动画

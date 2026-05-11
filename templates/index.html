@@ -219,9 +219,15 @@
                     </div>
                     <div class="chat-input-area">
                         <div class="chat-input-row">
+                            <button id="btn-image-upload" class="btn-icon-expand" title="上传图片">🖼️</button>
+                            <input type="file" id="image-input" accept="image/*" class="hidden">
                             <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
                             <button id="btn-expand-input" class="btn-icon-expand" title="展开多行输入">📝</button>
                             <button id="btn-chat-send" class="btn primary">发送</button>
+                        </div>
+                        <div id="image-preview-container" class="image-preview-container hidden">
+                            <img id="image-preview" src="" alt="预览">
+                            <button id="btn-remove-image" class="btn-remove-image" title="移除图片">×</button>
                         </div>
                         <textarea id="chat-input-expanded" class="chat-input-expanded hidden" placeholder="多行输入... Shift+Enter 换行，Enter 发送" rows="4"></textarea>
                     </div>
