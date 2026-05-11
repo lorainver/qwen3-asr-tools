@@ -70,7 +70,15 @@
                 <p>长文本总结与 GPU 批处理转录</p>
             </header>
 
-            <div class="cards-grid">
+            <!-- 标签页切换栏 -->
+            <div class="tab-bar">
+                <button class="tab-btn active" data-tab="workstation">🎬 工作站</button>
+                <button class="tab-btn" data-tab="assistant">💬 AI 助理</button>
+            </div>
+
+            <!-- 页面1：工作站 -->
+            <div id="page-workstation" class="tab-page active">
+                <div class="cards-grid">
                 <!-- 总结卡片 -->
                 <div class="card glass-panel" id="summary-card">
                     <div class="card-header">
@@ -135,42 +143,7 @@
                     </div>
                 </div>
 
-                <!-- 聊天卡片 (AI 助手) -->
-                <div class="card glass-panel chat-card" id="chat-card">
-                    <div class="card-header"
-                        style="justify-content: space-between; display: flex; align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <div class="icon chat-icon"></div>
-                            <h3>AI 智能助理 <small id="current-model-tag" class="model-tag">加载中...</small></h3>
-                        </div>
-                        <div class="chat-header-actions" style="display: flex; align-items: center; gap: 15px;">
-                            <select id="select-model" class="select-minimal" title="选择对话模型">
-                                <option value="">-- 加载中 --</option>
-                            </select>
-                            <select id="select-tts-engine" class="select-minimal">
-                                <option value="edge">🌐 微软在线</option>
-                                <option value="sherpa">🏠 本地离线</option>
-                            </select>
-                            <label class="auto-speak-toggle">
-                                <input type="checkbox" id="check-auto-speak">
-                                <span class="toggle-icon">🔊</span>
-                                <span class="toggle-text">自动朗读</span>
-                            </label>
-                            <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="chat-history" class="chat-history">
-                            <div class="msg assistant">你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。</div>
-                        </div>
-                        <div class="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
-                            <button id="btn-chat-send" class="btn primary">发送</button>
-                        </div>
-                    </div>
-                </div>
-
-<!-- 终端命令参考卡片 (全量恢复) -->
+                <!-- 终端命令参考卡片 (全量恢复) -->
                 <div class="card glass-panel cli-card">
                     <div class="card-header">
                         <div class="icon cli-icon"></div>
@@ -211,11 +184,45 @@
                             </div>
                         </div>
                     </div>
-                </div> 
-            </div>
+                </div>
+                </div><!-- end cards-grid -->
+            </div><!-- end page-workstation -->
+
+            <!-- 页面2：AI 助理（全屏聊天） -->
+            <div id="page-assistant" class="tab-page">
+                <div class="chat-fullscreen glass-panel">
+                    <div class="chat-header-bar">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <h3>💬 AI 智能助理</h3>
+                            <small id="current-model-tag" class="model-tag">加载中...</small>
+                        </div>
+                        <div class="chat-header-actions">
+                            <select id="select-model" class="select-minimal" title="选择对话模型">
+                                <option value="">-- 加载中 --</option>
+                            </select>
+                            <select id="select-tts-engine" class="select-minimal">
+                                <option value="edge">🌐 微软在线</option>
+                                <option value="sherpa">🏠 本地离线</option>
+                            </select>
+                            <label class="auto-speak-toggle">
+                                <input type="checkbox" id="check-auto-speak">
+                                <span class="toggle-icon">🔊</span>
+                                <span class="toggle-text">自动朗读</span>
+                            </label>
+                            <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
+                        </div>
+                    </div>
+                    <div id="chat-history" class="chat-history-full">
+                        <div class="msg-wrapper assistant"><div class="msg-content assistant"><span class="markdown-content"><p>你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。</p></span></div><div class="msg-toolbar"><button class="btn-icon btn-copy-inline">📋 复制</button><button class="btn-icon">🔊 朗读</button></div></div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
+                        <button id="btn-chat-send" class="btn primary">发送</button>
+                    </div>
+                </div>
+            </div><!-- end page-assistant -->
         </main>
     </div>
     <script src="/static/main.js"></script>
 </body>
-
 </html>

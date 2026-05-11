@@ -114,6 +114,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // === 0.5 标签页切换逻辑 ===
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPages = document.querySelectorAll('.tab-page');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.dataset.tab;
+            
+            // 切换标签按钮状态
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // 切换页面显示
+            tabPages.forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(`page-${targetTab}`);
+            if (targetPage) targetPage.classList.add('active');
+        });
+    });
+
     // === 1. GPU 监控 (SSE) ===
     const evtSource = new EventSource('/api/gpu_stats');
     const vramVal = document.getElementById('vram-val');
@@ -573,8 +592,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function appendMessage(role, text) {
-        const div = document.createElement('div');
-        div.className = `msg ${role}`;
+        // 创建消息包装器
+        const wrapper = document.createElement('div');
+        wrapper.className = `msg-wrapper ${role}`;
+        
+        // 创建消息内容区
+        const contentDiv = document.createElement('div');
+        contentDiv.className = `msg-content ${role}`;
+        
         const contentSpan = document.createElement('span');
         
         if (role === 'assistant') {
@@ -588,16 +613,44 @@ document.addEventListener('DOMContentLoaded', () => {
             contentSpan.innerText = text;
         }
         
-        div.appendChild(contentSpan);
+        contentDiv.appendChild(contentSpan);
+        wrapper.appendChild(contentDiv);
+        
+        // 添加工具栏（复制按钮 + 朗读按钮）
+        const toolbar = document.createElement('div');
+        toolbar.className = 'msg-toolbar';
+        
+        // 复制按钮
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn-icon btn-copy-inline';
+        copyBtn.innerHTML = '📋 复制';
+        copyBtn.onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(contentSpan.innerText);
+                copyBtn.innerHTML = '✅ 已复制';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.innerHTML = '📋 复制';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            } catch (e) {
+                console.error('复制失败:', e);
+            }
+        };
+        toolbar.appendChild(copyBtn);
+        
+        // 助手消息额外添加朗读按钮
         if (role === 'assistant') {
             const speakBtn = document.createElement('button');
-            speakBtn.className = 'btn-speak';
-            speakBtn.innerHTML = '🔊';
-            // TTS 朗读时使用纯文本（去除 markdown 格式）
+            speakBtn.className = 'btn-icon';
+            speakBtn.innerHTML = '🔊 朗读';
             speakBtn.onclick = () => playTTS(contentSpan.innerText, speakBtn);
-            div.appendChild(speakBtn);
+            toolbar.appendChild(speakBtn);
         }
-        chatHistory.appendChild(div);
+        
+        wrapper.appendChild(toolbar);
+        
+        chatHistory.appendChild(wrapper);
         chatHistory.scrollTop = chatHistory.scrollHeight;
         return contentSpan;
     }
