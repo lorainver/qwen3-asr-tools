@@ -1,0 +1,77 @@
+# Qwen3-ASR Web 配置文件
+# 所有路径使用绝对路径，确保从任何目录运行都能正确加载
+
+# ===== 模型路径（绝对路径）=====
+models:
+  # Qwen3-ASR 语音识别模型（转录用）
+  asr: "D:/qwen3-asr/models/Qwen/Qwen3-ASR-0___6B"
+  
+  # Qwen2.5 大语言模型（对话/总结用）
+  llm: "D:/qwen3-asr/models/Qwen/Qwen2.5-1.5B-Instruct"
+  
+  # Sherpa-ONNX 离线 TTS 模型
+  tts: "D:/qwen3-asr/models/tts/vits-icefall-zh-aishell3"
+
+# ===== 服务器配置 =====
+server:
+  host: "0.0.0.0"
+  port: 8000
+  worker_port: 8001
+  debug: false
+
+# ===== GPU 设置 =====
+gpu:
+  device: "cuda"
+  batch_size: 8          # 转录批处理大小
+  chunk_size: 30.0        # 音频分块大小（秒）
+  max_inference_batch: 8   # Qwen3-ASR 最大推理批次
+
+# ===== 音频处理 =====
+audio:
+  sample_rate: 16000
+  channels: 1
+  format: "s16"           # 16-bit PCM
+
+# ===== TTS 设置 =====
+tts:
+  edge_voice: "zh-CN-XiaoxiaoNeural"
+  sherpa:
+    noise_scale: 0.667
+    noise_scale_w: 0.8
+    length_scale: 1.0
+    num_threads: 2
+    provider: "cpu"
+
+# ===== 日志配置 =====
+logging:
+  level: "INFO"           # DEBUG, INFO, WARNING, ERROR
+  file: "D:/qwen3-asr/logs/app.log"
+  max_bytes: 10485760     # 10 MB
+  backup_count: 5
+
+# ===== 文件路径 =====
+paths:
+  recordings: "D:/qwen3-asr/recordings"
+  audio_cache: "D:/qwen3-asr/static/audio"
+  templates: "D:/qwen3-asr/templates"
+  static: "D:/qwen3-asr/static"
+
+# ===== 转录参数 =====
+transcription:
+  max_new_tokens: 512
+  language: null            # null = 自动检测
+  yield_progress: true
+
+# ===== 总结参数 =====
+summarization:
+  chunk_size: 1500
+  local_max_tokens: 256
+  global_max_tokens: 1024
+  yield_progress: true
+
+# ===== 对话参数 =====
+chat:
+  max_new_tokens: 512
+  temperature: 0.7
+  top_p: 0.9
+  do_sample: true

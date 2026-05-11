@@ -38,6 +38,7 @@ temp_realtime.wav
 
 # 忽略日志
 *.log
+logs/
 
 # 忽略用户上传和缓存
 recordings/
@@ -45,6 +46,8 @@ static/audio/*.mp3
 
 # 忽略备份副本
 *-副本.py
+*copy*.py
+*Copy*.py
 
 # 忽略测试输出
 test_*.err
