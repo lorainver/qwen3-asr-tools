@@ -7,7 +7,7 @@ web_app.py - 主 Web 服务（无 CUDA 依赖）
 
 架构：
 ┌──────────────────────┐     ┌──────────────────────┐
-│  web_app.py (8000)    │     │  ai_worker.py (8001)  │
+│  web_app.py (8000)  │     │  ai_worker.py (8001)  │
 │  FastAPI + TTS        │ ←→ │  torch + AI模型       │
 │  GPU监控（pynvml）     │     │  chat / summarize     │
 │  不导入 torch          │     │  transcribe          │
@@ -33,17 +33,39 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 import pynvml
+import logging
 from tts_engine import TTSEngine
+from config_loader import config
+
+# 配置日志
+logging.basicConfig(
+    level=getattr(logging, config.get('logging.level', 'INFO')),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(config.get('logging.file', 'logs/app.log'), encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# 过滤 uvicorn.access 日志中轮询请求的噪音
+class SkipPollingFilter(logging.Filter):
+    def filter(self, record):
+        msg = record.getMessage()
+        for skip_path in ['/api/worker_status', '/api/gpu_stats', '/health']:
+            if skip_path in msg:
+                return False
+        return True
+
+# 应用到 uvicorn.access logger
+for logger_name in ['uvicorn.access', 'uvicorn.error']:
+    logging.getLogger(logger_name).addFilter(SkipPollingFilter())
 
 # ========== 配置 ==========
 
 AI_WORKER_PORT = 8001
 AI_WORKER_HOST = "127.0.0.1"
 AI_WORKER_URL = f"http://{AI_WORKER_HOST}:{AI_WORKER_PORT}"
-
-# ========== FastAPI 初始化 ==========
-
-app = FastAPI(title="Qwen3 ASR Web Console")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -55,6 +77,8 @@ os.makedirs(STATIC_DIR, exist_ok=True)
 os.makedirs(TEMPLATES_DIR, exist_ok=True)
 os.makedirs(RECORDINGS_DIR, exist_ok=True)
 os.makedirs(AUDIO_DIR, exist_ok=True)
+
+app = FastAPI(title="Qwen3 ASR Web Console")
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -78,14 +102,27 @@ class AIWorkerManager:
         """检查 worker 是否运行中"""
         if self.process is None:
             return False
-        return self.process.poll() is None
+        retcode = self.process.poll()
+        if retcode is not None:
+            # 进程已退出，记录退出码
+            logger.warning(f"AI Worker 进程已退出，退出码: {retcode}")
+            # 尝试读取子进程的输出（错误信息）
+            try:
+                output = self.process.stdout.read() if self.process.stdout else ''
+                if output:
+                    logger.warning(f"AI Worker 最后输出: {output[-500:]}")
+            except:
+                pass
+            self.process = None
+            return False
+        return True
     
     def start(self) -> dict:
         """启动 AI Worker 子进程"""
         if self.is_running():
             return {"status": "already_running", "message": "AI Worker 已在运行"}
         
-        print("\n[WebApp] 启动 AI Worker 子进程...")
+        logger.info("启动 AI Worker 子进程...")
         
         # 使用当前 Python 解释器
         python_exe = sys.executable
@@ -99,13 +136,28 @@ class AIWorkerManager:
         )
         self._start_time = time.time()
         
+        # 启动后台线程持续读取子进程输出，防止管道阻塞
+        import threading
+        def _read_worker_output(proc):
+            try:
+                for line in proc.stdout:
+                    line = line.rstrip()
+                    # 跳过 AI Worker 的 uvicorn access 日志（健康检查）
+                    if '/health' in line or '"GET' in line and '200 OK' in line:
+                        continue
+                    logger.info(f"[Worker] {line}")
+            except:
+                pass
+        
+        t = threading.Thread(target=_read_worker_output, args=(self.process,), daemon=True)
+        t.start()
+        
         # 等待启动（最多 30 秒）
-        print("[WebApp] 等待 AI Worker 就绪...")
+        logger.info("等待 AI Worker 就绪...")
         for i in range(30):
             time.sleep(1)
             if not self.is_running():
-                # 进程已退出，启动失败
-                print("[WebApp] AI Worker 启动失败")
+                logger.error("AI Worker 启动失败")
                 return {"status": "error", "message": "AI Worker 启动失败"}
             
             # 尝试健康检查
@@ -113,11 +165,12 @@ class AIWorkerManager:
                 import requests
                 resp = requests.get(f"{AI_WORKER_URL}/health", timeout=1)
                 if resp.status_code == 200:
-                    print(f"[WebApp] AI Worker 已就绪 ({i+1}秒)")
+                    logger.info(f"AI Worker 已就绪 ({i+1}秒)")
                     return {"status": "started", "message": f"AI Worker 启动成功 ({i+1}秒)"}
             except:
                 pass
         
+        logger.warning("AI Worker 启动超时")
         return {"status": "timeout", "message": "AI Worker 启动超时"}
     
     def kill(self) -> dict:
@@ -129,7 +182,7 @@ class AIWorkerManager:
             self.process = None
             return {"status": "already_stopped", "message": "AI Worker 已停止"}
         
-        print("\n[WebApp] 终止 AI Worker 子进程...")
+        logger.info("终止 AI Worker 子进程...")
         
         # Windows: 使用 terminate() 或 taskkill
         self.process.terminate()
@@ -137,11 +190,11 @@ class AIWorkerManager:
         # 等待进程退出（最多 5 秒）
         try:
             self.process.wait(timeout=5)
-            print("[WebApp] AI Worker 已正常终止")
+            logger.info("AI Worker 已正常终止")
         except subprocess.TimeoutExpired:
             # 强制杀死
             self.process.kill()
-            print("[WebApp] AI Worker 已强制终止")
+            logger.warning("AI Worker 已强制终止")
         
         self.process = None
         
@@ -237,7 +290,7 @@ class SummarizeRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 # ========== TTS 端点（本地处理） ==========
 
@@ -398,8 +451,8 @@ async def open_recordings():
 
 if __name__ == "__main__":
     import uvicorn
-    print(f"\n[WebApp] 主服务启动在 http://0.0.0.0:8000")
-    print(f"[WebApp] AI Worker 将在首次使用时启动（端口 {AI_WORKER_PORT}）")
-    print(f"[WebApp] 点击「释放显存」将终止 AI Worker，显存完全释放\n")
+    logger.info(f"主服务启动在 http://0.0.0.0:8000")
+    logger.info(f"AI Worker 将在首次使用时启动（端口 {AI_WORKER_PORT}）")
+    logger.info("点击「释放显存」将终止 AI Worker，显存完全释放")
     
     uvicorn.run(app, host="0.0.0.0", port=8000)

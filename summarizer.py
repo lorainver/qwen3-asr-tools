@@ -1,18 +1,25 @@
 import torch
+import logging
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import gc
 import json
 from model_manager import model_manager
+from config_loader import config
+
+# 配置日志
+logger = logging.getLogger(__name__)
 
 class LongTextSummarizer:
-    def __init__(self, model_path=r"D:\qwen3-asr\models\Qwen\Qwen2.5-1.5B-Instruct"):
-        self.model_path = model_path
+    def __init__(self):
+        # 从配置文件读取模型路径
+        self.model_path = config['models']['llm']
+        logger.info(f"Summarizer 使用模型: {self.model_path}")
         self.tokenizer = None
         self.model = None
 
     def _load_model(self):
         if self.model is None:
-            print("Loading Summarizer Model...")
+            logger.info("Loading Summarizer Model...")
             model_manager.set_processing(True)
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
             bnb_config = BitsAndBytesConfig(
@@ -27,11 +34,11 @@ class LongTextSummarizer:
             )
             # 注册实例（而非模型对象），这样 release_all 可以调用 _unload_model
             model_manager.register_summarizer(self)
-            print("Summarizer Model loaded.")
+            logger.info("Summarizer Model loaded.")
 
     def _unload_model(self):
         if self.model is not None:
-            print("Unloading Summarizer Model...")
+            logger.info("Unloading Summarizer Model...")
             # 先删除模型和分词器
             del self.model
             del self.tokenizer
@@ -48,7 +55,7 @@ class LongTextSummarizer:
             # 打印清理后的内存状态
             allocated = torch.cuda.memory_allocated() / 1024**3
             reserved = torch.cuda.memory_reserved() / 1024**3
-            print(f"Summarizer Model unloaded. Allocated: {allocated:.2f}GB, Reserved: {reserved:.2f}GB")
+            logger.info(f"Summarizer Model unloaded. Allocated: {allocated:.2f}GB, Reserved: {reserved:.2f}GB")
         else:
             model_manager.set_processing(False)
 
@@ -104,11 +111,11 @@ class LongTextSummarizer:
             final_result = self.tokenizer.decode(output_ids[0][len(input_ids[0]):], skip_special_tokens=True)
 
         except torch.cuda.OutOfMemoryError:
-            print("❌ GPU 显存不足！请关闭其他程序后重试。")
+            logger.error("GPU 显存不足！请关闭其他程序后重试。")
             if yield_progress:
                 yield json.dumps({"status": "error", "message": "GPU 显存不足，请释放显存后重试"})
         except Exception as e:
-            print(f"❌ 总结过程出错: {e}")
+            logger.error(f"总结过程出错: {e}")
             import traceback
             traceback.print_exc()
             if yield_progress:
@@ -151,12 +158,13 @@ class LongTextSummarizer:
                 )
                 
             response = self.tokenizer.decode(output_ids[0][len(input_ids[0]):], skip_special_tokens=True)
+            logger.debug(f"Chat response: {response[:100]}...")
             return response.strip()
         except torch.cuda.OutOfMemoryError:
-            print("❌ GPU 显存不足！请关闭其他程序后重试。")
+            logger.error("GPU 显存不足！请关闭其他程序后重试。")
             raise
         except Exception as e:
-            print(f"❌ 对话出错: {e}")
+            logger.error(f"对话出错: {e}")
             raise
         finally:
             # 对话频率高暂不卸载（显存充裕），若需释放去掉下面注释

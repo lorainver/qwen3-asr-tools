@@ -4,6 +4,10 @@ import os
 import hashlib
 import numpy as np
 import struct
+import logging
+from config_loader import config
+
+logger = logging.getLogger(__name__)
 
 class EdgeEngine:
     def __init__(self, voice="zh-CN-XiaoxiaoNeural"):
@@ -21,22 +25,22 @@ class EdgeEngine:
 class SherpaEngine:
     def __init__(self):
         self.tts = None
-        self.base_dir = os.path.dirname(os.path.abspath(__file__))
-        model_root = os.path.join(self.base_dir, "models", "tts", "vits-icefall-zh-aishell3")
+        # 从配置文件读取 TTS 模型路径
+        self.base_dir = config['models']['tts']
         
-        self.model_path = os.path.join(model_root, "model.onnx")
-        self.tokens_path = os.path.join(model_root, "tokens.txt")
-        self.lexicon_path = os.path.join(model_root, "lexicon.txt")
-        self.date_fst = os.path.join(model_root, "date.fst")
-        self.number_fst = os.path.join(model_root, "number.fst")
-        self.phone_fst = os.path.join(model_root, "phone.fst")
+        self.model_path = os.path.join(self.base_dir, "model.onnx")
+        self.tokens_path = os.path.join(self.base_dir, "tokens.txt")
+        self.lexicon_path = os.path.join(self.base_dir, "lexicon.txt")
+        self.date_fst = os.path.join(self.base_dir, "date.fst")
+        self.number_fst = os.path.join(self.base_dir, "number.fst")
+        self.phone_fst = os.path.join(self.base_dir, "phone.fst")
         self._initialized = False
 
     def _lazy_init(self):
         if self._initialized:
             return
         if not os.path.exists(self.model_path):
-            print(f"Error: 离线模型文件不存在 at {self.model_path}")
+            logger.error(f"离线模型文件不存在 at {self.model_path}")
             return
 
         import sherpa_onnx
@@ -62,7 +66,7 @@ class SherpaEngine:
         )
         self.tts = sherpa_onnx.OfflineTts(config)
         self._initialized = True
-        print("Sherpa-ONNX 离线语音引擎初始化完成。")
+        logger.info("Sherpa-ONNX 离线语音引擎初始化完成。")
 
     def _make_wav_header(self, sample_rate, num_channels=1, bits_per_sample=16):
         """生成流式 WAV 头（数据长度设为最大值，支持边生成边播放）"""
@@ -132,8 +136,8 @@ class SherpaEngine:
                     yield pcm_data[i:i+chunk_size]
 
         except Exception as e:
+            logger.error("SherpaTTS Exception details:")
             import traceback
-            print("SherpaTTS Exception details:")
             traceback.print_exc()
 
 class TTSEngine:
@@ -161,7 +165,8 @@ class TTSEngine:
             with open(output_path, "wb") as f:
                 async for chunk in self.stream_speech(text):
                     f.write(chunk)
+            logger.info(f"TTS cached: {output_path}")
             return True
         except Exception as e:
-            print(f"Save TTS Error: {e}")
+            logger.error(f"Save TTS Error: {e}")
             return False

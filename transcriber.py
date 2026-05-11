@@ -11,7 +11,12 @@ import time, os, json, av
 import numpy as np
 import gc
 import torch
+import logging
 from model_manager import model_manager
+from config_loader import config
+
+logger = logging.getLogger(__name__)
+
 
 def estimate_timestamps(text, cs, cd):
     """根据字符数量估算句子时间戳"""
@@ -29,11 +34,13 @@ def estimate_timestamps(text, cs, cd):
         pos += dur
     return result
 
+
 def format_time(s):
     """将秒数转换为 SRT 时间格式"""
     h, m = divmod(int(s), 3600)
     m, s = divmod(m, 60)
     return f"{h:02d}:{m:02d}:{s:02d},{int(s%1*1000):03d}"
+
 
 def write_srt(segments, out_path):
     """将片段列表写入 SRT 文件"""
@@ -49,6 +56,7 @@ def write_srt(segments, out_path):
         for i, (s, e, t) in enumerate(out, 1):
             f.write(f"{i}\n{format_time(s)} --> {format_time(e)}\n{t}\n\n")
 
+
 def run_transcription(media_path, srt_path, yield_progress=None):
     """
     执行视频转字幕任务
@@ -62,9 +70,16 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         如果 yield_progress=True，返回 JSON 格式的进度流
         支持取消：通过 model_manager.cancel() 发送取消信号
     """
-    model_path = r"D:\qwen3-asr\models\Qwen\Qwen3-ASR-0___6B"
-    chunk_size = 30.0
-    batch_size = 8
+    # 从配置文件读取参数
+    model_path = config['models']['asr']
+    chunk_size = config.get('gpu.chunk_size', 30.0)
+    batch_size = config.get('gpu.batch_size', 8)
+    target_sr = config.get('audio.sample_rate', 16000)
+    target_format = config.get('audio.format', 's16')
+    target_channels = config.get('audio.channels', 1)
+    max_batch = config.get('gpu.max_inference_batch', 8)
+    max_tokens = config.get('transcription.max_new_tokens', 512)
+    
     model = None
     
     # 设置处理状态
@@ -85,8 +100,16 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         from qwen_asr import Qwen3ASRModel
         import transformers
         transformers.logging.set_verbosity_error()
-        model = Qwen3ASRModel.from_pretrained(model_path, device_map='cuda', max_inference_batch_size=batch_size, max_new_tokens=512)
+        
+        logger.info(f"Loading ASR model from {model_path}")
+        model = Qwen3ASRModel.from_pretrained(
+            model_path, 
+            device_map='cuda', 
+            max_inference_batch_size=max_batch, 
+            max_new_tokens=max_tokens
+        )
         model_manager.register_transcriber(model)
+        logger.info(f"ASR model loaded. Batch size: {max_batch}, Max tokens: {max_tokens}")
         
         if yield_progress:
             yield json.dumps({"status": "processing", "progress": 10, "message": "提取全局音频流..."}) + "\n"
@@ -94,7 +117,11 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         # 3. 提取音频
         container = av.open(str(media_path))
         ast = container.streams.audio[0]
-        resampler = av.audio.resampler.AudioResampler(format='s16', layout='mono', rate=16000)
+        resampler = av.audio.resampler.AudioResampler(
+            format=target_format, 
+            layout=target_channels, 
+            rate=target_sr
+        )
         audio_frames = []
         for frame in container.decode(ast):
             for rf in resampler.resample(frame):
@@ -107,10 +134,13 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         done_count = 0
         tt = time.time()
         
+        logger.info(f"Starting batch processing: batch_size={batch_size}, chunk_size={chunk_size}s")
+        
         # 4. 批处理转录
         for batch_start in range(0, n_chunks, batch_size):
             # 检查取消信号
             if model_manager.is_cancelled():
+                logger.info("Transcription cancelled by user")
                 if yield_progress:
                     yield json.dumps({"status": "cancelled", "message": "转录已被用户取消"}) + "\n"
                 return
@@ -123,10 +153,10 @@ def run_transcription(media_path, srt_path, yield_progress=None):
                 cs = i * chunk_size
                 cd = min(chunk_size, total_sec - cs)
                 chunk_path = f"D:\\qwen3-asr\\chunk_{i}.wav"
-                start_idx = int(cs * 16000)
-                end_idx = int((cs + cd) * 16000)
+                start_idx = int(cs * target_sr)
+                end_idx = int((cs + cd) * target_sr)
                 chunk = full_audio[start_idx:end_idx]
-                sf.write(chunk_path, chunk, 16000)
+                sf.write(chunk_path, chunk, target_sr)
                 batch_wavs.append(chunk_path)
                 batch_info.append((i, cs, cd))
                 
@@ -148,17 +178,19 @@ def run_transcription(media_path, srt_path, yield_progress=None):
             if yield_progress:
                 percent = int((done_count / n_chunks) * 80) + 10
                 elapsed = time.time() - tt
-                eta = (elapsed / done_count) * (n_chunks - done_count)
+                eta = (elapsed / done_count) * (n_chunks - done_count) if done_count > 0 else 0
+                logger.debug(f"Transcription progress: {done_count}/{n_chunks}, ETA: {eta/60:.1f}min")
                 yield json.dumps({"status": "processing", "progress": percent, "message": f"正在识别 ({done_count}/{n_chunks})... 剩余 {eta/60:.1f} 分钟"}) + "\n"
 
         # 5. 写入 SRT
         write_srt(all_segs, srt_path)
+        logger.info(f"Transcription completed: {srt_path}")
         
         if yield_progress:
             yield json.dumps({"status": "done", "progress": 100, "message": "转录完成！", "srt_path": str(srt_path)}) + "\n"
             
     except Exception as e:
-        print(f"❌ 转录出错: {e}")
+        logger.error(f"转录出错: {e}")
         import traceback
         traceback.print_exc()
         if yield_progress:
@@ -171,4 +203,4 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         gc.collect()
         torch.cuda.empty_cache()
         model_manager.set_processing(False)
-        print("[Transcriber] 模型已清理，显存已释放")
+        logger.info("[Transcriber] 模型已清理，显存已释放")
