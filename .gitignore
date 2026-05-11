@@ -43,6 +43,7 @@ logs/
 # 忽略用户上传和缓存
 recordings/
 static/audio/*.mp3
+chats/
 
 # 忽略备份副本
 *-副本.py
