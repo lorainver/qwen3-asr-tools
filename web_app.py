@@ -283,6 +283,7 @@ async def proxy_stream_to_worker(method: str, path: str, **kwargs):
 class ChatRequest(BaseModel):
     messages: list
     model_id: str = None  # 可选：指定模型
+    enable_search: bool = False  # 是否启用联网搜索
 
 class SummarizeRequest(BaseModel):
     text: str
@@ -488,6 +489,23 @@ async def api_chat_stream(request: ChatRequest):
             "Connection": "keep-alive"
         }
     )
+
+# ========== 联网搜索 API 代理 ==========
+
+@app.get("/api/search/status")
+async def api_search_status():
+    """获取搜索功能状态"""
+    if not ai_worker.ensure_running():
+        return {"enabled": False, "message": "AI Worker 未运行"}
+    
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.get(f"{AI_WORKER_URL}/api/search/status")
+            return resp.json()
+    except Exception as e:
+        return {"enabled": False, "message": f"查询失败: {e}"}
+
+# 注意：搜索功能已集成到 /api/chat_stream 中，无需单独的 /api/search 端点
 
 @app.post("/api/summarize")
 async def api_summarize(request: SummarizeRequest):
