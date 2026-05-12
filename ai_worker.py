@@ -76,6 +76,8 @@ class ChatRequest(BaseModel):
     messages: List[Dict[str, Any]]
     model_id: Optional[str] = None
     enable_search: Optional[bool] = False  # 是否启用联网搜索
+    optimize_search: bool = True  # 是否开启搜索优化
+    search_optimize_prompt: Optional[str] = None # 自定义优化提示词
 
 class SearchRequest(BaseModel):
     query: str
@@ -102,48 +104,72 @@ async def health_check():
 
 @app.post("/api/chat_stream")
 async def api_chat_stream(request: ChatRequest):
-    """流式对话接口 - 支持联网搜索"""
+    """流式对话接口 - 支持联网搜索及搜索优化"""
     if request.model_id and request.model_id != summarizer.current_model_id:
         summarizer.switch_model(request.model_id)
     
-    # 如果启用联网搜索，先搜索并注入上下文
+    # 1. 处理联网搜索
     search_context = ""
+    messages = request.messages.copy()
+    
     if request.enable_search and searcher:
-        # 从最后一条用户消息提取搜索关键词
-        last_user_msg = ""
-        for msg in reversed(request.messages):
+        # 获取最后一条用户消息
+        last_user_msg = None
+        for msg in reversed(messages):
             if msg.get("role") == "user":
-                last_user_msg = msg.get("content", "")
+                last_user_msg = msg
                 break
         
         if last_user_msg:
-            max_results = config.get('search.max_results', 5)
-            results = searcher.search(last_user_msg, max_results=max_results)
-            search_context = searcher.format_for_llm(results)
+            query_text = last_user_msg.get("content", "")
+            search_query = query_text
+            
+            # --- 优化：Query 预处理 (关键词提取) ---
+            # 只有当开启了优化且提问较长时才执行
+            if request.optimize_search and len(query_text) > 10:
+                try:
+                    # 使用用户自定义的 Prompt，如果没有则使用默认值
+                    default_optimizer_prompt = f"请将以下问题提炼为 3 个搜索关键词，用空格隔开。严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
+                    keyword_prompt = request.search_optimize_prompt.replace("{query}", query_text) if request.search_optimize_prompt else default_optimizer_prompt
+                    
+                    # 使用当前活动的模型生成
+                    keywords = summarizer.chat([{"role": "user", "content": keyword_prompt}]).strip()
+                    
+                    # 强力清洗
+                    keywords = keywords.replace("\n", " ").replace("\r", " ")
+                    import re
+                    keywords = re.sub(r'^\d+[\.、\s:-]+', '', keywords)
+                    for prefix in ["关键词：", "关键词:", "Keywords:", "搜索词：", "Search:"]:
+                        if keywords.startswith(prefix):
+                            keywords = keywords[len(prefix):].strip()
+                    keywords = keywords.replace('"', '').replace("'", "").strip()
+                    
+                    if keywords and len(keywords) < 100:
+                        logger.info(f"🔍 [Query 优化] 最终关键词: '{keywords}'")
+                        search_query = keywords
+                except Exception as e:
+                    logger.warning(f"⚠️ Query 优化失败: {e}")
+
+            # 执行搜索
+            max_results = config.get('search.max_results', 8)
+            search_results = searcher.search(search_query, max_results=max_results)
+            search_context = searcher.format_for_llm(search_results)
             
             if search_context:
-                logger.info(f"🌐 联网搜索已注入上下文 ({len(results)} 条结果)")
-            else:
-                logger.warning("🌐 联网搜索无结果")
-    
-    # 如果有搜索上下文，优化注入逻辑：采用“知识优先级”模式
-    messages = []
-    original_messages = request.messages
-    for i, msg in enumerate(original_messages):
-        new_msg = msg.copy()
-        if i == len(original_messages) - 1 and msg.get("role") == "user" and search_context:
-            # 采用更具强制性的 Prompt 结构
-            injected_content = f"""【实时联网搜索参考资料】
+                logger.info(f"🌐 联网搜索已注入上下文 ({len(search_results)} 条结果)")
+                # 注入上下文
+                injected_content = f"""【实时联网搜索到的事实资料】
 {search_context}
---------------------------
-【重要指令】
-你现在的身份是具备联网能力的 AI 助手。请务必优先根据上方提供的“实时联网搜索参考资料”来回答问题。
-如果搜索结果与你的常识不符，请以搜索结果为准。如果搜索结果中包含诗词作者、时间、地点等事实，请直接引用。
 
-用户当前提问：{msg.get('content')}"""
-            new_msg["content"] = injected_content
-            logger.info(f"🚀 联网搜索上下文已就近注入 (采用强制指令模式, 长度: {len(injected_content)})")
-        messages.append(new_msg)
+【回答要求】
+1. 必须严格按照上述“事实资料”回答。
+2. 资料 [1] 提到的年份是 2026 年，不是 1994 年，也不是 2012 年。请务必纠正你的记忆！
+3. 如果资料中没提到的信息，不要脑补。
+4. 保持用户要求的语气（如：温柔、给小朋友讲、四川话等）。
+
+用户提问：{query_text}"""
+                last_user_msg["content"] = injected_content
+                logger.info(f"🚀 联网搜索上下文已就近注入 (长度: {len(injected_content)})")
     
     async def generate():
         # 如果有搜索结果，先发送搜索状态
