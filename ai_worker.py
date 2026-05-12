@@ -76,7 +76,7 @@ class ChatRequest(BaseModel):
     messages: List[Dict[str, Any]]
     model_id: Optional[str] = None
     enable_search: Optional[bool] = True  # 是否启用联网搜索（默认开启）
-    optimize_search: bool = False  # 是否开启搜索优化（默认关闭）
+    optimize_search: bool = True  # 是否开启搜索优化（默认开启）
     search_optimize_prompt: Optional[str] = None # 自定义优化提示词
 
 class SearchRequest(BaseModel):

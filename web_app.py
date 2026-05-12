@@ -284,7 +284,7 @@ class ChatRequest(BaseModel):
     messages: list
     model_id: str = None  # 可选：指定模型
     enable_search: bool = True  # 是否启用联网搜索（默认开启）
-    optimize_search: bool = False  # 是否启用关键词优化
+    optimize_search: bool = True  # 是否启用关键词优化（默认开启）
     search_optimize_prompt: str = None  # 自定义优化提示词
 
 class SummarizeRequest(BaseModel):
