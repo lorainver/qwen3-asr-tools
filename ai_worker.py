@@ -255,7 +255,7 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
     # 0. 调试信息：打印远程请求内容
     last_msg = request.messages[-1]["content"] if request.messages else "None"
     logger.info(f"📥 [OpenAI API] 收到远程请求 (共 {len(request.messages)} 条消息)")
-    logger.debug(f"📝 消息内容预览: {last_msg[:200]}...")
+    logger.info(f"📝 远程消息预览: {last_msg[:500]}...")
 
     # 1. 自动切换模型
     if request.model and request.model != summarizer.current_model_id:
