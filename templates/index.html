@@ -209,11 +209,15 @@
                                 <span class="toggle-text">自动朗读</span>
                             </label>
                             <label class="auto-speak-toggle" id="web-search-toggle">
-                                <input type="checkbox" id="check-web-search">
+                                <input type="checkbox" id="check-web-search" checked>
                                 <span class="toggle-icon">🌐</span>
                                 <span class="toggle-text">联网搜索</span>
                             </label>
-                            <button id="btn-search-settings" class="btn-icon-small" title="搜索设置">⚙️</button>
+                            <label class="auto-speak-toggle" id="search-optimize-toggle">
+                                <input type="checkbox" id="check-optimize-search">
+                                <span class="toggle-icon">🧠</span>
+                                <span class="toggle-text">搜索优化</span>
+                            </label>
                             <select id="select-history" class="select-minimal">
                                 <option value="">📜 历史对话</option>
                             </select>
@@ -241,32 +245,6 @@
             </div><!-- end page-assistant -->
         </main>
     </div>
-
-    <!-- 搜索设置面板 (移至 body 根部防止布局冲突) -->
-    <div id="search-settings-panel" class="settings-panel-overlay hidden">
-        <div class="settings-panel glass-panel">
-            <div class="settings-header">
-                <h4>🔍 搜索优化设置</h4>
-                <button id="btn-close-settings" class="btn-close">×</button>
-            </div>
-            <div class="settings-body">
-                <div class="setting-item">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="check-optimize-search" checked> 
-                        <span>启用 AI 关键词优化</span>
-                    </label>
-                    <p class="setting-tip">自动去除语气词和废话，让搜索引擎更精准（会稍微增加响应延迟）。</p>
-                </div>
-                <div class="setting-item">
-                    <label>自定义优化提示词:</label>
-                    <p class="setting-tip">使用 {query} 代表你的原始提问。</p>
-                    <textarea id="search-optimize-prompt" rows="5" placeholder="请将以下问题提炼为 3 个搜索关键词，用空格隔开。严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query}"></textarea>
-                </div>
-                <button id="btn-save-search-settings" class="btn primary btn-full">保存并应用</button>
-            </div>
-        </div>
-    </div>
-
     <script src="/static/main.js"></script>
 </body>
 </html>

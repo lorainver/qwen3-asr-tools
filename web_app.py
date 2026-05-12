@@ -283,7 +283,7 @@ async def proxy_stream_to_worker(method: str, path: str, **kwargs):
 class ChatRequest(BaseModel):
     messages: list
     model_id: str = None  # 可选：指定模型
-    enable_search: bool = False  # 是否启用联网搜索
+    enable_search: bool = True  # 是否启用联网搜索（默认开启）
     optimize_search: bool = False  # 是否启用关键词优化
     search_optimize_prompt: str = None  # 自定义优化提示词
 
