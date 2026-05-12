@@ -132,7 +132,8 @@ async def api_chat_stream(request: ChatRequest):
                 logger.info(f"🧠 正在为提问进行 AI 关键词优化: '{query_text[:30]}...'")
                 try:
                     # 使用更严格的 Prompt
-                    default_optimizer_prompt = f"请将以下问题提炼为 3 个最关键的搜索关键词，用空格隔开。要求：严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
+                    # default_optimizer_prompt = f"请将以下问题提炼为 3 个最关键的搜索关键词，用空格隔开。要求：严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
+                    default_optimizer_prompt = f"这是用户发来的请求, 先提取里面具体查询的内容, 然后这部分内容提炼为几个最关键的搜索关键词，用空格隔开。要求：严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
                     keyword_prompt = request.search_optimize_prompt.replace("{query}", query_text) if request.search_optimize_prompt else default_optimizer_prompt
                     
                     logger.debug(f"📝 优化 Prompt: {keyword_prompt}")
@@ -169,9 +170,8 @@ async def api_chat_stream(request: ChatRequest):
 
 【回答要求】
 1. 必须严格按照上述“事实资料”回答。
-2. 资料 [1] 提到的年份是 2026 年，不是 1994 年，也不是 2012 年。请务必纠正你的记忆！
-3. 如果资料中没提到的信息，不要脑补。
-4. 保持用户要求的语气（如：温柔、给小朋友讲、四川话等）。
+2. 如果资料中没提到的信息，不要脑补。
+
 
 用户提问：{query_text}"""
                 last_user_msg["content"] = injected_content
@@ -252,6 +252,11 @@ async def v1_models():
 
 @app.post("/v1/chat/completions")
 async def v1_chat_completions(request: OpenAICompletionRequest):
+    # 0. 调试信息：打印远程请求内容
+    last_msg = request.messages[-1]["content"] if request.messages else "None"
+    logger.info(f"📥 [OpenAI API] 收到远程请求 (共 {len(request.messages)} 条消息)")
+    logger.debug(f"📝 消息内容预览: {last_msg[:200]}...")
+
     # 1. 自动切换模型
     if request.model and request.model != summarizer.current_model_id:
         logger.info(f"[OpenAI API] 切换模型至: {request.model}")
@@ -307,5 +312,5 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8001)
 

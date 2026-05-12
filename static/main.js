@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnExpandInput = document.getElementById('btn-expand-input');
     const btnChatSend = document.getElementById('btn-chat-send');
     const btnNewChat = document.getElementById('btn-new-chat');
+    const checkOptimizeSearch = document.getElementById('check-optimize-search');
     const checkAutoSpeak = document.getElementById('check-auto-speak');
     const selectTTSEngine = document.getElementById('select-tts-engine');
     const selectHistory = document.getElementById('select-history');
@@ -397,6 +398,18 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 sumStatus.innerText = "处理出错: " + error.message;
             }
+        });
+    }
+
+    // 初始化搜索优化设置 (主界面开关)
+    const savedOptimize = localStorage.getItem('optimize_search');
+    if (savedOptimize !== null && checkOptimizeSearch) {
+        checkOptimizeSearch.checked = savedOptimize === 'true';
+    }
+
+    if (checkOptimizeSearch) {
+        checkOptimizeSearch.addEventListener('change', () => {
+            localStorage.setItem('optimize_search', checkOptimizeSearch.checked);
         });
     }
 
@@ -781,6 +794,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ttsPointer = 0;
         const useStreamingTTS = checkAutoSpeak && checkAutoSpeak.checked;
         
+        // 联网搜索及优化参数
+        const isSearchEnabled = checkWebSearch && checkWebSearch.checked;
+        const isOptimizeEnabled = checkOptimizeSearch && checkOptimizeSearch.checked;
+        
+        console.log(`📡 [Network] 发送请求: search=${isSearchEnabled}, optimize=${isOptimizeEnabled}`);
+
         try {
             const response = await fetch('/api/chat_stream', {
                 method: 'POST',
@@ -788,7 +807,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ 
                     messages: messages,
                     model_id: currentModelId,
-                    enable_search: checkWebSearch && checkWebSearch.checked  // 联网搜索开关
+                    enable_search: isSearchEnabled,
+                    optimize_search: isOptimizeEnabled
                 })
             });
             
