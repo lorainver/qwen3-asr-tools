@@ -118,16 +118,18 @@ async def api_chat_stream(request: ChatRequest):
             else:
                 logger.warning("🌐 联网搜索无结果")
     
-    # 如果有搜索上下文，注入到消息中
-    messages = request.messages
-    if search_context:
-        # 在系统消息后插入搜索上下文（如果有系统消息）
-        # 否则在用户消息前插入
-        search_msg = {"role": "system", "content": search_context}
-        if messages and messages[0].get("role") == "system":
-            messages = [messages[0], search_msg] + messages[1:]
-        else:
-            messages = [search_msg] + messages
+    # 如果有搜索上下文，优化注入逻辑：直接放入最后一条用户消息中
+    messages = []
+    original_messages = request.messages
+    for i, msg in enumerate(original_messages):
+        new_msg = msg.copy()
+        # 如果是最后一条用户消息，且存在搜索上下文，则进行“就近注入”
+        if i == len(original_messages) - 1 and msg.get("role") == "user" and search_context:
+            # 强化指令，确保模型优先参考搜索结果
+            injected_content = f"{search_context}\n\n---\n以上是实时联网搜索到的参考资料。请结合这些信息回答我的问题：\n{msg.get('content')}"
+            new_msg["content"] = injected_content
+            logger.info(f"🚀 联网搜索上下文已就近注入用户消息 (字符数: {len(injected_content)})")
+        messages.append(new_msg)
     
     async def generate():
         # 如果有搜索结果，先发送搜索状态
