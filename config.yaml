@@ -103,10 +103,11 @@ search:
   # 是否启用联网搜索功能
   enabled: true
   
-  # Serper.dev API Key (Google 搜索)
-  # 注册地址: https://serper.dev/ (免费 2500 次/月)
-  # 如果不填或配额用完，会自动降级到 DuckDuckGo
-  serper_api_key: ""
+  # 私有 SearXNG 节点地址 (部署在 Apple 服务器)
+  searxng_url: "http://192.168.31.132:8081"
+  
+  # Serper.dev API Key (作为备用)
+  serper_api_key: "1b759d40635de28d53bc786160d2f0f1ff7aa86b"
   
   # 每次搜索返回的最大结果数
-  max_results: 5
+  max_results: 8

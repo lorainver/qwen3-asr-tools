@@ -20,23 +20,27 @@ class SearchResult:
 class WebSearcher:
     """联网搜索器 - 自动降级双引擎"""
     
-    def __init__(self, serper_api_key: Optional[str] = None):
+    def __init__(self, serper_api_key: Optional[str] = None, searxng_url: Optional[str] = None):
         self.serper_api_key = serper_api_key
+        self.searxng_url = searxng_url
         self.serper_quota_exceeded = False  # 标记 Serper 配额是否用完
         self.serper_url = "https://google.serper.dev/search"
         
     def search(self, query: str, max_results: int = 5) -> List[SearchResult]:
         """
-        执行搜索 - 优先 Serper，失败自动降级到 DuckDuckGo
-        
-        Args:
-            query: 搜索关键词
-            max_results: 最大返回结果数
-            
-        Returns:
-            搜索结果列表
+        执行搜索 - 优先使用私有 SearXNG，其次 Serper，最后降级到 DuckDuckGo
         """
-        # 1. 如果 Serper 配额未用完，优先使用
+        # 1. 优先使用私有 SearXNG 节点
+        if self.searxng_url:
+            try:
+                results = self._search_searxng(query, max_results)
+                if results:
+                    logger.info(f"🌐 [SearXNG] 搜索成功: '{query}' → {len(results)} 条结果")
+                    return results
+            except Exception as e:
+                logger.warning(f"⚠️ SearXNG 搜索失败: {e}，尝试备用引擎")
+
+        # 2. 如果 Serper 配额未用完，作为第一备用
         if self.serper_api_key and not self.serper_quota_exceeded:
             try:
                 results = self._search_serper(query, max_results)
@@ -51,16 +55,59 @@ class WebSearcher:
                 else:
                     logger.warning(f"⚠️ Serper 搜索失败: {e}，尝试 DuckDuckGo")
         
-        # 2. 降级到 DuckDuckGo
+        # 3. 最后降级到 DuckDuckGo
         try:
             results = self._search_duckduckgo(query, max_results)
             if results:
                 logger.info(f"🌐 [DuckDuckGo] 搜索成功: '{query}' → {len(results)} 条结果")
                 return results
         except Exception as e:
-            logger.error(f"❌ DuckDuckGo 搜索也失败: {e}")
+            logger.error(f"❌ 所有搜索引擎均失败: {e}")
             
         return []
+
+    def _search_searxng(self, query: str, max_results: int) -> List[SearchResult]:
+        """私有 SearXNG 节点搜索 - 深度加固版"""
+        if not self.searxng_url:
+            return []
+            
+        url = f"{self.searxng_url}/search"
+        params = {
+            "q": query,
+            "format": "json",
+            "engines": "google,bing,baidu,duckduckgo",
+            "language": "zh-CN"
+        }
+        
+        # 深度加固：使用独立 Session 并彻底禁用系统环境变量中的代理配置
+        session = requests.Session()
+        session.trust_env = False  # 关键：强制不读取系统代理环境变量
+        
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
+        
+        try:
+            # 增加超时时间到 30 秒，显式传空代理
+            response = session.get(url, params=params, timeout=30, headers=headers, proxies={"http": None, "https": None})
+            response.raise_for_status()
+            data = response.json()
+        except Exception as e:
+            logger.error(f"❌ SearXNG 访问异常 (URL: {url}): {e}")
+            raise e
+        
+        results = []
+        # 解析 results 数组
+        search_results = data.get("results", [])
+        for item in search_results[:max_results]:
+            results.append(SearchResult(
+                title=item.get("title", ""),
+                snippet=item.get("content", ""),
+                url=item.get("url", ""),
+                source=item.get("engine", "searxng")
+            ))
+        
+        return results
     
     def _search_serper(self, query: str, max_results: int) -> List[SearchResult]:
         """Serper.dev API (Google 搜索)"""
@@ -162,11 +209,11 @@ class WebSearcher:
 # 全局单例
 _searcher: Optional[WebSearcher] = None
 
-def get_searcher(serper_api_key: Optional[str] = None) -> WebSearcher:
+def get_searcher(serper_api_key: Optional[str] = None, searxng_url: Optional[str] = None) -> WebSearcher:
     """获取全局搜索器实例"""
     global _searcher
     if _searcher is None:
-        _searcher = WebSearcher(serper_api_key)
+        _searcher = WebSearcher(serper_api_key, searxng_url)
     return _searcher
 
 def reset_searcher():

@@ -38,9 +38,17 @@ summarizer = LongTextSummarizer()
 # 初始化搜索器
 search_enabled = config.get('search.enabled', True)
 serper_api_key = config.get('search.serper_api_key', '')
+searxng_url = config.get('search.searxng_url', '')
+
 if search_enabled:
-    searcher = get_searcher(serper_api_key if serper_api_key else None)
-    logger.info(f"联网搜索已启用 (Serper API: {'已配置' if serper_api_key else '未配置，使用 DuckDuckGo'})")
+    searcher = get_searcher(
+        serper_api_key if serper_api_key else None,
+        searxng_url if searxng_url else None
+    )
+    if searxng_url:
+        logger.info(f"联网搜索已启用 (优先使用私有 SearXNG: {searxng_url})")
+    else:
+        logger.info(f"联网搜索已启用 (使用备用引擎: {'Serper' if serper_api_key else 'DuckDuckGo'})")
 else:
     searcher = None
 
