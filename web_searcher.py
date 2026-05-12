@@ -116,11 +116,10 @@ class WebSearcher:
         
         results = []
         with DDGS() as ddgs:
-            # 使用 text 搜索
+            # 使用 text 搜索（不指定 region，默认全球搜索）
             search_gen = ddgs.text(
                 query,
-                max_results=max_results,
-                region="cn-zh"  # 中国区域
+                max_results=max_results
             )
             
             if search_gen:
