@@ -118,17 +118,23 @@ async def api_chat_stream(request: ChatRequest):
             else:
                 logger.warning("🌐 联网搜索无结果")
     
-    # 如果有搜索上下文，优化注入逻辑：直接放入最后一条用户消息中
+    # 如果有搜索上下文，优化注入逻辑：采用“知识优先级”模式
     messages = []
     original_messages = request.messages
     for i, msg in enumerate(original_messages):
         new_msg = msg.copy()
-        # 如果是最后一条用户消息，且存在搜索上下文，则进行“就近注入”
         if i == len(original_messages) - 1 and msg.get("role") == "user" and search_context:
-            # 强化指令，确保模型优先参考搜索结果
-            injected_content = f"{search_context}\n\n---\n以上是实时联网搜索到的参考资料。请结合这些信息回答我的问题：\n{msg.get('content')}"
+            # 采用更具强制性的 Prompt 结构
+            injected_content = f"""【实时联网搜索参考资料】
+{search_context}
+--------------------------
+【重要指令】
+你现在的身份是具备联网能力的 AI 助手。请务必优先根据上方提供的“实时联网搜索参考资料”来回答问题。
+如果搜索结果与你的常识不符，请以搜索结果为准。如果搜索结果中包含诗词作者、时间、地点等事实，请直接引用。
+
+用户当前提问：{msg.get('content')}"""
             new_msg["content"] = injected_content
-            logger.info(f"🚀 联网搜索上下文已就近注入用户消息 (字符数: {len(injected_content)})")
+            logger.info(f"🚀 联网搜索上下文已就近注入 (采用强制指令模式, 长度: {len(injected_content)})")
         messages.append(new_msg)
     
     async def generate():
