@@ -189,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedImageBase64 = null;
 
     let currentModelId = 'qwen-general';
+    const checkWebSearch = document.getElementById('check-web-search');  // 联网搜索开关
 
     // === 1. GPU 监控 (SSE) ===
     const evtSource = new EventSource('/api/gpu_stats');
@@ -786,7 +787,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     messages: messages,
-                    model_id: currentModelId
+                    model_id: currentModelId,
+                    enable_search: checkWebSearch && checkWebSearch.checked  // 联网搜索开关
                 })
             });
             

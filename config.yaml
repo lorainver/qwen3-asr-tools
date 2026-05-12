@@ -97,3 +97,16 @@ chat:
   temperature: 0.7
   top_p: 0.9
   do_sample: true
+
+# ===== 联网搜索配置 =====
+search:
+  # 是否启用联网搜索功能
+  enabled: true
+  
+  # Serper.dev API Key (Google 搜索)
+  # 注册地址: https://serper.dev/ (免费 2500 次/月)
+  # 如果不填或配额用完，会自动降级到 DuckDuckGo
+  serper_api_key: ""
+  
+  # 每次搜索返回的最大结果数
+  max_results: 5

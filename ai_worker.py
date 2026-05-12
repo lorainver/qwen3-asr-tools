@@ -15,6 +15,8 @@ from pydantic import BaseModel, Field
 
 # 导入我们的核心模型类
 from summarizer import LongTextSummarizer
+from web_searcher import get_searcher, reset_searcher
+from config_loader import config
 
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -32,6 +34,15 @@ app.add_middleware(
 
 # 初始化模型 (单例模式)
 summarizer = LongTextSummarizer()
+
+# 初始化搜索器
+search_enabled = config.get('search.enabled', True)
+serper_api_key = config.get('search.serper_api_key', '')
+if search_enabled:
+    searcher = get_searcher(serper_api_key if serper_api_key else None)
+    logger.info(f"联网搜索已启用 (Serper API: {'已配置' if serper_api_key else '未配置，使用 DuckDuckGo'})")
+else:
+    searcher = None
 
 # ========== Pydantic 模型 (简化版，避免 Pydantic 验证错误) ==========
 
@@ -56,6 +67,11 @@ class OpenAICompletionRequest(BaseModel):
 class ChatRequest(BaseModel):
     messages: List[Dict[str, Any]]
     model_id: Optional[str] = None
+    enable_search: Optional[bool] = False  # 是否启用联网搜索
+
+class SearchRequest(BaseModel):
+    query: str
+    max_results: Optional[int] = 5
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -78,12 +94,48 @@ async def health_check():
 
 @app.post("/api/chat_stream")
 async def api_chat_stream(request: ChatRequest):
-    """流式对话接口"""
+    """流式对话接口 - 支持联网搜索"""
     if request.model_id and request.model_id != summarizer.current_model_id:
         summarizer.switch_model(request.model_id)
     
+    # 如果启用联网搜索，先搜索并注入上下文
+    search_context = ""
+    if request.enable_search and searcher:
+        # 从最后一条用户消息提取搜索关键词
+        last_user_msg = ""
+        for msg in reversed(request.messages):
+            if msg.get("role") == "user":
+                last_user_msg = msg.get("content", "")
+                break
+        
+        if last_user_msg:
+            max_results = config.get('search.max_results', 5)
+            results = searcher.search(last_user_msg, max_results=max_results)
+            search_context = searcher.format_for_llm(results)
+            
+            if search_context:
+                logger.info(f"🌐 联网搜索已注入上下文 ({len(results)} 条结果)")
+            else:
+                logger.warning("🌐 联网搜索无结果")
+    
+    # 如果有搜索上下文，注入到消息中
+    messages = request.messages
+    if search_context:
+        # 在系统消息后插入搜索上下文（如果有系统消息）
+        # 否则在用户消息前插入
+        search_msg = {"role": "system", "content": search_context}
+        if messages and messages[0].get("role") == "system":
+            messages = [messages[0], search_msg] + messages[1:]
+        else:
+            messages = [search_msg] + messages
+    
     async def generate():
-        for token in summarizer.chat_stream(request.messages):
+        # 如果有搜索结果，先发送搜索状态
+        if search_context:
+            yield f"data: {json.dumps({'type': 'search', 'status': 'done'}, ensure_ascii=False)}\n\n"
+            await asyncio.sleep(0.01)
+        
+        for token in summarizer.chat_stream(messages):
             yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
             # 添加微小延迟，确保每个 token 分开发送（打字机效果）
             await asyncio.sleep(0.02)
@@ -111,6 +163,34 @@ async def api_switch_model(request: SwitchModelRequest):
     if success:
         return {"status": "ok", "current_model": summarizer.get_current_model()}
     return {"status": "error", "message": f"未知模型: {request.model_id}"}
+
+# ========== 联网搜索接口 ==========
+
+@app.post("/api/search")
+async def api_search(request: SearchRequest):
+    """独立搜索接口 - 返回搜索结果"""
+    if not search_enabled or not searcher:
+        return {"status": "error", "message": "联网搜索未启用"}
+    
+    results = searcher.search(request.query, max_results=request.max_results)
+    return {
+        "status": "ok",
+        "results": [{
+            "title": r.title,
+            "snippet": r.snippet,
+            "url": r.url,
+            "source": r.source
+        } for r in results]
+    }
+
+@app.get("/api/search/status")
+async def api_search_status():
+    """获取搜索功能状态"""
+    return {
+        "enabled": search_enabled,
+        "engine": "serper" if (serper_api_key and not searcher.serper_quota_exceeded) else "duckduckgo",
+        "serper_quota_exceeded": searcher.serper_quota_exceeded if searcher else False
+    }
 
 # ========== OpenAI 兼容接口 ==========
 
