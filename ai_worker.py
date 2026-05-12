@@ -76,7 +76,7 @@ class ChatRequest(BaseModel):
     messages: List[Dict[str, Any]]
     model_id: Optional[str] = None
     enable_search: Optional[bool] = False  # 是否启用联网搜索
-    optimize_search: bool = True  # 是否开启搜索优化
+    optimize_search: bool = False  # 是否开启搜索优化（默认关闭）
     search_optimize_prompt: Optional[str] = None # 自定义优化提示词
 
 class SearchRequest(BaseModel):
@@ -105,6 +105,8 @@ async def health_check():
 @app.post("/api/chat_stream")
 async def api_chat_stream(request: ChatRequest):
     """流式对话接口 - 支持联网搜索及搜索优化"""
+    logger.info(f"📩 收到请求: search={request.enable_search}, optimize={request.optimize_search}")
+    
     if request.model_id and request.model_id != summarizer.current_model_id:
         summarizer.switch_model(request.model_id)
     
@@ -125,13 +127,15 @@ async def api_chat_stream(request: ChatRequest):
             search_query = query_text
             
             # --- 优化：Query 预处理 (关键词提取) ---
-            # 只有当开启了优化且提问较长时才执行
-            if request.optimize_search and len(query_text) > 10:
+            # 只有当显式开启了优化且提问较长时才执行
+            if request.optimize_search is True and len(query_text) > 10:
+                logger.info(f"🧠 正在为提问进行 AI 关键词优化: '{query_text[:30]}...'")
                 try:
-                    # 使用用户自定义的 Prompt，如果没有则使用默认值
-                    default_optimizer_prompt = f"请将以下问题提炼为 3 个搜索关键词，用空格隔开。严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
+                    # 使用更严格的 Prompt
+                    default_optimizer_prompt = f"请将以下问题提炼为 3 个最关键的搜索关键词，用空格隔开。要求：严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
                     keyword_prompt = request.search_optimize_prompt.replace("{query}", query_text) if request.search_optimize_prompt else default_optimizer_prompt
                     
+                    logger.debug(f"📝 优化 Prompt: {keyword_prompt}")
                     # 使用当前活动的模型生成
                     keywords = summarizer.chat([{"role": "user", "content": keyword_prompt}]).strip()
                     
@@ -145,10 +149,12 @@ async def api_chat_stream(request: ChatRequest):
                     keywords = keywords.replace('"', '').replace("'", "").strip()
                     
                     if keywords and len(keywords) < 100:
-                        logger.info(f"🔍 [Query 优化] 最终关键词: '{keywords}'")
+                        logger.info(f"🔍 [Query 优化成功] 最终关键词: '{keywords}'")
                         search_query = keywords
                 except Exception as e:
                     logger.warning(f"⚠️ Query 优化失败: {e}")
+            else:
+                logger.info(f"⏭️ 跳过 AI 关键词优化 (原因: 开关={request.optimize_search}, 长度={len(query_text)})")
 
             # 执行搜索
             max_results = config.get('search.max_results', 8)
