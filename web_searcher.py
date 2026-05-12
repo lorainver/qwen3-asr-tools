@@ -109,9 +109,9 @@ class WebSearcher:
         需要安装: pip install duckduckgo-search
         """
         try:
-            from duckduckgo_search import DDGS
+            from ddgs import DDGS
         except ImportError:
-            logger.error("请先安装 duckduckgo-search: pip install duckduckgo-search")
+            logger.error("请先安装 ddgs: pip install ddgs")
             return []
         
         results = []
