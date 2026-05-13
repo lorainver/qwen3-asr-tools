@@ -64,12 +64,23 @@ class LongTextSummarizer:
             if self.current_model_id == 'qwen-vl':
                 self.processor = AutoProcessor.from_pretrained(self.model_path)
                 bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True)
-                self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.model_path, quantization_config=bnb_config, device_map="auto", torch_dtype=torch.float16)
+                self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+                    self.model_path, 
+                    quantization_config=bnb_config, 
+                    device_map="auto", 
+                    torch_dtype=torch.float16,
+                    attn_implementation="sdpa"
+                )
                 self.tokenizer = self.processor.tokenizer
             else:
                 self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
                 bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16, bnb_4bit_quant_type="nf4")
-                self.model = AutoModelForCausalLM.from_pretrained(self.model_path, quantization_config=bnb_config, device_map="auto")
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    self.model_path, 
+                    quantization_config=bnb_config, 
+                    device_map="auto",
+                    attn_implementation="sdpa"
+                )
             
             model_manager.register_summarizer(self)
 

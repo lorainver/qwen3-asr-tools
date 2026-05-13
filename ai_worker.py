@@ -110,6 +110,10 @@ async def api_chat_stream(request: ChatRequest):
     if request.model_id and request.model_id != summarizer.current_model_id:
         summarizer.switch_model(request.model_id)
     
+    # 记录输入长度
+    total_chars = sum(len(str(m.get("content", ""))) for m in request.messages)
+    logger.info(f"📊 [Request] 输入消息共 {len(request.messages)} 条, 总计 {total_chars} 字符")
+    
     # 1. 处理联网搜索
     search_context = ""
     messages = request.messages.copy()
@@ -183,11 +187,17 @@ async def api_chat_stream(request: ChatRequest):
             yield f"data: {json.dumps({'type': 'search', 'status': 'done'}, ensure_ascii=False)}\n\n"
             await asyncio.sleep(0.01)
         
-        for token in summarizer.chat_stream(messages):
-            yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
-            # 添加微小延迟，确保每个 token 分开发送（打字机效果）
-            await asyncio.sleep(0.02)
-        yield "data: [DONE]\n\n"
+        try:
+            for token in summarizer.chat_stream(messages):
+                yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
+                # 添加微小延迟，确保每个 token 分开发送（打字机效果）
+                await asyncio.sleep(0.02)
+            yield "data: [DONE]\n\n"
+        finally:
+            # 自动清理显存碎片
+            import torch
+            torch.cuda.empty_cache()
+            logger.debug("🧹 已触发显存碎片清理")
     
     return StreamingResponse(
         generate(), 
@@ -255,12 +265,16 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
     # 0. 调试信息：打印远程请求内容
     last_msg = request.messages[-1]["content"] if request.messages else "None"
     logger.info(f"📥 [OpenAI API] 收到远程请求 (共 {len(request.messages)} 条消息)")
-    logger.info(f"📝 远程消息预览: {last_msg[:500]}...")
+    logger.info(f"📝 远程消息预览: {last_msg[:50000]}...")
 
     # 1. 自动切换模型
     if request.model and request.model != summarizer.current_model_id:
         logger.info(f"[OpenAI API] 切换模型至: {request.model}")
         summarizer.switch_model(request.model)
+
+    # 记录输入长度
+    total_chars = sum(len(str(m.get("content", ""))) for m in request.messages)
+    logger.info(f"📊 [OpenAI API] 输入消息共 {len(request.messages)} 条, 总计 {total_chars} 字符")
 
     # 2. 流式响应
     if request.stream:
@@ -268,23 +282,28 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
             request_id = f"chatcmpl-{uuid.uuid4()}"
             created_time = int(time.time())
             
-            for token in summarizer.chat_stream(request.messages):
-                chunk = {
-                    "id": request_id,
-                    "object": "chat.completion.chunk",
-                    "created": created_time,
+            try:
+                for token in summarizer.chat_stream(request.messages):
+                    chunk = {
+                        "id": request_id,
+                        "object": "chat.completion.chunk",
+                        "created": created_time,
+                        "model": summarizer.current_model_id,
+                        "choices": [{"index": 0, "delta": {"content": token}, "finish_reason": None}]
+                    }
+                    yield f"data: {json.dumps(chunk, ensure_ascii=False)}\n\n"
+                
+                done_chunk = {
+                    "id": request_id, "object": "chat.completion.chunk", "created": created_time,
                     "model": summarizer.current_model_id,
-                    "choices": [{"index": 0, "delta": {"content": token}, "finish_reason": None}]
+                    "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}]
                 }
-                yield f"data: {json.dumps(chunk, ensure_ascii=False)}\n\n"
-            
-            done_chunk = {
-                "id": request_id, "object": "chat.completion.chunk", "created": created_time,
-                "model": summarizer.current_model_id,
-                "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}]
-            }
-            yield f"data: {json.dumps(done_chunk)}\n\n"
-            yield "data: [DONE]\n\n"
+                yield f"data: {json.dumps(done_chunk)}\n\n"
+                yield "data: [DONE]\n\n"
+            finally:
+                import torch
+                torch.cuda.empty_cache()
+                logger.debug("🧹 [OpenAI API] 已触发显存碎片清理")
 
         return StreamingResponse(
             openai_stream_generator(), 
