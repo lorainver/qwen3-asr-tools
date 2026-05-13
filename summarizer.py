@@ -2,7 +2,7 @@ import torch
 import logging
 import gc
 import json
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TextIteratorStreamer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TextIteratorStreamer, AutoConfig
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 from qwen_vl_utils import process_vision_info
 from threading import Thread
@@ -74,13 +74,27 @@ class LongTextSummarizer:
                 self.tokenizer = self.processor.tokenizer
             else:
                 self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
-                bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16, bnb_4bit_quant_type="nf4")
-                self.model = AutoModelForCausalLM.from_pretrained(
-                    self.model_path, 
-                    quantization_config=bnb_config, 
-                    device_map="auto",
-                    attn_implementation="sdpa"
-                )
+                
+                # 检查模型是否已经有量化配置（如 GPTQ/AWQ）
+                model_config = AutoConfig.from_pretrained(self.model_path)
+                
+                if hasattr(model_config, 'quantization_config') and model_config.quantization_config:
+                    # 模型已量化，直接加载（不传递 quantization_config）
+                    logger.info(f"✓ 模型已量化，跳过 BitsAndBytesConfig: {self.model_path}")
+                    self.model = AutoModelForCausalLM.from_pretrained(
+                        self.model_path, 
+                        device_map="auto",
+                        attn_implementation="sdpa"
+                    )
+                else:
+                    # 模型未量化，使用 BitsAndBytesConfig 进行 4bit 量化
+                    bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16, bnb_4bit_quant_type="nf4")
+                    self.model = AutoModelForCausalLM.from_pretrained(
+                        self.model_path, 
+                        quantization_config=bnb_config, 
+                        device_map="auto",
+                        attn_implementation="sdpa"
+                    )
             
             model_manager.register_summarizer(self)
 

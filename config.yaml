@@ -30,6 +30,10 @@ models:
       name: "Qwen2.5-VL (视觉版)"
       path: "D:/qwen3-asr/models/Qwen/Qwen2.5-VL-3B-Instruct"
       description: "多模态大模型，支持图片分析和试卷识别"
+    qwen-7b:
+      name: "Qwen2.5-7B (GPTQ-Int4)"
+      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4"
+      description: "7B 参数 GPTQ 4bit 量化，效果更强（需 8GB 显存）"
   
   # Sherpa-ONNX 离线 TTS 模型
   tts: "D:/qwen3-asr/models/tts/vits-icefall-zh-aishell3"
