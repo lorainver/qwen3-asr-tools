@@ -1,3 +1,4 @@
+import os
 import torch
 import logging
 import gc
@@ -60,6 +61,15 @@ class LongTextSummarizer:
         if self.model is None:
             logger.info(f"Loading Summarizer Model: {self.current_model_id}...")
             model_manager.set_processing(True)
+            
+            # 禁用 Triton JIT 编译（Windows 不支持 Triton）
+            # 这对于 GPTQ 等预量化模型是必要的
+            os.environ['TORCH_COMPILE_DISABLE'] = '1'
+            try:
+                import torch._dynamo
+                torch._dynamo.config.disable = True
+            except Exception:
+                pass
             
             if self.current_model_id == 'qwen-vl':
                 self.processor = AutoProcessor.from_pretrained(self.model_path)
