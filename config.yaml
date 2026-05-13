@@ -38,6 +38,12 @@ models:
       name: "Qwen2.5-7B (GPTQ-Int4)"
       path: "D:/qwen3-asr/models/Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4"
       description: "7B 参数 GPTQ 4bit 量化，效果更强（需 8GB 显存）"
+    qwen-remote-vl:
+      name: "Qwen2-VL (远程 192.31)"
+      api_url: "http://192.168.0.31:8888/v1/chat/completions"
+      is_remote: true
+      is_vl: true
+      description: "运行在远程服务器上的视觉模型，支持图片分析"
   
   # Sherpa-ONNX 离线 TTS 模型
   tts: "D:/qwen3-asr/models/tts/vits-icefall-zh-aishell3"

@@ -7,6 +7,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 from qwen_vl_utils import process_vision_info
 from threading import Thread
+import requests
 from model_manager import model_manager
 from config_loader import config
 
@@ -23,6 +24,8 @@ class LongTextSummarizer:
         self.tokenizer = None
         self.processor = None
         self.model = None
+        self.api_url = None
+        self.is_remote = False
 
     def get_available_models(self):
         result = []
@@ -54,7 +57,15 @@ class LongTextSummarizer:
         model_info = self.available_models[model_id]
         self.model_path = model_info.get('path', self.default_model_path)
         self.current_model_id = model_id
-        logger.info(f"✅ 已切换到模型 '{model_id}' -> {self.model_path}")
+        
+        # 处理远程模型标识
+        self.api_url = model_info.get('api_url')
+        self.is_remote = model_info.get('is_remote', False)
+        
+        if self.is_remote:
+            logger.info(f"🌐 已切换到远程模型 '{model_id}' -> {self.api_url}")
+        else:
+            logger.info(f"✅ 已切换到本地模型 '{model_id}' -> {self.model_path}")
         return True
 
     def _load_model(self):
@@ -121,6 +132,9 @@ class LongTextSummarizer:
             model_manager.set_processing(False)
 
     def chat(self, messages):
+        if self.is_remote:
+            return self._chat_remote(messages)
+            
         self._load_model()
         try:
             if self.current_model_id == 'qwen-vl':
@@ -141,7 +155,29 @@ class LongTextSummarizer:
         finally:
             model_manager.set_processing(False)
 
+    def _chat_remote(self, messages):
+        logger.info(f"🚀 正在向远程服务器请求: {self.api_url}")
+        try:
+            payload = {
+                "model": "qwen", # 远程服务器通常不强制要求模型名一致
+                "messages": messages,
+                "stream": False,
+                "temperature": 0.7
+            }
+            response = requests.post(self.api_url, json=payload, timeout=60)
+            response.raise_for_status()
+            data = response.json()
+            return data['choices'][0]['message']['content']
+        except Exception as e:
+            error_msg = f"❌ 远程请求失败: {str(e)}"
+            logger.error(error_msg)
+            return error_msg
+
     def chat_stream(self, messages):
+        if self.is_remote:
+            yield from self._chat_stream_remote(messages)
+            return
+
         self._load_model()
         try:
             if self.current_model_id == 'qwen-vl':
@@ -163,3 +199,32 @@ class LongTextSummarizer:
             thread.join()
         finally:
             model_manager.set_processing(False)
+
+    def _chat_stream_remote(self, messages):
+        logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url}")
+        try:
+            payload = {
+                "model": "qwen",
+                "messages": messages,
+                "stream": True,
+                "temperature": 0.7
+            }
+            response = requests.post(self.api_url, json=payload, stream=True, timeout=60)
+            response.raise_for_status()
+            
+            for line in response.iter_lines():
+                if not line: continue
+                line_str = line.decode('utf-8')
+                if line_str.startswith("data: "):
+                    data_content = line_str[6:].strip()
+                    if data_content == "[DONE]": break
+                    
+                    try:
+                        chunk = json.loads(data_content)
+                        token = chunk.get('choices', [{}])[0].get('delta', {}).get('content', '')
+                        if token:
+                            yield token
+                    except Exception:
+                        continue
+        except Exception as e:
+            yield f"❌ 远程流式请求失败: {str(e)}"

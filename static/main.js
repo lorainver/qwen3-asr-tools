@@ -315,9 +315,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedImageBase64 = event.target.result;
                 imagePreview.src = selectedImageBase64;
                 imagePreviewContainer.classList.remove('hidden');
-                // 如果当前不是视觉模型，自动切换
-                if (currentModelId !== 'qwen-vl' && selectModel) {
-                    selectModel.value = 'qwen-vl';
+                
+                // 改进切换逻辑：如果当前模型不具备视觉能力，则提示或自动切换
+                // 我们通过模型 ID 是否包含 'vl' 来快速判定
+                if (!currentModelId.toLowerCase().includes('vl') && selectModel) {
+                    // 优先寻找远程 VL 模型，如果没有再选本地
+                    const remoteVLOption = Array.from(selectModel.options).find(opt => opt.value.includes('remote') && opt.value.includes('vl'));
+                    const localVLOption = Array.from(selectModel.options).find(opt => opt.value === 'qwen-vl');
+                    
+                    if (remoteVLOption) {
+                        selectModel.value = remoteVLOption.value;
+                    } else if (localVLOption) {
+                        selectModel.value = localVLOption.value;
+                    }
                     selectModel.dispatchEvent(new Event('change'));
                 }
             };
