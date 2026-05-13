@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPTQ 预量化模型部署指南（Windows + Python 3.14）</title>
+    
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-powershell.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    
+    <!-- Mermaid.js for flowcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --code-bg: #1e293b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: var(--bg-color);
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .sidebar h2 {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .sidebar nav a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .sidebar nav a.level-2 {
+            padding-left: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem 3rem 4rem;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        /* Header */
+        .doc-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .doc-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .doc-header .meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .doc-header .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Sections */
+        .section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .section h3 {
+            font-size: 1.25rem;
+            color: var(--text-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .section h4 {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin: 1.25rem 0 0.75rem;
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        
+        .info-box.success {
+            background: #ecfdf5;
+            border-color: var(--success-color);
+        }
+        
+        .info-box.warning {
+            background: #fffbeb;
+            border-color: var(--warning-color);
+        }
+        
+        .info-box.error {
+            background: #fef2f2;
+            border-color: var(--error-color);
+        }
+        
+        .info-box strong {
+            font-weight: 600;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background: var(--bg-color);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        tr:hover td {
+            background: #f1f5f9;
+        }
+        
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+        
+        pre code {
+            color: #e2e8f0;
+        }
+        
+        :not(pre) > code {
+            background: #e2e8f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+        }
+        
+        /* Diff Block */
+        .diff-block {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .diff-block .before,
+        .diff-block .after {
+            flex: 1;
+        }
+        
+        .diff-block .label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .diff-block .before .label {
+            background: #fef2f2;
+            color: var(--error-color);
+        }
+        
+        .diff-block .after .label {
+            background: #ecfdf5;
+            color: var(--success-color);
+        }
+        
+        /* Steps */
+        .steps {
+            counter-reset: step;
+        }
+        
+        .step {
+            position: relative;
+            padding-left: 3rem;
+            margin: 1.5rem 0;
+        }
+        
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Result Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+        
+        .badge.success {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        .badge.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .badge.warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        /* Mermaid */
+        .mermaid {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        /* Links */
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Lists */
+        ul, ol {
+            padding-left: 1.5rem;
+            margin: 0.75rem 0;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+        }
+        
+        /* Collapsible */
+        details {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        details[open] summary {
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        .doc-footer {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .main-content {
+                margin-left: 240px;
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .doc-header h1 {
+                font-size: 1.75rem;
+            }
+            .diff-block {
+                flex-direction: column;
+            }
+        }
+        
+        /* Print */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .section {
+                box-shadow: none;
+                border: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h2>目录导航</h2>
+            <nav>
+                <a href="#env">1. 环境准备</a>
+                <a href="#env-cuda" class="level-2">1.1 安装 CUDA Toolkit</a>
+                <a href="#env-vs" class="level-2">1.2 安装 VS Build Tools</a>
+                <a href="#env-venv" class="level-2">1.3 创建虚拟环境</a>
+                <a href="#attempts">2. 问题与尝试</a>
+                <a href="#attempt-flow" class="level-2">整体流程图</a>
+                <a href="#solution">3. 最终解决方案</a>
+                <a href="#solution-deps" class="level-2">3.1 安装依赖</a>
+                <a href="#solution-patch" class="level-2">3.2 修改 optimum</a>
+                <a href="#solution-triton" class="level-2">3.3 禁用 Triton</a>
+                <a href="#test">4. 测试验证</a>
+                <a href="#troubleshoot">5. 故障排查</a>
+                <a href="#appendix">附录</a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Document Header -->
+            <header class="doc-header">
+                <h1>GPTQ 预量化模型部署指南</h1>
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem; opacity: 0.95;">
+                    Windows + Python 3.14 + NVIDIA RTX 5060 8GB
+                </p>
+                <div class="meta">
+                    <div class="meta-item">
+                        <span>📁</span>
+                        <span>项目：D:\qwen3-asr</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>🎯</span>
+                        <span>目标模型：Qwen2.5-7B-Instruct-GPTQ-Int4</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>📅</span>
+                        <span>完成日期：2026-05-13</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Section 1: Environment -->
+            <section id="env" class="section">
+                <h2>1. 环境准备</h2>
+                
+                <h3 id="env-req">1.1 系统要求</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>组件</th>
+                            <th>版本要求</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Python</td>
+                            <td>3.14+</td>
+                            <td>本指南使用 Python 3.14</td>
+                        </tr>
+                        <tr>
+                            <td>NVIDIA GPU</td>
+                            <td>CUDA Compute 7.0+</td>
+                            <td>RTX 5060 Blackwell 架构</td>
+                        </tr>
+                        <tr>
+                            <td>GPU 显存</td>
+                            <td>≥ 8GB</td>
+                            <td>7B-GPTQ-Int4 需要约 5.5GB</td>
+                        </tr>
+                        <tr>
+                            <td>CUDA Toolkit</td>
+                            <td>12.1+</td>
+                            <td>用于编译 C++ 扩展</td>
+                        </tr>
+                        <tr>
+                            <td>VS Build Tools</td>
+                            <td>2022+</td>
+                            <td>Windows 编译工具链</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 id="env-cuda">1.2 安装 CUDA Toolkit</h3>
+                
+                <div class="info-box">
+                    <strong>📥 下载链接：</strong>
+                    <a href="https://developer.nvidia.com/cuda-downloads" target="_blank">CUDA Toolkit 官方下载</a> | 
+                    <a href="https://developer.nvidia.com/cuda-12-1-0-download-archive" target="_blank">CUDA 12.1 归档</a>
+                </div>
+                
+                <p>选择以下配置：</p>
+                <ul>
+                    <li>Operating System: <strong>Windows</strong></li>
+                    <li>Architecture: <strong>x86_64</strong></li>
+                    <li>Version: <strong>10/11</strong></li>
+                    <li>Installer Type: <strong>exe (local)</strong></li>
+                </ul>
+                
+                <h4>安装步骤：</h4>
+                <pre><code class="language-powershell"># 1. 下载 CUDA 12.1 安装包（约 3GB）
+
+# 2. 运行安装程序
+# 建议选择 "Custom" 安装，安装路径：D:\NVIDIA\CUDA\v12.1
+
+# 3. 验证安装
+D:\NVIDIA\CUDA\v12.1\bin\nvcc.exe --version
+# 输出：Cuda compilation tools, release 12.1, V12.1.66</code></pre>
+                
+                <h4>设置环境变量：</h4>
+                <pre><code class="language-powershell"># PowerShell（管理员）
+[Environment]::SetEnvironmentVariable("CUDA_HOME", "D:\NVIDIA\CUDA\v12.1", "Machine")
+[Environment]::SetEnvironmentVariable("CUDA_PATH", "D:\NVIDIA\CUDA\v12.1", "Machine")
+
+# 添加到 PATH
+$env:Path = "D:\NVIDIA\CUDA\v12.1\bin;" + $env:Path</code></pre>
+                
+                <h4>验证 CUDA 安装：</h4>
+                <pre><code class="language-powershell"># 检查 nvcc
+nvcc --version
+
+# 检查 NVIDIA 驱动
+nvidia-smi
+# 应显示 GPU 信息和驱动版本</code></pre>
+                
+                <h3 id="env-vs">1.3 安装 Visual Studio Build Tools</h3>
+                
+                <div class="info-box">
+                    <strong>📥 下载链接：</strong>
+                    <a href="https://visualstudio.microsoft.com/downloads/" target="_blank">Visual Studio 官方下载</a>
+                    （选择 "Build Tools for Visual Studio 2022"）
+                </div>
+                
+                <pre><code class="language-powershell"># 1. 下载 VS_BuildTools.exe
+
+# 2. 运行安装程序，选择以下工作负载：
+#    - "使用 C++ 的桌面开发" (Desktop development with C++)
+
+# 3. 确保包含以下组件：
+#    - MSVC v143 - VS 2022 C++ x64/x86 生成工具
+#    - Windows 10/11 SDK
+#    - C++ CMake tools for Windows</code></pre>
+                
+                <h3 id="env-venv">1.4 创建 Python 虚拟环境</h3>
+                <pre><code class="language-powershell"># 创建虚拟环境
+python -m venv D:\qwen3-asr\venv
+
+# 激活虚拟环境
+D:\qwen3-asr\venv\Scripts\Activate.ps1
+
+# 安装基础依赖
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install transformers accelerate safetensors</code></pre>
+            </section>
+            
+            <!-- Section 2: Attempts -->
+            <section id="attempts" class="section">
+                <h2>2. 问题与尝试</h2>
+                
+                <h3 id="attempt-flow">2.1 整体流程图</h3>
+                <div class="mermaid">
+flowchart TD
+    A[开始：加载 GPTQ 模型] --> B{选择量化库}
+    
+    B -->|方案1| C[安装 auto-gptq]
+    B -->|方案2| D[安装 autoawq]
+    B -->|方案3| E[安装 gptqmodel]
+    
+    C --> C1{Python 3.14}
+    C1 -->|有预编译 wheel?| C2[直接安装]
+    C1 -->|无预编译 wheel| C3[从源码编译]
+    C3 --> C4[需要 CUDA + VS Build Tools]
+    C4 --> C5{编译成功?}
+    C5 -->|否| F[失败：triton 不支持 Windows]
+    C5 -->|是| C6[安装成功]
+    
+    D --> D1[依赖 triton]
+    D1 --> F
+    
+    E --> E1{版本选择}
+    E1 -->|gptqmodel 7.0.0| E2[pyproject.toml 格式问题]
+    E2 --> F
+    E1 -->|gptqmodel 2.2.0| E3[安装成功]
+    
+    E3 --> G{optimum 兼容性}
+    G -->|API 不兼容| H[修改 optimum/gptq/quantizer.py]
+    H --> I{推理测试}
+    I -->|Triton JIT 报错| J[禁用 Triton: TORCH_COMPILE_DISABLE=1]
+    J --> K[成功！]
+    I -->|成功| K
+    
+    C6 --> I
+    
+    style A fill:#e0f2fe
+    style K fill:#d1fae5
+    style F fill:#fee2e2
+                </div>
+                
+                <h3>2.2 尝试方案一：auto-gptq</h3>
+                
+                <pre><code class="language-powershell"># 尝试直接安装
+pip install auto-gptq
+
+# 错误信息：
+# ERROR: No matching distribution found for auto-gptq
+# 原因：Python 3.14 太新，没有预编译的 wheel</code></pre>
+                
+                <pre><code class="language-powershell"># 尝试从源码编译
+git clone https://github.com/AutoGPTQ/AutoGPTQ.git
+cd AutoGPTQ
+
+$env:CUDA_HOME = "D:\NVIDIA\CUDA\v12.1"
+python -m build --wheel
+
+# 错误信息：
+# ImportError: triton not found
+# 原因：auto-gptq 依赖 triton，而 triton 不支持 Windows</code></pre>
+                
+                <div class="badge error">❌ 结论：auto-gptq 在 Windows + Python 3.14 下无法安装</div>
+                
+                <h3>2.3 尝试方案二：autoawq</h3>
+                
+                <pre><code class="language-powershell">pip install autoawq
+
+# 错误信息：
+# ERROR: Could not find a version that satisfies the requirement autoawq
+# 原因：autoawq 依赖 triton，而 triton 不支持 Windows</code></pre>
+                
+                <div class="badge error">❌ 结论：autoawq 在 Windows 下无法安装（依赖 triton）</div>
+                
+                <h3>2.4 尝试方案三：gptqmodel 7.0.0</h3>
+                
+                <pre><code class="language-powershell">pip install gptqmodel==7.0.0
+
+# 错误信息：
+# configuration error: `project.license` must be valid exactly by one definition
+# GIVEN VALUE: "Apache-2.0"
+# 
+# 原因：setuptools >= 77.0.1 要求 license 字段必须是以下格式之一：
+#   - license = {text = "Apache-2.0"}
+#   - license = {file = "LICENSE"}
+# 而 gptqmodel 7.0.0 使用的是旧格式：license = "Apache-2.0"</code></pre>
+                
+                <div class="badge error">❌ 结论：gptqmodel 7.0.0 依赖链问题太多，放弃</div>
+                
+                <h3>2.5 最终选择：gptqmodel 2.2.0</h3>
+                
+                <pre><code class="language-powershell">pip install gptqmodel==2.2.0
+
+# 安装成功！但遇到新问题：
+# optimum 2.1.0 与 gptqmodel 2.2.0 API 不兼容</code></pre>
+                
+                <div class="badge warning">⚠️ 需要修改 optimum 兼容性</div>
+            </section>
+            
+            <!-- Section 3: Solution -->
+            <section id="solution" class="section">
+                <h2>3. 最终解决方案</h2>
+                
+                <h3 id="solution-deps">3.1 安装依赖</h3>
+                <pre><code class="language-powershell"># 激活虚拟环境
+D:\qwen3-asr\venv\Scripts\Activate.ps1
+
+# 安装 gptqmodel 2.2.0
+pip install gptqmodel==2.2.0
+
+# 卸载 auto-gptq（避免版本检查报错）
+pip uninstall auto-gptq -y
+
+# 确保 optimum 已安装
+pip install optimum</code></pre>
+                
+                <h3 id="solution-patch">3.2 修改 optimum/gptq/quantizer.py</h3>
+                
+                <div class="info-box">
+                    <strong>📝 文件位置：</strong>
+                    <code>D:\qwen3-asr\venv\Lib\site-packages\optimum\gptq\quantizer.py</code>
+                </div>
+                
+                <h4>修改 1：导入部分（约第 45-60 行）</h4>
+                
+                <div class="diff-block">
+                    <div class="before">
+                        <div class="label">❌ 原代码</div>
+                        <pre><code class="language-python">if is_gptqmodel_available():
+    from gptqmodel import BACKEND, QuantizeConfig
+    # ...
+    try:
+        from gptqmodel.utils.importer import hf_select_quant_linear_v2
+    except ImportError:
+        hf_select_quant_linear_v2 = None</code></pre>
+                    </div>
+                    <div class="after">
+                        <div class="label">✅ 修改后</div>
+                        <pre><code class="language-python">if is_gptqmodel_available():
+    from gptqmodel import BACKEND, QuantizeConfig
+    # ...
+    try:
+        from gptqmodel.utils.importer import hf_select_quant_linear_v2
+    except ImportError:
+        # gptqmodel < 7.0 uses hf_select_quant_linear
+        try:
+            from gptqmodel.utils.importer import hf_select_quant_linear as hf_select_quant_linear_v2
+        except ImportError:
+            hf_select_quant_linear_v2 = None</code></pre>
+                    </div>
+                </div>
+                
+                <h4>修改 2：select_quant_linear 方法（约第 223 行）</h4>
+                
+                <div class="diff-block">
+                    <div class="before">
+                        <div class="label">❌ 原代码</div>
+                        <pre><code class="language-python">def select_quant_linear(self, device_map, pack=False):
+    self.quant_linear = hf_select_quant_linear_v2(
+        bits=self.bits,
+        group_size=self.group_size,
+        desc_act=self.desc_act,
+        sym=self.sym,
+        format=self.format,  # ❌
+        quant_method=METHOD.GPTQ,  # ❌
+        meta=self.meta,
+        device_map=device_map,
+        backend=self.backend,
+        pack=pack,
+    )</code></pre>
+                    </div>
+                    <div class="after">
+                        <div class="label">✅ 修改后</div>
+                        <pre><code class="language-python">def select_quant_linear(self, device_map, pack=False):
+    checkpoint_format = self.format if isinstance(self.format, str) else str(self.format)
+    self.quant_linear = hf_select_quant_linear_v2(
+        bits=self.bits,
+        group_size=self.group_size,
+        desc_act=self.desc_act,
+        sym=self.sym,
+        checkpoint_format=checkpoint_format,  # ✅
+        meta=self.meta,
+        device_map=device_map,
+        backend=self.backend,
+        pack=pack,
+    )</code></pre>
+                    </div>
+                </div>
+                
+                <h4>关键变更对照表：</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>原 API (gptqmodel 7.0.0)</th>
+                            <th>新 API (gptqmodel 2.2.0)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>hf_select_quant_linear_v2</code></td>
+                            <td><code>hf_select_quant_linear</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>METHOD</code></td>
+                            <td><code>QUANT_METHOD</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>format</code></td>
+                            <td><code>checkpoint_format</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>quant_method</code> 参数</td>
+                            <td>不存在，需移除</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 id="solution-triton">3.3 禁用 Triton JIT</h3>
+                
+                <div class="info-box warning">
+                    <strong>⚠️ 重要：</strong>Windows 不支持 Triton，必须禁用 JIT 编译才能正常运行 GPTQ 模型。
+                </div>
+                
+                <h4>方法 1：代码中设置</h4>
+                <pre><code class="language-python">import os
+os.environ['TORCH_COMPILE_DISABLE'] = '1'
+
+import torch
+torch._dynamo.config.disable = True</code></pre>
+                
+                <h4>方法 2：环境变量（推荐用于 Web 服务）</h4>
+                <pre><code class="language-powershell"># PowerShell
+$env:TORCH_COMPILE_DISABLE = '1'
+
+# 或在系统环境变量中设置
+[Environment]::SetEnvironmentVariable("TORCH_COMPILE_DISABLE", "1", "Machine")</code></pre>
+                
+                <h3 id="solution-model">3.4 下载 GPTQ 模型</h3>
+                
+                <div class="info-box">
+                    <strong>📥 模型链接：</strong>
+                    <a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4" target="_blank">Qwen2.5-7B-Instruct-GPTQ-Int4</a>
+                </div>
+                
+                <pre><code class="language-powershell"># 方法 1：使用 huggingface-cli
+pip install huggingface_hub
+huggingface-cli download Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4 --local-dir D:\qwen3-asr\models\Qwen\Qwen2.5-7B-Instruct-GPTQ-Int4
+
+# 方法 2：使用 Python 脚本下载
+python -c "
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id='Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4',
+    local_dir=r'D:\qwen3-asr\models\Qwen\Qwen2.5-7B-Instruct-GPTQ-Int4'
+)
+"</code></pre>
+            </section>
+            
+            <!-- Section 4: Test -->
+            <section id="test" class="section">
+                <h2>4. 测试验证</h2>
+                
+                <h3>4.1 基础测试脚本</h3>
+                
+                <details open>
+                    <summary>📄 查看完整测试脚本：test_gptq_trust.py</summary>
+                    <pre><code class="language-python">"""
+Test GPTQ model loading with gptqmodel 2.2.0
+"""
+import os
+os.environ['TORCH_COMPILE_DISABLE'] = '1'  # Disable Triton JIT
+
+import torch
+torch._dynamo.config.disable = True
+
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
+
+model_path = r"D:\qwen3-asr\models\Qwen\Qwen2.5-7B-Instruct-GPTQ-Int4"
+
+print(f"Test model: {model_path}")
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"GPU: {torch.cuda.get_device_name(0)}")
+print()
+
+# Check model config
+print("1. Check model config...")
+config = AutoConfig.from_pretrained(model_path, trust_remote_code=True)
+print(f"   Model type: {config.model_type}")
+if hasattr(config, 'quantization_config'):
+    print(f"   Quantization config: {config.quantization_config}")
+print()
+
+# Load tokenizer
+print("2. Loading Tokenizer...")
+tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+print("   [OK] Tokenizer loaded")
+print()
+
+# Load model
+print("3. Loading Model (GPTQ)...")
+model = AutoModelForCausalLM.from_pretrained(
+    model_path,
+    device_map="auto",
+    trust_remote_code=True,
+)
+print("   [OK] Model loaded")
+print()
+
+# Test inference
+print("4. Testing inference...")
+messages = [
+    {"role": "user", "content": "Hello, please introduce yourself briefly."}
+]
+input_text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+inputs = tokenizer(input_text, return_tensors="pt").to(model.device)
+
+print("   Generating...")
+with torch.no_grad():
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=50,
+        do_sample=True,
+        temperature=0.7
+    )
+
+response = tokenizer.decode(outputs[0][inputs['input_ids'].shape[1]:], skip_special_tokens=True)
+print(f"   [OK] Inference success")
+print(f"   Response: {response}")
+print()
+
+# Memory usage
+print("5. Memory usage:")
+print(f"   Allocated: {torch.cuda.memory_allocated() / 1024**2:.1f} MB")
+print(f"   Reserved: {torch.cuda.memory_reserved() / 1024**2:.1f} MB")
+print()
+
+print("[SUCCESS] GPTQ model works correctly!")</code></pre>
+                </details>
+                
+                <h3>4.2 运行测试</h3>
+                <pre><code class="language-powershell">cd D:\qwen3-asr
+D:\qwen3-asr\venv\Scripts\python.exe test_gptq_trust.py</code></pre>
+                
+                <h3>4.3 预期输出</h3>
+                <pre><code>Test model: D:\qwen3-asr\models\Qwen\Qwen2.5-7B-Instruct-GPTQ-Int4
+CUDA available: True
+GPU: NVIDIA GeForce RTX 5060
+
+1. Check model config...
+   Model type: qwen2
+   Quantization config: {'batch_size': 1, 'bits': 4, ...}
+
+2. Loading Tokenizer...
+   [OK] Tokenizer loaded
+
+3. Loading Model (GPTQ)...
+   INFO   Kernel: Auto-selection: adding candidate `TorchQuantLinear`
+   Loading checkpoint shards: 100%|████████████████| 2/2 [00:07<00:00]
+   INFO   Format: Converting `checkpoint_format` from `gptq` to internal `gptq_v2`.
+   INFO   Optimize: `TorchQuantLinear` compilation triggered.
+   [OK] Model loaded
+
+4. Testing inference...
+   Generating...
+   [OK] Inference success
+   Response: Hello! I'm Qwen, a large language model created by Alibaba Cloud...
+
+5. Memory usage:
+   Allocated: 5359.5 MB
+   Reserved: 5956.0 MB
+
+[SUCCESS] GPTQ model works correctly!</code></pre>
+                
+                <div class="info-box success">
+                    <strong>✅ 成功标志：</strong>模型加载耗时约 7 秒，显存占用约 5.4GB，推理正常响应。
+                </div>
+            </section>
+            
+            <!-- Section 5: Troubleshooting -->
+            <section id="troubleshoot" class="section">
+                <h2>5. 故障排查</h2>
+                
+                <h3>5.1 常见错误及解决方案</h3>
+                
+                <details>
+                    <summary>❌ 错误 1：ImportError: You need a version of auto_gptq >= 0.4.2</summary>
+                    <div class="info-box error" style="margin-top: 1rem;">
+                        <strong>原因：</strong>transformers 检测到 auto-gptq 已安装但版本 &lt; 0.4.2
+                    </div>
+                    <h4>解决方案：</h4>
+                    <pre><code class="language-powershell">pip uninstall auto-gptq -y</code></pre>
+                </details>
+                
+                <details>
+                    <summary>❌ 错误 2：TypeError: 'NoneType' object is not callable</summary>
+                    <div class="info-box error" style="margin-top: 1rem;">
+                        <strong>原因：</strong>hf_select_quant_linear_v2 不存在（gptqmodel 2.2.0 只有 hf_select_quant_linear）
+                    </div>
+                    <h4>解决方案：</h4>
+                    <p>修改 optimum/gptq/quantizer.py 导入部分（见 <a href="#solution-patch">3.2 节</a>）</p>
+                </details>
+                
+                <details>
+                    <summary>❌ 错误 3：torch._inductor.exc.TritonMissing</summary>
+                    <div class="info-box error" style="margin-top: 1rem;">
+                        <strong>原因：</strong>Windows 不支持 Triton，但 gptqmodel 的 TorchQuantLinear 默认尝试使用 Triton JIT 编译
+                    </div>
+                    <h4>解决方案：</h4>
+                    <pre><code class="language-python">import os
+os.environ['TORCH_COMPILE_DISABLE'] = '1'
+import torch
+torch._dynamo.config.disable = True</code></pre>
+                </details>
+                
+                <details>
+                    <summary>❌ 错误 4：configuration error: project.license must be valid</summary>
+                    <div class="info-box error" style="margin-top: 1rem;">
+                        <strong>原因：</strong>setuptools >= 77 要求 license 字段使用 <code>{text = "..."}</code> 或 <code>{file = "..."}</code> 格式
+                    </div>
+                    <h4>解决方案：</h4>
+                    <p>使用 gptqmodel 2.2.0（已修复），或手动修改 pyproject.toml</p>
+                </details>
+                
+                <h3>5.2 依赖版本矩阵</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>组件</th>
+                            <th>版本</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Python</td>
+                            <td>3.14</td>
+                            <td>主测试环境</td>
+                        </tr>
+                        <tr>
+                            <td>PyTorch</td>
+                            <td>2.11.0+cu130</td>
+                            <td>CUDA 12.x</td>
+                        </tr>
+                        <tr>
+                            <td>transformers</td>
+                            <td>4.57.6</td>
+                            <td>最新版</td>
+                        </tr>
+                        <tr>
+                            <td>optimum</td>
+                            <td>2.1.0</td>
+                            <td>需手动打补丁</td>
+                        </tr>
+                        <tr>
+                            <td>gptqmodel</td>
+                            <td>2.2.0</td>
+                            <td>兼容版本</td>
+                        </tr>
+                        <tr>
+                            <td>accelerate</td>
+                            <td>1.13.0+</td>
+                            <td>模型加载</td>
+                        </tr>
+                        <tr>
+                            <td>safetensors</td>
+                            <td>0.7.0+</td>
+                            <td>权重格式</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- Appendix -->
+            <section id="appendix" class="section">
+                <h2>附录</h2>
+                
+                <h3>A. 相关链接</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>资源</th>
+                            <th>链接</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CUDA Toolkit 下载</td>
+                            <td><a href="https://developer.nvidia.com/cuda-downloads" target="_blank">developer.nvidia.com/cuda-downloads</a></td>
+                        </tr>
+                        <tr>
+                            <td>CUDA 12.1 归档</td>
+                            <td><a href="https://developer.nvidia.com/cuda-12-1-0-download-archive" target="_blank">developer.nvidia.com/cuda-12-1-0-download-archive</a></td>
+                        </tr>
+                        <tr>
+                            <td>VS Build Tools</td>
+                            <td><a href="https://visualstudio.microsoft.com/downloads/" target="_blank">visualstudio.microsoft.com/downloads</a></td>
+                        </tr>
+                        <tr>
+                            <td>Qwen2.5-7B-GPTQ-Int4</td>
+                            <td><a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4" target="_blank">huggingface.co/Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4</a></td>
+                        </tr>
+                        <tr>
+                            <td>gptqmodel GitHub</td>
+                            <td><a href="https://github.com/ModelCloud/GPTQModel" target="_blank">github.com/ModelCloud/GPTQModel</a></td>
+                        </tr>
+                        <tr>
+                            <td>optimum GitHub</td>
+                            <td><a href="https://github.com/huggingface/optimum" target="_blank">github.com/huggingface/optimum</a></td>
+                        </tr>
+                        <tr>
+                            <td>transformers 文档</td>
+                            <td><a href="https://huggingface.co/docs/transformers/" target="_blank">huggingface.co/docs/transformers</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>B. 配置文件示例</h3>
+                <details>
+                    <summary>📄 config.yaml 模型配置</summary>
+                    <pre><code class="language-yaml">models:
+  llm_models:
+    qwen-7b:
+      name: "Qwen2.5-7B (GPTQ-Int4)"
+      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4"
+      description: "7B 参数 GPTQ 4bit 量化，效果更强（需 8GB 显存）"</code></pre>
+                </details>
+                
+                <h3>C. 版本兼容性图</h3>
+                <div class="mermaid">
+graph LR
+    subgraph 推荐["✅ 推荐环境"]
+        A[Python 3.14] --> B[PyTorch 2.11]
+        B --> C[gptqmodel 2.2.0]
+        C --> D[optimum 2.1.0 + 补丁]
+    end
+    
+    subgraph 不兼容["❌ 不兼容"]
+        E[gptqmodel 7.0.0] --> F[pyproject.toml 问题]
+        G[auto-gptq] --> H[triton 依赖]
+        I[autoawq] --> H
+    end
+    
+    subgraph 限制["⚠️ Windows 限制"]
+        J[triton] --> K[不支持 Windows]
+    end
+    
+    H --> K
+                </div>
+            </section>
+            
+            <!-- Summary -->
+            <section class="section" style="background: linear-gradient(135deg, #eff6ff, #dbeafe);">
+                <h2>📋 总结</h2>
+                <p>在 <strong>Windows + Python 3.14</strong> 环境下部署 GPTQ 预量化模型需要：</p>
+                <ol>
+                    <li><strong>安装 CUDA Toolkit 12.1</strong> 和 <strong>VS Build Tools 2022</strong></li>
+                    <li><strong>使用 gptqmodel 2.2.0</strong>（而非 7.0.0）</li>
+                    <li><strong>手动修改 optimum/gptq/quantizer.py</strong> 兼容 API</li>
+                    <li><strong>禁用 Triton JIT</strong>（<code>TORCH_COMPILE_DISABLE=1</code>）</li>
+                    <li><strong>卸载 auto-gptq</strong>（避免版本检查报错）</li>
+                </ol>
+                <div class="info-box success">
+                    <strong>✅ 成功后：</strong>7B-GPTQ-Int4 模型显存占用约 5.4GB，可在 RTX 5060 8GB 显卡上流畅运行。
+                </div>
+            </section>
+            
+            <!-- Footer -->
+            <footer class="doc-footer">
+                <p>
+                    <strong>文档版本：</strong>v1.0 | 
+                    <strong>最后更新：</strong>2026-05-13 | 
+                    <strong>作者：</strong>QClaw AI Assistant
+                </p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="https://github.com/lorainver/qwen3-asr-tools" target="_blank">GitHub 仓库</a> | 
+                    <a href="D:\qwen3-asr\docs\GPTQ_Deployment_Guide_Windows.md">Markdown 源文件</a>
+                </p>
+            </footer>
+        </main>
+    </div>
+    
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#2563eb',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#3b82f6',
+                lineColor: '#64748b',
+                secondaryColor: '#f1f5f9',
+                tertiaryColor: '#eff6ff'
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Highlight active section in sidebar
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.sidebar nav a');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.style.background = '';
+                link.style.color = '';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.background = 'var(--primary-color)';
+                    link.style.color = 'white';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
