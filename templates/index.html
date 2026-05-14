@@ -169,8 +169,12 @@
                                 <span class="label">🚀 黄金组合 (Ollama 加速版):</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 0.6b --model_type ollama --ollama_model qwen2.5:3b</code>
                             </div>
-                            <div class="code-block" data-tooltip="顶级配置：1.7B ASR + 3B LLM。全本地运行，最强精度，需 8GB+ 显存。">
-                                <span class="label">💎 顶级画质 (纯本地 1.7B+3B):</span>
+                            <div class="code-block" data-tooltip="专业级推荐：1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景，精度最高。">
+                                <span class="label">💎 专业全能版 (1.7B + Ollama):</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 1.7b --model_type ollama --ollama_model qwen2.5:3b</code>
+                            </div>
+                            <div class="code-block" data-tooltip="极致配置：1.7B ASR + 本地 3B。全本地离线运行，无需依赖外部 API。">
+                                <span class="label">🛡️ 全本地离线版 (1.7B + 3B):</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 1.7b --model_type 3b</code>
                             </div>
                             <div class="cli-params-box">
