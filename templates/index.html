@@ -142,44 +142,58 @@
                     </div>
                 </div>
 
-                <!-- 终端命令参考卡片 (全量恢复) -->
+                <!-- 终端命令参考卡片 (2026.05 最终全能版) -->
                 <div class="card glass-panel cli-card">
                     <div class="card-header">
                         <div class="icon cli-icon"></div>
                         <h3>终端实战命令参考 <small class="model-tag">CLI Toolbox</small></h3>
                     </div>
                     <div class="card-body">
+                        <!-- 1. 实时同传 -->
                         <div class="cli-section">
-                            <h4>🛠️ 基础工具</h4>
-                            <div class="code-block" data-tooltip="列出当前系统所有可用的音频输入设备 ID，用于实时监控脚本。">
-                                <span class="label">查询音频设备列表:</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --list</code>
+                            <h4>🎤 实时同声传译 (混合引擎)</h4>
+                            <div class="code-block" data-tooltip="推荐配置：Ollama 3B 翻译 + 0.6B ASR。极省显存，智商在线。">
+                                <span class="label">🚀 黄金组合 (Ollama 加速):</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 0.6b --model_type ollama --ollama_model qwen2.5:3b</code>
+                            </div>
+                            <div class="code-block" data-tooltip="顶级配置：1.7B ASR + 3B LLM。全本地运行，最强精度，需 8GB+ 显存。">
+                                <span class="label">💎 顶级画质 (纯本地 1.7B+3B):</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 1.7b --model_type 3b</code>
+                            </div>
+                            <div class="cli-params-box">
+                                <strong>核心参数:</strong>
+                                <span><code>--asr_type [0.6b|1.7b]</code>: 识别引擎</span>
+                                <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎</span>
+                                <span><code>--ollama_model [id]</code>: 如 qwen2.5:3b</span>
+                                <span><code>--chunk [1.5]</code>: 延迟(秒)</span>
                             </div>
                         </div>
-                        <div class="cli-section">
+
+                        <!-- 2. 离线字幕提取 -->
+                        <div class="cli-section mt-15">
                             <h4>🎬 离线字幕提取 (SRT)</h4>
-                            <div class="code-block" data-tooltip="模型: Qwen3-ASR-1.7B。特点: 极速批处理，支持长视频自动切分转录。参数: --batch 控制并发量，越大速度越快。">
-                                <span class="label">Qwen3 GPU 极速版:</span>
+                            <div class="code-block" data-tooltip="Qwen3-ASR 极速版。支持 GPU 批处理，转录 1 小时视频仅需几分钟。">
+                                <span class="label">🔥 Qwen3 GPU 极速转录:</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频路径" --chunk 10 --batch 12</code>
                             </div>
-                            <div class="code-block" data-tooltip="模型: Faster-Whisper-Large-v3。特点: 经典的语音识别引擎，CPU 兼容性好。参数: --beam 1 为贪婪搜索，速度最快。">
-                                <span class="label">Whisper CPU/通用版:</span>
+                            <div class="code-block" data-tooltip="Faster-Whisper 经典引擎。适合 CPU 环境或需要特定方言识别的情况。">
+                                <span class="label">❄️ Whisper 通用转录:</span>
                                 <code>D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频路径" --beam 1</code>
                             </div>
+                            <div class="cli-params-box">
+                                <strong>核心参数:</strong>
+                                <span><code>--chunk [10]</code>: 切片长度(秒)，越大识别越连贯</span>
+                                <span><code>--batch [12]</code>: 并发数量，显存越大可设越高</span>
+                                <span><code>--beam [1-5]</code>: 束搜索宽度，1 最快，5 最准</span>
+                            </div>
                         </div>
-                        <div class="cli-section">
-                            <h4>🎤 实时语音监听 (GUI)</h4>
-                            <div class="code-block" data-tooltip="模型: Qwen3-ASR + Qwen2.5 翻译。特点: 边听边译，双语同步显示。参数: --chunk 1.5 平衡延迟与准确度。">
-                                <span class="label">带翻译 (双语对照):</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5</code>
-                            </div>
-                            <div class="code-block" data-tooltip="模型: Qwen3-ASR-1.7B。特点: 监听系统声音（如浏览器、播放器）并实时输出字幕。参数: --device_id 对应虚拟音频线。">
-                                <span class="label">系统声音识别 (无翻译):</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.0</code>
-                            </div>
-                            <div class="code-block" data-tooltip="模型: Qwen3-ASR-1.7B。特点: 使用麦克风进行个人演讲或会议录音实时转文字。">
-                                <span class="label">麦克风录音识别:</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 1 --chunk 2.0</code>
+
+                        <!-- 3. 基础工具 -->
+                        <div class="cli-section mt-15">
+                            <h4>🛠️ 基础工具</h4>
+                            <div class="code-block" data-tooltip="列出系统所有音频输入设备。在运行实时脚本前，必须先确认 device_id。">
+                                <span class="label">查询音频设备 ID:</span>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --list</code>
                             </div>
                         </div>
                     </div>
