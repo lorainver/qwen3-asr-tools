@@ -19,13 +19,16 @@ class LongTextSummarizer:
         # 从配置文件读取模型路径
         self.default_model_path = config['models']['llm']
         self.model_path = self.default_model_path
-        self.current_model_id = 'qwen-general'
-        self.available_models = config.get('models.llm_models', {})
+        self.current_model_id = 'qwen-ollama-7b'
+        self.available_models = config['models'].get('llm_models', {})
         self.tokenizer = None
         self.processor = None
         self.model = None
         self.api_url = None
         self.is_remote = False
+        
+        # 启动时立即同步模型状态（确保远程标志被正确设置）
+        self.switch_model(self.current_model_id)
 
     def get_available_models(self):
         result = []
@@ -157,9 +160,16 @@ class LongTextSummarizer:
 
     def _chat_remote(self, messages):
         logger.info(f"🚀 正在向远程服务器请求: {self.api_url}")
+        model_info = self.available_models.get(self.current_model_id, {})
+        remote_model = model_info.get('remote_model_name', self.current_model_id)
+        
+        # 针对本地 Ollama 的特殊处理：如果 ID 叫 qwen-ollama-7b，但实际模型叫 qwen2.5:7b
+        if self.current_model_id == 'qwen-ollama-7b':
+            remote_model = 'qwen2.5:7b'
+
         try:
             payload = {
-                "model": "qwen", # 远程服务器通常不强制要求模型名一致
+                "model": remote_model,
                 "messages": messages,
                 "stream": False,
                 "temperature": 0.7
@@ -202,9 +212,16 @@ class LongTextSummarizer:
 
     def _chat_stream_remote(self, messages):
         logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url}")
+        model_info = self.available_models.get(self.current_model_id, {})
+        remote_model = model_info.get('remote_model_name', self.current_model_id)
+        
+        # 针对本地 Ollama 的特殊处理
+        if self.current_model_id == 'qwen-ollama-7b':
+            remote_model = 'qwen2.5:7b'
+
         try:
             payload = {
-                "model": "qwen",
+                "model": remote_model,
                 "messages": messages,
                 "stream": True,
                 "temperature": 0.7

@@ -4,8 +4,8 @@ import json
 # 配置信息
 # API_URL = "http://127.0.0.1:8001/v1/chat/completions"
 # API_URL = "http://192.168.0.2:8001/v1/chat/completions"
-API_URL = "http://116.168.23.146:28001/v1/chat/completions"
-
+# API_URL = "http://116.168.23.146:28001/v1/chat/completions"
+API_URL = "http://192.168.0.31:8888/v1/chat/completions"
 # 自动获取当前服务器的状态（当前模型和可用列表）
 def get_server_status():
     try:

@@ -4,6 +4,8 @@ import sounddevice as sd
 import soundfile as sf
 import torch
 import tkinter as tk
+import requests
+import json
 from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import transformers
@@ -190,6 +192,34 @@ class FloatingCaption:
     def run(self):
         self.root.mainloop()
 
+class OllamaTranslator:
+    """Ollama API 翻译器 (利用本地 7B 或其他大模型)"""
+    def __init__(self, model_id="qwen2.5:7b", url="http://localhost:11434/v1/chat/completions"):
+        self.model_id = model_id
+        self.url = url
+        # 强制禁用代理
+        self.session = requests.Session()
+        self.session.trust_env = False
+        print(f"初始化 Ollama 翻译器: {model_id} via {url}")
+
+    def translate(self, text, history=""):
+        if not text: return ""
+        prompt = f"上下文：{history}\n请将以下内容翻译成中文（只输出译文）：\n{text}" if history else f"请直接翻译成中文：\n{text}"
+        
+        try:
+            payload = {
+                "model": self.model_id,
+                "messages": [{"role": "user", "content": prompt}],
+                "stream": False,
+                "temperature": 0.3 # 翻译任务建议低随机性
+            }
+            response = self.session.post(self.url, json=payload, timeout=10)
+            if response.status_code == 200:
+                return response.json()['choices'][0]['message']['content'].strip()
+            return f"[Error {response.status_code}]"
+        except Exception as e:
+            return f"[Ollama Error: {e}]"
+
 class LocalTranslator:
     """本地 LLM 翻译器 (4-bit 量化)"""
     def __init__(self, model_path):
@@ -209,11 +239,8 @@ class LocalTranslator:
 
     def translate(self, text, history=""):
         if not text: return ""
-        # 构造带上下文的 Prompt
-        if history:
-            prompt = f"上下文：{history}\n请结合上下文，将以下新内容翻译成中文（只输出译文）：\n{text}"
-        else:
-            prompt = f"请将以下内容直接翻译成中文（只输出译文）：\n{text}"
+        # 恢复到之前稳定的 Prompt 格式
+        prompt = f"请将以下内容直接翻译成中文（只输出译文）：\n{text}"
         
         messages = [{"role": "user", "content": prompt}]
         input_ids = self.tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors="pt").to("cuda")
@@ -232,23 +259,39 @@ class LocalTranslator:
         return response.strip()
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--device_id", type=int, default=30)
-    parser.add_argument("--chunk", type=float, default=2.5)
+    parser = argparse.ArgumentParser(description="Qwen3 高级实时同传系统")
+    parser.add_argument("--device_id", type=int, default=30, help="音频设备 ID")
+    parser.add_argument("--chunk", type=float, default=2.5, help="音频分块时长(秒)")
+    parser.add_argument("--model_type", type=str, default="1.5b", choices=["1.5b", "3b", "ollama"], help="翻译引擎类型")
+    parser.add_argument("--ollama_model", type=str, default="qwen2.5:3b", help="Ollama 模型 ID")
+    parser.add_argument("--asr_type", type=str, default="1.7b", choices=["0.6b", "1.7b"], help="ASR 模型版本")
     args = parser.parse_args()
 
     # 1. 初始化 GUI
     gui = FloatingCaption()
 
-    # 2. 加载 ASR 模型
+    # 2. 根据参数加载 ASR 模型
     from qwen_asr import Qwen3ASRModel
-    asr_path = r"D:\qwen3-asr\models\Qwen\Qwen3-ASR-1___7B"
-    print(f"正在加载 ASR 模型 (FP16)...")
+    asr_folder = "Qwen3-ASR-1___7B" if args.asr_type == "1.7b" else "Qwen3-ASR-0___6B"
+    asr_path = os.path.join(r"D:\qwen3-asr\models\Qwen", asr_folder)
+    
+    print(f"正在加载 ASR 模型 ({args.asr_type})...")
+    if not os.path.exists(asr_path):
+        print(f"错误: 找不到 ASR 模型路径 {asr_path}")
+        sys.exit(1)
+        
     asr_model = Qwen3ASRModel.from_pretrained(asr_path, device_map='cuda', torch_dtype=torch.float16)
     
-    # 3. 加载 翻译 模型
-    trans_path = r"D:\qwen3-asr\models\Qwen\Qwen2.5-1.5B-Instruct"
-    translator = LocalTranslator(trans_path)
+    # 3. 根据参数加载 翻译 引擎
+    if args.model_type == "ollama":
+        translator = OllamaTranslator(model_id=args.ollama_model)
+    else:
+        model_name = "Qwen2.5-1.5B-Instruct" if args.model_type == "1.5b" else "Qwen2.5-3B-Instruct"
+        trans_path = os.path.join(r"D:\qwen3-asr\models\Qwen", model_name)
+        if not os.path.exists(trans_path):
+            print(f"错误: 找不到模型路径 {trans_path}")
+            sys.exit(1)
+        translator = LocalTranslator(trans_path)
 
     # 音频队列和处理
     audio_queue = queue.Queue()

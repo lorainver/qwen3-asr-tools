@@ -22,10 +22,6 @@ models:
       name: "Qwen2.5-3B (增强版)"
       path: "D:/qwen3-asr/models/Qwen/Qwen2.5-3B-Instruct"
       description: "3B 参数，逻辑能力更强"
-    qwen-3b-awq:
-      name: "Qwen2.5-3B-AWQ (量化版)"
-      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-3B-Instruct-AWQ"
-      description: "3B 参数 AWQ 4bit 量化，显存占用更少"
     qwen-coder:
       name: "Qwen2.5-Coder-1.5B (代码)"
       path: "D:/qwen3-asr/models/Qwen/Qwen2.5-Coder-1.5B-Instruct"
@@ -34,16 +30,17 @@ models:
       name: "Qwen2.5-VL (视觉版)"
       path: "D:/qwen3-asr/models/Qwen/Qwen2.5-VL-3B-Instruct"
       description: "多模态大模型，支持图片分析和试卷识别"
-    qwen-7b:
-      name: "Qwen2.5-7B (GPTQ-Int4)"
-      path: "D:/qwen3-asr/models/Qwen/Qwen2.5-7B-Instruct-GPTQ-Int4"
-      description: "7B 参数 GPTQ 4bit 量化，效果更强（需 8GB 显存）"
     qwen-remote-vl:
       name: "Qwen2-VL (远程 192.31)"
       api_url: "http://192.168.0.31:8888/v1/chat/completions"
       is_remote: true
       is_vl: true
       description: "运行在远程服务器上的视觉模型，支持图片分析"
+    qwen-ollama-7b:
+      name: "Qwen2.5-7B (本地 Ollama)"
+      api_url: "http://localhost:11434/v1/chat/completions"
+      is_remote: true
+      description: "本地 Ollama 驱动的 7B 模型，利用 RTX 5060 满血运行，无需本地编译环境"
   
   # Sherpa-ONNX 离线 TTS 模型
   tts: "D:/qwen3-asr/models/tts/vits-icefall-zh-aishell3"
