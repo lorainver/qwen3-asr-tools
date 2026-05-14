@@ -179,10 +179,25 @@
                             </div>
                             <div class="cli-params-box">
                                 <strong>核心参数:</strong>
-                                <span><code>--asr_type [0.6b|1.7b]</code>: 识别引擎</span>
-                                <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎</span>
-                                <span><code>--ollama_model [id]</code>: 如 qwen2.5:3b</span>
-                                <span><code>--chunk [1.5]</code>: 延迟(秒)</span>
+                                <span><code>--asr_type [0.6b|1.7b]</code>: 识别引擎（推荐 1.7b 精度更高）</span>
+                                <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎选择</span>
+                                <span><code>--ollama_model [id]</code>: 仅在 model_type 为 ollama 时生效</span>
+                            </div>
+                        </div>
+
+                        <!-- 2. 实时语音转录 -->
+                        <div class="cli-section">
+                            <h4>📝 实时语音转录 (仅字幕 / 无翻译)</h4>
+                            <p style="color: #aaa; font-size: 0.85em;">适合只需原文实时上屏的场景，资源占用极低：</p>
+                            <div class="code-block" data-tooltip="纯净转录：仅显示原文，不进行翻译，适合中文讲座或速记。">
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.5 --asr_type 1.7b</code>
+                            </div>
+                            <div class="cli-params-box">
+                                <strong>Flag 详细说明:</strong>
+                                <span><code>--device_id [int]</code>: 声卡 ID（使用上方按钮查询）</span>
+                                <span><code>--chunk [float]</code>: 语音切片长度，默认 1.5 秒。越短越快，越长越准</span>
+                                <span><code>--asr_type [0.6b|1.7b]</code>: 识别引擎（0.6b 极速，1.7b 最准）</span>
+                                <span><code>--list</code>: 仅列出所有音频设备并退出</span>
                             </div>
                         </div>
 
