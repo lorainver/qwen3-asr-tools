@@ -162,6 +162,7 @@
                                 <!-- 设备列表将在这里生成 -->
                             </div>
                         </div>
+
                         <!-- 1. 实时同传 -->
                         <div class="cli-section">
                             <h4>🎤 实时同声传译 (混合引擎)</h4>
@@ -169,35 +170,43 @@
                                 <span class="label">🚀 黄金组合 (Ollama 加速版):</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 0.6b --model_type ollama --ollama_model qwen2.5:3b</code>
                             </div>
-                            <div class="code-block" data-tooltip="专业级推荐：1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景，精度最高。">
-                                <span class="label">💎 专业全能版 (1.7B + Ollama):</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 1.7b --model_type ollama --ollama_model qwen2.5:3b</code>
+                            <div class="run-control-row">
+                                <div class="code-block" style="flex: 1;" data-tooltip="专业级推荐：1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景，精度最高。">
+                                    <span class="label">💎 专业全能版 (1.7B + Ollama):</span>
+                                    <code>... --asr_type 1.7b --model_type ollama --ollama_model qwen2.5:3b</code>
+                                </div>
+                                <div class="run-actions">
+                                    <input type="number" id="id-trans" value="30" placeholder="ID" class="id-input">
+                                    <button class="btn-run" onclick="runScript('trans')">⚡ 执行</button>
+                                </div>
                             </div>
                             <div class="code-block" data-tooltip="极致配置：1.7B ASR + 本地 3B。全本地离线运行，无需依赖外部 API。">
                                 <span class="label">🛡️ 全本地离线版 (1.7B + 3B):</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 1.7b --model_type 3b</code>
+                                <code>... --asr_type 1.7b --model_type 3b</code>
                             </div>
                             <div class="cli-params-box">
                                 <strong>核心参数:</strong>
                                 <span><code>--asr_type [0.6b|1.7b]</code>: 识别引擎（推荐 1.7b 精度更高）</span>
                                 <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎选择</span>
-                                <span><code>--ollama_model [id]</code>: 仅在 model_type 为 ollama 时生效</span>
                             </div>
                         </div>
 
-                        <!-- 2. 实时语音转录 -->
+                        <!-- 2. 实时转录 -->
                         <div class="cli-section">
                             <h4>📝 实时语音转录 (仅字幕 / 无翻译)</h4>
-                            <p style="color: #aaa; font-size: 0.85em;">适合只需原文实时上屏的场景，资源占用极低：</p>
-                            <div class="code-block" data-tooltip="纯净转录：仅显示原文，不进行翻译，适合中文讲座或速记。">
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.5 --asr_type 1.7b</code>
+                            <div class="run-control-row">
+                                <div class="code-block" style="flex: 1;" data-tooltip="纯净转录：仅显示原文，不进行翻译，适合中文讲座或速记。">
+                                    <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.5 --asr_type 1.7b</code>
+                                </div>
+                                <div class="run-actions">
+                                    <input type="number" id="id-realtime" value="30" placeholder="ID" class="id-input">
+                                    <button class="btn-run" onclick="runScript('realtime')">⚡ 执行</button>
+                                </div>
                             </div>
                             <div class="cli-params-box">
                                 <strong>Flag 详细说明:</strong>
                                 <span><code>--device_id [int]</code>: 声卡 ID（使用上方按钮查询）</span>
-                                <span><code>--chunk [float]</code>: 语音切片长度，默认 1.5 秒。越短越快，越长越准</span>
-                                <span><code>--asr_type [0.6b|1.7b]</code>: 识别引擎（0.6b 极速，1.7b 最准）</span>
-                                <span><code>--list</code>: 仅列出所有音频设备并退出</span>
+                                <span><code>--chunk [float]</code>: 语音切片长度，默认 1.5 秒。</span>
                             </div>
                         </div>
 
@@ -292,5 +301,70 @@
         </main>
     </div>
     <script src="/static/main.js"></script>
+    <style>
+        /* 执行控件样式 */
+        .run-control-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .id-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            color: #64ffda;
+            border-radius: 4px;
+            padding: 8px;
+            width: 70px;
+            text-align: center;
+            font-family: monospace;
+            outline: none;
+        }
+        .id-input:focus {
+            border-color: #64ffda;
+        }
+        .btn-run {
+            background: linear-gradient(135deg, #64ffda, #00bfa5);
+            color: #0a192f;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .btn-run:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+        }
+    </style>
+
+    <script>
+        // 脚本执行函数
+        async function runScript(type) {
+            const inputId = type === 'trans' ? 'id-trans' : 'id-realtime';
+            const deviceId = document.getElementById(inputId).value;
+            
+            window.showToast(`🚀 正在启动 ${type === 'trans' ? '同传' : '转录'}...`);
+            
+            try {
+                const response = await fetch('/api/run_script', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: type, device_id: deviceId })
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    window.showToast(`✅ ${result.message}`);
+                } else {
+                    window.showToast(`❌ 启动失败: ${result.message}`);
+                }
+            } catch (error) {
+                window.showToast(`🚨 网络错误: ${error.message}`);
+            }
+        }
+    </script>
 </body>
+
 </html>

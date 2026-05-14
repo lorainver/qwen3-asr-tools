@@ -18,14 +18,19 @@ web_app.py - 主 Web 服务（无 CUDA 依赖）
 """
 
 import os
-import sys
-import subprocess
-import time
-import asyncio
-import json
 import signal
+import subprocess
+import threading
+import time
+import json
+import psutil
 import atexit
+import sys
+import asyncio
 import httpx
+
+# 存储正在运行的子进程：{ "task_name": process_object }
+running_processes = {}
 from fastapi import FastAPI, UploadFile, File, Request, Form
 from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -387,6 +392,58 @@ async def api_tts(text: str, engine: str = "edge"):
     
     tts_engine.set_mode(engine)
     return StreamingResponse(tts_engine.stream_speech(text), media_type=media_type)
+
+@app.post("/api/run_script")
+async def run_script(request: Request):
+    try:
+        data = await request.json()
+        script_type = data.get("type")
+        device_id = data.get("device_id", "0")
+        
+        print(f"DEBUG: 尝试启动脚本 type={script_type}, device_id={device_id}")
+        
+        venv_python = os.path.join(os.getcwd(), "venv", "Scripts", "python.exe")
+        if not os.path.exists(venv_python):
+            venv_python = "python"
+            
+        if script_type == "trans":
+            cmd = [venv_python, "qwen3_realtime_trans.py", "--device_id", str(device_id), "--chunk", "1.5", "--asr_type", "1.7b", "--model_type", "ollama", "--ollama_model", "qwen2.5:3b"]
+        else:
+            # 纯字幕版使用的是 --model_size 参数名，且值为大写或根据脚本定义
+            cmd = [venv_python, "qwen3_realtime.py", "--device_id", str(device_id), "--chunk", "1.5", "--model_size", "1.7B"]
+
+        # 1. 清理旧进程
+        if "active_task" in running_processes:
+            p_old = running_processes["active_task"]
+            print(f"DEBUG: 正在清理旧进程 PID={p_old.pid}")
+            try:
+                parent = psutil.Process(p_old.pid)
+                for child in parent.children(recursive=True):
+                    child.kill()
+                parent.kill()
+                p_old.wait(timeout=2) # 等待释放
+            except Exception as pe:
+                print(f"DEBUG: 清理进程时发生异常 (可能已退出): {pe}")
+
+        # 2. 启动新进程
+        print(f"DEBUG: 执行命令: {' '.join(cmd)}")
+        # Windows 特有：使用 CREATE_NEW_CONSOLE (0x10) 弹出新窗口
+        creation_flags = 0
+        if sys.platform == "win32":
+            creation_flags = 0x00000010 
+            
+        # 显式指定工作目录为当前目录
+        new_p = subprocess.Popen(cmd, creationflags=creation_flags, cwd=os.getcwd())
+        running_processes["active_task"] = new_p
+        
+        return {"status": "success", "message": f"成功启动，PID: {new_p.pid}"}
+        
+    except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"🚨 run_script 崩溃:\n{error_trace}")
+        return {"status": "error", "message": str(e)}
+
 
 # ========== GPU 监控（本地处理） ==========
 
