@@ -1,39 +1,41 @@
 import requests
-import json
 import time
+import json
 
-def test_ollama():
-    url = "http://localhost:11434/api/tags"
-    print(f"--- 1. 测试基础连通性 ({url}) ---")
-    try:
-        resp = requests.get(url, timeout=5)
-        print(f"✅ 连通性 OK, 状态码: {resp.status_code}")
-        print(f"模型列表: {resp.text[:200]}...")
-    except Exception as e:
-        print(f"❌ 连通性失败: {e}")
-        return
-
-    print("\n--- 2. 测试模型加载 (qwen2.5:7b) ---")
-    chat_url = "http://localhost:11434/v1/chat/completions"
+def debug_ollama(model_name="qwen2.5:3b"):
+    url = "http://localhost:11434/v1/chat/completions"
     payload = {
-        "model": "qwen2.5:7b",
-        "messages": [{"role": "user", "content": "你好"}],
+        "model": model_name,
+        "messages": [{"role": "user", "content": "你好，请回复'连接成功'"}],
         "stream": False
     }
     
+    print(f"--- Ollama 深度诊断程序 ---")
+    print(f"目标模型: {model_name}")
+    print(f"请求地址: {url}")
+    
     start_time = time.time()
     try:
-        print("正在发送请求，这可能需要几十秒（如果模型正在加载到显存）...")
-        response = requests.post(chat_url, json=payload, timeout=120)
-        duration = time.time() - start_time
-        print(f"状态码: {response.status_code}")
+        print("\n正在发起请求（请观察显卡驱动面板，看显存是否在上涨）...")
+        # 这里给 120 秒超长等待时间，彻底排除网络因素
+        response = requests.post(url, json=payload, timeout=120)
+        
+        elapsed = time.time() - start_time
+        print(f"请求结束，耗时: {elapsed:.2f} 秒")
+        
         if response.status_code == 200:
-            print(f"✅ 成功回复 (耗时 {duration:.2f}s):")
-            print(response.json()['choices'][0]['message']['content'])
+            result = response.json()
+            content = result['choices'][0]['message']['content']
+            print(f"✅ 诊断成功！模型回复: {content}")
         else:
-            print(f"❌ 请求失败, 响应内容: {response.text}")
+            print(f"❌ 诊断失败！状态码: {response.status_code}")
+            print(f"错误详情: {response.text}")
+            
+    except requests.exceptions.Timeout:
+        print(f"🚨 严重错误: 请求在 120 秒内依然超时！")
+        print("这通常意味着 Ollama 内部加载逻辑卡死了，或者磁盘 I/O 极慢。")
     except Exception as e:
-        print(f"❌ 请求发生异常: {e}")
+        print(f"🚨 发生意外错误: {str(e)}")
 
 if __name__ == "__main__":
-    test_ollama()
+    debug_ollama()

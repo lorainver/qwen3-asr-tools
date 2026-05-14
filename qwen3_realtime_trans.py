@@ -204,21 +204,46 @@ class OllamaTranslator:
 
     def translate(self, text, history=""):
         if not text: return ""
-        prompt = f"上下文：{history}\n请将以下内容翻译成中文（只输出译文）：\n{text}" if history else f"请直接翻译成中文：\n{text}"
+        
+        # 1. 构造多角色消息流，强制锁定“工具”人格
+        messages = [
+            {
+                "role": "system", 
+                "content": "你是一个专业的实时翻译工具。任务：直接将文本翻译成中文。要求：禁止输出任何解释、注释、注脚、原文或开场白。禁止与用户对话。只输出纯粹的中文译文。"
+            },
+            {
+                "role": "user", 
+                "content": f"上下文：{history}\n待翻译：{text}" if history else text
+            }
+        ]
         
         try:
             payload = {
                 "model": self.model_id,
-                "messages": [{"role": "user", "content": prompt}],
+                "messages": messages,
                 "stream": False,
-                "temperature": 0.3 # 翻译任务建议低随机性
+                "temperature": 0.1, # 极低随机性
+                "options": {
+                    "num_predict": 128, # 限制输出长度
+                    "stop": ["Note:", "注：", "Translation:", "原文：", "\n\n", "Context:"] # 遇到解释标志立刻停止
+                }
             }
-            response = self.session.post(self.url, json=payload, timeout=10)
+            # 使用 60 秒超时，确保模型加载不中断
+            response = self.session.post(self.url, json=payload, timeout=60)
             if response.status_code == 200:
-                return response.json()['choices'][0]['message']['content'].strip()
-            return f"[Error {response.status_code}]"
+                # 获取翻译内容
+                raw_res = response.json()['choices'][0]['message']['content'].strip()
+                # 最后的保险：手动截断可能的残留解释
+                for s in ["Note:", "注：", "Translation:"]:
+                    if s in raw_res: raw_res = raw_res.split(s)[0].strip()
+                return raw_res
+            else:
+                return f"[API Error {response.status_code}]"
         except Exception as e:
-            return f"[Ollama Error: {e}]"
+            error_msg = str(e)
+            if "timeout" in error_msg.lower():
+                return f"[Ollama Timeout]"
+            return f"[Ollama Error: {error_msg}]"
 
 class LocalTranslator:
     """本地 LLM 翻译器 (4-bit 量化)"""

@@ -165,8 +165,8 @@
                         <!-- 1. 实时同传 -->
                         <div class="cli-section">
                             <h4>🎤 实时同声传译 (混合引擎)</h4>
-                            <div class="code-block" data-tooltip="推荐配置：Ollama 3B 翻译 + 0.6B ASR。极省显存，智商在线。">
-                                <span class="label">🚀 黄金组合 (Ollama 加速):</span>
+                            <div class="code-block" data-tooltip="推荐配置：Ollama 3B 翻译 + 0.6B ASR。VRAM 极省（仅占 500MB），智商在线，延迟极低。">
+                                <span class="label">🚀 黄金组合 (Ollama 加速版):</span>
                                 <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 0.6b --model_type ollama --ollama_model qwen2.5:3b</code>
                             </div>
                             <div class="code-block" data-tooltip="顶级配置：1.7B ASR + 3B LLM。全本地运行，最强精度，需 8GB+ 显存。">
