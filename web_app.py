@@ -422,6 +422,28 @@ async def release_gpu():
     result = ai_worker.kill()
     return result
 
+@app.get("/api/audio_devices")
+async def get_audio_devices():
+    """获取系统音频输入设备列表"""
+    import sounddevice as sd
+    devices = []
+    try:
+        device_list = sd.query_devices()
+        for i, dev in enumerate(device_list):
+            # 只要输入设备
+            if dev['max_input_channels'] > 0:
+                devices.append({
+                    "id": i,
+                    "name": dev['name'],
+                    "hostapi": dev['hostapi'],
+                    "max_input_channels": dev['max_input_channels'],
+                    "default_samplerate": dev['default_samplerate']
+                })
+        return {"devices": devices}
+    except Exception as e:
+        logger.error(f"获取音频设备失败: {e}")
+        return {"devices": [], "error": str(e)}
+
 @app.get("/api/worker_status")
 async def worker_status():
     """查询 AI Worker 状态"""

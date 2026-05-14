@@ -204,23 +204,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tempVal) tempVal.innerText = `${data.temperature}°C`;
     };
 
-    // === 1.5 AI Worker 状态逻辑 ===
+    // === 1.5 AI Worker 状态逻辑 (静默释放版) ===
     if (btnShutdown) {
-        btnShutdown.addEventListener('click', async () => {
-            if (!confirm('确定要释放显存吗？这会关闭正在运行的 AI 模型。')) return;
+        btnShutdown.onclick = async () => {
             btnShutdown.disabled = true;
-            btnShutdown.textContent = '⌛ 正在释放...';
+            btnShutdown.textContent = "⌛ 正在释放...";
             try {
-                const resp = await fetch('/api/release_gpu', { method: 'POST' });
-                const data = await resp.json();
-                showToast(data.message || '显存已释放');
-            } catch (e) {
-                showToast('释放失败: ' + e.message);
+                // 注意：这里使用的是 /api/shutdown 或 /api/release_gpu，根据后端实际接口调整
+                const response = await fetch('/api/shutdown');
+                const result = await response.json();
+                window.showToast("✅ 显存已成功释放");
+            } catch (error) {
+                window.showToast("❌ 释放失败");
             } finally {
                 btnShutdown.disabled = false;
-                btnShutdown.textContent = '🛑 释放显存';
+                btnShutdown.textContent = "🛑 释放显存";
             }
-        });
+        };
     }
 
     async function loadModels() {
@@ -368,6 +368,103 @@ document.addEventListener('DOMContentLoaded', () => {
             // 忽略轮询错误
         }
     }, 2000);
+
+    // === 辅助函数：显示浮动提示 (Toast) ===
+    function showToast(message, duration = 2000) {
+        let toast = document.getElementById('toast-notification');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast-notification';
+            toast.style.cssText = `
+                position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+                background: rgba(100, 255, 218, 0.9); color: #0a192f;
+                padding: 10px 24px; border-radius: 50px; font-weight: bold;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 9999;
+                opacity: 0; transition: opacity 0.3s, bottom 0.3s; pointer-events: none;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        toast.style.bottom = '40px';
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.bottom = '30px';
+        }, duration);
+    }
+
+    // === 2. 交互逻辑初始化 ===
+    const btnRefreshDevices = document.getElementById('btn-refresh-devices');
+    const devicePanel = document.getElementById('device-list-panel');
+    const deviceContainer = document.getElementById('device-items-container');
+    const deviceClose = document.getElementById('device-close');
+
+    if (btnRefreshDevices) {
+        btnRefreshDevices.addEventListener('click', async () => {
+            btnRefreshDevices.textContent = '🔄 正在查询...';
+            btnRefreshDevices.disabled = true;
+            
+            try {
+                const response = await fetch('/api/audio_devices');
+                const data = await response.json();
+                
+                if (data.devices && data.devices.length > 0) {
+                    let html = `
+                        <table style="width: 100%; border-collapse: collapse; color: #ccc; font-size: 0.9em;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid rgba(100, 255, 218, 0.3); text-align: left;">
+                                    <th style="padding: 8px; color: #64ffda;">ID</th>
+                                    <th style="padding: 8px; color: #64ffda;">驱动类型</th>
+                                    <th style="padding: 8px; color: #64ffda;">设备名称</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    data.devices.forEach(dev => {
+                        const apiMap = {0: 'MME', 1: 'DirectSound', 2: 'WASAPI', 3: 'WDM-KS'};
+                        const apiName = apiMap[dev.hostapi] || 'Unknown';
+                        const isRecommended = apiName === 'WASAPI';
+                        const isVirtual = dev.name.toLowerCase().includes('cable') || dev.name.toLowerCase().includes('streaming');
+                        const icon = isVirtual ? '🔌' : '🎙️';
+                        
+                        html += `
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onclick="navigator.clipboard.writeText('${dev.id}'); window.showToast('✅ 已成功复制 ID: ${dev.id}')">
+                                <td style="padding: 8px; font-weight: bold; color: ${isRecommended ? '#64ffda' : '#aaa'};">${dev.id}</td>
+                                <td style="padding: 8px;"><span style="font-size: 0.8em; padding: 2px 6px; border-radius: 4px; background: ${isRecommended ? 'rgba(100, 255, 218, 0.1)' : 'rgba(255,255,255,0.05)'};">${apiName}</span></td>
+                                <td style="padding: 8px; color: ${isVirtual ? '#888' : '#eee'};">${icon} ${dev.name}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += `</tbody></table>
+                            <div style="font-size: 0.8em; color: #666; margin-top: 10px; text-align: center;">💡 提示：点击行可直接复制 ID。推荐优先使用 <span style="color: #64ffda;">WASAPI</span> 驱动。</div>`;
+                    deviceContainer.innerHTML = html;
+                    devicePanel.classList.remove('hidden');
+                } else {
+                    deviceContainer.innerHTML = '<div style="color: #ff5252;">未发现输入设备</div>';
+                    devicePanel.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Failed to fetch devices:', error);
+                window.showToast('❌ 查询失败');
+            } finally {
+                btnRefreshDevices.textContent = '🔍 查询设备 ID';
+                btnRefreshDevices.disabled = false;
+            }
+        });
+    }
+
+    // 暴露给 window 方便在 HTML onclick 中调用
+    window.showToast = showToast;
+
+    if (deviceClose) {
+        deviceClose.addEventListener('click', () => {
+            devicePanel.classList.add('hidden');
+        });
+    }
+
 
     // === 2. 智库摘要逻辑 ===
 

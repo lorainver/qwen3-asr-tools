@@ -143,12 +143,25 @@
                 </div>
 
                 <!-- 终端命令参考卡片 (2026.05 最终全能版) -->
-                <div class="card glass-panel cli-card">
+                <div class="card glass-panel cli-card" style="grid-column: 1 / -1;">
                     <div class="card-header">
                         <div class="icon cli-icon"></div>
-                        <h3>终端实战命令参考 <small class="model-tag">CLI Toolbox</small></h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <h3>终端实战命令参考 <small class="model-tag">CLI Toolbox</small></h3>
+                            <button id="btn-refresh-devices" class="btn-small" style="background: rgba(100, 255, 218, 0.1); color: #64ffda; border: 1px solid #64ffda;">🔍 查询设备 ID</button>
+                        </div>
                     </div>
                     <div class="card-body">
+                        <!-- 设备显示面板 -->
+                        <div id="device-list-panel" class="hidden" style="margin-bottom: 15px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(100, 255, 218, 0.2);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <strong style="color: #64ffda; font-size: 0.9em;">Detected Audio Inputs:</strong>
+                                <span id="device-close" style="cursor: pointer; opacity: 0.5;">×</span>
+                            </div>
+                            <div id="device-items-container" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
+                                <!-- 设备列表将在这里生成 -->
+                            </div>
+                        </div>
                         <!-- 1. 实时同传 -->
                         <div class="cli-section">
                             <h4>🎤 实时同声传译 (混合引擎)</h4>
