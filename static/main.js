@@ -527,10 +527,14 @@ document.addEventListener('DOMContentLoaded', () => {
             sumResult.classList.remove('hidden');
             sumResult.innerText = "";
             try {
+                const promptType = document.getElementById('prompt-type').value;
                 const response = await fetch('/api/summarize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text })
+                    body: JSON.stringify({ 
+                        text: text,
+                        prompt_type: promptType
+                    })
                 });
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');

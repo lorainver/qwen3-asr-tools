@@ -81,6 +81,15 @@ class ConfigLoader:
     def __getitem__(self, key):
         """支持字典式访问：config['models']['llm']"""
         return self._config.get(key, {})
+
+    def __getattr__(self, key):
+        """支持属性式访问：config.prompts（Jinja2 模板需要）"""
+        if key.startswith('_'):
+            raise AttributeError(key)
+        try:
+            return self._config.get(key, {})
+        except Exception:
+            raise AttributeError(key)
     
     @property
     def base_dir(self):

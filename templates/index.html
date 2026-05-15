@@ -87,7 +87,14 @@
                     <div class="card-body">
                         <p class="subtitle">粘贴长文本，自动提炼“一页纸精华”。</p>
                         <textarea id="meeting-text" placeholder="在此粘贴长文本..."></textarea>
-                        <button id="btn-summarize" class="btn primary">生成总结</button>
+                        <div class="summary-controls">
+                            <select id="prompt-type" class="form-select">
+                                {% for key, p in config.prompts.items() %}
+                                <option value="{{ key }}">{{ p.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button id="btn-summarize" class="btn primary">开始执行</button>
+                        </div>
                         <div id="sum-progress-container" class="hidden">
                             <div class="status-text" id="sum-status">正在准备数据...</div>
                             <div class="progress-bar active"></div>

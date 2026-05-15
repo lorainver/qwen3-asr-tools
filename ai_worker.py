@@ -83,6 +83,10 @@ class SearchRequest(BaseModel):
     query: str
     max_results: Optional[int] = 5
 
+class SummarizeRequest(BaseModel):
+    text: str
+    prompt_type: Optional[str] = "summarize"
+
 class SwitchModelRequest(BaseModel):
     model_id: str
 
@@ -207,6 +211,45 @@ async def api_chat_stream(request: ChatRequest):
             "X-Accel-Buffering": "no"
         }
     )
+
+@app.post("/api/summarize")
+async def api_summarize(request: SummarizeRequest):
+    """文本总结接口 - 支持多种提示词预设"""
+    logger.info(f"📝 收到总结请求: type={request.prompt_type}, 长度={len(request.text)}")
+    
+    # 1. 获取提示词
+    prompts = config.get('prompts', {})
+    prompt_info = prompts.get(request.prompt_type, prompts.get('summarize', {}))
+    system_prompt = prompt_info.get('content', "你是一个专业的AI助手。")
+    
+    # 2. 构建消息
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": f"以下是需要处理的文本内容：\n\n{request.text}"}
+    ]
+    
+    async def generate():
+        yield json.dumps({"status": "processing", "message": f"正在使用「{prompt_info.get('name', 'AI')}」模式进行处理..."}) + "\n"
+        await asyncio.sleep(0.01)
+        
+        try:
+            full_result = ""
+            for token in summarizer.chat_stream(messages):
+                full_result += token
+                # 我们以 JSON 格式发送进度，或者直接发送文本？
+                # web_app.py 预期的是流式文本，但 static/main.js 解析的是 JSON 每一行
+                yield json.dumps({"status": "processing", "message": "正在生成内容...", "delta": token}) + "\n"
+                await asyncio.sleep(0.01)
+            
+            yield json.dumps({"status": "done", "result": full_result}) + "\n"
+        except Exception as e:
+            logger.error(f"总结失败: {e}")
+            yield json.dumps({"status": "error", "message": str(e)}) + "\n"
+        finally:
+            import torch
+            torch.cuda.empty_cache()
+
+    return StreamingResponse(generate(), media_type="text/plain")
 
 @app.get("/api/models")
 async def api_models():

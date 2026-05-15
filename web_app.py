@@ -299,6 +299,7 @@ class ChatRequest(BaseModel):
 
 class SummarizeRequest(BaseModel):
     text: str
+    prompt_type: Optional[str] = "summarize"
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -379,7 +380,7 @@ async def load_history(path: str):
 
 @app.get("/", response_class=HTMLResponse)
 async def get_index(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html")
+    return templates.TemplateResponse(request=request, name="index.html", context={"config": config})
 
 # ========== TTS 端点（本地处理） ==========
 
