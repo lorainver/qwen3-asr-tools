@@ -161,11 +161,13 @@ class LongTextSummarizer:
     def _chat_remote(self, messages):
         logger.info(f"🚀 正在向远程服务器请求: {self.api_url}")
         model_info = self.available_models.get(self.current_model_id, {})
-        remote_model = model_info.get('remote_model_name', self.current_model_id)
+        remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
         
-        # 针对本地 Ollama 的特殊处理：如果 ID 叫 qwen-ollama-7b，但实际模型叫 qwen2.5:7b
+        # 强制硬编码映射
         if self.current_model_id == 'qwen-ollama-7b':
             remote_model = 'qwen2.5:7b'
+        elif self.current_model_id == 'qwen-ollama-9b':
+            remote_model = 'qwen3.5:9b'
 
         try:
             payload = {
@@ -213,20 +215,22 @@ class LongTextSummarizer:
     def _chat_stream_remote(self, messages):
         logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url}")
         model_info = self.available_models.get(self.current_model_id, {})
-        remote_model = model_info.get('remote_model_name', self.current_model_id)
+        remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
         
-        # 针对本地 Ollama 的特殊处理
         if self.current_model_id == 'qwen-ollama-7b':
             remote_model = 'qwen2.5:7b'
+        elif self.current_model_id == 'qwen-ollama-9b':
+            remote_model = 'qwen3.5:9b'
 
         try:
             payload = {
                 "model": remote_model,
                 "messages": messages,
                 "stream": True,
-                "temperature": 0.7
+                "temperature": 0.7,
+                "think": True  # 启用思考过程（返回 <think> 标签）
             }
-            response = requests.post(self.api_url, json=payload, stream=True, timeout=60)
+            response = requests.post(self.api_url, json=payload, stream=True, timeout=600)
             response.raise_for_status()
             
             for line in response.iter_lines():

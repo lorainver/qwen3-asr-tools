@@ -168,12 +168,12 @@
                             <h4>🎤 实时同声传译 (混合引擎)</h4>
                             <div class="code-block" data-tooltip="推荐配置：Ollama 3B 翻译 + 0.6B ASR。VRAM 极省（仅占 500MB），智商在线，延迟极低。">
                                 <span class="label">🚀 黄金组合 (Ollama 加速版):</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --asr_type 0.6b --model_type ollama --ollama_model qwen2.5:3b</code>
+                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --model_size 0.6B --model_type ollama --ollama_model qwen2.5:3b</code>
                             </div>
                             <div class="run-control-row">
                                 <div class="code-block" style="flex: 1;" data-tooltip="专业级推荐：1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景，精度最高。">
                                     <span class="label">💎 专业全能版 (1.7B + Ollama):</span>
-                                    <code>... --asr_type 1.7b --model_type ollama --ollama_model qwen2.5:3b</code>
+                                    <code>... --model_size 1.7B --model_type ollama --ollama_model qwen2.5:3b</code>
                                 </div>
                                 <div class="run-actions">
                                     <input type="number" id="id-trans" value="30" placeholder="ID" class="id-input">
@@ -182,11 +182,11 @@
                             </div>
                             <div class="code-block" data-tooltip="极致配置：1.7B ASR + 本地 3B。全本地离线运行，无需依赖外部 API。">
                                 <span class="label">🛡️ 全本地离线版 (1.7B + 3B):</span>
-                                <code>... --asr_type 1.7b --model_type 3b</code>
+                                <code>... --model_size 1.7B --model_type 3b</code>
                             </div>
                             <div class="cli-params-box">
                                 <strong>核心参数:</strong>
-                                <span><code>--asr_type [0.6b|1.7b]</code>: 识别引擎（推荐 1.7b 精度更高）</span>
+                                <span><code>--model_size [0.6B|1.7B]</code>: 识别引擎（推荐 1.7B 精度更高）</span>
                                 <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎选择</span>
                             </div>
                         </div>
@@ -196,7 +196,7 @@
                             <h4>📝 实时语音转录 (仅字幕 / 无翻译)</h4>
                             <div class="run-control-row">
                                 <div class="code-block" style="flex: 1;" data-tooltip="纯净转录：仅显示原文，不进行翻译，适合中文讲座或速记。">
-                                    <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.5 --asr_type 1.7b</code>
+                                    <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.5 --model_size 1.7B</code>
                                 </div>
                                 <div class="run-actions">
                                     <input type="number" id="id-realtime" value="30" placeholder="ID" class="id-input">

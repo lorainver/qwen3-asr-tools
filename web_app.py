@@ -18,6 +18,11 @@ web_app.py - 主 Web 服务（无 CUDA 依赖）
 """
 
 import os
+import sys
+# 确保项目根目录在路径中
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
 import signal
 import subprocess
 import threading
@@ -402,15 +407,26 @@ async def run_script(request: Request):
         
         print(f"DEBUG: 尝试启动脚本 type={script_type}, device_id={device_id}")
         
-        venv_python = os.path.join(os.getcwd(), "venv", "Scripts", "python.exe")
+        # 使用绝对路径定位 venv
+        venv_python = os.path.join(BASE_DIR, "venv", "Scripts", "python.exe")
         if not os.path.exists(venv_python):
-            venv_python = "python"
+            # 备选路径 (针对不同安装环境)
+            venv_python = os.path.join(BASE_DIR, "venv312", "Scripts", "python.exe")
+            if not os.path.exists(venv_python):
+                # 尝试当前环境下的解释器（如果 web_app.py 也是在 venv 下运行）
+                venv_python = sys.executable if "venv" in sys.executable.lower() else "python"
             
+        # 从请求中获取模型名称，如果没有则使用默认值
+        model_name = data.get("model", "qwen2.5:3b")
+        
         if script_type == "trans":
-            cmd = [venv_python, "qwen3_realtime_trans.py", "--device_id", str(device_id), "--chunk", "1.5", "--asr_type", "1.7b", "--model_type", "ollama", "--ollama_model", "qwen2.5:3b"]
+            # 同传模式：使用指定的 Ollama 模型
+            script_file = os.path.join(BASE_DIR, "qwen3_realtime_trans.py")
+            cmd_args = [venv_python, script_file, "--device_id", str(device_id), "--chunk", "1.5", "--model_size", "1.7B", "--model_type", "ollama", "--ollama_model", model_name]
         else:
-            # 纯字幕版使用的是 --model_size 参数名，且值为大写或根据脚本定义
-            cmd = [venv_python, "qwen3_realtime.py", "--device_id", str(device_id), "--chunk", "1.5", "--model_size", "1.7B"]
+            # 纯转录模式
+            script_file = os.path.join(BASE_DIR, "qwen3_realtime.py")
+            cmd_args = [venv_python, script_file, "--device_id", str(device_id), "--chunk", "1.5", "--model_size", "1.7B"]
 
         # 1. 清理旧进程
         if "active_task" in running_processes:
@@ -426,17 +442,33 @@ async def run_script(request: Request):
                 print(f"DEBUG: 清理进程时发生异常 (可能已退出): {pe}")
 
         # 2. 启动新进程
-        print(f"DEBUG: 执行命令: {' '.join(cmd)}")
+        # 直接使用 python 启动，不再包裹 cmd /c 以避免路径解析和子进程残留问题
+        # 同时将输出重定向到日志文件以便排查
+        log_file_path = os.path.join(BASE_DIR, "logs", f"script_{script_type}.log")
+        os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+        
+        log_file = open(log_file_path, "a", encoding="utf-8")
+        log_file.write(f"\n\n--- Start at {time.strftime('%Y-%m-%d %H:%M:%S')} ---\n")
+        log_file.write(f"Command: {' '.join(cmd_args)}\n")
+        log_file.flush()
+
         # Windows 特有：使用 CREATE_NEW_CONSOLE (0x10) 弹出新窗口
         creation_flags = 0
         if sys.platform == "win32":
             creation_flags = 0x00000010 
             
-        # 显式指定工作目录为当前目录
-        new_p = subprocess.Popen(cmd, creationflags=creation_flags, cwd=os.getcwd())
+        # 注意：不再使用 debug_cmd，直接使用 cmd_args 列表
+        new_p = subprocess.Popen(
+            cmd_args, 
+            creationflags=creation_flags, 
+            cwd=BASE_DIR,
+            stdout=log_file,
+            stderr=log_file,
+            env=os.environ.copy() # 确保继承环境变量
+        )
         running_processes["active_task"] = new_p
         
-        return {"status": "success", "message": f"成功启动，PID: {new_p.pid}"}
+        return {"status": "success", "message": f"成功启动，PID: {new_p.pid} (日志: logs/script_{script_type}.log)"}
         
     except Exception as e:
         import traceback
@@ -533,7 +565,7 @@ async def api_chat(request: ChatRequest):
         return {"response": "⚠️ AI Worker 启动中，请稍后重试..."}
     
     try:
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=120.0, proxy=None, trust_env=False) as client:
             resp = await client.post(f"{AI_WORKER_URL}/api/chat", json=request.dict())
             return resp.json()
     except Exception as e:
@@ -548,7 +580,7 @@ async def api_chat_stream(request: ChatRequest):
             yield "data: [DONE]\n\n"
         return StreamingResponse(error_gen(), media_type="text/event-stream")
     
-    client = httpx.AsyncClient(timeout=120.0)
+    client = httpx.AsyncClient(timeout=None, proxy=None, trust_env=False)
     req = client.build_request("POST", f"{AI_WORKER_URL}/api/chat_stream", json=request.dict())
     resp = await client.send(req, stream=True)
     

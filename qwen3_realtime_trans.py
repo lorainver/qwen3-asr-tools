@@ -289,7 +289,7 @@ def main():
     parser.add_argument("--chunk", type=float, default=2.5, help="音频分块时长(秒)")
     parser.add_argument("--model_type", type=str, default="1.5b", choices=["1.5b", "3b", "ollama"], help="翻译引擎类型")
     parser.add_argument("--ollama_model", type=str, default="qwen2.5:3b", help="Ollama 模型 ID")
-    parser.add_argument("--asr_type", type=str, default="1.7b", choices=["0.6b", "1.7b"], help="ASR 模型版本")
+    parser.add_argument("--model_size", type=str, default="1.7B", choices=["0.6B", "1.7B"], help="ASR 模型版本")
     args = parser.parse_args()
 
     # 1. 初始化 GUI
@@ -297,10 +297,10 @@ def main():
 
     # 2. 根据参数加载 ASR 模型
     from qwen_asr import Qwen3ASRModel
-    asr_folder = "Qwen3-ASR-1___7B" if args.asr_type == "1.7b" else "Qwen3-ASR-0___6B"
+    asr_folder = "Qwen3-ASR-1___7B" if args.model_size == "1.7B" else "Qwen3-ASR-0___6B"
     asr_path = os.path.join(r"D:\qwen3-asr\models\Qwen", asr_folder)
     
-    print(f"正在加载 ASR 模型 ({args.asr_type})...")
+    print(f"正在加载 ASR 模型 ({args.model_size})...")
     if not os.path.exists(asr_path):
         print(f"错误: 找不到 ASR 模型路径 {asr_path}")
         sys.exit(1)

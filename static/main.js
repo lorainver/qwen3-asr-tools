@@ -96,6 +96,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * 解析 <think>...</think> 标签，返回 { thinking, answer }
+     */
+    function parseThinking(text) {
+        const thinkStart = '<think>';
+        const thinkEnd = '</think>';
+        
+        const startIdx = text.indexOf(thinkStart);
+        const endIdx = text.indexOf(thinkEnd);
+        
+        if (startIdx !== -1 && endIdx !== -1) {
+            return {
+                before: text.substring(0, startIdx),
+                thinking: text.substring(startIdx + thinkStart.length, endIdx),
+                answer: text.substring(endIdx + thinkEnd.length)
+            };
+        }
+        return { before: '', thinking: null, answer: text };
+    }
+
+    /**
+     * 渲染包含思考过程的消息
+     */
+    function renderWithThinking(text) {
+        const { before, thinking, answer } = parseThinking(text);
+        
+        let html = '';
+        
+        // 思考过程（折叠显示）
+        if (thinking) {
+            html += `
+                <div class="thinking-block">
+                    <details>
+                        <summary>💭 思考过程 (点击展开)</summary>
+                        <div class="thinking-content">${renderMarkdown(thinking)}</div>
+                    </details>
+                </div>
+            `;
+        }
+        
+        // 最终回答
+        const finalAnswer = before + answer;
+        if (finalAnswer.trim()) {
+            html += `<div class="answer-content">${renderMarkdown(finalAnswer)}</div>`;
+        }
+        
+        return html;
+    }
+
+    /**
      * 异步渲染页面中所有未渲染的 Mermaid 图表
      */
     async function renderMermaidDiagrams() {
@@ -941,7 +990,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (json.token) {
                                 fullResponse += json.token;
                                 // 流式更新：渲染 Markdown
-                                loadingMsg.innerHTML = renderMarkdown(fullResponse);
+                                loadingMsg.innerHTML = renderWithThinking(fullResponse);
                                 chatHistory.scrollTop = chatHistory.scrollHeight;
                                 
                                 // 流式语音：检测到完整句子立即送 TTS
@@ -986,7 +1035,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (role === 'assistant') {
             // 助手消息：渲染 Markdown
             contentSpan.className = 'markdown-content';
-            contentSpan.innerHTML = renderMarkdown(text);
+            contentSpan.innerHTML = renderWithThinking(text);
             // 异步渲染 Mermaid 图表
             setTimeout(renderMermaidDiagrams, 50);
         } else {
