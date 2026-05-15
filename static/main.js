@@ -426,10 +426,11 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.id = 'toast-notification';
             toast.style.cssText = `
                 position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-                background: rgba(100, 255, 218, 0.9); color: #0a192f;
+                background: rgba(56, 189, 248, 0.92); color: #0a0e1a;
                 padding: 10px 24px; border-radius: 50px; font-weight: bold;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 9999;
+                box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3); z-index: 9999;
                 opacity: 0; transition: opacity 0.3s, bottom 0.3s; pointer-events: none;
+                font-family: 'Inter', -apple-system, sans-serif;
             `;
             document.body.appendChild(toast);
         }
@@ -460,12 +461,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (data.devices && data.devices.length > 0) {
                     let html = `
-                        <table style="width: 100%; border-collapse: collapse; color: #ccc; font-size: 0.9em;">
+                        <table style="width: 100%; border-collapse: collapse; color: #94a3b8; font-size: 0.88em;">
                             <thead>
-                                <tr style="border-bottom: 2px solid rgba(100, 255, 218, 0.3); text-align: left;">
-                                    <th style="padding: 8px; color: #64ffda;">ID</th>
-                                    <th style="padding: 8px; color: #64ffda;">驱动类型</th>
-                                    <th style="padding: 8px; color: #64ffda;">设备名称</th>
+                                <tr style="border-bottom: 2px solid rgba(56, 189, 248, 0.2); text-align: left;">
+                                    <th style="padding: 8px; color: #38bdf8;">ID</th>
+                                    <th style="padding: 8px; color: #38bdf8;">驱动类型</th>
+                                    <th style="padding: 8px; color: #38bdf8;">设备名称</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -480,19 +481,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         html += `
                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onclick="navigator.clipboard.writeText('${dev.id}'); window.showToast('✅ 已成功复制 ID: ${dev.id}')">
-                                <td style="padding: 8px; font-weight: bold; color: ${isRecommended ? '#64ffda' : '#aaa'};">${dev.id}</td>
-                                <td style="padding: 8px;"><span style="font-size: 0.8em; padding: 2px 6px; border-radius: 4px; background: ${isRecommended ? 'rgba(100, 255, 218, 0.1)' : 'rgba(255,255,255,0.05)'};">${apiName}</span></td>
-                                <td style="padding: 8px; color: ${isVirtual ? '#888' : '#eee'};">${icon} ${dev.name}</td>
+                                <td style="padding: 8px; font-weight: bold; color: ${isRecommended ? '#38bdf8' : '#94a3b8'};">${dev.id}</td>
+                                <td style="padding: 8px;"><span style="font-size: 0.8em; padding: 2px 6px; border-radius: 4px; background: ${isRecommended ? 'rgba(56, 189, 248, 0.12)' : 'rgba(255,255,255,0.05)'};">${apiName}</span></td>
+                                <td style="padding: 8px; color: ${isVirtual ? '#64748b' : '#e2e8f0'};">${icon} ${dev.name}</td>
                             </tr>
                         `;
                     });
                     
                     html += `</tbody></table>
-                            <div style="font-size: 0.8em; color: #666; margin-top: 10px; text-align: center;">💡 提示：点击行可直接复制 ID。推荐优先使用 <span style="color: #64ffda;">WASAPI</span> 驱动。</div>`;
+                            <div style="font-size: 0.78em; color: #64748b; margin-top: 10px; text-align: center;">💡 提示：点击行可直接复制 ID。推荐优先使用 <span style="color: #38bdf8;">WASAPI</span> 驱动。</div>`;
                     deviceContainer.innerHTML = html;
                     devicePanel.classList.remove('hidden');
                 } else {
-                    deviceContainer.innerHTML = '<div style="color: #ff5252;">未发现输入设备</div>';
+                    deviceContainer.innerHTML = '<div style="color: #f87171;">未发现输入设备</div>';
                     devicePanel.classList.remove('hidden');
                 }
             } catch (error) {
@@ -1132,9 +1133,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const toast = document.createElement('div');
         toast.style.cssText = `
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.85); color: white; padding: 12px 24px;
-            border-radius: 8px; z-index: 10000; font-family: Inter, sans-serif;
-            animation: fadeInOut 3s ease;
+            background: rgba(15, 23, 42, 0.92); color: #e2e8f0; padding: 12px 24px;
+            border-radius: 8px; z-index: 10000; font-family: 'Inter', -apple-system, sans-serif;
+            border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         `;
         toast.textContent = message;
         document.body.appendChild(toast);

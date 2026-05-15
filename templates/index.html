@@ -50,13 +50,13 @@
                 </div>
             </div>
             <!-- AI Worker 状态指示器 -->
-            <div class="worker-status" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <div style="font-size: 0.85em; color: #888; margin-bottom: 8px;">AI Worker 状态</div>
+            <div class="worker-status" style="margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid rgba(56, 189, 248, 0.08);">
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">AI Worker 状态</div>
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                    <div id="worker-status-dot" style="width: 10px; height: 10px; border-radius: 50%; background: #555;"></div>
-                    <span id="worker-status-text" style="font-size: 0.9em; color: #aaa;">未启动</span>
+                    <div id="worker-status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #475569;"></div>
+                    <span id="worker-status-text" style="font-size: 0.85rem; color: var(--text-secondary);">未启动</span>
                 </div>
-                <div id="worker-uptime" style="font-size: 0.8em; color: #666; margin-bottom: 12px;"></div>
+                <div id="worker-uptime" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;"></div>
                 <!-- 释放显存按钮移到这里 -->
                 <button id="btn-shutdown" class="btn-stop">🛑 释放显存</button>
             </div>
@@ -117,13 +117,11 @@
                             <input type="file" id="file-input" class="hidden" accept="video/*,audio/*">
                         </div>
 
-                        <div class="path-input-mode"
-                            style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1);">
-                            <div style="font-size: 0.85em; color: #888; margin-bottom: 8px;">直接输入视频绝对路径（原地读取，不占用额外空间）：
+                        <div class="path-input-mode">
+                            <div>直接输入视频绝对路径（原地读取，不占用额外空间）：
                             </div>
                             <div style="display: flex; gap: 10px;">
-                                <input type="text" id="local-video-path" placeholder="例如 F:\录制\视频.mp4"
-                                    style="flex: 1; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: white; font-family: monospace;">
+                                <input type="text" id="local-video-path" placeholder="例如 F:\录制\视频.mp4">
                                 <button id="btn-start-path" class="btn primary"
                                     style="padding: 0 20px; white-space: nowrap;">开始转录</button>
                             </div>
@@ -137,8 +135,8 @@
                         </div>
 
                         <div id="download-container" class="hidden mt-15">
-                            <div class="path-info" style="font-size: 0.85em; color: #aaa; margin-bottom: 8px;">
-                                默认保存至: <code id="srt-path-display" style="color: #64ffda;"></code>
+                            <div class="path-info">
+                                默认保存至: <code id="srt-path-display"></code>
                             </div>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                 <a id="btn-download" class="btn success" href="#" download
@@ -155,14 +153,14 @@
                         <div class="icon cli-icon"></div>
                         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                             <h3>终端实战命令参考 <small class="model-tag">CLI Toolbox</small></h3>
-                            <button id="btn-refresh-devices" class="btn-small" style="background: rgba(100, 255, 218, 0.1); color: #64ffda; border: 1px solid #64ffda;">🔍 查询设备 ID</button>
+                            <button id="btn-refresh-devices" class="btn-small" style="">🔍 查询设备 ID</button>
                         </div>
                     </div>
                     <div class="card-body">
                         <!-- 设备显示面板 -->
-                        <div id="device-list-panel" class="hidden" style="margin-bottom: 15px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(100, 255, 218, 0.2);">
+                        <div id="device-list-panel" class="hidden" style="margin-bottom: 15px; padding: 12px; background: rgba(0,0,0,0.25); border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.15);">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <strong style="color: #64ffda; font-size: 0.9em;">Detected Audio Inputs:</strong>
+                                <strong style="color: var(--accent); font-size: 0.88em;">Detected Audio Inputs:</strong>
                                 <span id="device-close" style="cursor: pointer; opacity: 0.5;">×</span>
                             </div>
                             <div id="device-items-container" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
@@ -317,33 +315,40 @@
             margin-bottom: 12px;
         }
         .id-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(100, 255, 218, 0.3);
-            color: #64ffda;
-            border-radius: 4px;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            color: var(--accent);
+            border-radius: 6px;
             padding: 8px;
             width: 70px;
             text-align: center;
-            font-family: monospace;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.85rem;
             outline: none;
+            transition: all 0.2s ease;
         }
         .id-input:focus {
-            border-color: #64ffda;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
         .btn-run {
-            background: linear-gradient(135deg, #64ffda, #00bfa5);
-            color: #0a192f;
+            background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+            color: #0a0e1a;
             border: none;
             padding: 8px 15px;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
             white-space: nowrap;
         }
         .btn-run:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+            box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
+        }
+        .btn-run:active {
+            transform: scale(0.96);
         }
     </style>
 
