@@ -56,6 +56,40 @@
     --transition-fast: 0.15s ease;
     --transition-normal: 0.25s ease;
     --transition-slow: 0.4s ease;
+ 
+    /* ── 默认深色模式特有变量 ── */
+    --input-bg: rgba(0, 0, 0, 0.25);
+    --code-bg: rgba(56, 189, 248, 0.08);
+    --pre-bg: rgba(0, 0, 0, 0.4);
+    --card-shadow: var(--shadow-md);
+}
+
+/* ── 亮色主题变量 ── */
+.light-mode {
+    --bg-color: #f1f5f9;
+    --bg-gradient-1: rgba(56, 189, 248, 0.05);
+    --bg-gradient-2: rgba(14, 165, 233, 0.04);
+    --panel-bg: rgba(255, 255, 255, 0.85);
+    --panel-bg-hover: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-color-hover: rgba(0, 0, 0, 0.15);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --accent: #0ea5e9;
+    --accent-dim: #0284c7;
+    --accent-hover: #0369a1;
+    --accent-glow: rgba(14, 165, 233, 0.1);
+    --accent-glow-strong: rgba(14, 165, 233, 0.2);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    
+    /* ── 亮色模式特有变量 ── */
+    --input-bg: rgba(255, 255, 255, 0.9);
+    --code-bg: rgba(14, 165, 233, 0.08);
+    --pre-bg: #f8fafc;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 * {
@@ -138,6 +172,29 @@ body {
     background-clip: text;
     letter-spacing: -0.02em;
 }
+ 
+ .btn-theme-toggle {
+     background: rgba(255, 255, 255, 0.05);
+     border: 1px solid var(--border-color);
+     border-radius: 50%;
+     width: 32px;
+     height: 32px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
+     font-size: 1rem;
+     transition: all var(--transition-fast);
+     margin-left: auto;
+     color: var(--text-secondary);
+ }
+ 
+ .btn-theme-toggle:hover {
+     background: var(--accent-glow);
+     border-color: var(--accent);
+     color: var(--accent);
+     transform: rotate(15deg);
+ }
 
 .gpu-monitor h3 {
     font-size: 0.85rem;
@@ -301,7 +358,7 @@ header p {
 textarea {
     width: 100%;
     height: 240px;
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     color: var(--text-primary);
@@ -643,7 +700,7 @@ textarea:focus {
 .chat-input-expanded {
     width: 100%;
     padding: var(--space-md) var(--space-lg);
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     color: var(--text-primary);
@@ -703,7 +760,7 @@ textarea:focus {
 
 #chat-input {
     flex: 1;
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     color: var(--text-primary);
@@ -808,11 +865,11 @@ textarea:focus {
 }
 
 .code-block {
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--pre-bg);
     padding: var(--space-md) var(--space-lg);
     border-radius: var(--radius-sm);
     margin-bottom: var(--space-sm);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
@@ -833,7 +890,7 @@ textarea:focus {
 .code-block code {
     font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
     font-size: 0.82rem;
-    color: #5eead4;
+    color: var(--accent-dim);
     word-break: break-all;
     line-height: 1.5;
 }
@@ -1000,7 +1057,7 @@ textarea:focus {
 
 /* ── 简约下拉菜单 ── */
 .select-minimal {
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
@@ -1121,7 +1178,7 @@ textarea:focus {
 .markdown-content pre {
     margin: 0.8em 0;
     padding: var(--space-lg);
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--pre-bg);
     border-radius: var(--radius-sm);
     overflow-x: auto;
     border: 1px solid var(--border-color);
@@ -1146,9 +1203,9 @@ textarea:focus {
 
 /* ── 行内代码 ── */
 .markdown-content :not(pre) > code {
-    color: #5eead4;
-    background: rgba(94, 234, 212, 0.08);
-    border: 1px solid rgba(94, 234, 212, 0.15);
+    color: var(--accent-dim);
+    background: var(--code-bg);
+    border: 1px solid var(--border-color);
 }
 
 /* ── 表格 ── */

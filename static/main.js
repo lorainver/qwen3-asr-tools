@@ -243,6 +243,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectTTSEngine = document.getElementById('select-tts-engine');
     const selectHistory = document.getElementById('select-history');
     const checkEnableThink = document.getElementById('check-enable-think'); // 深度思考开关
+    const btnThemeToggle = document.getElementById('btn-theme-toggle'); // 主题切换按钮
+    
+    // 初始化主题
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if (btnThemeToggle) btnThemeToggle.innerHTML = '☀️';
+    }
+
+    // 主题切换逻辑
+    if (btnThemeToggle) {
+        btnThemeToggle.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            btnThemeToggle.innerHTML = isLight ? '☀️' : '🌙';
+            
+            // 如果使用了 Mermaid，可能需要重新渲染（有些图表颜色是硬编码的）
+            if (typeof renderMermaidDiagrams === 'function') {
+                renderMermaidDiagrams();
+            }
+        });
+    }
 
     // 新增图片上传相关
     const btnImageUpload = document.getElementById('btn-image-upload');
