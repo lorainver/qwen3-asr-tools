@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 0. Markdown 渲染配置 ===
     // 配置 marked
     marked.setOptions({
-        highlight: function(code, lang) {
+        highlight: function (code, lang) {
             if (lang && hljs.getLanguage(lang)) {
-                try { return hljs.highlight(code, { language: lang }).value; } catch (e) {}
+                try { return hljs.highlight(code, { language: lang }).value; } catch (e) { }
             }
             return hljs.highlightAuto(code).value;
         },
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function renderMarkdown(text) {
         if (!text) return '';
-        
+
         // 1. 保护 Mermaid 代码块，避免被 marked 解析
         const mermaidBlocks = [];
         text = text.replace(/```mermaid\n([\s\S]*?)```/g, (match, code) => {
@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 html = html.replace(key, rendered);
             } catch (e) {
-                html = html.replace(key, item.display 
-                    ? `$$${item.formula}$$` 
+                html = html.replace(key, item.display
+                    ? `$$${item.formula}$$`
                     : `$${item.formula}$`);
             }
         });
@@ -101,10 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function parseThinking(text) {
         const thinkStart = '<think>';
         const thinkEnd = '</think>';
-        
+
         const startIdx = text.indexOf(thinkStart);
         const endIdx = text.indexOf(thinkEnd);
-        
+
         if (startIdx !== -1) {
             if (endIdx !== -1) {
                 // 完整闭合的思考块
@@ -130,9 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function renderWithThinking(text, forceOpen = false) {
         const { before, thinking, answer } = parseThinking(text);
-        
+
         let html = '';
-        
+
         // 思考过程（折叠显示）
         if (thinking !== null) {
             // 只有在强制开启（生成中）且正文还没出来时才默认展开
@@ -146,13 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
-        
+
         // 最终回答
         const finalAnswer = before + answer;
         if (finalAnswer.trim()) {
             html += `<div class="answer-content">${renderMarkdown(finalAnswer)}</div>`;
         }
-        
+
         return html;
     }
 
@@ -182,11 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const targetTab = btn.dataset.tab;
-            
+
             // 切换标签按钮状态
             tabBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
+
             // 切换页面显示
             tabPages.forEach(page => page.classList.remove('active'));
             const targetPage = document.getElementById(`page-${targetTab}`);
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectHistory = document.getElementById('select-history');
     const checkEnableThink = document.getElementById('check-enable-think'); // 深度思考开关
     const btnThemeToggle = document.getElementById('btn-theme-toggle'); // 主题切换按钮
-    
+
     // 初始化主题
     const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isLight = document.body.classList.toggle('light-mode');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
             btnThemeToggle.innerHTML = isLight ? '☀️' : '🌙';
-            
+
             // 如果使用了 Mermaid，可能需要重新渲染（有些图表颜色是硬编码的）
             if (typeof renderMermaidDiagrams === 'function') {
                 renderMermaidDiagrams();
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const resp = await fetch('/api/models');
             const data = await resp.json();
             allAvailableModels = data.available || [];
-            
+
             // 更新当前模型 ID
             if (data.current) {
                 currentModelId = data.current.id;
@@ -332,13 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderModelList() {
         if (!selectModel) return;
-        
+
         const category = selectModelCategory ? selectModelCategory.value : 'all';
         selectModel.innerHTML = '';
-        
+
         // 过滤模型
-        const filtered = category === 'all' 
-            ? allAvailableModels 
+        const filtered = category === 'all'
+            ? allAvailableModels
             : allAvailableModels.filter(m => m.category === category);
 
         if (filtered.length === 0) {
@@ -396,10 +396,10 @@ document.addEventListener('DOMContentLoaded', () => {
         selectModel.addEventListener('change', async (e) => {
             const newModelId = e.target.value;
             if (!newModelId || newModelId === currentModelId) return;
-            
+
             selectModel.disabled = true;
             currentModelTag.textContent = '切换中...';
-            
+
             try {
                 const resp = await fetch('/api/switch_model', {
                     method: 'POST',
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ model_id: newModelId })
                 });
                 const data = await resp.json();
-                
+
                 if (data.status === 'ok' && data.current_model) {
                     currentModelId = newModelId;
                     currentModelTag.textContent = data.current_model.name;
@@ -451,14 +451,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedImageBase64 = event.target.result;
                 imagePreview.src = selectedImageBase64;
                 imagePreviewContainer.classList.remove('hidden');
-                
+
                 // 改进切换逻辑：如果当前模型不具备视觉能力，则提示或自动切换
                 // 我们通过模型 ID 是否包含 'vl' 来快速判定
                 if (!currentModelId.toLowerCase().includes('vl') && selectModel) {
                     // 优先寻找远程 VL 模型，如果没有再选本地
                     const remoteVLOption = Array.from(selectModel.options).find(opt => opt.value.includes('remote') && opt.value.includes('vl'));
                     const localVLOption = Array.from(selectModel.options).find(opt => opt.value === 'qwen-vl');
-                    
+
                     if (remoteVLOption) {
                         selectModel.value = remoteVLOption.value;
                     } else if (localVLOption) {
@@ -508,14 +508,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 辅助函数：显示浮动提示 (Toast) ===
     function showToast(message, duration = 2000) {
         let toast = document.getElementById('toast-notification');
+        const isLight = document.body.classList.contains('light-mode');
         if (!toast) {
             toast = document.createElement('div');
             toast.id = 'toast-notification';
             toast.style.cssText = `
                 position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-                background: rgba(56, 189, 248, 0.92); color: #0a0e1a;
+                background: ${isLight ? 'rgba(14, 165, 233, 0.92)' : 'rgba(56, 189, 248, 0.92)'}; color: ${isLight ? '#ffffff' : '#0a0e1a'};
                 padding: 10px 24px; border-radius: 50px; font-weight: bold;
-                box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3); z-index: 9999;
+                box-shadow: 0 10px 30px ${isLight ? 'rgba(14, 165, 233, 0.2)' : 'rgba(56, 189, 248, 0.3)'}; z-index: 9999;
                 opacity: 0; transition: opacity 0.3s, bottom 0.3s; pointer-events: none;
                 font-family: 'Inter', -apple-system, sans-serif;
             `;
@@ -524,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.textContent = message;
         toast.style.opacity = '1';
         toast.style.bottom = '40px';
-        
+
         setTimeout(() => {
             toast.style.opacity = '0';
             toast.style.bottom = '30px';
@@ -541,14 +542,15 @@ document.addEventListener('DOMContentLoaded', () => {
         btnRefreshDevices.addEventListener('click', async () => {
             btnRefreshDevices.textContent = '🔄 正在查询...';
             btnRefreshDevices.disabled = true;
-            
+
             try {
                 const response = await fetch('/api/audio_devices');
                 const data = await response.json();
-                
+
                 if (data.devices && data.devices.length > 0) {
+                    const isLight = document.body.classList.contains('light-mode');
                     let html = `
-                        <table style="width: 100%; border-collapse: collapse; color: #94a3b8; font-size: 0.88em;">
+                        <table style="width: 100%; border-collapse: collapse; color: ${isLight ? '#475569' : '#94a3b8'}; font-size: 0.88em;">
                             <thead>
                                 <tr style="border-bottom: 2px solid rgba(56, 189, 248, 0.2); text-align: left;">
                                     <th style="padding: 8px; color: #38bdf8;">ID</th>
@@ -558,23 +560,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             </thead>
                             <tbody>
                     `;
-                    
+
                     data.devices.forEach(dev => {
-                        const apiMap = {0: 'MME', 1: 'DirectSound', 2: 'WASAPI', 3: 'WDM-KS'};
+                        const apiMap = { 0: 'MME', 1: 'DirectSound', 2: 'WASAPI', 3: 'WDM-KS' };
                         const apiName = apiMap[dev.hostapi] || 'Unknown';
                         const isRecommended = apiName === 'WASAPI';
                         const isVirtual = dev.name.toLowerCase().includes('cable') || dev.name.toLowerCase().includes('streaming');
                         const icon = isVirtual ? '🔌' : '🎙️';
-                        
+
                         html += `
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onclick="navigator.clipboard.writeText('${dev.id}'); window.showToast('✅ 已成功复制 ID: ${dev.id}')">
-                                <td style="padding: 8px; font-weight: bold; color: ${isRecommended ? '#38bdf8' : '#94a3b8'};">${dev.id}</td>
-                                <td style="padding: 8px;"><span style="font-size: 0.8em; padding: 2px 6px; border-radius: 4px; background: ${isRecommended ? 'rgba(56, 189, 248, 0.12)' : 'rgba(255,255,255,0.05)'};">${apiName}</span></td>
-                                <td style="padding: 8px; color: ${isVirtual ? '#64748b' : '#e2e8f0'};">${icon} ${dev.name}</td>
+                            <tr style="border-bottom: 1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)'}; cursor: pointer;" onclick="navigator.clipboard.writeText('${dev.id}'); window.showToast('✅ 已成功复制 ID: ${dev.id}')">
+                                <td style="padding: 8px; font-weight: bold; color: ${isRecommended ? '#38bdf8' : (isLight ? '#475569' : '#94a3b8')};">${dev.id}</td>
+                                <td style="padding: 8px;"><span style="font-size: 0.8em; padding: 2px 6px; border-radius: 4px; background: ${isRecommended ? 'rgba(56, 189, 248, 0.12)' : (isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.05)')};">${apiName}</span></td>
+                                <td style="padding: 8px; color: ${isVirtual ? '#64748b' : (isLight ? '#0f172a' : '#e2e8f0')};">${icon} ${dev.name}</td>
                             </tr>
                         `;
                     });
-                    
+
                     html += `</tbody></table>
                             <div style="font-size: 0.78em; color: #64748b; margin-top: 10px; text-align: center;">💡 提示：点击行可直接复制 ID。推荐优先使用 <span style="color: #38bdf8;">WASAPI</span> 驱动。</div>`;
                     deviceContainer.innerHTML = html;
@@ -619,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/api/summarize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         text: text,
                         prompt_type: promptType
                     })
@@ -816,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const originalText = btnNewChat.innerHTML;
                 btnNewChat.innerHTML = '💾 保存中...';
                 btnNewChat.disabled = true;
-                
+
                 try {
                     await saveCurrentChat();
                 } catch (e) {
@@ -826,7 +828,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btnNewChat.disabled = false;
                 }
             }
-            
+
             messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
             chatHistory.innerHTML = "";
             appendMessage('assistant', messages[0].content);
@@ -841,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const resp = await fetch('/api/history/list');
             const list = await resp.json();
-            
+
             // 保留第一项默认项
             selectHistory.innerHTML = '<option value="">📜 历史对话</option>';
             list.forEach(item => {
@@ -1007,11 +1009,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedImageBase64) {
             // 多模态消息格式
             messageContent = [
-                { 
-                    type: 'image', 
+                {
+                    type: 'image',
                     image: selectedImageBase64,
                     // 针对 8GB 显存进行优化，限制最大像素点，防止 OOM
-                    max_pixels: 600 * 600 
+                    max_pixels: 600 * 600
                 },
                 { type: 'text', text: text }
             ];
@@ -1022,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.className = 'chat-image';
             img.onclick = () => window.open(img.src, '_blank');
             userMsgSpan.parentElement.insertBefore(img, userMsgSpan);
-            
+
             // 清理图片预览
             btnRemoveImage.click();
         } else {
@@ -1033,27 +1035,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         messages.push({ "role": "user", "content": messageContent });
         const loadingMsg = appendMessage('assistant', '');
-        
+
         // 显示“正在思考...”动画
         loadingMsg.innerHTML = '<span class="thinking-dots">正在思考<span class="dot dot-1">.</span><span class="dot dot-2">.</span><span class="dot dot-3">.</span></span>';
-        
+
         // 重置流式 TTS 状态
         streamingAudioQueue.clear();
         ttsPointer = 0;
         const useStreamingTTS = checkAutoSpeak && checkAutoSpeak.checked;
-        
+
         // 联网搜索及优化参数
         const isSearchEnabled = checkWebSearch && checkWebSearch.checked;
         const isOptimizeEnabled = checkOptimizeSearch && checkOptimizeSearch.checked;
         const isThinkEnabled = checkEnableThink && checkEnableThink.checked;
-        
+
         console.log(`📡 [Network] 发送请求: search=${isSearchEnabled}, optimize=${isOptimizeEnabled}, think=${isThinkEnabled}`);
 
         try {
             const response = await fetch('/api/chat_stream', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     messages: messages,
                     model_id: currentModelId,
                     enable_search: isSearchEnabled,
@@ -1061,18 +1063,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     enable_think: isThinkEnabled
                 })
             });
-            
+
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let fullResponse = '';
-            
+
             while (true) {
                 const { value, done } = await reader.read();
                 if (done) break;
-                
+
                 const chunk = decoder.decode(value, { stream: true });
                 const lines = chunk.split('\n');
-                
+
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
                         const data = line.slice(6);
@@ -1086,7 +1088,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 // 流式更新：渲染 Markdown，生成时保持思考过程展开
                                 loadingMsg.innerHTML = renderWithThinking(fullResponse, true);
                                 chatHistory.scrollTop = chatHistory.scrollHeight;
-                                
+
                                 // 流式语音：检测到完整句子立即送 TTS
                                 if (useStreamingTTS) {
                                     const newSentences = extractNewSentences(fullResponse);
@@ -1099,22 +1101,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-            
+
             // 生成结束，进行最后一次渲染（允许折叠）
             loadingMsg.innerHTML = renderWithThinking(fullResponse, false);
-            
+
             // 完成后将回复加入消息历史
             messages.push({ "role": "assistant", "content": fullResponse });
-            
+
             // 渲染 Mermaid 图表（流式结束后可能有未渲染的图表）
             renderMermaidDiagrams();
-            
+
             // 流式 TTS：刷入剩余未完句子
             if (useStreamingTTS && fullResponse.substring(ttsPointer).trim()) {
                 streamingAudioQueue.enqueue(fullResponse.substring(ttsPointer).trim());
             }
-        } catch (error) { 
-            loadingMsg.innerText = "出错了: " + error.message; 
+        } catch (error) {
+            loadingMsg.innerText = "出错了: " + error.message;
         }
     }
 
@@ -1122,14 +1124,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // 创建消息包装器
         const wrapper = document.createElement('div');
         wrapper.className = `msg-wrapper ${role}`;
-        
+
         // 创建消息气泡容器
         const contentDiv = document.createElement('div');
         contentDiv.className = `msg-content ${role}`;
-        
+
         // 创建实际消息体 (使用 div 替代 span，以支持内部包含思考块等块级元素)
         const messageBody = document.createElement('div');
-        
+
         if (role === 'assistant') {
             // 助手消息：渲染 Markdown
             messageBody.className = 'markdown-content';
@@ -1140,14 +1142,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // 用户消息：纯文本
             messageBody.innerText = text;
         }
-        
+
         contentDiv.appendChild(messageBody);
         wrapper.appendChild(contentDiv);
-        
+
         // 添加工具栏（复制按钮 + 朗读按钮）
         const toolbar = document.createElement('div');
         toolbar.className = 'msg-toolbar';
-        
+
         // 复制按钮
         const copyBtn = document.createElement('button');
         copyBtn.className = 'btn-icon btn-copy-inline';
@@ -1166,7 +1168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         toolbar.appendChild(copyBtn);
-        
+
         // 助手消息额外添加朗读按钮
         if (role === 'assistant') {
             const speakBtn = document.createElement('button');
@@ -1175,9 +1177,9 @@ document.addEventListener('DOMContentLoaded', () => {
             speakBtn.onclick = () => playTTS(messageBody.innerText, speakBtn);
             toolbar.appendChild(speakBtn);
         }
-        
+
         wrapper.appendChild(toolbar);
-        
+
         chatHistory.appendChild(wrapper);
         chatHistory.scrollTop = chatHistory.scrollHeight;
         return messageBody;
@@ -1221,14 +1223,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('[ReleaseGPU] Button not found!');
     }
-    
+
     function showToast(message) {
         const toast = document.createElement('div');
+        const isLight = document.body.classList.contains('light-mode');
         toast.style.cssText = `
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.92); color: #e2e8f0; padding: 12px 24px;
+            background: ${isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(15, 23, 42, 0.92)'}; color: ${isLight ? '#0f172a' : '#e2e8f0'}; padding: 12px 24px;
             border-radius: 8px; z-index: 10000; font-family: 'Inter', -apple-system, sans-serif;
-            border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 1px solid ${isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(56, 189, 248, 0.2)'}; box-shadow: 0 8px 24px ${isLight ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.4)'};
         `;
         toast.textContent = message;
         document.body.appendChild(toast);

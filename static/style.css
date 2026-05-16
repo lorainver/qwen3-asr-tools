@@ -62,6 +62,29 @@
     --code-bg: rgba(56, 189, 248, 0.08);
     --pre-bg: rgba(0, 0, 0, 0.4);
     --card-shadow: var(--shadow-md);
+    --tooltip-bg: #0f172a;
+    --chat-area-bg: rgba(0, 0, 0, 0.15);
+    --msg-assistant-bg: rgba(255, 255, 255, 0.04);
+    --overlay-bg: rgba(0, 0, 0, 0.65);
+    --tab-bar-bg: rgba(0, 0, 0, 0.2);
+    --drop-zone-bg: rgba(0, 0, 0, 0.08);
+    --result-box-bg: rgba(0, 0, 0, 0.25);
+    --path-input-bg: rgba(0, 0, 0, 0.15);
+    --code-block-hover-bg: rgba(0, 0, 0, 0.45);
+    --select-option-bg: #0f172a;
+    --select-option-color: white;
+    --btn-primary-text: #0a0e1a;
+    --btn-secondary-bg: rgba(255, 255, 255, 0.06);
+    --btn-secondary-hover-bg: rgba(255, 255, 255, 0.1);
+    --toggle-bg: rgba(255, 255, 255, 0.05);
+    --toggle-border: rgba(255, 255, 255, 0.08);
+    --toggle-text: #cbd5e1;
+    --toggle-hover-bg: rgba(255, 255, 255, 0.08);
+    --progress-track: rgba(255, 255, 255, 0.04);
+    --thinking-bg: rgba(255, 255, 255, 0.02);
+    --thinking-hover-bg: rgba(255, 255, 255, 0.04);
+    --inline-code-color: var(--accent-dim);
+    --path-code-color: #5eead4;
 }
 
 /* ── 亮色主题变量 ── */
@@ -90,6 +113,29 @@
     --code-bg: rgba(14, 165, 233, 0.08);
     --pre-bg: #f8fafc;
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    --tooltip-bg: #1e293b;
+    --chat-area-bg: rgba(241, 245, 249, 0.6);
+    --msg-assistant-bg: rgba(255, 255, 255, 0.7);
+    --overlay-bg: rgba(0, 0, 0, 0.3);
+    --tab-bar-bg: rgba(0, 0, 0, 0.04);
+    --drop-zone-bg: rgba(241, 245, 249, 0.5);
+    --result-box-bg: rgba(248, 250, 252, 0.8);
+    --path-input-bg: rgba(248, 250, 252, 0.6);
+    --code-block-hover-bg: #f1f5f9;
+    --select-option-bg: #ffffff;
+    --select-option-color: #0f172a;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: rgba(0, 0, 0, 0.04);
+    --btn-secondary-hover-bg: rgba(0, 0, 0, 0.08);
+    --toggle-bg: rgba(0, 0, 0, 0.03);
+    --toggle-border: rgba(0, 0, 0, 0.08);
+    --toggle-text: #475569;
+    --toggle-hover-bg: rgba(0, 0, 0, 0.06);
+    --progress-track: rgba(0, 0, 0, 0.06);
+    --thinking-bg: rgba(241, 245, 249, 0.5);
+    --thinking-hover-bg: rgba(241, 245, 249, 0.8);
+    --inline-code-color: #0284c7;
+    --path-code-color: #0d9488;
 }
 
 * {
@@ -174,7 +220,7 @@ body {
 }
  
  .btn-theme-toggle {
-     background: rgba(255, 255, 255, 0.05);
+     background: var(--toggle-bg);
      border: 1px solid var(--border-color);
      border-radius: 50%;
      width: 32px;
@@ -226,7 +272,7 @@ body {
 .progress-bar {
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--progress-track);
     border-radius: var(--radius-xl);
     overflow: hidden;
 }
@@ -402,7 +448,7 @@ textarea:focus {
 
 .btn.primary {
     background: linear-gradient(135deg, var(--accent-dim), var(--accent));
-    color: #0a0e1a;
+    color: var(--btn-primary-text);
     box-shadow: var(--shadow-sm);
 }
 
@@ -426,13 +472,13 @@ textarea:focus {
 }
 
 .btn.secondary {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--btn-secondary-bg);
     border: 1px solid var(--border-color);
     color: var(--text-secondary);
 }
 
 .btn.secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--btn-secondary-hover-bg);
     border-color: var(--border-color-hover);
     color: var(--text-primary);
 }
@@ -447,7 +493,7 @@ textarea:focus {
 /* ── 下拉选择框 ── */
 .form-select {
     flex: 1;
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
@@ -466,7 +512,7 @@ textarea:focus {
 
 .form-select:hover {
     border-color: var(--accent);
-    background-color: rgba(0, 0, 0, 0.35);
+    background-color: var(--input-bg);
 }
 
 .form-select:focus {
@@ -475,8 +521,8 @@ textarea:focus {
 }
 
 .form-select option {
-    background: #0f172a;
-    color: white;
+    background: var(--select-option-bg);
+    color: var(--select-option-color);
 }
 
 .hidden {
@@ -494,7 +540,7 @@ textarea:focus {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--drop-zone-bg);
     cursor: pointer;
     transition: all var(--transition-normal);
     min-height: 240px;
@@ -547,7 +593,7 @@ textarea:focus {
 .result-box {
     margin-top: var(--space-xl);
     padding: var(--space-lg);
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--result-box-bg);
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
     white-space: pre-wrap;
@@ -567,7 +613,7 @@ textarea:focus {
 
 .chat-history {
     flex: 1;
-    background: rgba(0, 0, 0, 0.15);
+    background: var(--chat-area-bg);
     border-radius: var(--radius-md);
     padding: var(--space-lg);
     overflow-y: auto;
@@ -589,13 +635,13 @@ textarea:focus {
 .msg.user {
     align-self: flex-end;
     background: linear-gradient(135deg, var(--accent-dim), var(--accent));
-    color: #0a0e1a;
+    color: var(--btn-primary-text);
     border-bottom-right-radius: var(--radius-xs);
 }
 
 .msg.assistant {
     align-self: flex-start;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--msg-assistant-bg);
     border: 1px solid var(--border-color);
     border-bottom-left-radius: var(--radius-xs);
 }
@@ -630,13 +676,13 @@ textarea:focus {
 
 .msg-content.user {
     background: linear-gradient(135deg, var(--accent-dim), var(--accent));
-    color: #0a0e1a;
+    color: var(--btn-primary-text);
     border-bottom-right-radius: var(--radius-xs);
     box-shadow: var(--shadow-sm);
 }
 
 .msg-content.assistant {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--msg-assistant-bg);
     border: 1px solid var(--border-color);
     border-bottom-left-radius: var(--radius-xs);
 }
@@ -681,7 +727,7 @@ textarea:focus {
 }
 
 .btn-icon-expand {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--btn-secondary-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     color: var(--text-muted);
@@ -716,7 +762,6 @@ textarea:focus {
 
 .chat-input-expanded:focus {
     border-color: var(--accent);
-    background: rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
@@ -773,7 +818,6 @@ textarea:focus {
 
 #chat-input:focus {
     border-color: var(--accent);
-    background: rgba(0, 0, 0, 0.35);
     box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
@@ -782,7 +826,7 @@ textarea:focus {
     position: relative;
     margin-top: var(--space-sm);
     padding: var(--space-sm);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--msg-assistant-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     display: inline-flex;
@@ -877,7 +921,7 @@ textarea:focus {
 }
 
 .code-block:hover {
-    background: rgba(0, 0, 0, 0.45);
+    background: var(--code-block-hover-bg);
     border-color: var(--border-color-hover);
 }
 
@@ -922,8 +966,8 @@ textarea:focus {
     bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
-    background: #0f172a;
-    color: var(--text-primary);
+    background: var(--tooltip-bg);
+    color: #e2e8f0;
     padding: var(--space-md) var(--space-lg);
     border-radius: var(--radius-sm);
     font-size: 0.78rem;
@@ -949,7 +993,7 @@ textarea:focus {
     left: 50%;
     transform: translateX(-50%);
     border: 6px solid transparent;
-    border-top-color: #0f172a;
+    border-top-color: var(--tooltip-bg);
     opacity: 0;
     transition: all var(--transition-fast);
     z-index: 100;
@@ -1017,17 +1061,17 @@ textarea:focus {
     flex-shrink: 0;
     cursor: pointer;
     user-select: none;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--toggle-bg);
     padding: 5px var(--space-md);
     border-radius: var(--radius-sm);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--toggle-border);
     font-size: 0.85rem;
-    color: #cbd5e1;
+    color: var(--toggle-text);
     transition: all var(--transition-fast);
 }
 
 .auto-speak-toggle:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--toggle-hover-bg);
     border-color: rgba(56, 189, 248, 0.3);
 }
 
@@ -1072,7 +1116,6 @@ textarea:focus {
 }
 
 .select-minimal:hover {
-    background: rgba(0, 0, 0, 0.35);
     border-color: var(--accent);
 }
 
@@ -1081,8 +1124,8 @@ textarea:focus {
 }
 
 .select-minimal option {
-    background: #0f172a;
-    color: white;
+    background: var(--select-option-bg);
+    color: var(--select-option-color);
 }
 
 #select-model-category {
@@ -1203,7 +1246,7 @@ textarea:focus {
 
 /* ── 行内代码 ── */
 .markdown-content :not(pre) > code {
-    color: var(--accent-dim);
+    color: var(--inline-code-color);
     background: var(--code-bg);
     border: 1px solid var(--border-color);
 }
@@ -1230,7 +1273,7 @@ textarea:focus {
 }
 
 .markdown-content tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--msg-assistant-bg);
 }
 
 .markdown-content tr:hover {
@@ -1251,7 +1294,7 @@ textarea:focus {
 .mermaid-container {
     margin: 1em 0;
     padding: var(--space-lg);
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--pre-bg);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     overflow-x: auto;
@@ -1289,7 +1332,7 @@ textarea:focus {
     display: flex;
     gap: 0;
     margin-bottom: var(--space-xl);
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--tab-bar-bg);
     border-radius: var(--radius-md);
     padding: var(--space-xs);
     border: 1px solid var(--border-color);
@@ -1310,13 +1353,13 @@ textarea:focus {
 }
 
 .tab-btn:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--btn-secondary-hover-bg);
     color: var(--text-secondary);
 }
 
 .tab-btn.active {
     background: linear-gradient(135deg, var(--accent-dim), var(--accent));
-    color: #0a0e1a;
+    color: var(--btn-primary-text);
     font-weight: 600;
     box-shadow: var(--shadow-glow-accent);
 }
@@ -1369,7 +1412,7 @@ textarea:focus {
 
 .chat-history-full {
     flex: 1;
-    background: rgba(0, 0, 0, 0.15);
+    background: var(--chat-area-bg);
     border-radius: var(--radius-md);
     padding: var(--space-xl);
     overflow-y: auto;
@@ -1389,7 +1432,7 @@ textarea:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.65);
+    background: var(--overlay-bg);
     backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
@@ -1463,7 +1506,7 @@ textarea:focus {
     height: 120px;
     margin-top: var(--space-sm);
     font-size: 0.88rem;
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--input-bg);
 }
 
 .btn-full {
@@ -1472,7 +1515,7 @@ textarea:focus {
 }
 
 .btn-icon-small {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--btn-secondary-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xs);
     cursor: pointer;
@@ -1500,8 +1543,8 @@ textarea:focus {
     height: 32px;
     margin-left: 0;
     padding: 0 var(--space-md);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--toggle-border);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1521,7 +1564,7 @@ textarea:focus {
     margin-bottom: var(--space-md);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--thinking-bg);
     overflow: hidden;
 }
 
@@ -1536,7 +1579,7 @@ textarea:focus {
     font-size: 0.82rem;
     color: var(--text-muted);
     user-select: none;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--thinking-bg);
     border-bottom: 1px solid transparent;
     transition: all var(--transition-fast);
     /* 恢复原生列表样式 */
@@ -1557,7 +1600,7 @@ textarea:focus {
 }
 
 .thinking-block summary:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--thinking-hover-bg);
     color: var(--accent);
 }
 
@@ -1623,7 +1666,7 @@ textarea:focus {
 .path-input-mode {
     margin-top: var(--space-lg) !important;
     padding: var(--space-lg) !important;
-    background: rgba(0, 0, 0, 0.15) !important;
+    background: var(--path-input-bg) !important;
     border-radius: var(--radius-sm) !important;
     border: 1px dashed rgba(56, 189, 248, 0.15) !important;
 }
@@ -1637,7 +1680,7 @@ textarea:focus {
 .path-input-mode input[type="text"] {
     flex: 1;
     padding: var(--space-md) !important;
-    background: rgba(0, 0, 0, 0.25) !important;
+    background: var(--input-bg) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: var(--radius-sm) !important;
     color: var(--text-primary) !important;
@@ -1659,7 +1702,7 @@ textarea:focus {
 }
 
 .path-info code {
-    color: #5eead4 !important;
+    color: var(--path-code-color) !important;
 }
 
 /* ── 下载容器按钮行 ── */
@@ -1691,7 +1734,64 @@ textarea:focus {
 /* ============================
    选中文本
    ============================ */
+/* ============================
+   浅色模式适配覆盖
+   ============================ */
+
 ::selection {
     background: rgba(56, 189, 248, 0.25);
     color: white;
 }
+
+.light-mode ::selection {
+    background: rgba(14, 165, 233, 0.2);
+    color: #0f172a;
+}
+
+/* ── 浅色模式滚动条 ── */
+.light-mode ::-webkit-scrollbar-thumb {
+    background: rgba(14, 165, 233, 0.2);
+}
+
+.light-mode ::-webkit-scrollbar-thumb:hover {
+    background: rgba(14, 165, 233, 0.4);
+}
+
+/* ── 浅色模式代码高亮适配 ── */
+.light-mode .code-block code {
+    color: #0369a1;
+}
+
+/* ── 浅色模式 Markdown 加粗文字 ── */
+.light-mode .markdown-content strong {
+    color: #0f172a;
+}
+
+/* ── 浅色模式用户消息文字 ── */
+.light-mode .msg-content.user,
+.light-mode .msg.user {
+    color: #ffffff;
+}
+
+/* ── 浅色模式 mermaid 错误 ── */
+.light-mode .mermaid-error code {
+    color: #dc2626;
+}
+
+/* ── 浅色模式 Chat 输入区 focus ── */
+.light-mode #chat-input:focus,
+.light-mode .chat-input-expanded:focus {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* ── 浅色模式 tooltip 文字 ── */
+.light-mode .code-block::after {
+    color: #f1f5f9;
+}
+
+/* ── 浅色模式 model-tag ── */
+.light-mode .model-tag {
+    background: rgba(14, 165, 233, 0.1);
+    border-color: rgba(14, 165, 233, 0.2);
+}
+
