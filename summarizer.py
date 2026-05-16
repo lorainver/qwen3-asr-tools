@@ -305,8 +305,8 @@ class LongTextSummarizer:
                         chunk = json.loads(data_content)
                         delta = chunk.get('choices', [{}])[0].get('delta', {})
                         
-                        # 1. 处理推理内容 (reasoning_content)
-                        reasoning = delta.get('reasoning_content', '')
+                        # 1. 处理推理内容 (reasoning_content, reasoning, thought)
+                        reasoning = delta.get('reasoning_content') or delta.get('reasoning') or delta.get('thought') or ''
                         if reasoning:
                             if not is_thinking:
                                 yield "<think>"

@@ -105,12 +105,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const startIdx = text.indexOf(thinkStart);
         const endIdx = text.indexOf(thinkEnd);
         
-        if (startIdx !== -1 && endIdx !== -1) {
-            return {
-                before: text.substring(0, startIdx),
-                thinking: text.substring(startIdx + thinkStart.length, endIdx),
-                answer: text.substring(endIdx + thinkEnd.length)
-            };
+        if (startIdx !== -1) {
+            if (endIdx !== -1) {
+                // 完整闭合的思考块
+                return {
+                    before: text.substring(0, startIdx),
+                    thinking: text.substring(startIdx + thinkStart.length, endIdx),
+                    answer: text.substring(endIdx + thinkEnd.length)
+                };
+            } else {
+                // 正在思考中，尚未闭合
+                return {
+                    before: text.substring(0, startIdx),
+                    thinking: text.substring(startIdx + thinkStart.length),
+                    answer: ''
+                };
+            }
         }
         return { before: '', thinking: null, answer: text };
     }
