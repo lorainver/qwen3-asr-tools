@@ -1028,6 +1028,17 @@ textarea:focus {
     color: white;
 }
 
+#select-model-category {
+    min-width: 100px;
+    background: rgba(56, 189, 248, 0.08);
+    border-color: rgba(56, 189, 248, 0.2);
+    color: var(--accent);
+}
+
+#select-model-category:hover {
+    background: rgba(56, 189, 248, 0.12);
+}
+
 #select-history {
     min-width: 150px;
 }

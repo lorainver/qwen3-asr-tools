@@ -198,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 模型选择
     const selectModel = document.getElementById('select-model');
+    const selectModelCategory = document.getElementById('select-model-category');
     const currentModelTag = document.getElementById('current-model-tag');
 
     // 总结卡片
@@ -239,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedImageBase64 = null;
 
     let currentModelId = 'qwen-general';
+    let allAvailableModels = []; // 存储所有加载的模型信息
     const checkWebSearch = document.getElementById('check-web-search');  // 联网搜索开关
 
     // === 1. GPU 监控 (SSE) ===
@@ -276,32 +278,82 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const resp = await fetch('/api/models');
             const data = await resp.json();
+            allAvailableModels = data.available || [];
             
-            // 清空并填充下拉框
-            if (selectModel) {
-                selectModel.innerHTML = '';
-                for (const model of data.available || []) {
-                    const option = document.createElement('option');
-                    option.value = model.id;
-                    option.textContent = model.name;
-                    if (model.current) {
-                        option.selected = true;
-                        currentModelId = model.id;
-                    }
-                    selectModel.appendChild(option);
-                }
-            }
-            
-            // 更新标签
-            if (currentModelTag && data.current) {
+            // 更新当前模型 ID
+            if (data.current) {
+                currentModelId = data.current.id;
                 currentModelTag.textContent = data.current.name;
             }
+
+            renderModelList();
         } catch (e) {
             console.error('加载模型列表失败:', e);
             if (selectModel) {
                 selectModel.innerHTML = '<option value="">加载失败</option>';
             }
         }
+    }
+
+    function renderModelList() {
+        if (!selectModel) return;
+        
+        const category = selectModelCategory ? selectModelCategory.value : 'all';
+        selectModel.innerHTML = '';
+        
+        // 过滤模型
+        const filtered = category === 'all' 
+            ? allAvailableModels 
+            : allAvailableModels.filter(m => m.category === category);
+
+        if (filtered.length === 0) {
+            selectModel.innerHTML = '<option value="">无匹配模型</option>';
+            return;
+        }
+
+        // 按类别分组渲染（如果是 'all' 模式）
+        if (category === 'all') {
+            const groups = {
+                'local': { name: '🏠 本地原生模型', options: [] },
+                'ollama': { name: '🦙 Ollama 本地模型', options: [] },
+                'remote': { name: '🌐 远程 API 模型', options: [] }
+            };
+
+            for (const model of filtered) {
+                const cat = model.category || 'local';
+                if (!groups[cat]) groups[cat] = { name: '其他模型', options: [] };
+                groups[cat].options.push(model);
+            }
+
+            for (const key in groups) {
+                const group = groups[key];
+                if (group.options.length === 0) continue;
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = group.name;
+                group.options.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.id;
+                    option.textContent = model.name;
+                    if (model.id === currentModelId) option.selected = true;
+                    optgroup.appendChild(option);
+                });
+                selectModel.appendChild(optgroup);
+            }
+        } else {
+            // 单一类别不分组
+            filtered.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.id;
+                option.textContent = model.name;
+                if (model.id === currentModelId) option.selected = true;
+                selectModel.appendChild(option);
+            });
+        }
+    }
+
+    // 类别变化监听
+    if (selectModelCategory) {
+        selectModelCategory.addEventListener('change', renderModelList);
     }
 
     // 模型选择变化时切换

@@ -32,14 +32,52 @@ class LongTextSummarizer:
 
     def get_available_models(self):
         result = []
+        # 1. 添加配置文件中的本地原生模型
         for model_id, model_info in self.available_models.items():
+            if not model_info.get('is_remote', False):
+                result.append({
+                    'id': model_id,
+                    'name': model_info.get('name', model_id),
+                    'category': 'local',
+                    'description': model_info.get('description', ''),
+                    'current': model_id == self.current_model_id
+                })
+        
+        # 2. 获取 Ollama 模型
+        ollama_models = self._get_ollama_models_dynamic()
+        for m in ollama_models:
+            m_id = f"ollama:{m['name']}"
             result.append({
-                'id': model_id,
-                'name': model_info.get('name', model_id),
-                'description': model_info.get('description', ''),
-                'current': model_id == self.current_model_id
+                'id': m_id,
+                'name': f"Ollama: {m['name']}",
+                'category': 'ollama',
+                'description': f"Ollama 驱动的 {m['name']} 模型",
+                'current': m_id == self.current_model_id or (self.current_model_id == 'qwen-ollama-7b' and m['name'] == 'qwen2.5:7b')
             })
+
+        # 3. 添加远程模型
+        for model_id, model_info in self.available_models.items():
+            if model_info.get('is_remote', False) and 'ollama' not in model_id:
+                result.append({
+                    'id': model_id,
+                    'name': model_info.get('name', model_id),
+                    'category': 'remote',
+                    'description': model_info.get('description', ''),
+                    'current': model_id == self.current_model_id
+                })
+        
         return result
+
+    def _get_ollama_models_dynamic(self):
+        """动态从本地 Ollama 获取模型列表"""
+        try:
+            # 尝试 127.0.0.1 避开 localhost 解析延迟或 503
+            resp = requests.get("http://127.0.0.1:11434/api/tags", timeout=2)
+            if resp.status_code == 200:
+                return resp.json().get('models', [])
+        except Exception as e:
+            logger.warning(f"无法获取 Ollama 模型列表: {e}")
+        return []
 
     def get_current_model(self):
         if self.current_model_id in self.available_models:
@@ -48,15 +86,37 @@ class LongTextSummarizer:
         return {'id': self.current_model_id, 'name': 'Unknown', 'path': self.model_path}
 
     def switch_model(self, model_id):
+        # 处理动态 Ollama 模型 ID (格式: ollama:name)
+        if model_id.startswith("ollama:"):
+            target_ollama_name = model_id.split(":", 1)[1]
+            if self.model is not None:
+                self._unload_model()
+            
+            self.current_model_id = model_id
+            self.is_remote = True
+            self.api_url = "http://localhost:11434/v1/chat/completions"
+            # 我们动态构造一个 model_info 存储
+            self.available_models[model_id] = {
+                'name': f"Ollama: {target_ollama_name}",
+                'model_id': target_ollama_name,
+                'api_url': self.api_url,
+                'is_remote': True
+            }
+            logger.info(f"✅ 已切换到动态 Ollama 模型 '{target_ollama_name}'")
+            return True
+
         if model_id not in self.available_models:
             logger.warning(f"⚠️ 切换失败: 未知的模型 ID '{model_id}'")
             return False
+            
         if model_id == self.current_model_id and self.model is not None:
             logger.info(f"✓ 模型 '{model_id}' 已加载，无需切换")
             return True
+            
         if self.model is not None:
             logger.info(f"⏳ 卸载当前模型 '{self.current_model_id}'...")
             self._unload_model()
+            
         model_info = self.available_models[model_id]
         self.model_path = model_info.get('path', self.default_model_path)
         self.current_model_id = model_id
