@@ -293,6 +293,7 @@ class LongTextSummarizer:
             response = requests.post(self.api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
             response.raise_for_status()
             
+            is_thinking = False
             for line in response.iter_lines():
                 if not line: continue
                 line_str = line.decode('utf-8')
@@ -302,10 +303,29 @@ class LongTextSummarizer:
                     
                     try:
                         chunk = json.loads(data_content)
-                        token = chunk.get('choices', [{}])[0].get('delta', {}).get('content', '')
+                        delta = chunk.get('choices', [{}])[0].get('delta', {})
+                        
+                        # 1. 处理推理内容 (reasoning_content)
+                        reasoning = delta.get('reasoning_content', '')
+                        if reasoning:
+                            if not is_thinking:
+                                yield "<think>"
+                                is_thinking = True
+                            yield reasoning
+                        
+                        # 2. 处理正式内容 (content)
+                        token = delta.get('content', '')
                         if token:
+                            # 如果之前在思考，现在正式输出了，则先关闭思考标签
+                            if is_thinking:
+                                yield "</think>"
+                                is_thinking = False
                             yield token
                     except Exception:
                         continue
+            
+            # 循环结束后，如果还在思考状态，闭合标签
+            if is_thinking:
+                yield "</think>"
         except Exception as e:
             yield f"❌ 远程流式请求失败: {str(e)}"
