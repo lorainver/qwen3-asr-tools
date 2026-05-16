@@ -72,7 +72,7 @@ class LongTextSummarizer:
         """动态从本地 Ollama 获取模型列表"""
         try:
             # 尝试 127.0.0.1 避开 localhost 解析延迟或 503
-            resp = requests.get("http://127.0.0.1:11434/api/tags", timeout=2)
+            resp = requests.get("http://127.0.0.1:11434/api/tags", timeout=2, proxies={'http': None, 'https': None})
             if resp.status_code == 200:
                 return resp.json().get('models', [])
         except Exception as e:
@@ -94,7 +94,7 @@ class LongTextSummarizer:
             
             self.current_model_id = model_id
             self.is_remote = True
-            self.api_url = "http://localhost:11434/v1/chat/completions"
+            self.api_url = "http://127.0.0.1:11434/v1/chat/completions"
             # 我们动态构造一个 model_info 存储
             self.available_models[model_id] = {
                 'name': f"Ollama: {target_ollama_name}",
@@ -236,7 +236,7 @@ class LongTextSummarizer:
                 "stream": False,
                 "temperature": 0.7
             }
-            response = requests.post(self.api_url, json=payload, timeout=60)
+            response = requests.post(self.api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
             response.raise_for_status()
             data = response.json()
             return data['choices'][0]['message']['content']
@@ -290,7 +290,7 @@ class LongTextSummarizer:
                 "temperature": 0.7,
                 "think": True  # 启用思考过程（返回 <think> 标签）
             }
-            response = requests.post(self.api_url, json=payload, stream=True, timeout=600)
+            response = requests.post(self.api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
             response.raise_for_status()
             
             for line in response.iter_lines():

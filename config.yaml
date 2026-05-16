@@ -38,13 +38,13 @@ models:
       description: "运行在远程服务器上的视觉模型，支持图片分析"
     qwen-ollama-7b:
       name: "Qwen2.5-7B (本地 Ollama)"
-      api_url: "http://localhost:11434/v1/chat/completions"
+      api_url: "http://127.0.0.1:11434/v1/chat/completions"
       is_remote: true
       description: "本地 Ollama 驱动的 7B 模型，利用 RTX 5060 满血运行"
     qwen-ollama-9b:
       name: "Qwen3.5-9B (旗舰版)"
       model_id: "qwen3.5:9b"
-      api_url: "http://localhost:11434/v1/chat/completions"
+      api_url: "http://127.0.0.1:11434/v1/chat/completions"
       is_remote: true
       description: "2026年最新 Qwen 3.5 旗舰模型，9B 参数配合 128k 上下文，翻译与逻辑性能封神"
   
