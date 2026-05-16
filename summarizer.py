@@ -277,6 +277,7 @@ class LongTextSummarizer:
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
         
+        # 针对 Ollama 模型的硬编码映射
         if self.current_model_id == 'qwen-ollama-7b':
             remote_model = 'qwen2.5:7b'
         elif self.current_model_id == 'qwen-ollama-9b':
@@ -288,7 +289,7 @@ class LongTextSummarizer:
                 "messages": messages,
                 "stream": True,
                 "temperature": 0.7,
-                "think": enable_think  # 根据开关动态启用/禁用思考过程
+                "think": enable_think  # 告诉 Ollama API 我们的偏好
             }
             response = requests.post(self.api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
             response.raise_for_status()
