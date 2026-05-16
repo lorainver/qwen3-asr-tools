@@ -51,13 +51,18 @@
                 </div>
             </div>
             <!-- AI Worker 状态指示器 -->
-            <div class="worker-status" style="margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid rgba(56, 189, 248, 0.08);">
-                <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">AI Worker 状态</div>
+            <div class="worker-status"
+                style="margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid rgba(56, 189, 248, 0.08);">
+                <div
+                    style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    AI Worker 状态</div>
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                    <div id="worker-status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #475569;"></div>
+                    <div id="worker-status-dot"
+                        style="width: 8px; height: 8px; border-radius: 50%; background: #475569;"></div>
                     <span id="worker-status-text" style="font-size: 0.85rem; color: var(--text-secondary);">未启动</span>
                 </div>
-                <div id="worker-uptime" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;"></div>
+                <div id="worker-uptime" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">
+                </div>
                 <!-- 释放显存按钮移到这里 -->
                 <button id="btn-shutdown" class="btn-stop">🛑 释放显存</button>
             </div>
@@ -79,172 +84,188 @@
             <!-- 页面1：工作站 -->
             <div id="page-workstation" class="tab-page active">
                 <div class="cards-grid">
-                <!-- 总结卡片 -->
-                <div class="card glass-panel" id="summary-card">
-                    <div class="card-header">
-                        <div class="icon sum-icon"></div>
-                        <h3>AI 智库摘要</h3>
-                    </div>
-                    <div class="card-body">
-                        <p class="subtitle">粘贴长文本，自动提炼“一页纸精华”。</p>
-                        <textarea id="meeting-text" placeholder="在此粘贴长文本..."></textarea>
-                        <div class="summary-controls">
-                            <select id="prompt-type" class="form-select">
-                                {% for key, p in config.prompts.items() %}
-                                <option value="{{ key }}">{{ p.name }}</option>
-                                {% endfor %}
-                            </select>
-                            <button id="btn-summarize" class="btn primary">开始执行</button>
+                    <!-- 总结卡片 -->
+                    <div class="card glass-panel" id="summary-card">
+                        <div class="card-header">
+                            <div class="icon sum-icon"></div>
+                            <h3>AI 智库摘要</h3>
                         </div>
-                        <div id="sum-progress-container" class="hidden">
-                            <div class="status-text" id="sum-status">正在准备数据...</div>
-                            <div class="progress-bar active"></div>
-                        </div>
-                        <div id="sum-result" class="result-box hidden"></div>
-                    </div>
-                </div>
-
-                <!-- 转录卡片 -->
-                <div class="card glass-panel" id="transcribe-card">
-                    <div class="card-header">
-                        <div class="icon trans-icon"></div>
-                        <h3>视频提取文本 (Qwen3-ASR)</h3>
-                    </div>
-                    <div class="card-body">
-                        <p class="subtitle">支持拖拽视频上传，或直接输入本地路径（免上传）。</p>
-                        <div id="drop-zone" class="drop-zone">
-                            <div class="upload-icon">📁</div>
-                            <p>点击选择或将视频文件拖拽到这里</p>
-                            <input type="file" id="file-input" class="hidden" accept="video/*,audio/*">
-                        </div>
-
-                        <div class="path-input-mode">
-                            <div>直接输入视频绝对路径（原地读取，不占用额外空间）：
+                        <div class="card-body">
+                            <p class="subtitle">粘贴长文本，自动提炼“一页纸精华”。</p>
+                            <textarea id="meeting-text" placeholder="在此粘贴长文本..."></textarea>
+                            <div class="summary-controls">
+                                <select id="prompt-type" class="form-select">
+                                    {% for key, p in config.prompts.items() %}
+                                    <option value="{{ key }}">{{ p.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select id="target-lang" class="form-select hidden">
+                                    <option value="zh">→ 中文</option>
+                                    <option value="en">→ English</option>
+                                    <option value="ja">→ 日本語</option>
+                                    <option value="ko">→ 한국어</option>
+                                    <option value="fr">→ Français</option>
+                                    <option value="de">→ Deutsch</option>
+                                </select>
+                                <button id="btn-summarize" class="btn primary">开始执行</button>
                             </div>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="text" id="local-video-path" placeholder="例如 F:\录制\视频.mp4">
-                                <button id="btn-start-path" class="btn primary"
-                                    style="padding: 0 20px; white-space: nowrap;">开始转录</button>
+                            <div id="sum-progress-container" class="hidden">
+                                <div class="status-text" id="sum-status">正在准备数据...</div>
+                                <div class="progress-bar active"></div>
                             </div>
-                        </div>
-
-                        <div id="trans-progress-container" class="hidden">
-                            <div class="status-text" id="trans-status">等待上传...</div>
-                            <div class="progress-bar">
-                                <div id="trans-bar" class="progress-fill" style="width: 0%;"></div>
-                            </div>
-                        </div>
-
-                        <div id="download-container" class="hidden mt-15">
-                            <div class="path-info">
-                                默认保存至: <code id="srt-path-display"></code>
-                            </div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <a id="btn-download" class="btn success" href="#" download
-                                    style="text-decoration: none; flex: 1; text-align: center;">💾 下载 SRT 字幕</a>
-                                <button id="btn-open-folder" class="btn secondary" style="flex: 1;">📂 打开所在目录</button>
-                            </div>
+                            <div id="sum-result" class="result-box hidden"></div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 终端命令参考卡片 (2026.05 最终全能版) -->
-                <div class="card glass-panel cli-card" style="grid-column: 1 / -1;">
-                    <div class="card-header">
-                        <div class="icon cli-icon"></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <h3>终端实战命令参考 <small class="model-tag">CLI Toolbox</small></h3>
-                            <button id="btn-refresh-devices" class="btn-small" style="">🔍 查询设备 ID</button>
+                    <!-- 转录卡片 -->
+                    <div class="card glass-panel" id="transcribe-card">
+                        <div class="card-header">
+                            <div class="icon trans-icon"></div>
+                            <h3>视频提取文本 (Qwen3-ASR)</h3>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <!-- 设备显示面板 -->
-                        <div id="device-list-panel" class="hidden" style="margin-bottom: 15px; padding: 12px; background: rgba(0,0,0,0.25); border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.15);">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <strong style="color: var(--accent); font-size: 0.88em;">Detected Audio Inputs:</strong>
-                                <span id="device-close" style="cursor: pointer; opacity: 0.5;">×</span>
+                        <div class="card-body">
+                            <p class="subtitle">支持拖拽视频上传，或直接输入本地路径（免上传）。</p>
+                            <div id="drop-zone" class="drop-zone">
+                                <div class="upload-icon">📁</div>
+                                <p>点击选择或将视频文件拖拽到这里</p>
+                                <input type="file" id="file-input" class="hidden" accept="video/*,audio/*">
                             </div>
-                            <div id="device-items-container" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
-                                <!-- 设备列表将在这里生成 -->
-                            </div>
-                        </div>
 
-                        <!-- 1. 实时同传 -->
-                        <div class="cli-section">
-                            <h4>🎤 实时同声传译 (混合引擎)</h4>
-                            <div class="code-block" data-tooltip="推荐配置：Ollama 3B 翻译 + 0.6B ASR。VRAM 极省（仅占 500MB），智商在线，延迟极低。">
-                                <span class="label">🚀 黄金组合 (Ollama 加速版):</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --model_size 0.6B --model_type ollama --ollama_model qwen2.5:3b</code>
-                            </div>
-                            <div class="run-control-row">
-                                <div class="code-block" style="flex: 1;" data-tooltip="专业级推荐：1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景，精度最高。">
-                                    <span class="label">💎 专业全能版 (1.7B + Ollama):</span>
-                                    <code>... --model_size 1.7B --model_type ollama --ollama_model qwen2.5:3b</code>
+                            <div class="path-input-mode">
+                                <div>直接输入视频绝对路径（原地读取，不占用额外空间）：
                                 </div>
-                                <div class="run-actions">
-                                    <input type="number" id="id-trans" value="30" placeholder="ID" class="id-input">
-                                    <button class="btn-run" onclick="runScript('trans')">⚡ 执行</button>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" id="local-video-path" placeholder="例如 F:\录制\视频.mp4">
+                                    <button id="btn-start-path" class="btn primary"
+                                        style="padding: 0 20px; white-space: nowrap;">开始转录</button>
                                 </div>
                             </div>
-                            <div class="code-block" data-tooltip="极致配置：1.7B ASR + 本地 3B。全本地离线运行，无需依赖外部 API。">
-                                <span class="label">🛡️ 全本地离线版 (1.7B + 3B):</span>
-                                <code>... --model_size 1.7B --model_type 3b</code>
-                            </div>
-                            <div class="cli-params-box">
-                                <strong>核心参数:</strong>
-                                <span><code>--model_size [0.6B|1.7B]</code>: 识别引擎（推荐 1.7B 精度更高）</span>
-                                <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎选择</span>
-                            </div>
-                        </div>
 
-                        <!-- 2. 实时转录 -->
-                        <div class="cli-section">
-                            <h4>📝 实时语音转录 (仅字幕 / 无翻译)</h4>
-                            <div class="run-control-row">
-                                <div class="code-block" style="flex: 1;" data-tooltip="纯净转录：仅显示原文，不进行翻译，适合中文讲座或速记。">
-                                    <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.5 --model_size 1.7B</code>
-                                </div>
-                                <div class="run-actions">
-                                    <input type="number" id="id-realtime" value="30" placeholder="ID" class="id-input">
-                                    <button class="btn-run" onclick="runScript('realtime')">⚡ 执行</button>
+                            <div id="trans-progress-container" class="hidden">
+                                <div class="status-text" id="trans-status">等待上传...</div>
+                                <div class="progress-bar">
+                                    <div id="trans-bar" class="progress-fill" style="width: 0%;"></div>
                                 </div>
                             </div>
-                            <div class="cli-params-box">
-                                <strong>Flag 详细说明:</strong>
-                                <span><code>--device_id [int]</code>: 声卡 ID（使用上方按钮查询）</span>
-                                <span><code>--chunk [float]</code>: 语音切片长度，默认 1.5 秒。</span>
-                            </div>
-                        </div>
 
-                        <!-- 2. 离线字幕提取 -->
-                        <div class="cli-section mt-15">
-                            <h4>🎬 离线字幕提取 (SRT)</h4>
-                            <div class="code-block" data-tooltip="Qwen3-ASR 极速版。支持 GPU 批处理，转录 1 小时视频仅需几分钟。">
-                                <span class="label">🔥 Qwen3 GPU 极速转录:</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频路径" --chunk 10 --batch 12</code>
-                            </div>
-                            <div class="code-block" data-tooltip="Faster-Whisper 经典引擎。适合 CPU 环境或需要特定方言识别的情况。">
-                                <span class="label">❄️ Whisper 通用转录:</span>
-                                <code>D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频路径" --beam 1</code>
-                            </div>
-                            <div class="cli-params-box">
-                                <strong>核心参数:</strong>
-                                <span><code>--chunk [10]</code>: 切片长度(秒)，越大识别越连贯</span>
-                                <span><code>--batch [12]</code>: 并发数量，显存越大可设越高</span>
-                                <span><code>--beam [1-5]</code>: 束搜索宽度，1 最快，5 最准</span>
-                            </div>
-                        </div>
-
-                        <!-- 3. 基础工具 -->
-                        <div class="cli-section mt-15">
-                            <h4>🛠️ 基础工具</h4>
-                            <div class="code-block" data-tooltip="列出系统所有音频输入设备。在运行实时脚本前，必须先确认 device_id。">
-                                <span class="label">查询音频设备 ID:</span>
-                                <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --list</code>
+                            <div id="download-container" class="hidden mt-15">
+                                <div class="path-info">
+                                    默认保存至: <code id="srt-path-display"></code>
+                                </div>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <a id="btn-download" class="btn success" href="#" download
+                                        style="text-decoration: none; flex: 1; text-align: center;">💾 下载 SRT 字幕</a>
+                                    <button id="btn-open-folder" class="btn secondary" style="flex: 1;">📂
+                                        打开所在目录</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- 终端命令参考卡片 (2026.05 最终全能版) -->
+                    <div class="card glass-panel cli-card" style="grid-column: 1 / -1;">
+                        <div class="card-header">
+                            <div class="icon cli-icon"></div>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <h3>终端实战命令参考 <small class="model-tag">CLI Toolbox</small></h3>
+                                <button id="btn-refresh-devices" class="btn-small" style="">🔍 查询设备 ID</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- 设备显示面板 -->
+                            <div id="device-list-panel" class="hidden"
+                                style="margin-bottom: 15px; padding: 12px; background: rgba(0,0,0,0.25); border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.15);">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <strong style="color: var(--accent); font-size: 0.88em;">Detected Audio
+                                        Inputs:</strong>
+                                    <span id="device-close" style="cursor: pointer; opacity: 0.5;">×</span>
+                                </div>
+                                <div id="device-items-container"
+                                    style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
+                                    <!-- 设备列表将在这里生成 -->
+                                </div>
+                            </div>
+
+                            <!-- 1. 实时同传 -->
+                            <div class="cli-section">
+                                <h4>🎤 实时同声传译 (混合引擎)</h4>
+                                <div class="code-block"
+                                    data-tooltip="推荐配置：Ollama 3B 翻译 + 0.6B ASR。VRAM 极省（仅占 500MB），智商在线，延迟极低。">
+                                    <span class="label">🚀 黄金组合 (Ollama 加速版):</span>
+                                    <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --model_size 0.6B --model_type ollama --ollama_model qwen2.5:3b</code>
+                                </div>
+                                <div class="run-control-row">
+                                    <div class="code-block" style="flex: 1;"
+                                        data-tooltip="专业级推荐：1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景，精度最高。">
+                                        <span class="label">💎 专业全能版 (1.7B + Ollama):</span>
+                                        <code>... --model_size 1.7B --model_type ollama --ollama_model qwen2.5:3b</code>
+                                    </div>
+                                    <div class="run-actions">
+                                        <input type="number" id="id-trans" value="30" placeholder="ID" class="id-input">
+                                        <button class="btn-run" onclick="runScript('trans')">⚡ 执行</button>
+                                    </div>
+                                </div>
+                                <div class="code-block" data-tooltip="极致配置：1.7B ASR + 本地 3B。全本地离线运行，无需依赖外部 API。">
+                                    <span class="label">🛡️ 全本地离线版 (1.7B + 3B):</span>
+                                    <code>... --model_size 1.7B --model_type 3b</code>
+                                </div>
+                                <div class="cli-params-box">
+                                    <strong>核心参数:</strong>
+                                    <span><code>--model_size [0.6B|1.7B]</code>: 识别引擎（推荐 1.7B 精度更高）</span>
+                                    <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎选择</span>
+                                </div>
+                            </div>
+
+                            <!-- 2. 实时转录 -->
+                            <div class="cli-section">
+                                <h4>📝 实时语音转录 (仅字幕 / 无翻译)</h4>
+                                <div class="run-control-row">
+                                    <div class="code-block" style="flex: 1;" data-tooltip="纯净转录：仅显示原文，不进行翻译，适合中文讲座或速记。">
+                                        <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.5 --model_size 1.7B</code>
+                                    </div>
+                                    <div class="run-actions">
+                                        <input type="number" id="id-realtime" value="30" placeholder="ID"
+                                            class="id-input">
+                                        <button class="btn-run" onclick="runScript('realtime')">⚡ 执行</button>
+                                    </div>
+                                </div>
+                                <div class="cli-params-box">
+                                    <strong>Flag 详细说明:</strong>
+                                    <span><code>--device_id [int]</code>: 声卡 ID（使用上方按钮查询）</span>
+                                    <span><code>--chunk [float]</code>: 语音切片长度，默认 1.5 秒。</span>
+                                </div>
+                            </div>
+
+                            <!-- 2. 离线字幕提取 -->
+                            <div class="cli-section mt-15">
+                                <h4>🎬 离线字幕提取 (SRT)</h4>
+                                <div class="code-block" data-tooltip="Qwen3-ASR 极速版。支持 GPU 批处理，转录 1 小时视频仅需几分钟。">
+                                    <span class="label">🔥 Qwen3 GPU 极速转录:</span>
+                                    <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频路径" --chunk 10 --batch 12</code>
+                                </div>
+                                <div class="code-block" data-tooltip="Faster-Whisper 经典引擎。适合 CPU 环境或需要特定方言识别的情况。">
+                                    <span class="label">❄️ Whisper 通用转录:</span>
+                                    <code>D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频路径" --beam 1</code>
+                                </div>
+                                <div class="cli-params-box">
+                                    <strong>核心参数:</strong>
+                                    <span><code>--chunk [10]</code>: 切片长度(秒)，越大识别越连贯</span>
+                                    <span><code>--batch [12]</code>: 并发数量，显存越大可设越高</span>
+                                    <span><code>--beam [1-5]</code>: 束搜索宽度，1 最快，5 最准</span>
+                                </div>
+                            </div>
+
+                            <!-- 3. 基础工具 -->
+                            <div class="cli-section mt-15">
+                                <h4>🛠️ 基础工具</h4>
+                                <div class="code-block" data-tooltip="列出系统所有音频输入设备。在运行实时脚本前，必须先确认 device_id。">
+                                    <span class="label">查询音频设备 ID:</span>
+                                    <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --list</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div><!-- end cards-grid -->
             </div><!-- end page-workstation -->
 
@@ -297,7 +318,13 @@
                         </div>
                     </div>
                     <div id="chat-history" class="chat-history-full">
-                        <div class="msg-wrapper assistant"><div class="msg-content assistant"><span class="markdown-content"><p>你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。</p></span></div><div class="msg-toolbar"><button class="btn-icon btn-copy-inline">📋 复制</button><button class="btn-icon">🔊 朗读</button></div></div>
+                        <div class="msg-wrapper assistant">
+                            <div class="msg-content assistant"><span class="markdown-content">
+                                    <p>你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。</p>
+                                </span></div>
+                            <div class="msg-toolbar"><button class="btn-icon btn-copy-inline">📋 复制</button><button
+                                    class="btn-icon">🔊 朗读</button></div>
+                        </div>
                     </div>
                     <div class="chat-input-area">
                         <div class="chat-input-row">
@@ -311,7 +338,8 @@
                             <img id="image-preview" src="" alt="预览">
                             <button id="btn-remove-image" class="btn-remove-image" title="移除图片">×</button>
                         </div>
-                        <textarea id="chat-input-expanded" class="chat-input-expanded hidden" placeholder="多行输入... Shift+Enter 换行，Enter 发送" rows="4"></textarea>
+                        <textarea id="chat-input-expanded" class="chat-input-expanded hidden"
+                            placeholder="多行输入... Shift+Enter 换行，Enter 发送" rows="4"></textarea>
                     </div>
                 </div>
             </div><!-- end page-assistant -->
@@ -326,6 +354,7 @@
             gap: 10px;
             margin-bottom: 12px;
         }
+
         .id-input {
             background: rgba(56, 189, 248, 0.05);
             border: 1px solid rgba(56, 189, 248, 0.2);
@@ -339,10 +368,12 @@
             outline: none;
             transition: all 0.2s ease;
         }
+
         .id-input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
+
         .btn-run {
             background: linear-gradient(135deg, var(--accent-dim), var(--accent));
             color: #0a0e1a;
@@ -355,10 +386,12 @@
             transition: all 0.2s ease;
             white-space: nowrap;
         }
+
         .btn-run:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
         }
+
         .btn-run:active {
             transform: scale(0.96);
         }
@@ -369,9 +402,9 @@
         async function runScript(type) {
             const inputId = type === 'trans' ? 'id-trans' : 'id-realtime';
             const deviceId = document.getElementById(inputId).value;
-            
+
             window.showToast(`🚀 正在启动 ${type === 'trans' ? '同传' : '转录'}...`);
-            
+
             try {
                 const response = await fetch('/api/run_script', {
                     method: 'POST',

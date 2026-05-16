@@ -41,6 +41,7 @@ from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
+from typing import Optional
 
 import pynvml
 import logging
@@ -301,6 +302,7 @@ class ChatRequest(BaseModel):
 class SummarizeRequest(BaseModel):
     text: str
     prompt_type: Optional[str] = "summarize"
+    target_lang: Optional[str] = None  # 目标语言，仅用于翻译模式
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -630,12 +632,18 @@ async def api_summarize(request: SummarizeRequest):
             yield json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n"
         return StreamingResponse(error_gen(), media_type="text/plain")
     
-    async with httpx.AsyncClient(timeout=300.0) as client:
-        async with client.stream("POST", f"{AI_WORKER_URL}/api/summarize", json=request.dict()) as resp:
-            async def stream_gen():
-                async for chunk in resp.aiter_text():
-                    yield chunk
-            return StreamingResponse(stream_gen(), media_type="text/plain")
+    # 注意：上下文管理器必须放在生成器内部，否则 resp 会过早关闭
+    async def stream_gen():
+        try:
+            async with httpx.AsyncClient(timeout=300.0) as client:
+                async with client.stream("POST", f"{AI_WORKER_URL}/api/summarize", json=request.model_dump()) as resp:
+                    async for chunk in resp.aiter_text():
+                        yield chunk
+        except Exception as e:
+            logger.error(f"流式代理错误: {e}")
+            yield json.dumps({"status": "error", "message": str(e)}) + "\n"
+    
+    return StreamingResponse(stream_gen(), media_type="text/plain")
 
 @app.post("/api/transcribe")
 async def api_transcribe(file: UploadFile = File(...)):

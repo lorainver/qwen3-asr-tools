@@ -607,6 +607,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === 2. 智库摘要逻辑 ===
 
+    // 语言选择下拉框控制（仅翻译模式显示）
+    const promptTypeSelect = document.getElementById('prompt-type');
+    const targetLangSelect = document.getElementById('target-lang');
+
+    if (promptTypeSelect && targetLangSelect) {
+        // 初始化：根据当前选择显示/隐藏
+        targetLangSelect.classList.toggle('hidden', promptTypeSelect.value !== 'translate');
+        
+        // 监听变化
+        promptTypeSelect.addEventListener('change', () => {
+            targetLangSelect.classList.toggle('hidden', promptTypeSelect.value !== 'translate');
+        });
+    }
+
     if (btnSummarize) {
         btnSummarize.addEventListener('click', async () => {
             const text = meetingText.value.trim();
@@ -616,18 +630,23 @@ document.addEventListener('DOMContentLoaded', () => {
             sumProgCont.classList.remove('hidden');
             sumResult.classList.remove('hidden');
             sumResult.innerText = "";
+            
+            const promptType = document.getElementById('prompt-type').value;
+            const targetLang = targetLangSelect && promptType === 'translate' ? targetLangSelect.value : null;
+            
+            const requestBody = { text: text, prompt_type: promptType };
+            if (targetLang) requestBody.target_lang = targetLang;
+            
             try {
-                const promptType = document.getElementById('prompt-type').value;
                 const response = await fetch('/api/summarize', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text: text,
-                        prompt_type: promptType
-                    })
+                    body: JSON.stringify(requestBody)
                 });
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');
+                let fullText = '';  // 累积流式文本
+                
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
@@ -638,14 +657,38 @@ document.addEventListener('DOMContentLoaded', () => {
                             const data = JSON.parse(line);
                             if (data.status === 'processing') {
                                 sumStatus.innerText = data.message;
+                            } else if (data.status === 'streaming' && data.delta) {
+                                // 流式增量渲染：逐字追加
+                                fullText += data.delta;
+                                sumResult.innerText = fullText;
                             } else if (data.status === 'done') {
                                 sumProgCont.classList.add('hidden');
-                                sumResult.innerText = data.result;
+                                // 非翻译模式渲染 Markdown（深度总结、待办提取等）
+                                if (promptType !== 'translate' && typeof renderMarkdown === 'function') {
+                                    sumResult.innerHTML = renderMarkdown(data.result);
+                                    // 触发 Mermaid 图表渲染
+                                    setTimeout(() => {
+                                        document.querySelectorAll('#sum-result .mermaid-container').forEach(el => {
+                                            try {
+                                                const code = decodeURIComponent(el.dataset.mermaidCode);
+                                                mermaid.render(`mermaid-svg-${Date.now()}`, code).then(svg => {
+                                                    el.innerHTML = svg;
+                                                });
+                                            } catch (e) { el.innerHTML = '<pre>' + code + '</pre>'; }
+                                        });
+                                    }, 100);
+                                } else {
+                                    sumResult.innerText = data.result;
+                                }
+                            } else if (data.status === 'error') {
+                                sumProgCont.classList.add('hidden');
+                                sumResult.innerText = "❌ " + data.message;
                             }
                         } catch (e) { }
                     }
                 }
             } catch (error) {
+                sumProgCont.classList.add('hidden');
                 sumStatus.innerText = "处理出错: " + error.message;
             }
         });

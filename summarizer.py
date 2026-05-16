@@ -194,9 +194,9 @@ class LongTextSummarizer:
             torch.cuda.empty_cache()
             model_manager.set_processing(False)
 
-    def chat(self, messages):
+    def chat(self, messages, max_new_tokens=2048):
         if self.is_remote:
-            return self._chat_remote(messages)
+            return self._chat_remote(messages, max_new_tokens)
             
         self._load_model()
         try:
@@ -209,7 +209,7 @@ class LongTextSummarizer:
                 inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
             
             with torch.no_grad():
-                output_ids = self.model.generate(**inputs, max_new_tokens=2048, do_sample=True, temperature=0.7)
+                output_ids = self.model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=True, temperature=0.7)
             
             if self.current_model_id == 'qwen-vl':
                 generated_ids = [oid[len(iids):] for iids, oid in zip(inputs.input_ids, output_ids)]
@@ -218,7 +218,7 @@ class LongTextSummarizer:
         finally:
             model_manager.set_processing(False)
 
-    def _chat_remote(self, messages):
+    def _chat_remote(self, messages, max_new_tokens=2048):
         logger.info(f"🚀 正在向远程服务器请求: {self.api_url}")
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
@@ -234,7 +234,8 @@ class LongTextSummarizer:
                 "model": remote_model,
                 "messages": messages,
                 "stream": False,
-                "temperature": 0.7
+                "temperature": 0.7,
+                "max_tokens": max_new_tokens
             }
             response = requests.post(self.api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
             response.raise_for_status()
@@ -245,9 +246,9 @@ class LongTextSummarizer:
             logger.error(error_msg)
             return error_msg
 
-    def chat_stream(self, messages, enable_think=True):
+    def chat_stream(self, messages, enable_think=True, max_new_tokens=2048):
         if self.is_remote:
-            yield from self._chat_stream_remote(messages, enable_think=enable_think)
+            yield from self._chat_stream_remote(messages, enable_think=enable_think, max_new_tokens=max_new_tokens)
             return
 
         self._load_model()
@@ -261,7 +262,7 @@ class LongTextSummarizer:
                 inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
 
             streamer = TextIteratorStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
-            generation_kwargs = dict(**inputs, max_new_tokens=2048, do_sample=True, temperature=0.7, streamer=streamer)
+            generation_kwargs = dict(**inputs, max_new_tokens=max_new_tokens, do_sample=True, temperature=0.7, streamer=streamer)
             thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
             thread.start()
             
@@ -272,7 +273,7 @@ class LongTextSummarizer:
         finally:
             model_manager.set_processing(False)
 
-    def _chat_stream_remote(self, messages, enable_think=True):
+    def _chat_stream_remote(self, messages, enable_think=True, max_new_tokens=2048):
         logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url} (Think: {enable_think})")
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
@@ -289,7 +290,8 @@ class LongTextSummarizer:
                 "messages": messages,
                 "stream": True,
                 "temperature": 0.7,
-                "think": enable_think  # 告诉 Ollama API 我们的偏好
+                "think": enable_think,
+                "max_tokens": max_new_tokens
             }
             response = requests.post(self.api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
             response.raise_for_status()

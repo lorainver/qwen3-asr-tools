@@ -6,6 +6,7 @@ import time
 import uuid
 import logging
 import asyncio
+import re
 from typing import List, Optional, Any, Dict, Union
 
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
@@ -87,6 +88,7 @@ class SearchRequest(BaseModel):
 class SummarizeRequest(BaseModel):
     text: str
     prompt_type: Optional[str] = "summarize"
+    target_lang: Optional[str] = None  # 目标语言，仅用于翻译模式
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -213,17 +215,156 @@ async def api_chat_stream(request: ChatRequest):
         }
     )
 
+# ========== 翻译辅助函数 ==========
+
+def chunk_text_for_translation(text, max_chunk_size=3000):
+    """将长文本按段落拆分为块，每块不超过 max_chunk_size 字符
+    
+    拆分策略：
+    1. 优先按双换行（段落边界）拆分
+    2. 单段落过长时按句号/问号/感叹号（句子边界）拆分
+    3. 单句超长时按 max_chunk_size 硬切
+    """
+    paragraphs = re.split(r'\n\s*\n', text)
+    
+    chunks = []
+    current = ""
+    for para in paragraphs:
+        para = para.strip()
+        if not para:
+            continue
+        if current and len(current) + len(para) + 2 > max_chunk_size:
+            chunks.append(current)
+            current = para
+        else:
+            current = (current + '\n\n' + para) if current else para
+    
+    if current:
+        chunks.append(current)
+    
+    # 处理超长段落：按句子边界拆分
+    final_chunks = []
+    for chunk in chunks:
+        if len(chunk) <= max_chunk_size:
+            final_chunks.append(chunk)
+        else:
+            sentences = re.split(r'(?<=[。！？.!?])\s*', chunk)
+            sub_chunk = ""
+            for sent in sentences:
+                if sub_chunk and len(sub_chunk) + len(sent) + 1 > max_chunk_size:
+                    final_chunks.append(sub_chunk)
+                    sub_chunk = sent
+                else:
+                    sub_chunk = (sub_chunk + ' ' + sent) if sub_chunk else sent
+            if sub_chunk:
+                final_chunks.append(sub_chunk)
+    
+    # 极端情况：单句超长，硬切
+    result = []
+    for chunk in final_chunks:
+        if len(chunk) <= max_chunk_size:
+            result.append(chunk)
+        else:
+            for i in range(0, len(chunk), max_chunk_size):
+                result.append(chunk[i:i + max_chunk_size])
+    
+    return result if result else [text]
+
+
+LANG_MAP = {
+    'zh': '中文',
+    'en': '英文',
+    'ja': '日文',
+    'ko': '韩文',
+    'fr': '法文',
+    'de': '德文',
+}
+
+def get_translate_prompt(target_lang='zh'):
+    """根据目标语言动态生成翻译提示词"""
+    target = LANG_MAP.get(target_lang, '中文')
+    return (
+        f"你是一个专业的翻译专家。请将以下内容翻译成流畅的{target}，"
+        f"要求在保留原意的基础上，使其更符合{target}的表达习惯。"
+        f"如果是技术内容，请确保专业术语翻译准确。"
+        f"只需输出翻译后的内容，不要添加任何解释、注释或前后说明。"
+    )
+
+
 @app.post("/api/summarize")
 async def api_summarize(request: SummarizeRequest):
-    """文本总结接口 - 支持多种提示词预设"""
-    logger.info(f"📝 收到总结请求: type={request.prompt_type}, 长度={len(request.text)}")
+    """文本总结接口 - 支持多种提示词预设，翻译模式支持分块和目标语言"""
+    logger.info(f"📝 收到总结请求: type={request.prompt_type}, 长度={len(request.text)}, target_lang={request.target_lang}")
     
-    # 1. 获取提示词
+    # ========== 翻译模式：分块 + 目标语言 + 增大输出上限 ==========
+    if request.prompt_type == 'translate':
+        target_lang = request.target_lang or 'zh'
+        system_prompt = get_translate_prompt(target_lang)
+        text = request.text
+        CHUNK_SIZE = 3000
+        MAX_OUTPUT_TOKENS = 4096  # 翻译输出长度 ≈ 输入长度，远超默认 2048
+        
+        # 判断是否需要分块
+        needs_chunking = len(text) > CHUNK_SIZE
+        chunks = chunk_text_for_translation(text, CHUNK_SIZE) if needs_chunking else [text]
+        total_chunks = len(chunks)
+        
+        logger.info(f"🌐 翻译模式: 目标={LANG_MAP.get(target_lang, '中文')}, 分块={needs_chunking}({total_chunks}块)")
+        
+        async def generate_translate():
+            full_result = ""
+            
+            for i, chunk in enumerate(chunks):
+                # 发送分块进度
+                if needs_chunking:
+                    yield json.dumps({
+                        "status": "processing",
+                        "message": f"正在翻译第 {i+1}/{total_chunks} 段...",
+                        "chunk": i + 1,
+                        "total_chunks": total_chunks
+                    }) + "\n"
+                else:
+                    yield json.dumps({"status": "processing", "message": "正在翻译..."}) + "\n"
+                await asyncio.sleep(0.01)
+                
+                chunk_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": chunk}
+                ]
+                
+                try:
+                    chunk_result = ""
+                    for token in summarizer.chat_stream(chunk_messages, max_new_tokens=MAX_OUTPUT_TOKENS):
+                        chunk_result += token
+                        full_result += token
+                        yield json.dumps({"status": "streaming", "delta": token}) + "\n"
+                        await asyncio.sleep(0.01)
+                    
+                    # 分块间添加换行（非最后一块）
+                    if i < total_chunks - 1:
+                        full_result += "\n\n"
+                        yield json.dumps({"status": "streaming", "delta": "\n\n"}) + "\n"
+                except Exception as e:
+                    logger.error(f"翻译第 {i+1} 段失败: {e}")
+                    yield json.dumps({"status": "error", "message": f"翻译第 {i+1}/{total_chunks} 段失败: {str(e)}"}) + "\n"
+                    break
+            
+            yield json.dumps({"status": "done", "result": full_result}) + "\n"
+            
+            # 清理 GPU 缓存
+            try:
+                import torch
+                torch.cuda.empty_cache()
+            except Exception:
+                pass
+        
+        return StreamingResponse(generate_translate(), media_type="text/plain")
+    
+    # ========== 通用模式：深度总结 / 待办提取 / 文案润色 ==========
     prompts = config.get('prompts', {})
     prompt_info = prompts.get(request.prompt_type, prompts.get('summarize', {}))
     system_prompt = prompt_info.get('content', "你是一个专业的AI助手。")
     
-    # 2. 构建消息
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": f"以下是需要处理的文本内容：\n\n{request.text}"}
@@ -237,9 +378,7 @@ async def api_summarize(request: SummarizeRequest):
             full_result = ""
             for token in summarizer.chat_stream(messages):
                 full_result += token
-                # 我们以 JSON 格式发送进度，或者直接发送文本？
-                # web_app.py 预期的是流式文本，但 static/main.js 解析的是 JSON 每一行
-                yield json.dumps({"status": "processing", "message": "正在生成内容...", "delta": token}) + "\n"
+                yield json.dumps({"status": "streaming", "delta": token}) + "\n"
                 await asyncio.sleep(0.01)
             
             yield json.dumps({"status": "done", "result": full_result}) + "\n"
