@@ -1482,24 +1482,20 @@ textarea:focus {
     background: rgba(255, 255, 255, 0.02);
     border-bottom: 1px solid transparent;
     transition: all var(--transition-fast);
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
+    /* 恢复原生列表样式 */
+    display: list-item;
 }
 
 .thinking-block summary::-webkit-details-marker {
     display: none;
 }
 
+/* 暂时隐藏自定义箭头 */
 .thinking-block summary::before {
-    content: '+\25B6';
-    font-size: 0.72rem;
-    transition: transform var(--transition-fast);
-    display: inline-block;
+    display: none;
 }
 
-.thinking-block[open] summary::before {
+.thinking-block details[open] summary::before {
     transform: rotate(90deg);
 }
 
@@ -1508,7 +1504,7 @@ textarea:focus {
     color: var(--accent);
 }
 
-.thinking-block[open] summary {
+.thinking-block details[open] summary {
     border-bottom-color: var(--border-color);
 }
 

@@ -77,6 +77,7 @@ class ChatRequest(BaseModel):
     model_id: Optional[str] = None
     enable_search: Optional[bool] = True  # 是否启用联网搜索（默认开启）
     optimize_search: bool = True  # 是否开启搜索优化（默认开启）
+    enable_think: bool = True  # 是否启用深度思考（默认开启）
     search_optimize_prompt: Optional[str] = None # 自定义优化提示词
 
 class SearchRequest(BaseModel):
@@ -109,7 +110,7 @@ async def health_check():
 @app.post("/api/chat_stream")
 async def api_chat_stream(request: ChatRequest):
     """流式对话接口 - 支持联网搜索及搜索优化"""
-    logger.info(f"📩 收到请求: search={request.enable_search}, optimize={request.optimize_search}")
+    logger.info(f"📩 收到请求: search={request.enable_search}, optimize={request.optimize_search}, think={request.enable_think}")
     
     if request.model_id and request.model_id != summarizer.current_model_id:
         summarizer.switch_model(request.model_id)
@@ -192,7 +193,7 @@ async def api_chat_stream(request: ChatRequest):
             await asyncio.sleep(0.01)
         
         try:
-            for token in summarizer.chat_stream(messages):
+            for token in summarizer.chat_stream(messages, enable_think=request.enable_think):
                 yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
                 # 添加微小延迟，确保每个 token 分开发送（打字机效果）
                 await asyncio.sleep(0.02)

@@ -128,16 +128,18 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * 渲染包含思考过程的消息
      */
-    function renderWithThinking(text) {
+    function renderWithThinking(text, forceOpen = false) {
         const { before, thinking, answer } = parseThinking(text);
         
         let html = '';
         
         // 思考过程（折叠显示）
-        if (thinking) {
+        if (thinking !== null) {
+            // 只有在强制开启（生成中）且正文还没出来时才默认展开
+            const openAttr = (forceOpen && !answer) ? 'open' : '';
             html += `
                 <div class="thinking-block">
-                    <details>
+                    <details ${openAttr}>
                         <summary>💭 思考过程 (点击展开)</summary>
                         <div class="thinking-content">${renderMarkdown(thinking)}</div>
                     </details>
@@ -240,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkAutoSpeak = document.getElementById('check-auto-speak');
     const selectTTSEngine = document.getElementById('select-tts-engine');
     const selectHistory = document.getElementById('select-history');
+    const checkEnableThink = document.getElementById('check-enable-think'); // 深度思考开关
 
     // 新增图片上传相关
     const btnImageUpload = document.getElementById('btn-image-upload');
@@ -1020,8 +1023,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // 联网搜索及优化参数
         const isSearchEnabled = checkWebSearch && checkWebSearch.checked;
         const isOptimizeEnabled = checkOptimizeSearch && checkOptimizeSearch.checked;
+        const isThinkEnabled = checkEnableThink && checkEnableThink.checked;
         
-        console.log(`📡 [Network] 发送请求: search=${isSearchEnabled}, optimize=${isOptimizeEnabled}`);
+        console.log(`📡 [Network] 发送请求: search=${isSearchEnabled}, optimize=${isOptimizeEnabled}, think=${isThinkEnabled}`);
 
         try {
             const response = await fetch('/api/chat_stream', {
@@ -1031,7 +1035,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     messages: messages,
                     model_id: currentModelId,
                     enable_search: isSearchEnabled,
-                    optimize_search: isOptimizeEnabled
+                    optimize_search: isOptimizeEnabled,
+                    enable_think: isThinkEnabled
                 })
             });
             
@@ -1056,8 +1061,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             const json = JSON.parse(data);
                             if (json.token) {
                                 fullResponse += json.token;
-                                // 流式更新：渲染 Markdown
-                                loadingMsg.innerHTML = renderWithThinking(fullResponse);
+                                // 流式更新：渲染 Markdown，生成时保持思考过程展开
+                                loadingMsg.innerHTML = renderWithThinking(fullResponse, true);
                                 chatHistory.scrollTop = chatHistory.scrollHeight;
                                 
                                 // 流式语音：检测到完整句子立即送 TTS
@@ -1072,6 +1077,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
+            
+            // 生成结束，进行最后一次渲染（允许折叠）
+            loadingMsg.innerHTML = renderWithThinking(fullResponse, false);
             
             // 完成后将回复加入消息历史
             messages.push({ "role": "assistant", "content": fullResponse });
@@ -1093,24 +1101,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const wrapper = document.createElement('div');
         wrapper.className = `msg-wrapper ${role}`;
         
-        // 创建消息内容区
+        // 创建消息气泡容器
         const contentDiv = document.createElement('div');
         contentDiv.className = `msg-content ${role}`;
         
-        const contentSpan = document.createElement('span');
+        // 创建实际消息体 (使用 div 替代 span，以支持内部包含思考块等块级元素)
+        const messageBody = document.createElement('div');
         
         if (role === 'assistant') {
             // 助手消息：渲染 Markdown
-            contentSpan.className = 'markdown-content';
-            contentSpan.innerHTML = renderWithThinking(text);
+            messageBody.className = 'markdown-content';
+            messageBody.innerHTML = renderWithThinking(text, false);
             // 异步渲染 Mermaid 图表
             setTimeout(renderMermaidDiagrams, 50);
         } else {
             // 用户消息：纯文本
-            contentSpan.innerText = text;
+            messageBody.innerText = text;
         }
         
-        contentDiv.appendChild(contentSpan);
+        contentDiv.appendChild(messageBody);
         wrapper.appendChild(contentDiv);
         
         // 添加工具栏（复制按钮 + 朗读按钮）
@@ -1123,7 +1132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         copyBtn.innerHTML = '📋 复制';
         copyBtn.onclick = async () => {
             try {
-                await navigator.clipboard.writeText(contentSpan.innerText);
+                await navigator.clipboard.writeText(messageBody.innerText);
                 copyBtn.innerHTML = '✅ 已复制';
                 copyBtn.classList.add('copied');
                 setTimeout(() => {
@@ -1141,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const speakBtn = document.createElement('button');
             speakBtn.className = 'btn-icon';
             speakBtn.innerHTML = '🔊 朗读';
-            speakBtn.onclick = () => playTTS(contentSpan.innerText, speakBtn);
+            speakBtn.onclick = () => playTTS(messageBody.innerText, speakBtn);
             toolbar.appendChild(speakBtn);
         }
         
@@ -1149,7 +1158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         chatHistory.appendChild(wrapper);
         chatHistory.scrollTop = chatHistory.scrollHeight;
-        return contentSpan;
+        return messageBody;
     }
 
     if (btnChatSend) btnChatSend.addEventListener('click', sendChatMessage);

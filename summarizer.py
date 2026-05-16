@@ -245,9 +245,9 @@ class LongTextSummarizer:
             logger.error(error_msg)
             return error_msg
 
-    def chat_stream(self, messages):
+    def chat_stream(self, messages, enable_think=True):
         if self.is_remote:
-            yield from self._chat_stream_remote(messages)
+            yield from self._chat_stream_remote(messages, enable_think=enable_think)
             return
 
         self._load_model()
@@ -272,8 +272,8 @@ class LongTextSummarizer:
         finally:
             model_manager.set_processing(False)
 
-    def _chat_stream_remote(self, messages):
-        logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url}")
+    def _chat_stream_remote(self, messages, enable_think=True):
+        logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url} (Think: {enable_think})")
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
         
@@ -288,7 +288,7 @@ class LongTextSummarizer:
                 "messages": messages,
                 "stream": True,
                 "temperature": 0.7,
-                "think": True  # 启用思考过程（返回 <think> 标签）
+                "think": enable_think  # 根据开关动态启用/禁用思考过程
             }
             response = requests.post(self.api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
             response.raise_for_status()
