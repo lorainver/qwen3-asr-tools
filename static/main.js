@@ -645,7 +645,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');
-                let fullText = '';  // 累积流式文本
+                let fullText = '';  // 累积流式文本（含 thinking 标签）
+                // 切换为 Markdown 渲染模式
+                sumResult.classList.add('markdown-mode');
+                sumResult.innerText = '';
                 
                 while (true) {
                     const { value, done } = await reader.read();
@@ -658,28 +661,31 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (data.status === 'processing') {
                                 sumStatus.innerText = data.message;
                             } else if (data.status === 'streaming' && data.delta) {
-                                // 流式增量渲染：逐字追加
+                                // 流式增量渲染
                                 fullText += data.delta;
-                                sumResult.innerText = fullText;
+                                
+                                // 使用 renderWithThinking 渲染，生成中强制展开思考块
+                                // summarizer.py 已将 Ollama reasoning_content 包裹为 <think>...</think>
+                                // parseThinking() 自动识别这两个标签，无需额外检测
+                                sumResult.innerHTML = renderWithThinking(fullText, true);
+                                
+                                // 自动滚动到底部
+                                sumResult.scrollTop = sumResult.scrollHeight;
                             } else if (data.status === 'done') {
                                 sumProgCont.classList.add('hidden');
-                                // 非翻译模式渲染 Markdown（深度总结、待办提取等）
-                                if (promptType !== 'translate' && typeof renderMarkdown === 'function') {
-                                    sumResult.innerHTML = renderMarkdown(data.result);
-                                    // 触发 Mermaid 图表渲染
-                                    setTimeout(() => {
-                                        document.querySelectorAll('#sum-result .mermaid-container').forEach(el => {
-                                            try {
-                                                const code = decodeURIComponent(el.dataset.mermaidCode);
-                                                mermaid.render(`mermaid-svg-${Date.now()}`, code).then(svg => {
-                                                    el.innerHTML = svg;
-                                                });
-                                            } catch (e) { el.innerHTML = '<pre>' + code + '</pre>'; }
-                                        });
-                                    }, 100);
-                                } else {
-                                    sumResult.innerText = data.result;
-                                }
+                                // 最终渲染：思考块折叠，正文 Markdown 渲染
+                                sumResult.innerHTML = renderWithThinking(data.result, false);
+                                // 触发 Mermaid 图表渲染
+                                setTimeout(() => {
+                                    document.querySelectorAll('#sum-result .mermaid-container').forEach(el => {
+                                        try {
+                                            const code = decodeURIComponent(el.dataset.mermaidCode);
+                                            mermaid.render(`mermaid-svg-${Date.now()}`, code).then(svg => {
+                                                el.innerHTML = svg;
+                                            });
+                                        } catch (e) { el.innerHTML = '<pre>' + code + '</pre>'; }
+                                    });
+                                }, 100);
                             } else if (data.status === 'error') {
                                 sumProgCont.classList.add('hidden');
                                 sumResult.innerText = "❌ " + data.message;

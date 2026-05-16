@@ -601,6 +601,17 @@ textarea:focus {
     line-height: 1.65;
     flex: 1;
     overflow-y: auto;
+    max-height: 500px;
+}
+
+/* 翻译/摘要结果中的 Markdown 渲染模式 */
+.result-box.markdown-mode {
+    white-space: normal;
+}
+
+/* 翻译/摘要结果中的思考块 */
+.result-box .thinking-block {
+    margin-bottom: var(--space-sm);
 }
 
 /* ============================
