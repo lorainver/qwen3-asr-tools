@@ -273,48 +273,60 @@
             <div id="page-assistant" class="tab-page">
                 <div class="chat-fullscreen glass-panel">
                     <div class="chat-header-bar">
-                        <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="chat-header-title-row">
                             <h3>💬 AI 智能助理</h3>
                             <small id="current-model-tag" class="model-tag">加载中...</small>
                         </div>
                         <div class="chat-header-actions">
-                            <select id="select-model-category" class="select-minimal" title="模型类别">
-                                <option value="all">📁 全部模型</option>
-                                <option value="local">🏠 本地原生</option>
-                                <option value="ollama">🦙 Ollama</option>
-                                <option value="remote">🌐 远程/其他</option>
-                            </select>
-                            <select id="select-model" class="select-minimal" title="选择对话模型">
-                                <option value="">-- 加载中 --</option>
-                            </select>
-                            <select id="select-tts-engine" class="select-minimal">
-                                <option value="edge">🌐 微软在线</option>
-                                <option value="sherpa">🏠 本地离线</option>
-                            </select>
-                            <label class="auto-speak-toggle">
-                                <input type="checkbox" id="check-auto-speak">
-                                <span class="toggle-icon">🔊</span>
-                                <span class="toggle-text">自动朗读</span>
-                            </label>
-                            <label class="auto-speak-toggle" id="web-search-toggle">
-                                <input type="checkbox" id="check-web-search" checked>
-                                <span class="toggle-icon">🌐</span>
-                                <span class="toggle-text">联网搜索</span>
-                            </label>
-                            <label class="auto-speak-toggle" id="search-optimize-toggle">
-                                <input type="checkbox" id="check-optimize-search" checked>
-                                <span class="toggle-icon">🔍</span>
-                                <span class="toggle-text">搜索优化</span>
-                            </label>
-                            <label class="auto-speak-toggle" id="think-toggle">
-                                <input type="checkbox" id="check-enable-think" checked>
-                                <span class="toggle-icon">🧠</span>
-                                <span class="toggle-text">深度思考</span>
-                            </label>
-                            <select id="select-history" class="select-minimal">
-                                <option value="">📜 历史对话</option>
-                            </select>
-                            <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
+                            <!-- 模型配置组 -->
+                            <div class="header-action-group">
+                                <select id="select-model-category" class="select-minimal" title="模型类别">
+                                    <option value="all">📁 全部模型</option>
+                                    <option value="local">🏠 本地原生</option>
+                                    <option value="ollama">🦙 Ollama</option>
+                                    <option value="remote">🌐 远程/其他</option>
+                                </select>
+                                <select id="select-model" class="select-minimal" title="选择对话模型">
+                                    <option value="">-- 加载中 --</option>
+                                </select>
+                                <select id="select-tts-engine" class="select-minimal">
+                                    <option value="edge">🌐 微软在线</option>
+                                    <option value="sherpa">🏠 本地离线</option>
+                                </select>
+                            </div>
+
+                            <!-- 功能开关组 -->
+                            <div class="header-action-group">
+                                <label class="auto-speak-toggle">
+                                    <input type="checkbox" id="check-auto-speak">
+                                    <span class="toggle-icon">🔊</span>
+                                    <span class="toggle-text">自动朗读</span>
+                                </label>
+                                <label class="auto-speak-toggle" id="web-search-toggle">
+                                    <input type="checkbox" id="check-web-search" checked>
+                                    <span class="toggle-icon">🌐</span>
+                                    <span class="toggle-text">联网搜索</span>
+                                </label>
+                                <label class="auto-speak-toggle" id="search-optimize-toggle">
+                                    <input type="checkbox" id="check-optimize-search" checked>
+                                    <span class="toggle-icon">🔍</span>
+                                    <span class="toggle-text">搜索优化</span>
+                                </label>
+                                <label class="auto-speak-toggle" id="think-toggle">
+                                    <input type="checkbox" id="check-enable-think" checked>
+                                    <span class="toggle-icon">🧠</span>
+                                    <span class="toggle-text">深度思考</span>
+                                </label>
+                            </div>
+
+                            <!-- 历史管理组 -->
+                            <div class="header-action-group">
+                                <button id="btn-copy-last-answer" class="btn-small" title="复制最新回答的正文内容（不含思考过程）">📋 复制正文</button>
+                                <select id="select-history" class="select-minimal">
+                                    <option value="">📜 历史对话</option>
+                                </select>
+                                <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
+                            </div>
                         </div>
                     </div>
                     <div id="chat-history" class="chat-history-full">

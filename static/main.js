@@ -1224,13 +1224,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const toolbar = document.createElement('div');
         toolbar.className = 'msg-toolbar';
 
-        // 复制按钮
+        // 复制按钮 — 只复制正文内容（不含思考块）
         const copyBtn = document.createElement('button');
         copyBtn.className = 'btn-icon btn-copy-inline';
         copyBtn.innerHTML = '📋 复制';
         copyBtn.onclick = async () => {
             try {
-                await navigator.clipboard.writeText(messageBody.innerText);
+                let copyText;
+                if (role === 'assistant') {
+                    // 只提取 .answer-content 的纯文本，不含思考块
+                    const answerEls = messageBody.querySelectorAll('.answer-content');
+                    copyText = Array.from(answerEls)
+                        .map(el => el.innerText.trim())
+                        .filter(t => t)
+                        .join('\n\n');
+                } else {
+                    copyText = messageBody.innerText;
+                }
+                await navigator.clipboard.writeText(copyText);
                 copyBtn.innerHTML = '✅ 已复制';
                 copyBtn.classList.add('copied');
                 setTimeout(() => {
@@ -1248,7 +1259,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const speakBtn = document.createElement('button');
             speakBtn.className = 'btn-icon';
             speakBtn.innerHTML = '🔊 朗读';
-            speakBtn.onclick = () => playTTS(messageBody.innerText, speakBtn);
+            speakBtn.onclick = () => {
+                // 朗读也只读正文
+                const answerEls = messageBody.querySelectorAll('.answer-content');
+                const speakText = Array.from(answerEls)
+                    .map(el => el.innerText.trim())
+                    .filter(t => t)
+                    .join('\n\n');
+                playTTS(speakText, speakBtn);
+            };
             toolbar.appendChild(speakBtn);
         }
 
@@ -1261,6 +1280,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnChatSend) btnChatSend.addEventListener('click', sendChatMessage);
     if (chatInput) chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+
+    // === 5.5 一键复制最新回答的正文（不含思考块）===
+    const btnCopyLast = document.getElementById('btn-copy-last-answer');
+    if (btnCopyLast) {
+        btnCopyLast.addEventListener('click', async () => {
+            const allAssistantMsgs = chatHistory.querySelectorAll('.msg-wrapper.assistant');
+            if (!allAssistantMsgs.length) {
+                btnCopyLast.textContent = '⚠️ 无内容';
+                setTimeout(() => { btnCopyLast.textContent = '📋 复制正文'; }, 2000);
+                return;
+            }
+            // 取最新一条助手消息
+            const lastMsg = allAssistantMsgs[allAssistantMsgs.length - 1];
+            const body = lastMsg.querySelector('.markdown-content');
+            const answerEls = body ? body.querySelectorAll('.answer-content') : [];
+            const text = Array.from(answerEls)
+                .map(el => el.innerText.trim())
+                .filter(t => t)
+                .join('\n\n');
+            if (!text) {
+                btnCopyLast.textContent = '⚠️ 无正文';
+                setTimeout(() => { btnCopyLast.textContent = '📋 复制正文'; }, 2000);
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(text);
+                btnCopyLast.textContent = '✅ 已复制';
+                btnCopyLast.style.backgroundColor = '#4caf50';
+                setTimeout(() => {
+                    btnCopyLast.textContent = '📋 复制正文';
+                    btnCopyLast.style.backgroundColor = '';
+                }, 2000);
+            } catch (e) {
+                btnCopyLast.textContent = '❌ 失败';
+                setTimeout(() => { btnCopyLast.textContent = '📋 复制正文'; }, 2000);
+            }
+        });
+    }
 
     // === 6. 释放显存（终止 AI Worker 子进程） ===
     const btnRelease = document.getElementById('btn-shutdown');
