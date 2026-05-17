@@ -1420,4 +1420,148 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
+
+    // === 文档浏览功能 ===
+    const docsFileList = document.getElementById('docs-file-list');
+    const docsEmptyState = document.getElementById('docs-empty-state');
+    const docsViewerContainer = document.getElementById('docs-viewer-container');
+    const docsViewerTitle = document.getElementById('docs-viewer-title');
+    const docsRendered = document.getElementById('docs-rendered');
+    const docsIframe = document.getElementById('docs-iframe');
+    const docsRawContent = document.getElementById('docs-raw-content');
+    const btnDocsRefresh = document.getElementById('btn-docs-refresh');
+    const btnDocsCopy = document.getElementById('btn-docs-copy');
+    const btnDocsRaw = document.getElementById('btn-docs-raw');
+    
+    let docsCurrentFile = null;  // 当前查看的文件信息
+    let docsRawContent_text = '';  // 当前文件的原始内容
+    let docsShowRaw = false;  // 是否显示源码
+    
+    async function loadDocsList() {
+        docsFileList.innerHTML = '<div class="docs-loading">加载中...</div>';
+        try {
+            const resp = await fetch('/api/docs/list');
+            const data = await resp.json();
+            if (!data.files || data.files.length === 0) {
+                docsFileList.innerHTML = '<div class="docs-no-files">暂无 HTML/MD 文档</div>';
+                return;
+            }
+            docsFileList.innerHTML = '';
+            data.files.forEach(f => {
+                const item = document.createElement('div');
+                item.className = 'docs-file-item';
+                item.dataset.path = f.path;
+                const icon = f.type === 'html' ? '🌐' : '📝';
+                item.innerHTML = `
+                    <span class="docs-file-icon">${icon}</span>
+                    <div class="docs-file-info">
+                        <div class="docs-file-name" title="${f.path}">${f.name}</div>
+                        <div class="docs-file-meta">${f.size_str} · ${f.modified_str}</div>
+                    </div>
+                `;
+                item.addEventListener('click', () => openDoc(f, item));
+                docsFileList.appendChild(item);
+            });
+        } catch (e) {
+            docsFileList.innerHTML = '<div class="docs-no-files">加载失败</div>';
+        }
+    }
+    
+    async function openDoc(fileInfo, itemEl) {
+        // 更新选中状态
+        docsFileList.querySelectorAll('.docs-file-item').forEach(el => el.classList.remove('active'));
+        if (itemEl) itemEl.classList.add('active');
+        
+        docsCurrentFile = fileInfo;
+        docsViewerTitle.textContent = fileInfo.name;
+        docsShowRaw = false;
+        btnDocsRaw.textContent = '🔤 源码';
+        
+        try {
+            const resp = await fetch(`/api/docs/read?path=${encodeURIComponent(fileInfo.path)}`);
+            const data = await resp.json();
+            if (data.error) {
+                docsRendered.innerHTML = `<p style="color: #ef4444;">读取失败: ${data.error}</p>`;
+                showDocsViewer('markdown');
+                return;
+            }
+            
+            docsRawContent_text = data.content;
+            
+            if (data.type === 'html') {
+                // HTML 文件：用 iframe 渲染
+                showDocsViewer('html');
+                // 使用 srcdoc 注入内容
+                docsIframe.srcdoc = data.content;
+            } else {
+                // Markdown 文件：用 renderMarkdown 渲染（含 KaTeX 数学公式）
+                showDocsViewer('markdown');
+                docsRendered.innerHTML = renderMarkdown(data.content);
+                // 渲染 Mermaid 图表
+                if (typeof renderMermaidDiagrams === 'function') {
+                    renderMermaidDiagrams();
+                }
+            }
+        } catch (e) {
+            docsRendered.innerHTML = `<p style="color: #ef4444;">加载失败: ${e.message}</p>`;
+            showDocsViewer('markdown');
+        }
+    }
+    
+    function showDocsViewer(type) {
+        docsEmptyState.classList.add('hidden');
+        docsViewerContainer.classList.remove('hidden');
+        docsRendered.classList.add('hidden');
+        docsIframe.classList.add('hidden');
+        docsRawContent.classList.add('hidden');
+        
+        if (docsShowRaw) {
+            docsRawContent.textContent = docsRawContent_text;
+            docsRawContent.classList.remove('hidden');
+        } else if (type === 'html') {
+            docsIframe.classList.remove('hidden');
+        } else {
+            docsRendered.classList.remove('hidden');
+        }
+    }
+    
+    // 刷新按钮
+    btnDocsRefresh.addEventListener('click', loadDocsList);
+    
+    // 复制按钮
+    btnDocsCopy.addEventListener('click', () => {
+        if (!docsRawContent_text) return;
+        navigator.clipboard.writeText(docsRawContent_text).then(() => {
+            showToast('已复制文件内容');
+        }).catch(() => {
+            // fallback
+            const ta = document.createElement('textarea');
+            ta.value = docsRawContent_text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('已复制文件内容');
+        });
+    });
+    
+    // 源码/渲染切换
+    btnDocsRaw.addEventListener('click', () => {
+        docsShowRaw = !docsShowRaw;
+        btnDocsRaw.textContent = docsShowRaw ? '👁️ 渲染' : '🔤 源码';
+        if (docsCurrentFile) {
+            const type = docsCurrentFile.type;
+            showDocsViewer(type);
+        }
+    });
+    
+    // 首次切换到文档页时加载列表
+    const docsTabBtn = document.querySelector('[data-tab="docs"]');
+    if (docsTabBtn) {
+        docsTabBtn.addEventListener('click', () => {
+            if (docsFileList.children.length <= 1 && docsFileList.querySelector('.docs-loading')) {
+                loadDocsList();
+            }
+        });
+    }
 });

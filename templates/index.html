@@ -79,6 +79,7 @@
             <div class="tab-bar">
                 <button class="tab-btn active" data-tab="workstation">🎬 工作站</button>
                 <button class="tab-btn" data-tab="assistant">💬 AI 助理</button>
+                <button class="tab-btn" data-tab="docs">📄 文档</button>
             </div>
 
             <!-- 页面1：工作站 -->
@@ -355,6 +356,40 @@
                     </div>
                 </div>
             </div><!-- end page-assistant -->
+
+            <!-- 页面3：文档浏览 -->
+            <div id="page-docs" class="tab-page">
+                <div class="docs-viewer glass-panel">
+                    <div class="docs-sidebar">
+                        <div class="docs-sidebar-header">
+                            <h3>📄 文档浏览</h3>
+                            <button id="btn-docs-refresh" class="btn-small" title="刷新文件列表">🔄</button>
+                        </div>
+                        <div id="docs-file-list" class="docs-file-list">
+                            <div class="docs-loading">加载中...</div>
+                        </div>
+                    </div>
+                    <div class="docs-content-area">
+                        <div id="docs-empty-state" class="docs-empty-state">
+                            <div class="docs-empty-icon">📄</div>
+                            <p>选择左侧文档查看</p>
+                            <small>支持 HTML 和 Markdown 文件，MD 自动渲染数学公式</small>
+                        </div>
+                        <div id="docs-viewer-container" class="docs-viewer-container hidden">
+                            <div class="docs-viewer-header">
+                                <h4 id="docs-viewer-title"></h4>
+                                <div class="docs-viewer-actions">
+                                    <button id="btn-docs-copy" class="btn-small" title="复制源文件内容">📋 复制</button>
+                                    <button id="btn-docs-raw" class="btn-small" title="查看源码/渲染切换">🔤 源码</button>
+                                </div>
+                            </div>
+                            <div id="docs-rendered" class="docs-rendered markdown-content"></div>
+                            <iframe id="docs-iframe" class="docs-iframe hidden" sandbox="allow-same-origin"></iframe>
+                            <pre id="docs-raw-content" class="docs-raw-content hidden"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end page-docs -->
         </main>
     </div>
     <script src="/static/main.js"></script>

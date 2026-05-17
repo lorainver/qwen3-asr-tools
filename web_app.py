@@ -385,6 +385,112 @@ async def load_history(path: str):
 async def get_index(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"config": config})
 
+# ========== 文档浏览端点 ==========
+
+# 允许浏览的目录（相对于 BASE_DIR）
+DOCS_SCAN_DIRS = ["", "docs", "templates"]  # 空字符串表示根目录
+# 排除的目录名
+DOCS_EXCLUDE_DIRS = {"venv", "models", "scratch", "__pycache__", ".git", "node_modules", "gptqmodel_build"}
+
+@app.get("/api/docs/list")
+async def api_docs_list():
+    """列出项目目录下的 HTML 和 Markdown 文件"""
+    files = []
+    seen = set()  # 去重（按相对路径）
+    
+    for scan_dir in DOCS_SCAN_DIRS:
+        search_root = os.path.join(BASE_DIR, scan_dir)
+        if not os.path.isdir(search_root):
+            continue
+        
+        for dirpath, dirnames, filenames in os.walk(search_root):
+            # 排除目录（原地修改 dirnames 以跳过）
+            dirnames[:] = [d for d in dirnames if d not in DOCS_EXCLUDE_DIRS]
+            
+            for fname in filenames:
+                ext = os.path.splitext(fname)[1].lower()
+                if ext not in ('.html', '.htm', '.md'):
+                    continue
+                
+                full_path = os.path.join(dirpath, fname)
+                rel_path = os.path.relpath(full_path, BASE_DIR).replace("\\", "/")
+                
+                if rel_path in seen:
+                    continue
+                seen.add(rel_path)
+                
+                try:
+                    stat = os.stat(full_path)
+                    files.append({
+                        "name": fname,
+                        "path": rel_path,
+                        "type": "html" if ext in ('.html', '.htm') else "markdown",
+                        "size": stat.st_size,
+                        "modified": stat.st_mtime,
+                    })
+                except OSError:
+                    continue
+    
+    # 按修改时间倒序
+    files.sort(key=lambda f: f["modified"], reverse=True)
+    
+    # 格式化 modified 为可读字符串
+    for f in files:
+        from datetime import datetime
+        ts = f["modified"]
+        f["modified_str"] = datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M")
+        # 人类可读的文件大小
+        size = f["size"]
+        if size < 1024:
+            f["size_str"] = f"{size} B"
+        elif size < 1024 * 1024:
+            f["size_str"] = f"{size/1024:.1f} KB"
+        else:
+            f["size_str"] = f"{size/1024/1024:.1f} MB"
+    
+    return {"files": files}
+
+
+@app.get("/api/docs/read")
+async def api_docs_read(path: str):
+    """读取文档文件内容"""
+    # 安全检查：防止路径遍历
+    safe_path = path.replace("\\", "/").lstrip("/")
+    if ".." in safe_path.split("/"):
+        return {"error": "路径不合法"}
+    
+    full_path = os.path.join(BASE_DIR, safe_path)
+    full_path = os.path.normpath(full_path)
+    
+    # 确保在 BASE_DIR 内
+    if not full_path.startswith(os.path.normpath(BASE_DIR)):
+        return {"error": "路径不合法"}
+    
+    if not os.path.isfile(full_path):
+        return {"error": "文件不存在"}
+    
+    ext = os.path.splitext(full_path)[1].lower()
+    if ext not in ('.html', '.htm', '.md'):
+        return {"error": "不支持的文件类型"}
+    
+    try:
+        # 尝试 UTF-8，失败则用 GBK
+        try:
+            with open(full_path, "r", encoding="utf-8") as f:
+                content = f.read()
+        except UnicodeDecodeError:
+            with open(full_path, "r", encoding="gbk", errors="replace") as f:
+                content = f.read()
+        
+        return {
+            "name": os.path.basename(full_path),
+            "path": safe_path,
+            "type": "html" if ext in ('.html', '.htm') else "markdown",
+            "content": content,
+        }
+    except Exception as e:
+        return {"error": f"读取失败: {str(e)}"}
+
 # ========== TTS 端点（本地处理） ==========
 
 @app.get("/api/tts")
