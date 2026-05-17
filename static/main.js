@@ -31,14 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * 渲染 Markdown 文本为 HTML
-     * 支持：标准 Markdown + KaTeX 数学公式 + Mermaid 图表
+     * 支持:标准 Markdown + KaTeX 数学公式 + Mermaid 图表
      * @param {string} text - 原始 Markdown 文本
      * @returns {string} 渲染后的 HTML
      */
     function renderMarkdown(text) {
         if (!text) return '';
 
-        // 1. 保护 Mermaid 代码块，避免被 marked 解析
+        // 1. 保护 Mermaid 代码块,避免被 marked 解析
         const mermaidBlocks = [];
         text = text.replace(/```mermaid\n([\s\S]*?)```/g, (match, code) => {
             const placeholder = `%%MERMAID_${mermaidBlocks.length}%%`;
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return placeholder;
         });
 
-        // 2. 保护数学公式，避免被 marked 解析
+        // 2. 保护数学公式,避免被 marked 解析
         const mathBlocks = [];
         // 块级公式 $$...$$
         text = text.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 5. 还原 Mermaid 占位符为容器（异步渲染）
+        // 5. 还原 Mermaid 占位符为容器(异步渲染)
         mermaidBlocks.forEach((code, i) => {
             const placeholder = `%%MERMAID_${i}%%`;
             const containerId = `mermaid-${Date.now()}-${i}`;
@@ -96,11 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * 解析 <think>...</think> 标签，返回 { thinking, answer }
+     * 解析 <think>...</think> 标签,返回 { thinking, answer }
      */
     /**
-     * 解析所有思考标签，返回分段数组（支持多思考块交替）
-     * 如分块翻译时每块都有思考过程：text, thinking, text, thinking, text...
+     * 解析所有思考标签,返回分段数组(支持多思考块交替)
+     * 如分块翻译时每块都有思考过程:text, thinking, text, thinking, text...
      */
     function parseThinking(text) {
         const THINK = '<think>';
@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * 渲染包含思考过程的消息（支持多思考块交替）
-     * @param {string} text - 原始文本（含 <think> 标签）
+     * 渲染包含思考过程的消息(支持多思考块交替)
+     * @param {string} text - 原始文本(含 <think> 标签)
      * @param {boolean} forceOpen - 生成中强制展开思考块
      */
     function renderWithThinking(text, forceOpen = false) {
@@ -170,8 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const c = seg.content.trim();
                 if (!c) continue;
                 thinkCount++;
-                const nextIsText = segments.slice(i + 1).some(s => s.type === 'text' && s.content.trim());
-                const openAttr = (!forceOpen && nextIsText) ? ' open' : '';
+                const openAttr = forceOpen ? ' open' : '';
                 html += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${thinkCount} (点击展开)</summary><div class="thinking-content">${renderMarkdown(c)}</div></details></div>`;
             } else {
                 const c = seg.content.trim();
@@ -285,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
             btnThemeToggle.innerHTML = isLight ? '☀️' : '🌙';
 
-            // 如果使用了 Mermaid，可能需要重新渲染（有些图表颜色是硬编码的）
+            // 如果使用了 Mermaid,可能需要重新渲染(有些图表颜色是硬编码的)
             if (typeof renderMermaidDiagrams === 'function') {
                 renderMermaidDiagrams();
             }
@@ -322,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnShutdown.disabled = true;
             btnShutdown.textContent = "⌛ 正在释放...";
             try {
-                // 注意：这里使用的是 /api/shutdown 或 /api/release_gpu，根据后端实际接口调整
+                // 注意:这里使用的是 /api/shutdown 或 /api/release_gpu,根据后端实际接口调整
                 const response = await fetch('/api/shutdown');
                 const result = await response.json();
                 window.showToast("✅ 显存已成功释放");
@@ -372,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 按类别分组渲染（如果是 'all' 模式）
+        // 按类别分组渲染(如果是 'all' 模式)
         if (category === 'all') {
             const groups = {
                 'local': { name: '🏠 本地原生模型', options: [] },
@@ -478,10 +477,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 imagePreview.src = selectedImageBase64;
                 imagePreviewContainer.classList.remove('hidden');
 
-                // 改进切换逻辑：如果当前模型不具备视觉能力，则提示或自动切换
+                // 改进切换逻辑:如果当前模型不具备视觉能力,则提示或自动切换
                 // 我们通过模型 ID 是否包含 'vl' 来快速判定
                 if (!currentModelId.toLowerCase().includes('vl') && selectModel) {
-                    // 优先寻找远程 VL 模型，如果没有再选本地
+                    // 优先寻找远程 VL 模型,如果没有再选本地
                     const remoteVLOption = Array.from(selectModel.options).find(opt => opt.value.includes('remote') && opt.value.includes('vl'));
                     const localVLOption = Array.from(selectModel.options).find(opt => opt.value === 'qwen-vl');
 
@@ -531,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 2000);
 
-    // === 辅助函数：显示浮动提示 (Toast) ===
+    // === 辅助函数:显示浮动提示 (Toast) ===
     function showToast(message, duration = 2000) {
         let toast = document.getElementById('toast-notification');
         const isLight = document.body.classList.contains('light-mode');
@@ -604,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     html += `</tbody></table>
-                            <div style="font-size: 0.78em; color: #64748b; margin-top: 10px; text-align: center;">💡 提示：点击行可直接复制 ID。推荐优先使用 <span style="color: #38bdf8;">WASAPI</span> 驱动。</div>`;
+                            <div style="font-size: 0.78em; color: #64748b; margin-top: 10px; text-align: center;">💡 提示:点击行可直接复制 ID。推荐优先使用 <span style="color: #38bdf8;">WASAPI</span> 驱动。</div>`;
                     deviceContainer.innerHTML = html;
                     devicePanel.classList.remove('hidden');
                 } else {
@@ -632,14 +631,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === 2. 智库摘要逻辑 ===
 
-    // 语言选择下拉框控制（仅翻译模式显示）
+    // 语言选择下拉框控制(仅翻译模式显示)
     const promptTypeSelect = document.getElementById('prompt-type');
     const targetLangSelect = document.getElementById('target-lang');
 
     if (promptTypeSelect && targetLangSelect) {
-        // 初始化：根据当前选择显示/隐藏
+        // 初始化:根据当前选择显示/隐藏
         targetLangSelect.classList.toggle('hidden', promptTypeSelect.value !== 'translate');
-        
+
         // 监听变化
         promptTypeSelect.addEventListener('change', () => {
             targetLangSelect.classList.toggle('hidden', promptTypeSelect.value !== 'translate');
@@ -649,19 +648,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnSummarize) {
         btnSummarize.addEventListener('click', async () => {
             const text = meetingText.value.trim();
-            if (!text) return alert("请先粘贴文本内容！");
+            if (!text) return alert("请先粘贴文本内容!");
             meetingText.classList.add('hidden');
             btnSummarize.classList.add('hidden');
             sumProgCont.classList.remove('hidden');
             sumResult.classList.remove('hidden');
             sumResult.innerText = "";
-            
+
             const promptType = document.getElementById('prompt-type').value;
             const targetLang = targetLangSelect && promptType === 'translate' ? targetLangSelect.value : null;
-            
+
             const requestBody = { text: text, prompt_type: promptType };
             if (targetLang) requestBody.target_lang = targetLang;
-            
+
             try {
                 const response = await fetch('/api/summarize', {
                     method: 'POST',
@@ -671,10 +670,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');
                 let fullText = '';  // 累积流式文本（含 thinking 标签）
+                let chunkResults = [];  // 分块翻译：每段独立累积
+                let currentChunkText = '';  // 当前分块的流式文本
                 // 切换为 Markdown 渲染模式
                 sumResult.classList.add('markdown-mode');
                 sumResult.innerText = '';
-                
+
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
@@ -688,18 +689,69 @@ document.addEventListener('DOMContentLoaded', () => {
                             } else if (data.status === 'streaming' && data.delta) {
                                 // 流式增量渲染
                                 fullText += data.delta;
+                                currentChunkText += data.delta;
                                 
-                                // 使用 renderWithThinking 渲染，生成中强制展开思考块
-                                // summarizer.py 已将 Ollama reasoning_content 包裹为 <think>...</think>
-                                // parseThinking() 自动识别这两个标签，无需额外检测
-                                sumResult.innerHTML = renderWithThinking(fullText, true);
+                                // 分块翻译：已完成的段 + 当前正在流的段
+                                if (chunkResults.length > 0) {
+                                    // 有已完成的段，分段渲染
+                                    let html = '';
+                                    chunkResults.forEach(r => {
+                                        html += `<div class="translate-chunk">${renderWithThinking(r, false)}</div>`;
+                                    });
+                                    html += `<div class="translate-chunk active">${renderWithThinking(currentChunkText, true)}</div>`;
+                                    sumResult.innerHTML = html;
+                                } else {
+                                    // 第一段，直接渲染
+                                    sumResult.innerHTML = renderWithThinking(fullText, true);
+                                }
                                 
                                 // 自动滚动到底部
                                 sumResult.scrollTop = sumResult.scrollHeight;
+                            } else if (data.status === 'chunk_complete') {
+                                // 一段翻译完成，存入已完成列表
+                                chunkResults.push(data.chunk_result || currentChunkText);
+                                currentChunkText = '';
                             } else if (data.status === 'done') {
                                 sumProgCont.classList.add('hidden');
-                                // 最终渲染：思考块折叠，正文 Markdown 渲染
-                                sumResult.innerHTML = renderWithThinking(data.result, false);
+                                // 最终渲染：分段渲染每段翻译
+                                if (chunkResults.length > 0) {
+                                    // 有分块：每段独立渲染
+                                    // 如果有残余的 currentChunkText，加入最后一段
+                                    if (currentChunkText.trim()) {
+                                        chunkResults.push(currentChunkText);
+                                    }
+                                    let html = '';
+                                    chunkResults.forEach((r, idx) => {
+                                        html += `<div class="translate-chunk"><div class="translate-chunk-label">第 ${idx+1}/${chunkResults.length} 段</div>${renderWithThinking(r, false)}</div>`;
+                                    });
+                                    sumResult.innerHTML = html;
+                                } else {
+                                    // 无分块：直接渲染
+                                    sumResult.innerHTML = renderWithThinking(data.result, false);
+                                }
+                                // 添加复制按钮（只复制正文，不含思考块）
+                                const sumCopyBtn = document.createElement('button');
+                                sumCopyBtn.className = 'btn-icon btn-copy-result';
+                                sumCopyBtn.innerHTML = '📋 复制';
+                                sumCopyBtn.onclick = async () => {
+                                    try {
+                                        const answerEls = sumResult.querySelectorAll('.answer-content');
+                                        const copyText = Array.from(answerEls)
+                                            .map(el => el.innerText.trim())
+                                            .filter(t => t)
+                                            .join('\n\n');
+                                        await navigator.clipboard.writeText(copyText);
+                                        sumCopyBtn.innerHTML = '✅ 已复制';
+                                        sumCopyBtn.classList.add('copied');
+                                        setTimeout(() => {
+                                            sumCopyBtn.innerHTML = '📋 复制';
+                                            sumCopyBtn.classList.remove('copied');
+                                        }, 2000);
+                                    } catch (e) {
+                                        console.error('复制失败:', e);
+                                    }
+                                };
+                                sumResult.appendChild(sumCopyBtn);
                                 // 触发 Mermaid 图表渲染
                                 setTimeout(() => {
                                     document.querySelectorAll('#sum-result .mermaid-container').forEach(el => {
@@ -774,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnStartPath) {
         btnStartPath.addEventListener('click', async () => {
             const path = localPathInput.value.trim();
-            if (!path) return alert("请输入完整路径！");
+            if (!path) return alert("请输入完整路径!");
             if (document.querySelector('.path-input-mode')) document.querySelector('.path-input-mode').classList.add('hidden');
             dropZone.classList.add('hidden');
             transProgCont.classList.remove('hidden');
@@ -863,7 +915,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    let messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
+    let messages = [{ "role": "assistant", "content": "你好!我是你的本地 AI 助理。" }];
     const audioPlayer = new Audio();
 
     async function playTTS(text, btn) {
@@ -887,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnNewChat) {
         btnNewChat.addEventListener('click', async () => {
-            // 如果当前有对话内容（不仅仅是默认的第一条），则尝试保存
+            // 如果当前有对话内容(不仅仅是默认的第一条),则尝试保存
             if (messages.length > 1) {
                 const originalText = btnNewChat.innerHTML;
                 btnNewChat.innerHTML = '💾 保存中...';
@@ -903,7 +955,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            messages = [{ "role": "assistant", "content": "你好！我是你的本地 AI 助理。" }];
+            messages = [{ "role": "assistant", "content": "你好!我是你的本地 AI 助理。" }];
             chatHistory.innerHTML = "";
             appendMessage('assistant', messages[0].content);
             streamingAudioQueue.clear();
@@ -940,7 +992,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. 尝试让 AI 生成一个更智能的标题 (非流式请求)
         try {
-            const titlePrompt = `请为以下对话生成一个5字以内的简短标题。对话内容：${firstUserMsg.substring(0, 100)}`;
+            const titlePrompt = `请为以下对话生成一个5字以内的简短标题。对话内容:${firstUserMsg.substring(0, 100)}`;
             const resp = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -954,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 title = data.response.replace(/[#"'\n\r]/g, '').substring(0, 15);
             }
         } catch (e) {
-            console.warn('AI 生成标题失败，使用默认标题');
+            console.warn('AI 生成标题失败,使用默认标题');
         }
 
         // 3. 提交保存
@@ -997,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === 流式语音队列（带预加载） ===
+    // === 流式语音队列(带预加载) ===
     const streamingAudioQueue = {
         queue: [],         // [{sentence, audio, audioPromise}]
         isPlaying: false,
@@ -1005,7 +1057,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         enqueue(sentence) {
             if (!sentence.trim()) return;
-            // 立即开始预加载音频（不等播放）
+            // 立即开始预加载音频(不等播放)
             const engine = selectTTSEngine ? selectTTSEngine.value : 'edge';
             const audio = new Audio(`/api/tts?text=${encodeURIComponent(sentence)}&engine=${engine}`);
             const audioPromise = new Promise((resolve) => {
@@ -1026,7 +1078,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const { sentence, audio, audioPromise } = this.queue.shift();
 
             try {
-                // 等音频加载完（预加载已提前开始，通常立即可用）
+                // 等音频加载完(预加载已提前开始,通常立即可用)
                 const readyAudio = await audioPromise;
                 if (readyAudio) {
                     this.currentAudio = readyAudio;
@@ -1052,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 句子边界检测
-    const SENTENCE_ENDS = '。！？.!?\n';
+    const SENTENCE_ENDS = '。!?.!?\n';
     let ttsPointer = 0;
 
     function extractNewSentences(fullText) {
@@ -1086,7 +1138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     type: 'image',
                     image: selectedImageBase64,
-                    // 针对 8GB 显存进行优化，限制最大像素点，防止 OOM
+                    // 针对 8GB 显存进行优化,限制最大像素点,防止 OOM
                     max_pixels: 600 * 600
                 },
                 { type: 'text', text: text }
@@ -1110,7 +1162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messages.push({ "role": "user", "content": messageContent });
         const loadingMsg = appendMessage('assistant', '');
 
-        // 显示“正在思考...”动画
+        // 显示"正在思考..."动画
         loadingMsg.innerHTML = '<span class="thinking-dots">正在思考<span class="dot dot-1">.</span><span class="dot dot-2">.</span><span class="dot dot-3">.</span></span>';
 
         // 重置流式 TTS 状态
@@ -1159,11 +1211,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             const json = JSON.parse(data);
                             if (json.token) {
                                 fullResponse += json.token;
-                                // 流式更新：渲染 Markdown，生成时保持思考过程展开
+                                // 流式更新:渲染 Markdown,生成时保持思考过程展开
                                 loadingMsg.innerHTML = renderWithThinking(fullResponse, true);
                                 chatHistory.scrollTop = chatHistory.scrollHeight;
 
-                                // 流式语音：检测到完整句子立即送 TTS
+                                // 流式语音:检测到完整句子立即送 TTS
                                 if (useStreamingTTS) {
                                     const newSentences = extractNewSentences(fullResponse);
                                     newSentences.forEach(s => streamingAudioQueue.enqueue(s));
@@ -1176,16 +1228,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 生成结束，进行最后一次渲染（允许折叠）
+            // 生成结束,进行最后一次渲染(允许折叠)
             loadingMsg.innerHTML = renderWithThinking(fullResponse, false);
 
             // 完成后将回复加入消息历史
             messages.push({ "role": "assistant", "content": fullResponse });
 
-            // 渲染 Mermaid 图表（流式结束后可能有未渲染的图表）
+            // 渲染 Mermaid 图表(流式结束后可能有未渲染的图表)
             renderMermaidDiagrams();
 
-            // 流式 TTS：刷入剩余未完句子
+            // 流式 TTS:刷入剩余未完句子
             if (useStreamingTTS && fullResponse.substring(ttsPointer).trim()) {
                 streamingAudioQueue.enqueue(fullResponse.substring(ttsPointer).trim());
             }
@@ -1203,28 +1255,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const contentDiv = document.createElement('div');
         contentDiv.className = `msg-content ${role}`;
 
-        // 创建实际消息体 (使用 div 替代 span，以支持内部包含思考块等块级元素)
+        // 创建实际消息体 (使用 div 替代 span,以支持内部包含思考块等块级元素)
         const messageBody = document.createElement('div');
 
         if (role === 'assistant') {
-            // 助手消息：渲染 Markdown
+            // 助手消息:渲染 Markdown
             messageBody.className = 'markdown-content';
             messageBody.innerHTML = renderWithThinking(text, false);
             // 异步渲染 Mermaid 图表
             setTimeout(renderMermaidDiagrams, 50);
         } else {
-            // 用户消息：纯文本
+            // 用户消息:纯文本
             messageBody.innerText = text;
         }
 
         contentDiv.appendChild(messageBody);
         wrapper.appendChild(contentDiv);
 
-        // 添加工具栏（复制按钮 + 朗读按钮）
+        // 添加工具栏(复制按钮 + 朗读按钮)
         const toolbar = document.createElement('div');
         toolbar.className = 'msg-toolbar';
 
-        // 复制按钮 — 只复制正文内容（不含思考块）
+        // 复制按钮 - 只复制正文内容(不含思考块)
         const copyBtn = document.createElement('button');
         copyBtn.className = 'btn-icon btn-copy-inline';
         copyBtn.innerHTML = '📋 复制';
@@ -1232,7 +1284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 let copyText;
                 if (role === 'assistant') {
-                    // 只提取 .answer-content 的纯文本，不含思考块
+                    // 只提取 .answer-content 的纯文本,不含思考块
                     const answerEls = messageBody.querySelectorAll('.answer-content');
                     copyText = Array.from(answerEls)
                         .map(el => el.innerText.trim())
@@ -1281,7 +1333,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnChatSend) btnChatSend.addEventListener('click', sendChatMessage);
     if (chatInput) chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
 
-    // === 5.5 一键复制最新回答的正文（不含思考块）===
+    // === 5.5 一键复制最新回答的正文(不含思考块)===
     const btnCopyLast = document.getElementById('btn-copy-last-answer');
     if (btnCopyLast) {
         btnCopyLast.addEventListener('click', async () => {
@@ -1319,7 +1371,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === 6. 释放显存（终止 AI Worker 子进程） ===
+    // === 6. 释放显存(终止 AI Worker 子进程) ===
     const btnRelease = document.getElementById('btn-shutdown');
     if (btnRelease) {
         btnRelease.addEventListener('click', async () => {
@@ -1333,7 +1385,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('[ReleaseGPU] Response:', data);
                 btnRelease.innerText = "已释放";
                 btnRelease.style.backgroundColor = "#4caf50";
-                showToast("✅ AI 进程已终止，显存已完全释放（含 CUDA context）");
+                showToast("✅ AI 进程已终止,显存已完全释放(含 CUDA context)");
                 // 3秒后恢复按钮
                 setTimeout(() => {
                     btnRelease.disabled = false;
