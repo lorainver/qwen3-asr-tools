@@ -670,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder('utf-8');
                 let fullText = '';  // 累积流式文本（含 thinking 标签）
-                let chunkResults = [];  // 分块翻译：每段独立累积
+                let chunkResults = [];  // 分块处理：每段独立累积
                 let currentChunkText = '';  // 当前分块的流式文本
                 // 切换为 Markdown 渲染模式
                 sumResult.classList.add('markdown-mode');
@@ -691,7 +691,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 fullText += data.delta;
                                 currentChunkText += data.delta;
                                 
-                                // 分块翻译：已完成的段 + 当前正在流的段
+                                // 分块处理：已完成的段 + 当前正在流的段
                                 if (chunkResults.length > 0) {
                                     // 有已完成的段，分段渲染
                                     let html = '';
@@ -708,7 +708,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 // 自动滚动到底部
                                 sumResult.scrollTop = sumResult.scrollHeight;
                             } else if (data.status === 'chunk_complete') {
-                                // 一段翻译完成，存入已完成列表
+                                // 一段处理完成，存入已完成列表
                                 chunkResults.push(data.chunk_result || currentChunkText);
                                 currentChunkText = '';
                             } else if (data.status === 'done') {
