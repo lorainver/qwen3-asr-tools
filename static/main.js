@@ -1477,6 +1477,10 @@ document.addEventListener('DOMContentLoaded', () => {
         docsShowRaw = false;
         btnDocsRaw.textContent = '🔤 源码';
         
+        // 新标签页全屏打开
+        window.open(`/api/docs/view?path=${encodeURIComponent(fileInfo.path)}`, '_blank');
+        
+        // 同时在右侧小窗加载预览（方便快速浏览）
         try {
             const resp = await fetch(`/api/docs/read?path=${encodeURIComponent(fileInfo.path)}`);
             const data = await resp.json();
@@ -1489,22 +1493,17 @@ document.addEventListener('DOMContentLoaded', () => {
             docsRawContent_text = data.content;
             
             if (data.type === 'html') {
-                // HTML 文件：用 iframe 渲染
                 showDocsViewer('html');
-                // 使用 srcdoc 注入内容
                 docsIframe.srcdoc = data.content;
             } else {
-                // Markdown 文件：用 renderMarkdown 渲染（含 KaTeX 数学公式）
                 showDocsViewer('markdown');
                 docsRendered.innerHTML = renderMarkdown(data.content);
-                // 渲染 Mermaid 图表
                 if (typeof renderMermaidDiagrams === 'function') {
                     renderMermaidDiagrams();
                 }
             }
         } catch (e) {
-            docsRendered.innerHTML = `<p style="color: #ef4444;">加载失败: ${e.message}</p>`;
-            showDocsViewer('markdown');
+            // 预览加载失败不影响新标签页
         }
     }
     

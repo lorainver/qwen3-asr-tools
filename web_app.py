@@ -491,6 +491,170 @@ async def api_docs_read(path: str):
     except Exception as e:
         return {"error": f"读取失败: {str(e)}"}
 
+
+@app.get("/api/docs/view")
+async def api_docs_view(path: str):
+    """在新标签页中全屏查看文档（返回完整 HTML 页面）"""
+    # 安全检查：防止路径遍历
+    safe_path = path.replace("\\", "/").lstrip("/")
+    if ".." in safe_path.split("/"):
+        return HTMLResponse("<h1>路径不合法</h1>", status_code=400)
+    
+    full_path = os.path.join(BASE_DIR, safe_path)
+    full_path = os.path.normpath(full_path)
+    
+    if not full_path.startswith(os.path.normpath(BASE_DIR)):
+        return HTMLResponse("<h1>路径不合法</h1>", status_code=400)
+    
+    if not os.path.isfile(full_path):
+        return HTMLResponse("<h1>文件不存在</h1>", status_code=404)
+    
+    ext = os.path.splitext(full_path)[1].lower()
+    
+    try:
+        try:
+            with open(full_path, "r", encoding="utf-8") as f:
+                content = f.read()
+        except UnicodeDecodeError:
+            with open(full_path, "r", encoding="gbk", errors="replace") as f:
+                content = f.read()
+        
+        filename = os.path.basename(full_path)
+        
+        if ext in ('.html', '.htm'):
+            # HTML 文件：原样返回（注入返回按钮）
+            back_btn = '''<div style="position:fixed;top:12px;right:16px;z-index:99999">
+                <a href="/" target="_self" style="background:#0ea5e9;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:13px;font-family:system-ui">← 返回</a>
+            </div>'''
+            # 在 <body> 开头注入返回按钮
+            if "<body" in content:
+                content = content.replace("<body", back_btn + "<body", 1)
+            else:
+                content = back_btn + content
+            return HTMLResponse(content)
+        
+        elif ext == '.md':
+            # Markdown 文件：返回带渲染框架的完整 HTML 页面
+            html_page = f'''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{filename}</title>
+<!-- KaTeX CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<!-- marked.js -->
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+<!-- Mermaid -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.js" type="module"></script>
+<style>
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
+body {{ 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f172a; color: #e2e8f0;
+    line-height: 1.7;
+    padding: 20px 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}}
+#back-btn {{
+    position: fixed; top: 12px; right: 16px; z-index: 99999;
+    background: #0ea5e9; color: #fff; padding: 6px 14px; border-radius: 6px;
+    text-decoration: none; font-size: 13px; font-family: system-ui;
+}}
+#back-btn:hover {{ background: #0284c7; }}
+#content {{ margin-top: 10px; }}
+#content h1 {{ font-size: 2em; margin: 0.5em 0 0.3em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.3em; }}
+#content h2 {{ font-size: 1.5em; margin: 0.6em 0 0.25em; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.2em; }}
+#content h3 {{ font-size: 1.25em; margin: 0.7em 0 0.2em; }}
+#content p {{ margin: 0.6em 0; }}
+#content code {{ background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }}
+#content pre {{ background: rgba(0,0,0,0.35); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 0.8em 0; }}
+#content pre code {{ background: none; padding: 0; font-size: 0.85em; line-height: 1.55; }}
+#content blockquote {{ border-left: 3px solid #0ea5e9; margin: 0.8em 0; padding: 0.4em 1em; color: rgba(255,255,255,0.6); }}
+#content table {{ border-collapse: collapse; width: 100%; margin: 0.8em 0; }}
+#content th, #content td {{ border: 1px solid rgba(255,255,255,0.12); padding: 8px 12px; text-align: left; }}
+#content th {{ background: rgba(255,255,255,0.06); }}
+#content img {{ max-width: 100%; height: auto; border-radius: 6px; }}
+#content a {{ color: #38bdf8; text-decoration: none; }}
+#content a:hover {{ text-decoration: underline; }}
+.mermaid-container {{ text-align: center; margin: 1em 0; }}
+.mermaid-container svg {{ max-width: 100%; }}
+.mermaid-error {{ color: #ef4444; font-size: 0.9em; }}
+</style>
+</head>
+<body>
+<a id="back-btn" href="/" target="_self">← 返回</a>
+<div id="content"></div>
+
+<!-- KaTeX JS -->
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script>
+// 将原始 MD 内容嵌入页面
+const rawMd = {json.dumps(content)};
+
+// 配置 marked
+marked.setOptions({{
+    breaks: true,
+    gfm: true,
+}});
+
+// 收集 Mermaid 代码块
+const mermaidBlocks = [];
+let mdForRender = rawMd.replace(/```mermaid\\n([\\s\\S]*?)```/g, (match, code) => {{
+    const idx = mermaidBlocks.length;
+    mermaidBlocks.push(code.trim());
+    return `%%MERMAID_${idx}%%`;
+}});
+
+// 渲染为 HTML
+const renderedHtml = marked.parse(mdForRender);
+
+// 还原 Mermaid 占位符
+let finalHtml = renderedHtml;
+mermaidBlocks.forEach((code, i) => {{
+    const containerId = `mermaid-docs-${i}`;
+    const container = `<div class="mermaid-container" id="${containerId}" data-mermaid-code="${encodeURIComponent(code)}">`
+        + `<div class="mermaid-loading">🔄 图表加载中...</div></div>`;
+    finalHtml = finalHtml.replace(`%%MERMAID_${i}%%`, container);
+}});
+
+document.getElementById('content').innerHTML = finalHtml;
+
+// 渲染数学公式
+renderMathInElement(document.getElementById('content'), {{
+    delimiters: [
+        {{left: '$$', right: '$$', display: true}},
+        {{left: '$', right: '$', display: false}},
+    ],
+    throwOnError: false,
+}});
+
+// 渲染 Mermaid 图表
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.js';
+await mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
+const containers = document.querySelectorAll('.mermaid-container');
+for (const container of containers) {{
+    const code = decodeURIComponent(container.dataset.mermaidCode);
+    try {{
+        const {{ svg }} = await mermaid.render(`mermaid-svg-${{Date.now()}}-${{container.id}}`, code);
+        container.innerHTML = svg;
+    }} catch (e) {{
+        container.innerHTML = `<div class="mermaid-error">⚠️ Mermaid 渲染失败: ${{e.message}}</div>`;
+    }}
+}}
+</script>
+</body>
+</html>'''
+            return HTMLResponse(html_page)
+        
+        else:
+            return HTMLResponse("<h1>不支持的文件类型</h1>", status_code=400)
+    
+    except Exception as e:
+        return HTMLResponse(f"<h1>读取失败</h1><p>{str(e)}</p>", status_code=500)
+
 # ========== TTS 端点（本地处理） ==========
 
 @app.get("/api/tts")
