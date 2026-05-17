@@ -2024,6 +2024,11 @@ textarea:focus {
     background: transparent;
 }
 
+#btn-new-task {
+    margin-top: 12px;
+    width: 100%;
+}
+
 .docs-loading {
     text-align: center;
     padding: 20px;

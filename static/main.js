@@ -240,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 总结卡片
     const btnSummarize = document.getElementById('btn-summarize');
+    const btnNewTask = document.getElementById('btn-new-task');
     const meetingText = document.getElementById('meeting-text');
     const sumProgCont = document.getElementById('sum-progress-container');
     const sumStatus = document.getElementById('sum-status');
@@ -763,9 +764,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                         } catch (e) { el.innerHTML = '<pre>' + code + '</pre>'; }
                                     });
                                 }, 100);
+                                // 显示「新建任务」按钮
+                                btnNewTask.classList.remove('hidden');
                             } else if (data.status === 'error') {
                                 sumProgCont.classList.add('hidden');
                                 sumResult.innerText = "❌ " + data.message;
+                                btnNewTask.classList.remove('hidden');
                             }
                         } catch (e) { }
                     }
@@ -773,7 +777,21 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 sumProgCont.classList.add('hidden');
                 sumStatus.innerText = "处理出错: " + error.message;
+                btnNewTask.classList.remove('hidden');
             }
+        });
+    }
+
+    // 新建任务按钮：恢复输入区
+    if (btnNewTask) {
+        btnNewTask.addEventListener('click', () => {
+            sumResult.classList.add('hidden');
+            sumResult.innerHTML = '';
+            sumProgCont.classList.add('hidden');
+            btnNewTask.classList.add('hidden');
+            meetingText.classList.remove('hidden');
+            btnSummarize.classList.remove('hidden');
+            meetingText.focus();
         });
     }
 
