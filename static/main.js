@@ -98,61 +98,87 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * 解析 <think>...</think> 标签，返回 { thinking, answer }
      */
+    /**
+     * 解析所有思考标签，返回分段数组（支持多思考块交替）
+     * 如分块翻译时每块都有思考过程：text, thinking, text, thinking, text...
+     */
     function parseThinking(text) {
-        const thinkStart = '<think>';
-        const thinkEnd = '</think>';
+        const THINK = '<think>';
+        const END = '</think>';
+        const segments = [];
+        let pos = 0;
+        let inThink = false;
 
-        const startIdx = text.indexOf(thinkStart);
-        const endIdx = text.indexOf(thinkEnd);
+        while (true) {
+            const nextThink = text.indexOf(THINK, pos);
+            const nextEnd = text.indexOf(END, pos);
+            const nextOpen = nextThink === -1 ? Infinity : nextThink;
+            const nextClose = nextEnd === -1 ? Infinity : nextEnd;
 
-        if (startIdx !== -1) {
-            if (endIdx !== -1) {
-                // 完整闭合的思考块
-                return {
-                    before: text.substring(0, startIdx),
-                    thinking: text.substring(startIdx + thinkStart.length, endIdx),
-                    answer: text.substring(endIdx + thinkEnd.length)
-                };
+            if (nextOpen === Infinity && nextClose === Infinity) {
+                const tail = text.substring(pos);
+                if (tail) {
+                    if (inThink && segments.length > 0 && segments[segments.length - 1].type === 'thinking') {
+                        segments[segments.length - 1].content += tail;
+                    } else if (!inThink) {
+                        segments.push({ type: 'text', content: tail });
+                    }
+                }
+                break;
+            }
+
+            if (nextOpen < nextClose) {
+                // 遇到思考块开始标签
+                const before = text.substring(pos, nextOpen);
+                if (before) segments.push({ type: 'text', content: before });
+                pos = nextOpen + THINK.length;
+                inThink = true;
+                segments.push({ type: 'thinking', content: '' });
             } else {
-                // 正在思考中，尚未闭合
-                return {
-                    before: text.substring(0, startIdx),
-                    thinking: text.substring(startIdx + thinkStart.length),
-                    answer: ''
-                };
+                // 遇到思考块结束标签
+                if (segments.length > 0 && segments[segments.length - 1].type === 'thinking') {
+                    segments[segments.length - 1].content += text.substring(pos, nextEnd);
+                }
+                pos = nextEnd + END.length;
+                inThink = false;
             }
         }
-        return { before: '', thinking: null, answer: text };
+
+        // 清理尾部空段
+        while (segments.length > 0 && !segments[segments.length - 1].content.trim()) {
+            segments.pop();
+        }
+        return segments;
     }
 
     /**
-     * 渲染包含思考过程的消息
+     * 渲染包含思考过程的消息（支持多思考块交替）
+     * @param {string} text - 原始文本（含 <think> 标签）
+     * @param {boolean} forceOpen - 生成中强制展开思考块
      */
     function renderWithThinking(text, forceOpen = false) {
-        const { before, thinking, answer } = parseThinking(text);
+        const segments = parseThinking(text);
+        if (!segments.length) return '';
 
         let html = '';
+        let thinkCount = 0;
 
-        // 思考过程（折叠显示）
-        if (thinking !== null) {
-            // 只有在强制开启（生成中）且正文还没出来时才默认展开
-            const openAttr = (forceOpen && !answer) ? 'open' : '';
-            html += `
-                <div class="thinking-block">
-                    <details ${openAttr}>
-                        <summary>💭 思考过程 (点击展开)</summary>
-                        <div class="thinking-content">${renderMarkdown(thinking)}</div>
-                    </details>
-                </div>
-            `;
+        for (let i = 0; i < segments.length; i++) {
+            const seg = segments[i];
+
+            if (seg.type === 'thinking') {
+                const c = seg.content.trim();
+                if (!c) continue;
+                thinkCount++;
+                const nextIsText = segments.slice(i + 1).some(s => s.type === 'text' && s.content.trim());
+                const openAttr = (forceOpen && nextIsText) ? ' open' : '';
+                html += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${thinkCount} (点击展开)</summary><div class="thinking-content">${renderMarkdown(c)}</div></details></div>`;
+            } else {
+                const c = seg.content.trim();
+                if (!c) continue;
+                html += `<div class="answer-content">${renderMarkdown(c)}</div>`;
+            }
         }
-
-        // 最终回答
-        const finalAnswer = before + answer;
-        if (finalAnswer.trim()) {
-            html += `<div class="answer-content">${renderMarkdown(finalAnswer)}</div>`;
-        }
-
         return html;
     }
 
@@ -603,7 +629,6 @@ document.addEventListener('DOMContentLoaded', () => {
             devicePanel.classList.add('hidden');
         });
     }
-
 
     // === 2. 智库摘要逻辑 ===
 
