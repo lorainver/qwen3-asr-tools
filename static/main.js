@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!c) continue;
                 thinkCount++;
                 const nextIsText = segments.slice(i + 1).some(s => s.type === 'text' && s.content.trim());
-                const openAttr = (forceOpen && nextIsText) ? ' open' : '';
+                const openAttr = (!forceOpen && nextIsText) ? ' open' : '';
                 html += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${thinkCount} (点击展开)</summary><div class="thinking-content">${renderMarkdown(c)}</div></details></div>`;
             } else {
                 const c = seg.content.trim();

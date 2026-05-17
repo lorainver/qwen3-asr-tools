@@ -703,7 +703,7 @@ textarea:focus {
     display: flex;
     gap: var(--space-sm);
     margin-top: var(--space-xs);
-    opacity: 0.4;
+    opacity: 0.65;
     transition: opacity var(--transition-normal);
 }
 
