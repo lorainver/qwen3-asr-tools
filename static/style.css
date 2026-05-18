@@ -1704,6 +1704,38 @@ textarea:focus {
 }
 
 /* ============================
+   分块翻译段样式
+   ============================ */
+.translate-chunk {
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    background: rgba(56, 189, 248, 0.03);
+    border: 1px solid rgba(56, 189, 248, 0.08);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.translate-chunk.active {
+    border-color: rgba(56, 189, 248, 0.25);
+    background: rgba(56, 189, 248, 0.06);
+}
+
+.translate-chunk-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+    letter-spacing: 0.02em;
+}
+
+.translate-chunk .answer-content {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* ============================
    CLI 参数说明框
    ============================ */
 .cli-params-box {
