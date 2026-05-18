@@ -1449,6 +1449,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const docsRawContent = document.getElementById('docs-raw-content');
     const btnDocsRefresh = document.getElementById('btn-docs-refresh');
     const btnDocsCopy = document.getElementById('btn-docs-copy');
+    const btnDocsView = document.getElementById('btn-docs-view');
     const btnDocsRaw = document.getElementById('btn-docs-raw');
     
     let docsCurrentFile = null;  // 当前查看的文件信息
@@ -1495,8 +1496,9 @@ document.addEventListener('DOMContentLoaded', () => {
         docsShowRaw = false;
         btnDocsRaw.textContent = '🔤 源码';
         
-        // 新标签页全屏打开
-        window.open(`/api/docs/view?path=${encodeURIComponent(fileInfo.path)}`, '_blank');
+        // 【优化】此处移除了原有的自动 window.open() 跳转逻辑。
+        // 这样点击左侧文件项时仅会在右侧加载预览和绑定当前文件，不会再频繁弹出新窗口。
+        // 若用户需要跳转至新标签页打开，可以通过点击右侧操作区的“🌐 打开”按钮来手动触发。
         
         // 同时在右侧小窗加载预览（方便快速浏览）
         try {
@@ -1560,6 +1562,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.removeChild(ta);
             showToast('已复制文件内容');
         });
+    });
+    
+    // 【新增】“🌐 打开”按钮的点击事件监听器。
+    // 当点击时，在新标签页/新窗口中全屏打开当前正在浏览的文档文件（利用 docsCurrentFile 绑定的路径）。
+    // 这样将“新窗口打开”的行为交由用户主动选择，极大提升了多文档快速预览时的用户体验。
+    btnDocsView.addEventListener('click', () => {
+        if (!docsCurrentFile) return;
+        window.open(`/api/docs/view?path=${encodeURIComponent(docsCurrentFile.path)}`, '_blank');
     });
     
     // 源码/渲染切换
