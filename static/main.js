@@ -721,103 +721,126 @@ document.addEventListener('DOMContentLoaded', () => {
                 sumResult.classList.add('markdown-content');
                 sumResult.innerText = '';
 
+                let buffer = ''; // 缓存未接收完整的行
                 while (true) {
                     const { value, done } = await reader.read();
-                    if (done) break;
-                    const chunk = decoder.decode(value);
-                    const lines = chunk.split('\n').filter(line => line.trim());
-                    for (let line of lines) {
-                        try {
-                            const data = JSON.parse(line);
-                            if (data.status === 'processing') {
-                                sumStatus.innerText = data.message;
-                            } else if (data.status === 'streaming' && data.delta) {
-                                // 流式增量渲染
-                                fullText += data.delta;
-                                currentChunkText += data.delta;
-                                
-                                // 分块处理：已完成的段 + 当前正在流的段
-                                if (chunkResults.length > 0) {
-                                    // 有已完成的段，分段渲染
-                                    let html = '';
-                                    let globalCounter = { value: 0 };
-                                    chunkResults.forEach(r => {
-                                        html += `<div class="translate-chunk">${renderWithThinking(r, false, globalCounter)}</div>`;
-                                    });
-                                    html += `<div class="translate-chunk active">${renderWithThinking(currentChunkText, true, globalCounter)}</div>`;
-                                    sumResult.innerHTML = html;
-                                } else {
-                                    // 第一段，直接渲染
-                                    sumResult.innerHTML = renderWithThinking(fullText, true);
-                                }
-                                
-                                // 自动滚动到底部
-                                sumResult.scrollTop = sumResult.scrollHeight;
-                            } else if (data.status === 'chunk_complete') {
-                                // 一段处理完成，存入已完成列表
-                                chunkResults.push(data.chunk_result || currentChunkText);
-                                currentChunkText = '';
-                            } else if (data.status === 'done') {
-                                sumProgCont.classList.add('hidden');
-                                // 最终渲染：分段渲染每段翻译
-                                if (chunkResults.length > 0) {
-                                    // 有分块：每段独立渲染
-                                    // 如果有残余的 currentChunkText，加入最后一段
-                                    if (currentChunkText.trim()) {
-                                        chunkResults.push(currentChunkText);
-                                    }
-                                    let html = '';
-                                    let globalCounter = { value: 0 };
-                                    chunkResults.forEach((r, idx) => {
-                                        html += `<div class="translate-chunk"><div class="translate-chunk-label">第 ${idx+1}/${chunkResults.length} 段</div>${renderWithThinking(r, false, globalCounter)}</div>`;
-                                    });
-                                    sumResult.innerHTML = html;
-                                } else {
-                                    // 无分块：直接渲染
-                                    sumResult.innerHTML = renderWithThinking(data.result, false);
-                                }
-                                // 添加复制按钮（只复制正文，不含思考块）
-                                const sumCopyBtn = document.createElement('button');
-                                sumCopyBtn.className = 'btn-icon btn-copy-result';
-                                sumCopyBtn.innerHTML = '📋 复制';
-                                sumCopyBtn.onclick = async () => {
-                                    try {
-                                        const answerEls = sumResult.querySelectorAll('.answer-content');
-                                        const copyText = Array.from(answerEls)
-                                            .map(el => el.innerText.trim())
-                                            .filter(t => t)
-                                            .join('\n\n');
-                                        await navigator.clipboard.writeText(copyText);
-                                        sumCopyBtn.innerHTML = '✅ 已复制';
-                                        sumCopyBtn.classList.add('copied');
-                                        setTimeout(() => {
-                                            sumCopyBtn.innerHTML = '📋 复制';
-                                            sumCopyBtn.classList.remove('copied');
-                                        }, 2000);
-                                    } catch (e) {
-                                        console.error('复制失败:', e);
-                                    }
-                                };
-                                sumResult.parentNode.appendChild(sumCopyBtn);
-                                // 触发 Mermaid 图表渲染
-                                setTimeout(() => {
-                                    document.querySelectorAll('#sum-result .mermaid-container').forEach(el => {
-                                        try {
-                                            const code = decodeURIComponent(el.dataset.mermaidCode);
-                                            mermaid.render(`mermaid-svg-${Date.now()}`, code).then(svg => {
-                                                el.innerHTML = svg;
-                                            });
-                                        } catch (e) { el.innerHTML = '<pre>' + code + '</pre>'; }
-                                    });
-                                }, 100);
-                                // 显示「新建任务」按钮
-                                btnNewTask.classList.remove('hidden');
-                            } else if (data.status === 'error') {
-                                sumProgCont.classList.add('hidden');
-                                sumResult.innerText = "❌ " + data.message;
-                                btnNewTask.classList.remove('hidden');
+                    if (done) {
+                        if (buffer.trim()) {
+                            try {
+                                const data = JSON.parse(buffer.trim());
+                                processLine(data);
+                            } catch (e) {
+                                console.error('流结束时的残留数据解析失败:', e);
                             }
-                        } catch (e) { }
+                        }
+                        break;
+                    }
+                    
+                    buffer += decoder.decode(value, { stream: true });
+                    let boundary = buffer.indexOf('\n');
+                    while (boundary !== -1) {
+                        const line = buffer.substring(0, boundary).trim();
+                        buffer = buffer.substring(boundary + 1);
+                        if (line) {
+                            try {
+                                const data = JSON.parse(line);
+                                processLine(data);
+                            } catch (e) {
+                                console.error('行 JSON 解析失败:', e, line);
+                            }
+                        }
+                        boundary = buffer.indexOf('\n');
+                    }
+                }
+                
+                function processLine(data) {
+                    if (data.status === 'processing') {
+                        sumStatus.innerText = data.message;
+                    } else if (data.status === 'streaming' && data.delta) {
+                        // 流式增量渲染
+                        fullText += data.delta;
+                        currentChunkText += data.delta;
+                        
+                        // 分块处理：已完成的段 + 当前正在流的段
+                        if (chunkResults.length > 0) {
+                            // 有已完成的段，分段渲染
+                            let html = '';
+                            let globalCounter = { value: 0 };
+                            chunkResults.forEach(r => {
+                                html += `<div class="translate-chunk">${renderWithThinking(r, false, globalCounter)}</div>`;
+                            });
+                            html += `<div class="translate-chunk active">${renderWithThinking(currentChunkText, true, globalCounter)}</div>`;
+                            sumResult.innerHTML = html;
+                        } else {
+                            // 第一段，直接渲染
+                            sumResult.innerHTML = renderWithThinking(fullText, true);
+                        }
+                        
+                        // 自动滚动到底部
+                        sumResult.scrollTop = sumResult.scrollHeight;
+                    } else if (data.status === 'chunk_complete') {
+                        // 一段处理完成，存入已完成列表
+                        chunkResults.push(data.chunk_result || currentChunkText);
+                        currentChunkText = '';
+                    } else if (data.status === 'done') {
+                        sumProgCont.classList.add('hidden');
+                        // 最终渲染：分段渲染每段翻译
+                        if (chunkResults.length > 0) {
+                            // 有分块：每段独立渲染
+                            // 如果有残余 of currentChunkText，加入最后一段
+                            if (currentChunkText.trim()) {
+                                chunkResults.push(currentChunkText);
+                            }
+                            let html = '';
+                            let globalCounter = { value: 0 };
+                            chunkResults.forEach((r, idx) => {
+                                html += `<div class="translate-chunk"><div class="translate-chunk-label">第 ${idx+1}/${chunkResults.length} 段</div>${renderWithThinking(r, false, globalCounter)}</div>`;
+                            });
+                            sumResult.innerHTML = html;
+                        } else {
+                            // 无分块：直接渲染
+                            sumResult.innerHTML = renderWithThinking(data.result, false);
+                        }
+                        // 添加复制按钮（只复制正文，不含思考块）
+                        const sumCopyBtn = document.createElement('button');
+                        sumCopyBtn.className = 'btn-icon btn-copy-result';
+                        sumCopyBtn.innerHTML = '📋 复制';
+                        sumCopyBtn.onclick = async () => {
+                            try {
+                                const answerEls = sumResult.querySelectorAll('.answer-content');
+                                const copyText = Array.from(answerEls)
+                                    .map(el => el.innerText.trim())
+                                    .filter(t => t)
+                                    .join('\n\n');
+                                await navigator.clipboard.writeText(copyText);
+                                sumCopyBtn.innerHTML = '✅ 已复制';
+                                sumCopyBtn.classList.add('copied');
+                                setTimeout(() => {
+                                    sumCopyBtn.innerHTML = '📋 复制';
+                                    sumCopyBtn.classList.remove('copied');
+                                }, 2000);
+                            } catch (e) {
+                                console.error('复制失败:', e);
+                            }
+                        };
+                        sumResult.parentNode.appendChild(sumCopyBtn);
+                        // 触发 Mermaid 图表渲染
+                        setTimeout(() => {
+                            document.querySelectorAll('#sum-result .mermaid-container').forEach(el => {
+                                try {
+                                    const code = decodeURIComponent(el.dataset.mermaidCode);
+                                    mermaid.render(`mermaid-svg-${Date.now()}`, code).then(svg => {
+                                        el.innerHTML = svg;
+                                    });
+                                } catch (e) { el.innerHTML = '<pre>' + code + '</pre>'; }
+                            });
+                        }, 100);
+                        // 显示「新建任务」按钮
+                        btnNewTask.classList.remove('hidden');
+                    } else if (data.status === 'error') {
+                        sumProgCont.classList.add('hidden');
+                        sumResult.innerText = "❌ " + data.message;
+                        btnNewTask.classList.remove('hidden');
                     }
                 }
             } catch (error) {
@@ -914,34 +937,55 @@ document.addEventListener('DOMContentLoaded', () => {
     async function processStream(response) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder('utf-8');
+        let buffer = '';
         while (true) {
             const { value, done } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value);
-            const lines = chunk.split('\n').filter(line => line.trim());
-            for (let line of lines) {
-                try {
-                    const data = JSON.parse(line);
-                    if (data.status === 'processing') {
-                        transStatus.innerText = data.message;
-                        transBar.style.width = `${data.progress}%`;
-                    } else if (data.status === 'done') {
-                        transStatus.innerText = data.message;
-                        transBar.style.width = "100%";
-                        downloadCont.classList.remove('hidden');
-                        document.getElementById('srt-path-display').innerText = data.srt_path;
-                        btnDownload.href = `/api/download_srt?path=${encodeURIComponent(data.srt_path)}`;
-                        const btnOpenFolder = document.getElementById('btn-open-folder');
-                        if (btnOpenFolder) {
-                            btnOpenFolder.onclick = async () => {
-                                await fetch('/api/open_recordings', { method: 'POST' });
-                            };
-                        }
-                    } else if (data.status === 'error') {
-                        alert(data.message);
-                        transStatus.innerText = data.message;
+            if (done) {
+                if (buffer.trim()) {
+                    try {
+                        const data = JSON.parse(buffer.trim());
+                        processTranscribeLine(data);
+                    } catch (e) { }
+                }
+                break;
+            }
+            
+            buffer += decoder.decode(value, { stream: true });
+            let boundary = buffer.indexOf('\n');
+            while (boundary !== -1) {
+                const line = buffer.substring(0, boundary).trim();
+                buffer = buffer.substring(boundary + 1);
+                if (line) {
+                    try {
+                        const data = JSON.parse(line);
+                        processTranscribeLine(data);
+                    } catch (e) {
+                        console.error('ASR 行 JSON 解析失败:', e, line);
                     }
-                } catch (e) { }
+                }
+                boundary = buffer.indexOf('\n');
+            }
+        }
+
+        function processTranscribeLine(data) {
+            if (data.status === 'processing') {
+                transStatus.innerText = data.message;
+                transBar.style.width = `${data.progress}%`;
+            } else if (data.status === 'done') {
+                transStatus.innerText = data.message;
+                transBar.style.width = "100%";
+                downloadCont.classList.remove('hidden');
+                document.getElementById('srt-path-display').innerText = data.srt_path;
+                btnDownload.href = `/api/download_srt?path=${encodeURIComponent(data.srt_path)}`;
+                const btnOpenFolder = document.getElementById('btn-open-folder');
+                if (btnOpenFolder) {
+                    btnOpenFolder.onclick = async () => {
+                        await fetch('/api/open_recordings', { method: 'POST' });
+                    };
+                }
+            } else if (data.status === 'error') {
+                alert(data.message);
+                transStatus.innerText = data.message;
             }
         }
     }
@@ -1261,36 +1305,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const decoder = new TextDecoder();
             let fullResponse = '';
 
+            let buffer = '';
             while (true) {
                 const { value, done } = await reader.read();
-                if (done) break;
+                if (done) {
+                    if (buffer.trim()) {
+                        processChatLine(buffer.trim());
+                    }
+                    break;
+                }
 
-                const chunk = decoder.decode(value, { stream: true });
-                const lines = chunk.split('\n');
+                buffer += decoder.decode(value, { stream: true });
+                let boundary = buffer.indexOf('\n');
+                while (boundary !== -1) {
+                    const line = buffer.substring(0, boundary).trim();
+                    buffer = buffer.substring(boundary + 1);
+                    if (line) {
+                        processChatLine(line);
+                    }
+                    boundary = buffer.indexOf('\n');
+                }
+            }
 
-                for (const line of lines) {
-                    if (line.startsWith('data: ')) {
-                        const data = line.slice(6);
-                        if (data === '[DONE]') {
-                            break;
-                        }
-                        try {
-                            const json = JSON.parse(data);
-                            if (json.token) {
-                                fullResponse += json.token;
-                                // 流式更新:渲染 Markdown,生成时保持思考过程展开
-                                loadingMsg.innerHTML = renderWithThinking(fullResponse, true);
-                                chatHistory.scrollTop = chatHistory.scrollHeight;
+            function processChatLine(line) {
+                if (line.startsWith('data: ')) {
+                    const data = line.slice(6);
+                    if (data === '[DONE]') {
+                        return;
+                    }
+                    try {
+                        const json = JSON.parse(data);
+                        if (json.token) {
+                            fullResponse += json.token;
+                            // 流式更新:渲染 Markdown,生成时保持思考过程展开
+                            loadingMsg.innerHTML = renderWithThinking(fullResponse, true);
+                            chatHistory.scrollTop = chatHistory.scrollHeight;
 
-                                // 流式语音:检测到完整句子立即送 TTS
-                                if (useStreamingTTS) {
-                                    const newSentences = extractNewSentences(fullResponse);
-                                    newSentences.forEach(s => streamingAudioQueue.enqueue(s));
-                                }
+                            // 流式语音:检测到完整句子立即送 TTS
+                            if (useStreamingTTS) {
+                                const newSentences = extractNewSentences(fullResponse);
+                                newSentences.forEach(s => streamingAudioQueue.enqueue(s));
                             }
-                        } catch (e) {
-                            // 忽略解析错误
                         }
+                    } catch (e) {
+                        // 忽略解析错误
                     }
                 }
             }
