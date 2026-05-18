@@ -14,7 +14,6 @@
 
 import threading
 import gc
-import torch
 
 class ModelManager:
     """单例模式：管理所有 AI 模型的生命周期"""
@@ -124,6 +123,7 @@ class ModelManager:
                 print(f"[ModelManager] Transcriber 清理失败: {e}")
         
         # 4. 强制清理 GPU 缓存（多次尝试）
+        import torch
         gc.collect()
         try:
             torch.cuda.synchronize()

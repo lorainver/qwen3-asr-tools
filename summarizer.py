@@ -1,12 +1,7 @@
 import os
-import torch
 import logging
 import gc
 import json
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TextIteratorStreamer, AutoConfig
-from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
-from qwen_vl_utils import process_vision_info
-from threading import Thread
 import requests
 from model_manager import model_manager
 from config_loader import config
@@ -133,6 +128,10 @@ class LongTextSummarizer:
 
     def _load_model(self):
         if self.model is None:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, AutoConfig
+            from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+            
             logger.info(f"Loading Summarizer Model: {self.current_model_id}...")
             model_manager.set_processing(True)
             
@@ -184,6 +183,7 @@ class LongTextSummarizer:
 
     def _unload_model(self):
         if self.model is not None:
+            import torch
             logger.info("Unloading Summarizer Model...")
             del self.model
             if self.tokenizer: del self.tokenizer
@@ -199,6 +199,8 @@ class LongTextSummarizer:
             return self._chat_remote(messages, max_new_tokens)
             
         self._load_model()
+        import torch
+        from qwen_vl_utils import process_vision_info
         try:
             if self.current_model_id == 'qwen-vl':
                 text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
@@ -252,6 +254,9 @@ class LongTextSummarizer:
             return
 
         self._load_model()
+        import torch
+        from transformers import TextIteratorStreamer
+        from threading import Thread
         try:
             if self.current_model_id == 'qwen-vl':
                 text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
