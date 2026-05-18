@@ -12,6 +12,8 @@ import numpy as np
 import gc
 import torch
 import logging
+import tempfile
+import shutil
 from model_manager import model_manager
 from config_loader import config
 
@@ -81,6 +83,7 @@ def run_transcription(media_path, srt_path, yield_progress=None):
     max_tokens = config.get('transcription.max_new_tokens', 512)
     
     model = None
+    tmp_dir = tempfile.mkdtemp(prefix="qwen3_asr_")
     
     # 设置处理状态
     model_manager.set_processing(True)
@@ -152,7 +155,7 @@ def run_transcription(media_path, srt_path, yield_progress=None):
             for i in batch_indices:
                 cs = i * chunk_size
                 cd = min(chunk_size, total_sec - cs)
-                chunk_path = f"D:\\qwen3-asr\\chunk_{i}.wav"
+                chunk_path = os.path.join(tmp_dir, f"chunk_{i}.wav")
                 start_idx = int(cs * target_sr)
                 end_idx = int((cs + cd) * target_sr)
                 chunk = full_audio[start_idx:end_idx]
@@ -196,7 +199,13 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         if yield_progress:
             yield json.dumps({"status": "error", "message": f"转录出错: {e}"}) + "\n"
     finally:
-        # 6. 清理模型和显存（无论成功/失败/取消都会执行）
+        # 6. 清理临时目录、模型和显存（无论成功/失败/取消都会执行）
+        try:
+            if os.path.isdir(tmp_dir):
+                shutil.rmtree(tmp_dir, ignore_errors=True)
+                logger.info(f"[Transcriber] 临时目录已清理: {tmp_dir}")
+        except Exception:
+            pass
         if model is not None:
             del model
             model_manager.unregister_transcriber()
