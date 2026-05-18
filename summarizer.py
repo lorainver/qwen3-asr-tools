@@ -195,12 +195,15 @@ class LongTextSummarizer:
             model_manager.set_processing(False)
 
     def chat(self, messages, max_new_tokens=2048):
+        if not max_new_tokens or max_new_tokens <= 0:
+            max_new_tokens = None
         if self.is_remote:
             return self._chat_remote(messages, max_new_tokens)
             
         self._load_model()
         import torch
         from qwen_vl_utils import process_vision_info
+        local_max_tokens = max_new_tokens or 8192
         try:
             if self.current_model_id == 'qwen-vl':
                 text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
@@ -211,7 +214,7 @@ class LongTextSummarizer:
                 inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
             
             with torch.no_grad():
-                output_ids = self.model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=True, temperature=0.7)
+                output_ids = self.model.generate(**inputs, max_new_tokens=local_max_tokens, do_sample=True, temperature=0.7)
             
             if self.current_model_id == 'qwen-vl':
                 generated_ids = [oid[len(iids):] for iids, oid in zip(inputs.input_ids, output_ids)]
@@ -236,9 +239,10 @@ class LongTextSummarizer:
                 "model": remote_model,
                 "messages": messages,
                 "stream": False,
-                "temperature": 0.7,
-                "max_tokens": max_new_tokens
+                "temperature": 0.7
             }
+            if max_new_tokens is not None and max_new_tokens > 0:
+                payload["max_tokens"] = max_new_tokens
             response = requests.post(self.api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
             response.raise_for_status()
             data = response.json()
@@ -249,6 +253,8 @@ class LongTextSummarizer:
             return error_msg
 
     def chat_stream(self, messages, enable_think=True, max_new_tokens=2048):
+        if not max_new_tokens or max_new_tokens <= 0:
+            max_new_tokens = None
         if self.is_remote:
             yield from self._chat_stream_remote(messages, enable_think=enable_think, max_new_tokens=max_new_tokens)
             return
@@ -257,6 +263,7 @@ class LongTextSummarizer:
         import torch
         from transformers import TextIteratorStreamer
         from threading import Thread
+        local_max_tokens = max_new_tokens or 8192
         try:
             if self.current_model_id == 'qwen-vl':
                 text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
@@ -267,7 +274,7 @@ class LongTextSummarizer:
                 inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
 
             streamer = TextIteratorStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
-            generation_kwargs = dict(**inputs, max_new_tokens=max_new_tokens, do_sample=True, temperature=0.7, streamer=streamer)
+            generation_kwargs = dict(**inputs, max_new_tokens=local_max_tokens, do_sample=True, temperature=0.7, streamer=streamer)
             thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
             thread.start()
             
@@ -295,9 +302,10 @@ class LongTextSummarizer:
                 "messages": messages,
                 "stream": True,
                 "temperature": 0.7,
-                "think": enable_think,
-                "max_tokens": max_new_tokens
+                "think": enable_think
             }
+            if max_new_tokens is not None and max_new_tokens > 0:
+                payload["max_tokens"] = max_new_tokens
             response = requests.post(self.api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
             response.raise_for_status()
             
