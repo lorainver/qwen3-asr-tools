@@ -1,6 +1,6 @@
-# Qwen3-Omni 多维智能协同工作站 (Multimodal AI Workspace)
+# 多维智能协同工作站 (Multimodal AI Workspace)
 
-`Qwen3-Omni` 是一款基于 **Qwen 系列大模型** 构建的本地化多维智能协同工作站。它打破了传统音视频转录软件的单一范畴，集成了**前沿推理对话（Reasoning Chat）**、**智库级文档深度提炼（RAG Summarization）**、**GPU 级极速视频转录（ASR）**、**多引擎智能语音朗读（TTS）** 以及 **Ollama / GPU 实时硬件监控**。
+本系统是一款本地化部署的**多维智能协同工作站**。它打破了传统音视频转录软件的单一范畴，集成了**前沿推理对话（Reasoning Chat）**、**智库级文档深度提炼（RAG Summarization）**、**GPU 级极速视频转录（ASR）**、**多引擎智能语音朗读（TTS）** 以及 **Ollama / GPU 实时硬件监控**。
 
 ---
 
