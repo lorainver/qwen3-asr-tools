@@ -122,11 +122,13 @@ def count_message_tokens(messages: list) -> int:
     return total
 
 
-def trim_messages(messages: list, max_tokens: int = 24576) -> tuple:
+def trim_messages(messages: list, max_tokens: int = None) -> tuple:
     """从顶部截断旧对话，始终保留 system 消息和最近对话。
     
     返回 (trimmed_messages, original_tokens, trimmed_tokens, trimmed_count)
     """
+    if max_tokens is None:
+        max_tokens = config.get('chat.context_max_tokens', 24576)
     original_tokens = count_message_tokens(messages)
     
     if original_tokens <= max_tokens:
@@ -274,7 +276,8 @@ async def api_chat_stream(request: ChatRequest):
 
     async def generate():
         # 发送 token 用量信息
-        yield f"data: {json.dumps({'type': 'context', 'original_tokens': orig_tokens, 'trimmed_tokens': trimmed_tokens, 'trimmed_count': trimmed_count}, ensure_ascii=False)}\n\n"
+        ctx_max = config.get('chat.context_max_tokens', 24576)
+        yield f"data: {json.dumps({'type': 'context', 'original_tokens': orig_tokens, 'trimmed_tokens': trimmed_tokens, 'trimmed_count': trimmed_count, 'max_tokens': ctx_max}, ensure_ascii=False)}\n\n"
         await asyncio.sleep(0.01)
         
         # 如果有搜索结果,先发送搜索状态

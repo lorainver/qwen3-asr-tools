@@ -1236,18 +1236,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ========== 上下文 Token 指示器 ==========
-    const CONTEXT_MAX_TOKENS = 24576; // 与后端 trim_messages 一致
+    let contextMaxTokens = 24576; // 默认值，从后端 context 事件中动态更新
 
-    function updateContextIndicator(currentTokens, originalTokens, trimmedCount) {
+    function updateContextIndicator(currentTokens, originalTokens, trimmedCount, maxTokens) {
         const textEl = document.getElementById('context-token-text');
         const barEl = document.getElementById('context-bar-fill');
         const indicator = document.getElementById('context-indicator');
         if (!textEl || !barEl) return;
 
+        // 后端可推送 max_tokens 配置
+        if (maxTokens) contextMaxTokens = maxTokens;
+
         const displayTokens = currentTokens || 0;
-        const pct = Math.min(100, (displayTokens / CONTEXT_MAX_TOKENS) * 100);
+        const pct = Math.min(100, (displayTokens / contextMaxTokens) * 100);
         const kLabel = (displayTokens / 1024).toFixed(1);
-        const maxLabel = (CONTEXT_MAX_TOKENS / 1024).toFixed(0);
+        const maxLabel = (contextMaxTokens / 1024).toFixed(0);
 
         textEl.textContent = `${kLabel}K / ${maxLabel}K`;
         barEl.style.width = pct + '%';
@@ -1372,7 +1375,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const json = JSON.parse(data);
                         // 处理上下文 token 信息
                         if (json.type === 'context') {
-                            updateContextIndicator(json.trimmed_tokens, json.original_tokens, json.trimmed_count);
+                            updateContextIndicator(json.trimmed_tokens, json.original_tokens, json.trimmed_count, json.max_tokens);
                             return;
                         }
                         if (json.token) {

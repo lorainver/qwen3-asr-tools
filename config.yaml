@@ -111,6 +111,7 @@ summarization:
 
 # ===== 对话参数 =====
 chat:
+  context_max_tokens: 24576   # 上下文截断上限(tokens)，超出自动从顶部截断旧对话。建议模型上下文长度-8K(留给回复)
   max_new_tokens: 4096
   temperature: 0.7
   top_p: 0.9
