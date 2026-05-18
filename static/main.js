@@ -1070,6 +1070,8 @@ document.addEventListener('DOMContentLoaded', () => {
             chatHistory.innerHTML = "";
             appendMessage('assistant', messages[0].content);
             streamingAudioQueue.clear();
+            // 重置上下文指示器
+            updateContextIndicator(0, 0, 0);
         });
     }
 
@@ -1233,6 +1235,39 @@ document.addEventListener('DOMContentLoaded', () => {
         return sentences;
     }
 
+    // ========== 上下文 Token 指示器 ==========
+    const CONTEXT_MAX_TOKENS = 24576; // 与后端 trim_messages 一致
+
+    function updateContextIndicator(currentTokens, originalTokens, trimmedCount) {
+        const textEl = document.getElementById('context-token-text');
+        const barEl = document.getElementById('context-bar-fill');
+        const indicator = document.getElementById('context-indicator');
+        if (!textEl || !barEl) return;
+
+        const displayTokens = currentTokens || 0;
+        const pct = Math.min(100, (displayTokens / CONTEXT_MAX_TOKENS) * 100);
+        const kLabel = (displayTokens / 1024).toFixed(1);
+        const maxLabel = (CONTEXT_MAX_TOKENS / 1024).toFixed(0);
+
+        textEl.textContent = `${kLabel}K / ${maxLabel}K`;
+        barEl.style.width = pct + '%';
+
+        // 颜色分级
+        barEl.className = 'context-bar-fill';
+        if (pct > 90) {
+            barEl.classList.add('danger');
+        } else if (pct > 70) {
+            barEl.classList.add('warning');
+        }
+
+        // 截断提示
+        if (trimmedCount > 0) {
+            indicator.title = `上下文已截断 ${trimmedCount} 条旧消息 (${originalTokens}→${displayTokens} tokens)`;
+        } else {
+            indicator.title = `对话上下文 Token 用量`;
+        }
+    }
+
     async function sendChatMessage() {
         // 从当前活动的输入框获取文本
         const activeInput = isInputExpanded ? chatInputExpanded : chatInput;
@@ -1335,6 +1370,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     try {
                         const json = JSON.parse(data);
+                        // 处理上下文 token 信息
+                        if (json.type === 'context') {
+                            updateContextIndicator(json.trimmed_tokens, json.original_tokens, json.trimmed_count);
+                            return;
+                        }
                         if (json.token) {
                             fullResponse += json.token;
                             // 流式更新:渲染 Markdown,生成时保持思考过程展开

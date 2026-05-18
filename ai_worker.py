@@ -93,6 +93,85 @@ class SummarizeRequest(BaseModel):
 class SwitchModelRequest(BaseModel):
     model_id: str
 
+# ========== 上下文截断 ==========
+
+def estimate_tokens(text: str) -> int:
+    """粗估 token 数：中文约 1 字 ≈ 1.5 token，英文约 4 字符 ≈ 1 token"""
+    if not text:
+        return 0
+    chinese_chars = sum(1 for c in text if '\u4e00' <= c <= '\u9fff')
+    other_chars = len(text) - chinese_chars
+    return int(chinese_chars * 1.5 + other_chars / 4)
+
+
+def count_message_tokens(messages: list) -> int:
+    """估算消息列表的总 token 数"""
+    total = 0
+    for msg in messages:
+        content = msg.get('content', '')
+        if isinstance(content, str):
+            total += estimate_tokens(content)
+        elif isinstance(content, list):
+            # 多模态消息
+            for part in content:
+                if isinstance(part, dict) and part.get('type') == 'text':
+                    total += estimate_tokens(part.get('text', ''))
+                elif isinstance(part, dict) and part.get('type') == 'image':
+                    total += 768  # 图片粗估
+        total += 4  # role 开销
+    return total
+
+
+def trim_messages(messages: list, max_tokens: int = 24576) -> tuple:
+    """从顶部截断旧对话，始终保留 system 消息和最近对话。
+    
+    返回 (trimmed_messages, original_tokens, trimmed_tokens, trimmed_count)
+    """
+    original_tokens = count_message_tokens(messages)
+    
+    if original_tokens <= max_tokens:
+        return messages, original_tokens, original_tokens, 0
+    
+    # 分离 system 消息和对话消息
+    system_msgs = [m for m in messages if m.get('role') == 'system']
+    chat_msgs = [m for m in messages if m.get('role') != 'system']
+    
+    # 从尾部开始保留，直到 token 超限
+    kept = []
+    token_count = count_message_tokens(system_msgs)  # system 始终算在内
+    trimmed_count = 0
+    
+    for msg in reversed(chat_msgs):
+        msg_tokens = 4  # role 开销
+        content = msg.get('content', '')
+        if isinstance(content, str):
+            msg_tokens += estimate_tokens(content)
+        elif isinstance(content, list):
+            for part in content:
+                if isinstance(part, dict) and part.get('type') == 'text':
+                    msg_tokens += estimate_tokens(part.get('text', ''))
+                elif isinstance(part, dict) and part.get('type') == 'image':
+                    msg_tokens += 768
+        
+        if token_count + msg_tokens > max_tokens:
+            trimmed_count += 1
+            continue
+        token_count += msg_tokens
+        kept.insert(0, msg)
+    
+    # 正常情况下最后一条应为 user 消息(用户刚发的)
+    # 如果不是(异常情况), 不截断, 保留全部对话
+    if kept and kept[-1].get('role') != 'user':
+        logger.warning("⚠️ 上下文截断: 最后一条非 user 消息, 跳过截断")
+        return messages, original_tokens, original_tokens, 0
+    
+    result = system_msgs + kept
+    trimmed_tokens = count_message_tokens(result)
+    
+    logger.info(f"✂️ 上下文截断: {original_tokens}→{trimmed_tokens} tokens, 截断 {trimmed_count} 条旧消息")
+    return result, original_tokens, trimmed_tokens, trimmed_count
+
+
 # ========== API 路由 ==========
 
 @app.get("/health")
@@ -121,7 +200,10 @@ async def api_chat_stream(request: ChatRequest):
     total_chars = sum(len(str(m.get("content", ""))) for m in request.messages)
     logger.info(f"📊 [Request] 输入消息共 {len(request.messages)} 条, 总计 {total_chars} 字符")
 
-    # 1. 处理联网搜索
+    # 1. 上下文截断
+    messages, orig_tokens, trimmed_tokens, trimmed_count = trim_messages(request.messages)
+    
+    # 2. 处理联网搜索
     search_context = ""
     messages = request.messages.copy()
 
@@ -191,6 +273,10 @@ async def api_chat_stream(request: ChatRequest):
                 logger.info(f"🚀 联网搜索上下文已注入为 system 消息 (长度: {len(search_system_msg['content'])})")
 
     async def generate():
+        # 发送 token 用量信息
+        yield f"data: {json.dumps({'type': 'context', 'original_tokens': orig_tokens, 'trimmed_tokens': trimmed_tokens, 'trimmed_count': trimmed_count}, ensure_ascii=False)}\n\n"
+        await asyncio.sleep(0.01)
+        
         # 如果有搜索结果,先发送搜索状态
         if search_context:
             yield f"data: {json.dumps({'type': 'search', 'status': 'done'}, ensure_ascii=False)}\n\n"
