@@ -1095,4 +1095,12 @@ if __name__ == "__main__":
     logger.info(f"AI Worker 将在首次使用时启动（端口 {AI_WORKER_PORT}）")
     logger.info("点击「释放显存」将终止 AI Worker，显存完全释放")
     
-    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_graceful_shutdown=3)
+    # 禁用 uvicorn 默认的 ANSI 彩色日志，避免非 TTY 环境下出现 [32m 乱码
+    import uvicorn as _uv
+    log_cfg = _uv.config.LOGGING_CONFIG.copy()
+    log_cfg["formatters"]["default"]["()"] = "uvicorn.logging.DefaultFormatter"
+    log_cfg["formatters"]["default"]["use_colors"] = False
+    log_cfg["formatters"]["access"]["()"] = "uvicorn.logging.AccessFormatter"
+    log_cfg["formatters"]["access"]["use_colors"] = False
+
+    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_graceful_shutdown=3, log_config=log_cfg)

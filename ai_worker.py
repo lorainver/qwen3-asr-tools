@@ -539,6 +539,11 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
         }
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    import uvicorn as _uv
+    log_cfg = _uv.config.LOGGING_CONFIG.copy()
+    log_cfg["formatters"]["default"]["()"] = "uvicorn.logging.DefaultFormatter"
+    log_cfg["formatters"]["default"]["use_colors"] = False
+    log_cfg["formatters"]["access"]["()"] = "uvicorn.logging.AccessFormatter"
+    log_cfg["formatters"]["access"]["use_colors"] = False
+    _uv.run(app, host="0.0.0.0", port=8001, log_config=log_cfg)
 
