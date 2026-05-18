@@ -30,7 +30,6 @@ import time
 import json
 import psutil
 import atexit
-import sys
 import asyncio
 import httpx
 
