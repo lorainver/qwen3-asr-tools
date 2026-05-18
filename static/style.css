@@ -601,6 +601,8 @@ textarea:focus {
     line-height: 1.65;
     flex: 1;
     overflow-y: auto;
+    overflow-x: auto; /* 【新增】允许左右水平滚动。当 AI 生成超宽内容（如宽表格、长代码块、KaTeX 数学公式等）时，可避免页面布局被整体撑开撑变形 */
+    max-width: 100%;  /* 【新增】确保摘要卡片结果区域不会超出其父级容器的实际宽度边界 */
     max-height: 500px;
     position: relative;
 }
