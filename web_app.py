@@ -59,6 +59,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# 过滤 httpx 模块的 INFO 级别日志以避免轮询产生的请求刷屏
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 # 过滤 uvicorn.access 日志中轮询请求的噪音
 class SkipPollingFilter(logging.Filter):
     def filter(self, record):
