@@ -718,6 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let currentChunkText = '';  // 当前分块的流式文本
                 // 切换为 Markdown 渲染模式
                 sumResult.classList.add('markdown-mode');
+                sumResult.classList.add('markdown-content');
                 sumResult.innerText = '';
 
                 while (true) {
