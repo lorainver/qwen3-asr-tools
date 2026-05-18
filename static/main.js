@@ -235,6 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const workerUptime = document.getElementById('worker-uptime');
     const btnShutdown = document.getElementById('btn-shutdown');
 
+    // Ollama Status
+    const ollamaDot = document.getElementById('ollama-status-dot');
+    const ollamaText = document.getElementById('ollama-status-text');
+    const ollamaDetails = document.getElementById('ollama-details');
+    const ollamaModelName = document.getElementById('ollama-model-name');
+    const ollamaVramRatio = document.getElementById('ollama-vram-ratio');
+    const ollamaRamInfo = document.getElementById('ollama-ram-info');
+    const ollamaVramBar = document.getElementById('ollama-vram-bar');
+
     // 模型选择
     const selectModel = document.getElementById('select-model');
     const selectModelCategory = document.getElementById('select-model-category');
@@ -508,6 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setInterval(async () => {
+        // 1. 轮询 AI Worker 状态
         try {
             const resp = await fetch('/api/worker_status');
             const data = await resp.json();
@@ -526,6 +536,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     workerText.textContent = '○ 未启动';
                     workerText.style.color = '#aaa';
                     if (workerUptime) workerUptime.textContent = '';
+                }
+            }
+        } catch (e) {
+            // 忽略轮询错误
+        }
+
+        // 2. 轮询 Ollama 运行状态与模型分配
+        try {
+            const resp = await fetch('/api/ollama_status');
+            const data = await resp.json();
+            if (ollamaDot && ollamaText) {
+                if (data.running) {
+                    ollamaDot.style.background = '#0ea5e9'; // 在线天蓝色
+                    ollamaText.textContent = data.has_model ? '模型运行中' : '服务在线 (空闲)';
+                    ollamaText.style.color = '#0ea5e9';
+
+                    if (data.has_model && data.models && data.models.length > 0) {
+                        if (ollamaDetails) ollamaDetails.style.display = 'block';
+                        const firstModel = data.models[0];
+                        if (ollamaModelName) ollamaModelName.textContent = firstModel.name;
+                        if (ollamaVramRatio) ollamaVramRatio.textContent = `${firstModel.vram_percent}%`;
+                        if (ollamaRamInfo) ollamaRamInfo.textContent = `CPU: ${firstModel.ram_gb.toFixed(1)}G / GPU: ${firstModel.vram_gb.toFixed(1)}G`;
+                        if (ollamaVramBar) ollamaVramBar.style.width = `${firstModel.vram_percent}%`;
+                    } else {
+                        if (ollamaDetails) ollamaDetails.style.display = 'none';
+                    }
+                } else {
+                    ollamaDot.style.background = '#555'; // 未启动灰色
+                    ollamaText.textContent = '○ 未启动';
+                    ollamaText.style.color = '#aaa';
+                    if (ollamaDetails) ollamaDetails.style.display = 'none';
                 }
             }
         } catch (e) {

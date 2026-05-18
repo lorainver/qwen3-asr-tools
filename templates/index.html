@@ -66,6 +66,32 @@
                 <!-- 释放显存按钮移到这里 -->
                 <button id="btn-shutdown" class="btn-stop">🛑 释放显存</button>
             </div>
+
+            <!-- Ollama 运行状态指示器 -->
+            <div class="ollama-status"
+                style="margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid rgba(56, 189, 248, 0.08);">
+                <div
+                    style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    Ollama 运行状态</div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div id="ollama-status-dot"
+                        style="width: 8px; height: 8px; border-radius: 50%; background: #475569; transition: background 0.3s ease;"></div>
+                    <span id="ollama-status-text" style="font-size: 0.85rem; color: var(--text-secondary); transition: color 0.3s ease;">未启动</span>
+                </div>
+                <div id="ollama-details" style="display: none; background: rgba(56, 189, 248, 0.03); border: 1px solid rgba(56, 189, 248, 0.08); border-radius: 6px; padding: 8px; margin-top: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        模型: <span id="ollama-model-name" style="color: #38bdf8; font-weight: 500;">-</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
+                        <span>显存占比: <span id="ollama-vram-ratio" style="color: #38bdf8; font-weight: 500;">0%</span></span>
+                        <span id="ollama-ram-info" style="font-size: 0.7rem; color: var(--text-muted); padding-left: 4px;">RAM: - / VRAM: -</span>
+                    </div>
+                    <!-- 比例条 -->
+                    <div class="progress-bar" style="height: 4px; margin-top: 6px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden;">
+                        <div id="ollama-vram-bar" class="progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #3b82f6, #38bdf8); transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+            </div>
         </aside>
 
         <!-- 主内容区 -->

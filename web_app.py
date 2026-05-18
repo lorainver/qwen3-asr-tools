@@ -63,7 +63,7 @@ logger = logging.getLogger(__name__)
 class SkipPollingFilter(logging.Filter):
     def filter(self, record):
         msg = record.getMessage()
-        for skip_path in ['/api/worker_status', '/api/gpu_stats', '/health']:
+        for skip_path in ['/api/worker_status', '/api/gpu_stats', '/api/ollama_status', '/health']:
             if skip_path in msg:
                 return False
         return True
@@ -811,6 +811,67 @@ async def get_audio_devices():
 async def worker_status():
     """查询 AI Worker 状态"""
     return ai_worker.get_status()
+
+@app.get("/api/ollama_status")
+async def get_ollama_status():
+    """获取 Ollama 的当前运行状态及模型资源分配关系"""
+    # 默认从配置或本地获取 Ollama 的 API 地址
+    ollama_url = config.get("models.llm_models.qwen-ollama-7b.api_url", "http://127.0.0.1:11434/v1/chat/completions")
+    from urllib.parse import urlparse
+    parsed = urlparse(ollama_url)
+    base_url = f"{parsed.scheme}://{parsed.netloc}" if parsed.netloc else "http://127.0.0.1:11434"
+    
+    ps_url = f"{base_url}/api/ps"
+    
+    async with httpx.AsyncClient(timeout=2.0) as client:
+        try:
+            resp = await client.get(ps_url)
+            if resp.status_code == 200:
+                data = resp.json()
+                models = data.get("models", [])
+                if not models:
+                    return {
+                        "running": True,
+                        "has_model": False,
+                        "message": "服务在线 (无运行模型)"
+                    }
+                else:
+                    # 获取当前所有加载的模型资源信息
+                    models_info = []
+                    for model in models:
+                        name = model.get("name", "Unknown")
+                        size = model.get("size", 0)
+                        size_vram = model.get("size_vram", 0)
+                        
+                        vram_gb = round(size_vram / (1024**3), 2)
+                        ram_gb = round((size - size_vram) / (1024**3), 2)
+                        total_gb = round(size / (1024**3), 2)
+                        
+                        vram_percent = round((size_vram / size) * 100, 1) if size > 0 else 0.0
+                        
+                        models_info.append({
+                            "name": name,
+                            "vram_gb": vram_gb,
+                            "ram_gb": ram_gb,
+                            "total_gb": total_gb,
+                            "vram_percent": vram_percent
+                        })
+                    
+                    return {
+                        "running": True,
+                        "has_model": True,
+                        "models": models_info,
+                        "message": f"正在运行 {len(models_info)} 个模型"
+                    }
+        except Exception as e:
+            # 仅在 debug 日志记录，避免控制台刷屏
+            logger.debug(f"Ollama stats query failed: {e}")
+            
+    return {
+        "running": False,
+        "has_model": False,
+        "message": "未检测到服务"
+    }
 
 @app.get("/api/model_status")
 async def model_status():
