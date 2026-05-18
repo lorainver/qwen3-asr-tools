@@ -99,6 +99,44 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 # 状态标志：服务是否正在关闭
 is_shutting_down = False
+original_sigint_handler = None
+original_sigterm_handler = None
+
+def graceful_signal_handler(signum, frame):
+    global is_shutting_down
+    if not is_shutting_down:
+        is_shutting_down = True
+        logger.info("💥 捕获到终止信号 (SIGINT/SIGTERM)，正在主动释放所有后台长连接...")
+    
+    # 链式调用原来的信号处理器，让 uvicorn 正常收尾
+    handler = original_sigint_handler if signum == 2 else original_sigterm_handler  # 2 表示 signal.SIGINT
+    if handler and callable(handler):
+        handler(signum, frame)
+
+@app.on_event("startup")
+async def startup_event():
+    global original_sigint_handler, original_sigterm_handler
+    import signal
+    
+    try:
+        # 包装 SIGINT (Ctrl+C)
+        sigint_handler = signal.getsignal(signal.SIGINT)
+        if sigint_handler != graceful_signal_handler:
+            original_sigint_handler = sigint_handler
+            signal.signal(signal.SIGINT, graceful_signal_handler)
+            logger.info("已成功包装 Uvicorn 的 SIGINT 信号处理器，实现长连接秒级优雅退出")
+    except Exception as e:
+        logger.debug(f"包装 SIGINT 信号处理器失败: {e}")
+
+    try:
+        # 包装 SIGTERM (系统终止)
+        sigterm_handler = signal.getsignal(signal.SIGTERM)
+        if sigterm_handler != graceful_signal_handler:
+            original_sigterm_handler = sigterm_handler
+            signal.signal(signal.SIGTERM, graceful_signal_handler)
+            logger.info("已成功包装 Uvicorn 的 SIGTERM 信号处理器，实现长连接秒级优雅退出")
+    except Exception as e:
+        logger.debug(f"包装 SIGTERM 信号处理器失败: {e}")
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -1057,4 +1095,4 @@ if __name__ == "__main__":
     logger.info(f"AI Worker 将在首次使用时启动（端口 {AI_WORKER_PORT}）")
     logger.info("点击「释放显存」将终止 AI Worker，显存完全释放")
     
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_graceful_shutdown=3)
