@@ -53,7 +53,7 @@ if search_enabled:
 else:
     searcher = None
 
-# ========== Pydantic 模型 (简化版，避免 Pydantic 验证错误) ==========
+# ========== Pydantic 模型 (简化版,避免 Pydantic 验证错误) ==========
 
 class OpenAIModelInfo(BaseModel):
     id: str
@@ -67,7 +67,7 @@ class OpenAIModelList(BaseModel):
 
 class OpenAICompletionRequest(BaseModel):
     model: str
-    messages: List[Dict[str, Any]] # 使用字典列表，避开嵌套解析问题
+    messages: List[Dict[str, Any]] # 使用字典列表,避开嵌套解析问题
     stream: Optional[bool] = False
     temperature: Optional[float] = 0.7
     top_p: Optional[float] = 1.0
@@ -76,9 +76,9 @@ class OpenAICompletionRequest(BaseModel):
 class ChatRequest(BaseModel):
     messages: List[Dict[str, Any]]
     model_id: Optional[str] = None
-    enable_search: Optional[bool] = True  # 是否启用联网搜索（默认开启）
-    optimize_search: bool = True  # 是否开启搜索优化（默认开启）
-    enable_think: bool = True  # 是否启用深度思考（默认开启）
+    enable_search: Optional[bool] = True  # 是否启用联网搜索(默认开启)
+    optimize_search: bool = True  # 是否开启搜索优化(默认开启)
+    enable_think: bool = True  # 是否启用深度思考(默认开启)
     search_optimize_prompt: Optional[str] = None # 自定义优化提示词
 
 class SearchRequest(BaseModel):
@@ -88,7 +88,7 @@ class SearchRequest(BaseModel):
 class SummarizeRequest(BaseModel):
     text: str
     prompt_type: Optional[str] = "summarize"
-    target_lang: Optional[str] = None  # 目标语言，仅用于翻译模式
+    target_lang: Optional[str] = None  # 目标语言,仅用于翻译模式
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -105,7 +105,7 @@ async def health_check():
 #     """非流式对话接口"""
 #     if request.model_id and request.model_id != summarizer.current_model_id:
 #         summarizer.switch_model(request.model_id)
-#     
+#
 #     response = summarizer.chat(request.messages)
 #     return {"response": response, "model": summarizer.current_model_id}
 
@@ -113,18 +113,18 @@ async def health_check():
 async def api_chat_stream(request: ChatRequest):
     """流式对话接口 - 支持联网搜索及搜索优化"""
     logger.info(f"📩 收到请求: search={request.enable_search}, optimize={request.optimize_search}, think={request.enable_think}")
-    
+
     if request.model_id and request.model_id != summarizer.current_model_id:
         summarizer.switch_model(request.model_id)
-    
+
     # 记录输入长度
     total_chars = sum(len(str(m.get("content", ""))) for m in request.messages)
     logger.info(f"📊 [Request] 输入消息共 {len(request.messages)} 条, 总计 {total_chars} 字符")
-    
+
     # 1. 处理联网搜索
     search_context = ""
     messages = request.messages.copy()
-    
+
     if request.enable_search and searcher:
         # 获取最后一条用户消息
         last_user_msg = None
@@ -132,34 +132,34 @@ async def api_chat_stream(request: ChatRequest):
             if msg.get("role") == "user":
                 last_user_msg = msg
                 break
-        
+
         if last_user_msg:
             query_text = last_user_msg.get("content", "")
             search_query = query_text
-            
-            # --- 优化：Query 预处理 (关键词提取) ---
+
+            # --- 优化:Query 预处理 (关键词提取) ---
             # 只有当显式开启了优化且提问较长时才执行
             if request.optimize_search is True and len(query_text) > 10:
                 logger.info(f"🧠 正在为提问进行 AI 关键词优化: '{query_text[:30]}...'")
                 try:
                     # 使用更严格的 Prompt
-                    # default_optimizer_prompt = f"请将以下问题提炼为 3 个最关键的搜索关键词，用空格隔开。要求：严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
-                    default_optimizer_prompt = f"这是用户发来的请求, 先提取里面具体查询的内容, 然后这部分内容提炼为几个最关键的搜索关键词，用空格隔开。要求：严禁使用序号，严禁换行，直接输出关键词。\n\n问题：{query_text}"
+                    # default_optimizer_prompt = f"请将以下问题提炼为 3 个最关键的搜索关键词,用空格隔开。要求:严禁使用序号,严禁换行,直接输出关键词。\n\n问题:{query_text}"
+                    default_optimizer_prompt = f"这是用户发来的请求, 先提取里面具体查询的内容, 然后这部分内容提炼为几个最关键的搜索关键词,用空格隔开。要求:严禁使用序号,严禁换行,直接输出关键词。\n\n问题:{query_text}"
                     keyword_prompt = request.search_optimize_prompt.replace("{query}", query_text) if request.search_optimize_prompt else default_optimizer_prompt
-                    
+
                     logger.debug(f"📝 优化 Prompt: {keyword_prompt}")
                     # 使用当前活动的模型生成
                     keywords = summarizer.chat([{"role": "user", "content": keyword_prompt}]).strip()
-                    
+
                     # 强力清洗
                     keywords = keywords.replace("\n", " ").replace("\r", " ")
                     import re
                     keywords = re.sub(r'^\d+[\.、\s:-]+', '', keywords)
-                    for prefix in ["关键词：", "关键词:", "Keywords:", "搜索词：", "Search:"]:
+                    for prefix in ["关键词:", "关键词:", "Keywords:", "搜索词:", "Search:"]:
                         if keywords.startswith(prefix):
                             keywords = keywords[len(prefix):].strip()
                     keywords = keywords.replace('"', '').replace("'", "").strip()
-                    
+
                     if keywords and len(keywords) < 100:
                         logger.info(f"🔍 [Query 优化成功] 最终关键词: '{keywords}'")
                         search_query = keywords
@@ -172,32 +172,34 @@ async def api_chat_stream(request: ChatRequest):
             max_results = config.get('search.max_results', 8)
             search_results = searcher.search(search_query, max_results=max_results)
             search_context = searcher.format_for_llm(search_results)
-            
+
             if search_context:
                 logger.info(f"🌐 联网搜索已注入上下文 ({len(search_results)} 条结果)")
-                # 注入上下文
-                injected_content = f"""【实时联网搜索到的事实资料】
+                # 在最后一条用户消息之前插入 system 消息，不修改用户原始消息
+                # 这样多轮对话中用户原始提问不会丢失
+                search_system_msg = {
+                    "role": "system",
+                    "content": f"""【实时联网搜索到的事实资料】
 {search_context}
 
 【回答要求】
-1. 必须严格按照上述“事实资料”回答。
-2. 如果资料中没提到的信息，不要脑补。
+1. 必须严格按照上述"事实资料"回答。
+2. 如果资料中没提到的信息，不要脑补。"""
+                }
+                last_user_idx = len(messages) - 1 - messages[::-1].index(last_user_msg)
+                messages.insert(last_user_idx, search_system_msg)
+                logger.info(f"🚀 联网搜索上下文已注入为 system 消息 (长度: {len(search_system_msg['content'])})")
 
-
-用户提问：{query_text}"""
-                last_user_msg["content"] = injected_content
-                logger.info(f"🚀 联网搜索上下文已就近注入 (长度: {len(injected_content)})")
-    
     async def generate():
-        # 如果有搜索结果，先发送搜索状态
+        # 如果有搜索结果,先发送搜索状态
         if search_context:
             yield f"data: {json.dumps({'type': 'search', 'status': 'done'}, ensure_ascii=False)}\n\n"
             await asyncio.sleep(0.01)
-        
+
         try:
             for token in summarizer.chat_stream(messages, enable_think=request.enable_think):
                 yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
-                # 添加微小延迟，确保每个 token 分开发送（打字机效果）
+                # 添加微小延迟,确保每个 token 分开发送(打字机效果)
                 await asyncio.sleep(0.02)
             yield "data: [DONE]\n\n"
         finally:
@@ -205,9 +207,9 @@ async def api_chat_stream(request: ChatRequest):
             import torch
             torch.cuda.empty_cache()
             logger.debug("🧹 已触发显存碎片清理")
-    
+
     return StreamingResponse(
-        generate(), 
+        generate(),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -218,17 +220,17 @@ async def api_chat_stream(request: ChatRequest):
 # ========== 翻译辅助函数 ==========
 
 def chunk_text(text, max_chunk_size=3000):
-    """将长文本按段落拆分为块，每块不超过 max_chunk_size 字符
-    
-    拆分策略：
-    1. 优先按双换行（段落边界）拆分
-    2. 单段落过长时按句号/问号/感叹号（句子边界）拆分
+    """将长文本按段落拆分为块,每块不超过 max_chunk_size 字符
+
+    拆分策略:
+    1. 优先按双换行(段落边界)拆分
+    2. 单段落过长时按句号/问号/感叹号(句子边界)拆分
     3. 单句超长时按 max_chunk_size 硬切
-    
-    适用于所有提示词类型（翻译、总结、润色等），通用分块函数。
+
+    适用于所有提示词类型(翻译、总结、润色等),通用分块函数。
     """
     paragraphs = re.split(r'\n\s*\n', text)
-    
+
     chunks = []
     current = ""
     for para in paragraphs:
@@ -240,17 +242,17 @@ def chunk_text(text, max_chunk_size=3000):
             current = para
         else:
             current = (current + '\n\n' + para) if current else para
-    
+
     if current:
         chunks.append(current)
-    
-    # 处理超长段落：按句子边界拆分
+
+    # 处理超长段落:按句子边界拆分
     final_chunks = []
     for chunk in chunks:
         if len(chunk) <= max_chunk_size:
             final_chunks.append(chunk)
         else:
-            sentences = re.split(r'(?<=[。！？.!?])\s*', chunk)
+            sentences = re.split(r'(?<=[。!?.!?])\s*', chunk)
             sub_chunk = ""
             for sent in sentences:
                 if sub_chunk and len(sub_chunk) + len(sent) + 1 > max_chunk_size:
@@ -260,8 +262,8 @@ def chunk_text(text, max_chunk_size=3000):
                     sub_chunk = (sub_chunk + ' ' + sent) if sub_chunk else sent
             if sub_chunk:
                 final_chunks.append(sub_chunk)
-    
-    # 极端情况：单句超长，硬切
+
+    # 极端情况:单句超长,硬切
     result = []
     for chunk in final_chunks:
         if len(chunk) <= max_chunk_size:
@@ -269,7 +271,7 @@ def chunk_text(text, max_chunk_size=3000):
         else:
             for i in range(0, len(chunk), max_chunk_size):
                 result.append(chunk[i:i + max_chunk_size])
-    
+
     return result if result else [text]
 
 
@@ -286,14 +288,14 @@ def get_translate_prompt(target_lang='zh'):
     """根据目标语言动态生成翻译提示词"""
     target = LANG_MAP.get(target_lang, '中文')
     return (
-        f"你是一个专业的翻译专家。请将以下内容翻译成流畅的{target}，"
-        f"要求在保留原意的基础上，使其更符合{target}的表达习惯。"
-        f"如果是技术内容，请确保专业术语翻译准确。"
-        f"只需输出翻译后的内容，不要添加任何解释、注释或前后说明。"
+        f"你是一个专业的翻译专家。请将以下内容翻译成流畅的{target},"
+        f"要求在保留原意的基础上,使其更符合{target}的表达习惯。"
+        f"如果是技术内容,请确保专业术语翻译准确。"
+        f"只需输出翻译后的内容,不要添加任何解释、注释或前后说明。"
     )
 
 
-# 各提示词类型的默认参数配置（可在 config.yaml 的 prompts 中用 max_new_tokens 覆盖）
+# 各提示词类型的默认参数配置(可在 config.yaml 的 prompts 中用 max_new_tokens 覆盖)
 PROMPT_DEFAULTS = {
     'translate':     {'max_new_tokens': 4096},  # 翻译输出长度 ≈ 输入长度
     'summarize':     {'max_new_tokens': 2048},  # 总结输出比原文短
@@ -302,7 +304,7 @@ PROMPT_DEFAULTS = {
     'summarizeHtml': {'max_new_tokens': 4096},  # HTML 输出可能较长
 }
 
-# 动作名称映射（用于进度提示文案）
+# 动作名称映射(用于进度提示文案)
 ACTION_NAMES = {
     'translate':     '翻译',
     'summarize':     '总结',
@@ -315,54 +317,54 @@ ACTION_NAMES = {
 @app.post("/api/summarize")
 async def api_summarize(request: SummarizeRequest):
     """文本总结接口 - 所有提示词类型统一支持分块流式处理
-    
-    通用逻辑：
-    1. 长文本（>CHUNK_SIZE）自动按段落/句子拆分为多块
-    2. 每块独立流式生成，前端实时渲染
+
+    通用逻辑:
+    1. 长文本(>CHUNK_SIZE)自动按段落/句子拆分为多块
+    2. 每块独立流式生成,前端实时渲染
     3. 思考过程(<think>标签)在生成中展开、完成后折叠
     4. 不同提示词类型可配置 max_new_tokens
     """
     prompt_type = request.prompt_type or 'summarize'
     text = request.text
     logger.info(f"📝 收到总结请求: type={prompt_type}, 长度={len(text)}, target_lang={request.target_lang}")
-    
+
     # ========== 获取系统提示词 ==========
     if prompt_type == 'translate':
-        # 翻译模式：动态生成提示词（含目标语言）
+        # 翻译模式:动态生成提示词(含目标语言)
         target_lang = request.target_lang or 'zh'
         system_prompt = get_translate_prompt(target_lang)
         prompt_name = f"翻译 → {LANG_MAP.get(target_lang, '中文')}"
     else:
-        # 其他模式：从配置读取
+        # 其他模式:从配置读取
         prompts = config.get('prompts', {})
         prompt_info = prompts.get(prompt_type, prompts.get('summarize', {}))
         system_prompt = prompt_info.get('content', "你是一个专业的AI助手。")
         prompt_name = prompt_info.get('name', 'AI')
-    
+
     # ========== 读取该类型的参数配置 ==========
     type_defaults = PROMPT_DEFAULTS.get(prompt_type, {'max_new_tokens': 2048})
     max_new_tokens = type_defaults.get('max_new_tokens', 2048)
-    
-    # 配置文件中可覆盖默认值（prompts.xxx.max_new_tokens）
+
+    # 配置文件中可覆盖默认值(prompts.xxx.max_new_tokens)
     prompts_cfg = config.get('prompts', {})
     prompt_cfg = prompts_cfg.get(prompt_type, {})
     if 'max_new_tokens' in prompt_cfg:
         max_new_tokens = prompt_cfg['max_new_tokens']
-    
+
     # ========== 分块逻辑 ==========
-    # 优先从 config.yaml 读取 summarization.chunk_size，默认值为 3000
+    # 优先从 config.yaml 读取 summarization.chunk_size,默认值为 3000
     CHUNK_SIZE = config.get('summarization', {}).get('chunk_size', 3000)
     needs_chunking = len(text) > CHUNK_SIZE
     chunks = chunk_text(text, CHUNK_SIZE) if needs_chunking else [text]
     total_chunks = len(chunks)
-    
+
     action = ACTION_NAMES.get(prompt_type, '处理')
     logger.info(f"📌 {prompt_name}: 分块={needs_chunking}({total_chunks}块), max_tokens={max_new_tokens}")
-    
+
     # ========== 统一分块流式生成 ==========
     async def generate_chunked():
         full_result = ""
-        
+
         for i, chunk in enumerate(chunks):
             # 发送分块进度
             if needs_chunking:
@@ -375,18 +377,18 @@ async def api_summarize(request: SummarizeRequest):
             else:
                 yield json.dumps({"status": "processing", "message": f"正在{action}..."}) + "\n"
             await asyncio.sleep(0.01)
-            
-            # 构建消息：翻译直接传原文，其他类型加前缀
+
+            # 构建消息:翻译直接传原文,其他类型加前缀
             if prompt_type == 'translate':
                 user_content = chunk
             else:
-                user_content = f"以下是需要处理的文本内容：\n\n{chunk}"
-            
+                user_content = f"以下是需要处理的文本内容:\n\n{chunk}"
+
             chunk_messages = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content}
             ]
-            
+
             try:
                 chunk_result = ""
                 for token in summarizer.chat_stream(chunk_messages, max_new_tokens=max_new_tokens):
@@ -394,27 +396,27 @@ async def api_summarize(request: SummarizeRequest):
                     full_result += token
                     yield json.dumps({"status": "streaming", "delta": token}) + "\n"
                     await asyncio.sleep(0.01)
-                
-                # 分块完成：发送 chunk_complete 事件（前端据此分段渲染）
+
+                # 分块完成:发送 chunk_complete 事件(前端据此分段渲染)
                 yield json.dumps({"status": "chunk_complete", "chunk": i + 1, "total_chunks": total_chunks, "chunk_result": chunk_result}) + "\n"
-                
-                # 分块间添加换行（非最后一块）
+
+                # 分块间添加换行(非最后一块)
                 if i < total_chunks - 1:
                     full_result += "\n\n"
             except Exception as e:
                 logger.error(f"{action}第 {i+1} 段失败: {e}")
                 yield json.dumps({"status": "error", "message": f"{action}第 {i+1}/{total_chunks} 段失败: {str(e)}"}) + "\n"
                 break
-        
+
         yield json.dumps({"status": "done", "result": full_result}) + "\n"
-        
+
         # 清理 GPU 缓存
         try:
             import torch
             torch.cuda.empty_cache()
         except Exception:
             pass
-    
+
     return StreamingResponse(generate_chunked(), media_type="text/plain")
 
 @app.get("/api/models")
@@ -438,7 +440,7 @@ async def api_search(request: SearchRequest):
     """独立搜索接口 - 返回搜索结果"""
     if not search_enabled or not searcher:
         return {"status": "error", "message": "联网搜索未启用"}
-    
+
     results = searcher.search(request.query, max_results=request.max_results)
     return {
         "status": "ok",
@@ -471,7 +473,7 @@ async def v1_models():
 
 @app.post("/v1/chat/completions")
 async def v1_chat_completions(request: OpenAICompletionRequest):
-    # 0. 调试信息：打印远程请求内容
+    # 0. 调试信息:打印远程请求内容
     last_msg = request.messages[-1]["content"] if request.messages else "None"
     logger.info(f"📥 [OpenAI API] 收到远程请求 (共 {len(request.messages)} 条消息)")
     logger.info(f"📝 远程消息预览: {last_msg[:50000]}...")
@@ -490,7 +492,7 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
         async def openai_stream_generator():
             request_id = f"chatcmpl-{uuid.uuid4()}"
             created_time = int(time.time())
-            
+
             try:
                 for token in summarizer.chat_stream(request.messages):
                     chunk = {
@@ -501,7 +503,7 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
                         "choices": [{"index": 0, "delta": {"content": token}, "finish_reason": None}]
                     }
                     yield f"data: {json.dumps(chunk, ensure_ascii=False)}\n\n"
-                
+
                 done_chunk = {
                     "id": request_id, "object": "chat.completion.chunk", "created": created_time,
                     "model": summarizer.current_model_id,
@@ -515,7 +517,7 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
                 logger.debug("🧹 [OpenAI API] 已触发显存碎片清理")
 
         return StreamingResponse(
-            openai_stream_generator(), 
+            openai_stream_generator(),
             media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-cache",
