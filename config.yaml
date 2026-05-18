@@ -103,7 +103,7 @@ transcription:
 
 # ===== 总结参数 =====
 summarization:
-  chunk_size: 1500
+  chunk_size: 3000        # 单个总结分块的最大字符长度（大文件将按此自动拆分）
   local_max_tokens: 256
   global_max_tokens: 1024
   yield_progress: true

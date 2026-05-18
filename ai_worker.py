@@ -350,7 +350,8 @@ async def api_summarize(request: SummarizeRequest):
         max_new_tokens = prompt_cfg['max_new_tokens']
     
     # ========== 分块逻辑 ==========
-    CHUNK_SIZE = 3000
+    # 优先从 config.yaml 读取 summarization.chunk_size，默认值为 3000
+    CHUNK_SIZE = config.get('summarization', {}).get('chunk_size', 3000)
     needs_chunking = len(text) > CHUNK_SIZE
     chunks = chunk_text(text, CHUNK_SIZE) if needs_chunking else [text]
     total_chunks = len(chunks)
