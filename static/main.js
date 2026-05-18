@@ -155,13 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
      * 渲染包含思考过程的消息(支持多思考块交替)
      * @param {string} text - 原始文本(含 <think> 标签)
      * @param {boolean} forceOpen - 生成中强制展开思考块
+     * @param {object} counterRef - 可选的计数器引用 { value: number }。用于在多段分块渲染时保持全局连续的思考序号递增计数。
      */
-    function renderWithThinking(text, forceOpen = false) {
+    function renderWithThinking(text, forceOpen = false, counterRef = null) {
         const segments = parseThinking(text);
         if (!segments.length) return '';
 
         let html = '';
-        let thinkCount = 0;
+        // 如果外部传入了 counterRef，则累加外部计数器，否则使用内部独立的局部计数器
+        let localCounter = counterRef || { value: 0 };
 
         for (let i = 0; i < segments.length; i++) {
             const seg = segments[i];
@@ -169,9 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (seg.type === 'thinking') {
                 const c = seg.content.trim();
                 if (!c) continue;
-                thinkCount++;
+                localCounter.value++;
                 const openAttr = forceOpen ? ' open' : '';
-                html += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${thinkCount} (点击展开)</summary><div class="thinking-content">${renderMarkdown(c)}</div></details></div>`;
+                html += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${localCounter.value} (点击展开)</summary><div class="thinking-content">${renderMarkdown(c)}</div></details></div>`;
             } else {
                 const c = seg.content.trim();
                 if (!c) continue;
@@ -696,10 +698,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 if (chunkResults.length > 0) {
                                     // 有已完成的段，分段渲染
                                     let html = '';
+                                    let globalCounter = { value: 0 };
                                     chunkResults.forEach(r => {
-                                        html += `<div class="translate-chunk">${renderWithThinking(r, false)}</div>`;
+                                        html += `<div class="translate-chunk">${renderWithThinking(r, false, globalCounter)}</div>`;
                                     });
-                                    html += `<div class="translate-chunk active">${renderWithThinking(currentChunkText, true)}</div>`;
+                                    html += `<div class="translate-chunk active">${renderWithThinking(currentChunkText, true, globalCounter)}</div>`;
                                     sumResult.innerHTML = html;
                                 } else {
                                     // 第一段，直接渲染
@@ -722,8 +725,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                         chunkResults.push(currentChunkText);
                                     }
                                     let html = '';
+                                    let globalCounter = { value: 0 };
                                     chunkResults.forEach((r, idx) => {
-                                        html += `<div class="translate-chunk"><div class="translate-chunk-label">第 ${idx+1}/${chunkResults.length} 段</div>${renderWithThinking(r, false)}</div>`;
+                                        html += `<div class="translate-chunk"><div class="translate-chunk-label">第 ${idx+1}/${chunkResults.length} 段</div>${renderWithThinking(r, false, globalCounter)}</div>`;
                                     });
                                     sumResult.innerHTML = html;
                                 } else {
