@@ -94,6 +94,15 @@ app = FastAPI(title="Qwen3 ASR Web Console")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
+# 状态标志：服务是否正在关闭
+is_shutting_down = False
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    global is_shutting_down
+    is_shutting_down = True
+    logger.info("主服务正在关闭，通知所有后台长连接释放...")
+
 # ========== 初始化 ==========
 
 pynvml.nvmlInit()
@@ -758,7 +767,7 @@ async def gpu_stats():
     """GPU 显存监控（SSE 流）"""
     async def event_generator():
         handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-        while True:
+        while not is_shutting_down:
             try:
                 mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
                 util_info = pynvml.nvmlDeviceGetUtilizationRates(handle)
