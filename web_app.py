@@ -376,11 +376,16 @@ async def save_history(request: SaveChatRequest):
         date_dir = os.path.join(CHATS_DIR, today)
         os.makedirs(date_dir, exist_ok=True)
         
-        safe_title = "".join([c for c in request.title if c.isalnum() or c in " _-"]).strip()
-        if not safe_title: safe_title = "未命名对话"
-        
-        filename = f"{now_time}_{safe_title}.json"
+        # 文件名只用时间戳，标题存 JSON 内部，避免特殊字符问题
+        filename = f"{now_time}.json"
         filepath = os.path.join(date_dir, filename)
+        
+        # 如果文件已存在（同秒保存），加序号
+        counter = 1
+        while os.path.exists(filepath):
+            filename = f"{now_time}_{counter}.json"
+            filepath = os.path.join(date_dir, filename)
+            counter += 1
         
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump({
@@ -395,25 +400,52 @@ async def save_history(request: SaveChatRequest):
         return {"status": "error", "message": str(e)}
 
 @app.get("/api/history/list")
-async def list_history():
-    """获取最近 6 个对话列表"""
+async def list_history(limit: int = 50, offset: int = 0, query: str = None):
+    """获取对话列表，支持分页和搜索"""
     import glob
     all_files = []
     for file_path in glob.glob(os.path.join(CHATS_DIR, "**", "*.json"), recursive=True):
         mtime = os.path.getmtime(file_path)
         rel_path = os.path.relpath(file_path, CHATS_DIR)
+        
+        # 从 JSON 文件读取标题（兼容旧格式：标题在文件名中）
+        title = None
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                title = data.get("title", "")
+        except Exception:
+            pass
+        
+        # 旧格式兼容：如果 JSON 中没有标题，从文件名提取
+        if not title:
+            parts = rel_path.split(os.sep)
+            if len(parts) >= 2:
+                filename = parts[1]
+                title = filename.split("_", 1)[1].rsplit(".", 1)[0] if "_" in filename else filename
+            else:
+                title = rel_path
+        
+        # 格式化日期前缀
         parts = rel_path.split(os.sep)
-        if len(parts) >= 2:
-            date_str = parts[0]
-            filename = parts[1]
-            title = filename.split("_", 1)[1].rsplit(".", 1)[0] if "_" in filename else filename
-            all_files.append({
-                "path": rel_path.replace(os.sep, "/"),
-                "title": f"[{date_str}] {title}",
-                "mtime": mtime
-            })
+        date_str = parts[0] if len(parts) >= 2 else ""
+        display_title = f"[{date_str}] {title}" if date_str else title
+        
+        all_files.append({
+            "path": rel_path.replace(os.sep, "/"),
+            "title": display_title,
+            "mtime": mtime
+        })
+    
+    # 搜索过滤
+    if query:
+        query_lower = query.lower()
+        all_files = [f for f in all_files if query_lower in f["title"].lower()]
+    
     all_files.sort(key=lambda x: x["mtime"], reverse=True)
-    return all_files[:6]
+    total = len(all_files)
+    items = all_files[offset:offset + limit]
+    return {"total": total, "items": items}
 
 @app.get("/api/history/load")
 async def load_history(path: str):
@@ -426,6 +458,22 @@ async def load_history(path: str):
         with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.delete("/api/history/delete")
+async def delete_history(path: str):
+    """删除指定对话"""
+    try:
+        safe_path = os.path.normpath(path).lstrip(os.sep + "/")
+        filepath = os.path.join(CHATS_DIR, safe_path)
+        if not filepath.startswith(CHATS_DIR):
+            return {"status": "error", "message": "非法路径"}
+        if not os.path.exists(filepath):
+            return {"status": "error", "message": "文件不存在"}
+        os.remove(filepath)
+        return {"status": "success"}
+    except Exception as e:
+        logger.error(f"删除对话失败: {e}")
         return {"status": "error", "message": str(e)}
 
 # ========== 页面端点 ==========

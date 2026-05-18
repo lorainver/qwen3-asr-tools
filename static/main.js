@@ -1077,11 +1077,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === 5.1 对话历史管理逻辑 ===
 
-    async function loadHistoryList() {
+    // 历史搜索框
+    const historySearchInput = document.getElementById('history-search');
+    if (historySearchInput) {
+        let searchDebounce = null;
+        historySearchInput.addEventListener('input', (e) => {
+            clearTimeout(searchDebounce);
+            searchDebounce = setTimeout(() => {
+                loadHistoryList(e.target.value.trim());
+            }, 300);
+        });
+    }
+
+    async function loadHistoryList(searchQuery = '') {
         if (!selectHistory) return;
         try {
-            const resp = await fetch('/api/history/list');
-            const list = await resp.json();
+            const params = new URLSearchParams({ limit: '50', offset: '0' });
+            if (searchQuery) params.set('query', searchQuery);
+            const resp = await fetch(`/api/history/list?${params}`);
+            const data = await resp.json();
+            const list = data.items || data; // 兼容旧格式
 
             // 保留第一项默认项
             selectHistory.innerHTML = '<option value="">📜 历史对话</option>';
@@ -1091,6 +1106,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 opt.textContent = item.title;
                 selectHistory.appendChild(opt);
             });
+
+            // 显示总数
+            if (data.total !== undefined) {
+                const totalOpt = document.createElement('option');
+                totalOpt.disabled = true;
+                totalOpt.textContent = `── 共 ${data.total} 条 ──`;
+                selectHistory.appendChild(totalOpt);
+            }
         } catch (e) {
             console.error('加载历史列表失败:', e);
         }
@@ -1158,6 +1181,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('❌ 加载失败: ' + e.message);
             } finally {
                 selectHistory.value = ""; // 重置下拉框
+            }
+        });
+
+        // 右键删除历史
+        selectHistory.addEventListener('contextmenu', async (e) => {
+            e.preventDefault();
+            const path = selectHistory.value;
+            if (!path) return;
+
+            const title = selectHistory.options[selectHistory.selectedIndex]?.textContent || '';
+            if (!confirm(`确定删除此对话？\n${title}`)) return;
+
+            try {
+                const resp = await fetch(`/api/history/delete?path=${encodeURIComponent(path)}`, { method: 'DELETE' });
+                const result = await resp.json();
+                if (result.status === 'success') {
+                    showToast('🗑️ 已删除');
+                    loadHistoryList();
+                } else {
+                    showToast('❌ 删除失败: ' + result.message);
+                }
+            } catch (e) {
+                showToast('❌ 删除失败: ' + e.message);
             }
         });
     }
