@@ -618,32 +618,35 @@ textarea:focus {
 }
 
 /* 翻译/摘要结果的复制按钮 */
-.result-box .btn-copy-result {
+.result-box-wrapper .btn-copy-result {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 12px;  /* 稍微往下挪一点，避开渐变边缘 */
+    right: 12px; /* 避开滚动条以防挡住或重叠 */
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    padding: 4px 10px;
+    padding: 6px 12px; /* 适当增大内边距使其更美观 */
     font-size: 0.8rem;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.2s, background 0.2s;
-    z-index: 10;
+    transition: opacity 0.25s ease, background 0.2s;
+    z-index: 100; /* 确保置于最高层，不被任何 markdown 标签遮挡 */
 }
 
-.result-box:hover .btn-copy-result {
+.result-box-wrapper:hover .btn-copy-result {
     opacity: 1;
 }
 
-.result-box .btn-copy-result:hover {
+.result-box-wrapper .btn-copy-result:hover {
     background: var(--hover-bg);
+    border-color: var(--accent);
 }
 
-.result-box .btn-copy-result.copied {
+.result-box-wrapper .btn-copy-result.copied {
     opacity: 1;
-    background: rgba(76, 175, 80, 0.15);
+    background: rgba(52, 211, 153, 0.15);
+    border-color: var(--success);
+    color: var(--success);
 }
 
 /* ============================

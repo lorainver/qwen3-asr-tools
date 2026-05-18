@@ -798,7 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         console.error('复制失败:', e);
                                     }
                                 };
-                                sumResult.appendChild(sumCopyBtn);
+                                sumResult.parentNode.appendChild(sumCopyBtn);
                                 // 触发 Mermaid 图表渲染
                                 setTimeout(() => {
                                     document.querySelectorAll('#sum-result .mermaid-container').forEach(el => {
@@ -833,6 +833,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btnNewTask.addEventListener('click', () => {
             sumResult.classList.add('hidden');
             sumResult.innerHTML = '';
+            // 清理可能存在的复制按钮
+            const existCopyBtn = sumResult.parentNode.querySelector('.btn-copy-result');
+            if (existCopyBtn) existCopyBtn.remove();
             sumProgCont.classList.add('hidden');
             btnNewTask.classList.add('hidden');
             meetingText.classList.remove('hidden');
