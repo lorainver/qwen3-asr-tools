@@ -1,48 +1,95 @@
-# Qwen3-ASR AI 智能音视频工作站
-这是一个基于 **Qwen3-ASR** 和 **Qwen2.5** 大模型构建的本地化音视频处理工作站。它集成了语音转文字、长文本 AI 总结、本地智能对话、AI 语音朗读以及 GPU 实时监控功能。
+# Qwen3-Omni 多维智能协同工作站 (Multimodal AI Workspace)
+
+`Qwen3-Omni` 是一款基于 **Qwen 系列大模型** 构建的本地化多维智能协同工作站。它打破了传统音视频转录软件的单一范畴，集成了**前沿推理对话（Reasoning Chat）**、**智库级文档深度提炼（RAG Summarization）**、**GPU 级极速视频转录（ASR）**、**多引擎智能语音朗读（TTS）** 以及 **Ollama / GPU 实时硬件监控**。
+
 ---
-## 🌟 核心功能 (Web 界面)
-- **🚀 极速视频转录 (ASR)**: 基于 `Qwen3-ASR-1.7B` 模型，支持 GPU 批处理加速。
-- **📝 智库级文本总结**: 集成 `Qwen2.5-1.5B-Instruct` 模型，支持超长文本分段总结。
-- **💬 本地 AI 助理**: 类似 ChatGPT 的对话界面，支持上下文记忆。
-  - **[新建对话]** 按钮：一键清空对话记录，重置 AI 记忆并提升响应速度。
-- **🔊 AI 语音朗读 (TTS)**: 每条 AI 回复旁均有 🔊 按钮，点击即可朗读，再次点击停止。
-  - **🌐 微软在线 (Edge-TTS)**：高质量在线语音，流式传输，响应极快。
-  - **🏠 本地离线 (Sherpa-ONNX)**：基于 `vits-icefall-zh-aishell3` 模型，完全离线，网络差时首选。
-  - 可在网页右上角下拉菜单随时切换两种模式。
-  - **[自动朗读]** 开关：开启后 AI 回复完成时自动朗读，无需手动点击。
-- **📊 GPU 实时看板**: 监控显存、利用率及温度。
-  - **[停止服务器]** 按钮：点击后自动关闭进程，瞬间释放显存。
-- **🎨 现代 Web UI**: Glassmorphism 风格，内置终端命令参考，支持代码块一键复制。
+
+## 🌟 核心功能架构
+
+### 1. 💬 智能对话交互 (Cognitive & Reasoning Chat)
+* **上下文智能记忆**：支持多轮对话上下文追踪，为您提供流畅的本地助理体验。
+* **思考过程可视化**：支持 `<think>` 标签流式流出，并在前端展现可折叠、具有自适应段落序号（如“思考部分 #1”、“思考部分 #2”）的专业推理面板。
+* **[新建对话] 机制**：一键清空会话历史，不仅能瞬时释放上下文所带来的显存压力，还能让模型以最高速度响应新任务。
+
+### 2. 📄 长文本深度总结 (Deep Document Summarization)
+* **大文本分块流式提炼**：支持分段装载，AI 会按大纲结构生成具有深度信息量的“一页纸智库精华”。
+* **卓越的 Markdown 渲染**：支持渲染标题、项目列表、代码块、LaTeX 数学公式以及 Mermaid 图表。
+* **横向溢出滚动机制**：为渲染结果设置了专属滚动条，超宽表格、长代码块或复杂图表只在卡片内横向滑动，**绝不撑开网页，保持页面整体宽度纹丝不动**。
+* **悬浮随动复制按钮**：在右上方部署了解耦的复制按钮。当您上下拉动长文本滚动条时，**复制按钮将始终悬浮在卡片右上角**，随时可点，且鼠标移开后优雅淡出。
+
+### 3. 🎬 视频转录与文本提取 (GPU-Accelerated ASR)
+* **极速 GPU 批处理**：基于 Whisper / Qwen3-ASR 核心，深度压榨显卡算力，支持极速音频/字幕提取。
+* **零空间占用本地直读**：支持本地视频文件绝对路径一键读取，免去了繁琐的网页上传过程，读取百 G 视频无需消耗任何额外 C 盘空间。
+
+### 4. 🧠 Ollama 实时状态与显/内存分配监控
+* **零显存无感轮询**：通过 CPU 侧的极其轻量的 `/api/ps` 服务级心跳包，以 **0% GPU 计算占用率** 实时监测模型状态。
+* **高科技状态看板**：侧边栏实时呈现当前在线模型名字，并以**高饱和度青蓝渐变比例条**直观呈现该模型在显存（VRAM）与物理内存（RAM）中的具体分配比例。
+
+### 5. 📊 GPU 实时看板与秒退释放
+* **硬件级实时监测**：实时捕获 NVIDIA 显卡的显存使用率、核心利用率以及核心温度。
+* **OS 信号信号级秒退拦截**：重新编写了 Uvicorn 退出管道，按下 `Ctrl+C` 的微秒瞬间强行掐断流式连接，**3秒内强制优雅关闭**，绝不假死。
+* **[一键释放显存] 按钮**：在侧边栏一键安全关停后台服务，瞬间释放显存以供其他 3D 游戏或训练任务使用。
+
+### 6. 🔊 多引擎语音合成朗读 (TTS Engine)
+* **🌐 微软在线引擎 (Edge-TTS)**：提供云端超高拟真度、情感充沛的流式语音合成，首字响应在 100ms 以内。
+* **🏠 本地离线引擎 (Sherpa-ONNX)**：基于 `vits-icefall-zh-aishell3` 模型，100% 离线，无网环境下完美平替。
+* **[自动朗读] 联动**：可切换开启状态，当 AI 生成回复完毕后自动触发朗读。
+
 ---
-## 🔊 语音朗读部署说明
-### 在线引擎 (Edge-TTS)
-无需额外配置，启动服务后即可使用。
-### 离线引擎 (Sherpa-ONNX) 首次部署
-运行以下脚本自动下载并配置离线模型（约 45MB）：
+
+## 🔊 离线语音引擎首次部署
+
+离线引擎需要下载约 45MB 的物理模型包。请在您的 PowerShell 终端运行以下命令：
 ```powershell
 D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\download_tts_model.py
-模型将保存至 D:\qwen3-asr\models\tts\vits-icefall-zh-aishell3\。
+```
+运行完成后，模型文件将自动配置在：`D:\qwen3-asr\models\tts\vits-icefall-zh-aishell3\` 下。
 
-⌨️ 命令行实战工具 (CLI)
-1. 字幕提取 (SRT)
-Qwen3 GPU 极速版: D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频路径" --chunk 10 --batch 12
-Whisper CPU/通用版: D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频路径" --beam 1
-2. 实时语音监控 (GUI)
-带翻译 (双语对照): D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5
-系统声音识别 (无翻译): D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.0
+---
 
-🛠️ 运行与维护
-启动服务:
-powershell
-D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\web_app.py
-显存释放:
-若需运行其他高显存应用，请点击网页侧边栏的"停止服务器"按钮。
-也可以在终端按 Ctrl + C，但点击网页按钮响应更直接。
-记忆管理:
-对话历史较长时会增加显存占用，建议定期使用"新建对话"重置。
-语音引擎切换:
-网络正常时推荐使用"🌐 微软在线"，音质更佳。
-网络差或追求极致响应时切换至"🏠 本地离线"。
-🔒 隐私声明
-所有 AI 模型推理（ASR、文本总结、对话）均在本地 GPU 完成，100% 离线运行。 在线 TTS 语音朗读功能会将文本发送至微软服务器；如需完全离线，请使用"本地离线"模式。
+## ⌨️ 命令行实战工具 (CLI Toolbox)
+
+除了 Web 界面，本项目还包含了一套强大的终端处理工具：
+
+### 1. 🎬 字幕快速提取 (SRT Tool)
+* **Qwen3 GPU 极速批处理版**：
+  ```powershell
+  D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频绝对路径" --chunk 10 --batch 12
+  ```
+* **Whisper 兼容版 (通用)**：
+  ```powershell
+  D:\Programs\Python\Python314\python.exe D:\qwen3-asr\fw_srt.py "视频绝对路径" --beam 1
+  ```
+
+### 2. 🎤 实时麦克风/系统声卡语音监控
+* **声卡识别 (含双语对照翻译)**：
+  ```powershell
+  D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5
+  ```
+* **系统声音直接录制 (无翻译)**：
+  ```powershell
+  D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.0
+  ```
+
+---
+
+## 🛠️ 后台服务启动与维护
+
+### 1. 启动 Web 应用程序
+在 PowerShell 中运行以下命令启动服务：
+```powershell
+$env:NO_PROXY="localhost,127.0.0.1"
+D:\qwen3-asr\venv\Scripts\python.exe d:\qwen3-asr\web_app.py
+```
+* **浏览器访问**：`http://127.0.0.1:9396`
+
+### 2. 显存管理最佳实践
+1. **零显存底噪（Lazy Loading）**：由于我们设计了深度学习库延迟装载机制，若您仅使用 Ollama 模型，Python 进程的**闲置显存开销为绝对的 0.00 MB**。
+2. **快速释放**：运行本地 GPU 模型后若想玩游戏，可直接点击网页侧边栏的 **“一键释放显存”** 按钮或在控制台按下 **Ctrl+C**，服务将在 3 秒内秒退，百分之百回收显存。
+3. **长上下文维护**：若长时间进行对话，长上下文会导致 Ollama 缓存显存增加，推荐定期点击 **“新建对话”** 来刷新状态。
+
+---
+
+## 🔒 隐私与安全性声明
+* **多模态与推理完全本地化**：无论是 ASR 语音识别、文本总结还是 AI 对话，全部推理均运行在您的 RTX 5060 显卡上，**零数据外流**，100% 安全离线。
+* **在线 TTS 使用**：当且仅当您使用“微软在线朗读”时，会将文本发送至 Edge 接口进行拟真合成。若敏感信息较多，请在网页右上角将其切换为“本地离线”模式。
