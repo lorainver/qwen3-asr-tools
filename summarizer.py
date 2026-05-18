@@ -47,7 +47,7 @@ class LongTextSummarizer:
                 'name': f"Ollama: {m['name']}",
                 'category': 'ollama',
                 'description': f"Ollama 驱动的 {m['name']} 模型",
-                'current': m_id == self.current_model_id or (self.current_model_id == 'qwen-ollama-7b' and m['name'] == 'qwen2.5:7b')
+                'current': m_id == self.current_model_id or self.current_model_id in self.available_models and self.available_models[self.current_model_id].get('model_id') == m['name']
             })
 
         # 3. 添加远程模型
@@ -226,13 +226,7 @@ class LongTextSummarizer:
     def _chat_remote(self, messages, max_new_tokens=2048):
         logger.info(f"🚀 正在向远程服务器请求: {self.api_url}")
         model_info = self.available_models.get(self.current_model_id, {})
-        remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
-        
-        # 强制硬编码映射
-        if self.current_model_id == 'qwen-ollama-7b':
-            remote_model = 'qwen2.5:7b'
-        elif self.current_model_id == 'qwen-ollama-9b':
-            remote_model = 'qwen3.5:9b'
+        remote_model = model_info.get('model_id', self.current_model_id)
 
         try:
             payload = {
@@ -288,13 +282,7 @@ class LongTextSummarizer:
     def _chat_stream_remote(self, messages, enable_think=True, max_new_tokens=2048):
         logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url} (Think: {enable_think})")
         model_info = self.available_models.get(self.current_model_id, {})
-        remote_model = model_info.get('model_id', model_info.get('remote_model_name', self.current_model_id))
-        
-        # 针对 Ollama 模型的硬编码映射
-        if self.current_model_id == 'qwen-ollama-7b':
-            remote_model = 'qwen2.5:7b'
-        elif self.current_model_id == 'qwen-ollama-9b':
-            remote_model = 'qwen3.5:9b'
+        remote_model = model_info.get('model_id', self.current_model_id)
 
         try:
             payload = {
