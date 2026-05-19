@@ -399,7 +399,7 @@ class LongTextSummarizer:
                     if not line: continue
                     try:
                         chunk = json.loads(line.decode('utf-8'))
-                        reasoning = chunk.get('message', {}).get('reasoning') or ''
+                        reasoning = chunk.get('message', {}).get('thinking') or chunk.get('message', {}).get('reasoning') or ''
                         if reasoning:
                             if not is_thinking:
                                 yield "<think>"
