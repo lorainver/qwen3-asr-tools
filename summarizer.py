@@ -373,10 +373,28 @@ class LongTextSummarizer:
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', self.current_model_id)
 
+        # 构造发送给远程服务器的消息体
+        local_messages = list(messages)
+        if not enable_think and is_ollama:
+            has_system = False
+            for msg in local_messages:
+                if msg.get("role") == "system":
+                    msg_copy = dict(msg)
+                    msg_copy["content"] = msg_copy.get("content", "") + "\n【重要要求】：请直接回答用户的问题，绝对不要进行任何推理（thinking），绝对不要输出 <think> 标签，也绝对不要产生任何思考过程。"
+                    idx = local_messages.index(msg)
+                    local_messages[idx] = msg_copy
+                    has_system = True
+                    break
+            if not has_system:
+                local_messages.insert(0, {
+                    "role": "system",
+                    "content": "你是一个助手。请直接回答用户的问题，绝对不要进行任何推理（thinking），绝对不要输出 <think> 标签，也绝对不要产生任何思考过程。"
+                })
+
         try:
             payload = {
                 "model": remote_model,
-                "messages": messages,
+                "messages": local_messages,
                 "stream": True,
                 "temperature": 0.7
             }
