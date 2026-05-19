@@ -1560,7 +1560,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         finalizeChat();
                     } else {
                         // 队列暂时空但流未结束：做一次完整渲染（让 Markdown/KaTeX 生效）
-                        updateDoubleTracks(displayedResponse, true, false);
+                        // 避免 lightweight ↔ fullMarkdown 高频切换导致视觉抖动
+                        // 完整 Markdown 渲染只在 finalizeChat() 中做一次
+                        //updateDoubleTracks(displayedResponse, true, false);
                     }
                 }
             }
