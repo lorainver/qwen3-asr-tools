@@ -262,11 +262,11 @@ class LongTextSummarizer:
             torch.cuda.empty_cache()
             model_manager.set_processing(False)
 
-    def chat(self, messages, max_new_tokens=2048):
+    def chat(self, messages, max_new_tokens=2048, enable_think=True):
         if not max_new_tokens or max_new_tokens <= 0:
             max_new_tokens = None
         if self.is_remote:
-            return self._chat_remote(messages, max_new_tokens)
+            return self._chat_remote(messages, max_new_tokens, enable_think=enable_think)
             
         self._load_model()
         import torch
@@ -291,8 +291,13 @@ class LongTextSummarizer:
         finally:
             model_manager.set_processing(False)
 
-    def _chat_remote(self, messages, max_new_tokens=2048):
-        logger.info(f"🚀 正在向远程服务器请求: {self.api_url}")
+    def _chat_remote(self, messages, max_new_tokens=2048, enable_think=True):
+        is_ollama = self._is_ollama_model(self.current_model_id)
+        api_url = self.api_url
+        if is_ollama and api_url and "/v1/chat/completions" in api_url:
+            api_url = api_url.replace("/v1/chat/completions", "/api/chat")
+
+        logger.info(f"🚀 正在向远程服务器请求: {api_url} (Ollama原生模式: {is_ollama})")
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', self.current_model_id)
 
@@ -303,12 +308,23 @@ class LongTextSummarizer:
                 "stream": False,
                 "temperature": 0.7
             }
-            if max_new_tokens is not None and max_new_tokens > 0:
-                payload["max_tokens"] = max_new_tokens
-            response = requests.post(self.api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
+            if is_ollama:
+                payload["think"] = enable_think
+                if max_new_tokens is not None and max_new_tokens > 0:
+                    payload["options"] = {"num_predict": max_new_tokens}
+            else:
+                payload["think"] = enable_think
+                if max_new_tokens is not None and max_new_tokens > 0:
+                    payload["max_tokens"] = max_new_tokens
+            
+            response = requests.post(api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
             response.raise_for_status()
             data = response.json()
-            return data['choices'][0]['message']['content']
+            
+            if is_ollama:
+                return data.get('message', {}).get('content', '')
+            else:
+                return data['choices'][0]['message']['content']
         except Exception as e:
             error_msg = f"❌ 远程请求失败: {str(e)}"
             logger.error(error_msg)
@@ -348,7 +364,12 @@ class LongTextSummarizer:
             model_manager.set_processing(False)
 
     def _chat_stream_remote(self, messages, enable_think=True, max_new_tokens=2048):
-        logger.info(f"🚀 正在向远程服务器发起流式请求: {self.api_url} (Think: {enable_think})")
+        is_ollama = self._is_ollama_model(self.current_model_id)
+        api_url = self.api_url
+        if is_ollama and api_url and "/v1/chat/completions" in api_url:
+            api_url = api_url.replace("/v1/chat/completions", "/api/chat")
+
+        logger.info(f"🚀 正在向远程服务器发起流式请求: {api_url} (Ollama原生模式: {is_ollama}, Think: {enable_think})")
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', self.current_model_id)
 
@@ -357,46 +378,74 @@ class LongTextSummarizer:
                 "model": remote_model,
                 "messages": messages,
                 "stream": True,
-                "temperature": 0.7,
-                "think": enable_think
+                "temperature": 0.7
             }
-            if max_new_tokens is not None and max_new_tokens > 0:
-                payload["max_tokens"] = max_new_tokens
-            response = requests.post(self.api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
+            if is_ollama:
+                payload["think"] = enable_think
+                if max_new_tokens is not None and max_new_tokens > 0:
+                    payload["options"] = {"num_predict": max_new_tokens}
+            else:
+                payload["think"] = enable_think
+                if max_new_tokens is not None and max_new_tokens > 0:
+                    payload["max_tokens"] = max_new_tokens
+                    
+            response = requests.post(api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
             response.raise_for_status()
             
             is_thinking = False
-            for line in response.iter_lines():
-                if not line: continue
-                line_str = line.decode('utf-8')
-                if line_str.startswith("data: "):
-                    data_content = line_str[6:].strip()
-                    if data_content == "[DONE]": break
-                    
+            
+            if is_ollama:
+                for line in response.iter_lines():
+                    if not line: continue
                     try:
-                        chunk = json.loads(data_content)
-                        delta = chunk.get('choices', [{}])[0].get('delta', {})
-                        
-                        # 1. 处理推理内容 (reasoning_content, reasoning, thought)
-                        reasoning = delta.get('reasoning_content') or delta.get('reasoning') or delta.get('thought') or ''
+                        chunk = json.loads(line.decode('utf-8'))
+                        reasoning = chunk.get('message', {}).get('reasoning') or ''
                         if reasoning:
                             if not is_thinking:
                                 yield "<think>"
                                 is_thinking = True
                             yield reasoning
                         
-                        # 2. 处理正式内容 (content)
-                        token = delta.get('content', '')
+                        token = chunk.get('message', {}).get('content') or ''
                         if token:
-                            # 如果之前在思考，现在正式输出了，则先关闭思考标签
                             if is_thinking:
                                 yield "</think>"
                                 is_thinking = False
                             yield token
-                    except Exception:
+                            
+                        if chunk.get('done', False):
+                            break
+                    except Exception as ex:
+                        logger.warning(f"解析 Ollama 原生流 chunk 失败: {ex}")
                         continue
+            else:
+                for line in response.iter_lines():
+                    if not line: continue
+                    line_str = line.decode('utf-8')
+                    if line_str.startswith("data: "):
+                        data_content = line_str[6:].strip()
+                        if data_content == "[DONE]": break
+                        
+                        try:
+                            chunk = json.loads(data_content)
+                            delta = chunk.get('choices', [{}])[0].get('delta', {})
+                            
+                            reasoning = delta.get('reasoning_content') or delta.get('reasoning') or delta.get('thought') or ''
+                            if reasoning:
+                                if not is_thinking:
+                                    yield "<think>"
+                                    is_thinking = True
+                                yield reasoning
+                            
+                            token = delta.get('content', '')
+                            if token:
+                                if is_thinking:
+                                    yield "</think>"
+                                    is_thinking = False
+                                yield token
+                        except Exception:
+                            continue
             
-            # 循环结束后，如果还在思考状态，闭合标签
             if is_thinking:
                 yield "</think>"
         except Exception as e:
