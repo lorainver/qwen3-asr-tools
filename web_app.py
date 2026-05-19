@@ -141,6 +141,7 @@ async def startup_event():
 async def shutdown_event():
     global is_shutting_down
     is_shutting_down = True
+    ai_worker.intentional_stop = True
     logger.info("主服务正在关闭，通知所有后台长连接释放...")
 
 # ========== 初始化 ==========
@@ -151,11 +152,16 @@ tts_engine = TTSEngine()
 # ========== AI Worker 进程管理 ==========
 
 class AIWorkerManager:
-    """管理 AI Worker 子进程的生命周期"""
+    """管理 AI Worker 子进程的生命周期，支持侧车意外中断自动拉起（Auto-Respawn）"""
     
     def __init__(self):
         self.process = None
         self._start_time = 0
+        self.intentional_stop = False
+        self.respawn_count = 0
+        self.max_respawn = 3
+        self.is_respawning = False
+        self.respawn_message = ""
         atexit.register(self.kill)
     
     def is_running(self) -> bool:
@@ -165,7 +171,10 @@ class AIWorkerManager:
         retcode = self.process.poll()
         if retcode is not None:
             # 进程已退出，记录退出码
-            logger.warning(f"AI Worker 进程已退出，退出码: {retcode}")
+            if not self.intentional_stop and not is_shutting_down:
+                logger.warning(f"AI Worker 进程意外退出，退出码: {retcode}")
+            else:
+                logger.info(f"AI Worker 进程退出，退出码: {retcode}")
             # 尝试读取子进程的输出（错误信息）
             try:
                 output = self.process.stdout.read() if self.process.stdout else ''
@@ -182,6 +191,7 @@ class AIWorkerManager:
         if self.is_running():
             return {"status": "already_running", "message": "AI Worker 已在运行"}
         
+        self.intentional_stop = False
         logger.info("启动 AI Worker 子进程...")
         
         # 使用当前 Python 解释器
@@ -196,7 +206,7 @@ class AIWorkerManager:
         )
         self._start_time = time.time()
         
-        # 启动后台线程持续读取子进程输出，防止管道阻塞
+        # 启动后台线程持续读取子进程输出，防止管道阻塞，并充当侧车守护线程
         import threading
         def _read_worker_output(proc):
             try:
@@ -208,6 +218,41 @@ class AIWorkerManager:
                     logger.info(f"[Worker] {line}")
             except:
                 pass
+            
+            # 当输出管道关闭（子进程结束时），进行守护拉起检测
+            time.sleep(0.5)  # 稍微等待防抖以获取真实退出码
+            retcode = proc.poll()
+            
+            # 只有当非人为主动停止，且主服务未关机，且进程确实退出时，才触发自动守护
+            if not self.intentional_stop and not is_shutting_down and retcode is not None:
+                logger.warning(f"💥 AI Worker 进程异常退出，退出码: {retcode}")
+                # 只有当当前活跃进程仍然是此 proc 时，才置空并触发自动拉起，避免并发冲突
+                if self.process == proc:
+                    self.process = None
+                    
+                    if self.respawn_count < self.max_respawn:
+                        self.respawn_count += 1
+                        self.is_respawning = True
+                        self.respawn_message = f"后端 AI 服务异常退出 (代码: {retcode})，正在自动拉起中 ({self.respawn_count}/{self.max_respawn} 次)..."
+                        logger.warning(f"🔄 {self.respawn_message}")
+                        
+                        # 稍微等待 1.5 秒以确保端口与系统资源释放
+                        time.sleep(1.5)
+                        
+                        # 调用启动方法重新拉起
+                        start_res = self.start()
+                        if start_res.get("status") == "started":
+                            logger.info(f"✅ AI Worker 进程自动重新拉起成功！")
+                            self.is_respawning = False
+                            self.respawn_message = ""
+                            self.respawn_count = 0  # 恢复成功后重置计数
+                        else:
+                            logger.error(f"❌ AI Worker 进程自动拉起失败: {start_res.get('message')}")
+                            self.is_respawning = False
+                            self.respawn_message = f"自动拉起失败: {start_res.get('message')}"
+                    else:
+                        logger.error(f"❌ AI Worker 异常退出重试已达上限 ({self.max_respawn}次)，放弃自动拉起。")
+                        self.respawn_message = "后端服务持续异常崩溃，已达最大重试上限。请点击侧边栏「释放显存」后重新手动启动。"
         
         t = threading.Thread(target=_read_worker_output, args=(self.process,), daemon=True)
         t.start()
@@ -235,6 +280,11 @@ class AIWorkerManager:
     
     def kill(self) -> dict:
         """终止 AI Worker 子进程（完全释放显存）"""
+        self.intentional_stop = True
+        self.respawn_count = 0  # 释放时重置所有重试状态
+        self.is_respawning = False
+        self.respawn_message = ""
+        
         if self.process is None:
             return {"status": "not_running", "message": "AI Worker 未运行"}
         
@@ -268,6 +318,10 @@ class AIWorkerManager:
         if self.is_running():
             return True
         
+        # 如果正在自动重新拉起中，直接返回 False 避免并发干扰
+        if self.is_respawning:
+            return False
+            
         result = self.start()
         return result["status"] in ["started", "already_running"]
     
@@ -278,7 +332,9 @@ class AIWorkerManager:
         return {
             "running": running,
             "uptime_seconds": int(uptime),
-            "url": AI_WORKER_URL if running else None
+            "url": AI_WORKER_URL if running else None,
+            "respawning": self.is_respawning,
+            "respawn_message": self.respawn_message
         }
 
 ai_worker = AIWorkerManager()

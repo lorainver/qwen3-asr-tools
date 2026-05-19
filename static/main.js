@@ -525,7 +525,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const resp = await fetch('/api/worker_status');
             const data = await resp.json();
             if (workerDot && workerText) {
-                if (data.running) {
+                if (data.respawning) {
+                    workerDot.style.background = '#ff9800'; // 橙色警告
+                    workerText.textContent = '自动恢复中';
+                    workerText.style.color = '#ff9800';
+                    if (workerUptime) {
+                        workerUptime.textContent = '后端异常，自动拉起中...';
+                        workerUptime.style.color = '#ff9800';
+                    }
+                    if (!window.lastRespawning) {
+                        window.lastRespawning = true;
+                        showToast("⚠️ 检测到后端 AI 服务异常，正在自动拉起...", 4000);
+                    }
+                } else if (data.running) {
                     workerDot.style.background = '#4caf50';
                     workerText.textContent = '运行中';
                     workerText.style.color = '#4caf50';
@@ -533,12 +545,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         const mins = Math.floor(data.uptime_seconds / 60);
                         const secs = data.uptime_seconds % 60;
                         workerUptime.textContent = `已运行 ${mins}分${secs}秒`;
+                        workerUptime.style.color = '';
+                    }
+                    if (window.lastRespawning) {
+                        window.lastRespawning = false;
+                        showToast("✅ 后端 AI 服务已自动恢复成功！", 3000);
                     }
                 } else {
                     workerDot.style.background = '#555';
                     workerText.textContent = '○ 未启动';
                     workerText.style.color = '#aaa';
-                    if (workerUptime) workerUptime.textContent = '';
+                    if (workerUptime) {
+                        workerUptime.textContent = data.respawn_message || '';
+                        workerUptime.style.color = '#ef4444';
+                    }
+                    if (window.lastRespawning) {
+                        window.lastRespawning = false;
+                        showToast("❌ 后端 AI 服务多次拉起失败，请释放显存后重试", 4000);
+                    }
                 }
             }
         } catch (e) {
