@@ -1473,12 +1473,25 @@ document.addEventListener('DOMContentLoaded', () => {
             let fullResponse = '';
             let displayedResponse = ''; // 打字机实际渲染呈现出的字符内容
             let typingQueue = [];       // 平滑打字渲染排队缓冲区
-            let typingTimer = null;
             let streamFinished = false; // 标记网络流是否已经接收完毕
 
             // 局部虚拟 DOM 比对双轨更新器，完全杜绝 <details> 节点在打印正文时的撕裂与重绘
-            function updateDoubleTracks(text, isGenerating) {
+            /**
+             * 双轨渲染器：思考块 + 正文分离渲染
+             * @param {string} text - 当前累积文本
+             * @param {boolean} isGenerating - 是否处于生成中（决定思考块展开状态）
+             * @param {boolean} lightweight - 轻量模式（流式中跳过 Markdown 渲染，仅做基本转义）
+             */
+            function updateDoubleTracks(text, isGenerating, lightweight = false) {
                 const segments = parseThinking(text);
+                
+                // 【修复问题 2】当 parseThinking 返回空数组时，不清空容器，保留原有动画
+                if (segments.length === 0) {
+                    // 如果文本非空但解析不出段落（如只有 ◂think▸ 开始标签），保持现状
+                    // thinking dots 动画继续显示，等后续内容到达后再更新
+                    return;
+                }
+                
                 let thinkingHtml = '';
                 let answerHtml = '';
                 let localCounter = 0;
@@ -1489,14 +1502,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (c) {
                             localCounter++;
                             const openAttr = isGenerating ? ' open' : '';
-                            thinkingHtml += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${localCounter} (点击展开)</summary><div class="thinking-content">${renderMarkdown(c)}</div></details></div>`;
+                            // 【修复问题 1】轻量模式下跳过 renderMarkdown，直接转义显示
+                            const contentHtml = lightweight ? escapeHtml(c) : renderMarkdown(c);
+                            thinkingHtml += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${localCounter} (点击展开)</summary><div class="thinking-content">${contentHtml}</div></details></div>`;
                         }
                     } else {
-                        answerHtml += `<div class="answer-content">${renderMarkdown(seg.content)}</div>`;
+                        // 【修复问题 1】轻量模式下跳过 renderMarkdown，直接转义显示
+                        const contentHtml = lightweight ? escapeHtml(seg.content) : renderMarkdown(seg.content);
+                        answerHtml += `<div class="answer-content">${contentHtml}</div>`;
                     }
                 }
 
-                // 核心优化：仅在 HTML 结构发生绝对变化时，才触动 innerHTML 重绘，极大降负 CPU
+                // 核心优化：仅在 HTML 结构发生绝对变化时，才触动 innerHTML 重绘
                 if (thinkingContainer.innerHTML !== thinkingHtml) {
                     thinkingContainer.innerHTML = thinkingHtml;
                 }
@@ -1504,25 +1521,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     answerContainer.innerHTML = answerHtml;
                 }
             }
+            
+            /**
+             * 基本HTML转义（轻量模式用）
+             */
+            function escapeHtml(text) {
+                if (!text) return '';
+                return text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;')
+                    .replace(/\n/g, '<br>');
+            }
 
+            let typingRAF = null;
+            
             function processTyping() {
+                typingRAF = null;
                 if (typingQueue.length > 0) {
                     // 动态调整打字速率：如果后端数据堆积，每次多取几个字符以平滑跟上
                     const batchSize = Math.max(1, Math.floor(typingQueue.length / 8));
                     const chunk = typingQueue.splice(0, batchSize).join('');
                     displayedResponse += chunk;
 
-                    // 双轨渲染：稳健驻留思考折叠框，只刷新正文区域
-                    updateDoubleTracks(displayedResponse, true);
+                    // 双轨渲染：流式期间使用轻量模式（跳过 renderMarkdown），避免全文重解析卡顿
+                    updateDoubleTracks(displayedResponse, true, true);
                     chatHistory.scrollTop = chatHistory.scrollHeight;
 
-                    // 16ms 黄金刷新频率调度下一帧打字，契合 60Hz 视觉残留
-                    typingTimer = setTimeout(processTyping, 16);
+                    // 用 requestAnimationFrame 对齐屏幕刷新，避免 setTimeout 累积延迟
+                    if (!typingRAF) {
+                        typingRAF = requestAnimationFrame(processTyping);
+                    }
                 } else {
-                    typingTimer = null;
-                    // 流已结束且缓存队列空了，执行最终合并收尾渲染
+                    // 打字队列空了：如果流已结束则收尾；否则做一次完整 Markdown 渲染刷新
                     if (streamFinished) {
                         finalizeChat();
+                    } else {
+                        // 队列暂时空但流未结束：做一次完整渲染（让 Markdown/KaTeX 生效）
+                        updateDoubleTracks(displayedResponse, true, false);
                     }
                 }
             }
@@ -1574,8 +1612,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             
                             // 启动打字器运行
-                            if (!typingTimer) {
-                                processTyping();
+                            if (!typingRAF) {
+                                typingRAF = requestAnimationFrame(processTyping);
                             }
 
                             // 流式语音:检测到完整句子立即送 TTS（基于 fullResponse，零延迟触发）
@@ -1594,13 +1632,13 @@ document.addEventListener('DOMContentLoaded', () => {
             streamFinished = true;
             
             // 如果此时打字缓冲队列已无数据，立即收尾；否则等待打字完毕后在 processTyping 中收尾
-            if (!typingTimer) {
+            if (!typingRAF) {
                 finalizeChat();
             }
 
             function finalizeChat() {
                 // 收尾更新，强制让 details 闭合（不传 isGenerating，即 details 不带 open）
-                updateDoubleTracks(fullResponse, false);
+                updateDoubleTracks(fullResponse, false, false);
                 loadingMsg.dataset.rawContent = fullResponse;
 
                 // 完成后将回复加入消息历史
