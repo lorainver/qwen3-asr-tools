@@ -673,7 +673,7 @@ async def api_docs_read(path: str):
         
         return {
             "name": os.path.basename(full_path),
-            "path": safe_path,
+            "path": os.path.relpath(full_path, BASE_DIR).replace("\\", "/"),
             "type": "html" if ext in ('.html', '.htm') else "markdown",
             "content": content,
         }
