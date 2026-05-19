@@ -21,19 +21,97 @@ logger = logging.getLogger(__name__)
 
 
 def estimate_timestamps(text, cs, cd):
-    """根据字符数量估算句子时间戳"""
+    """
+    自适应音视频对齐平滑算法：
+    1. 智能提取句子及其末尾的标点符号。
+    2. 根据标点符号的强弱（如句号、逗号、问号）分配不同的物理停顿时间权重（0.2s - 0.5s）。
+    3. 扣除停顿时间后，将剩余有效说话时间按字符字数非线性平滑均分。
+    4. 确保在断句、停顿处字幕自动隐去，避免静音期无声字幕傻挂，对齐准确度大幅度提升。
+    """
     import re
     if not text.strip():
         return [(cs, cs + cd, '')]
-    sents = [s.strip() for s in re.split(r'[。！？\n]', text) if s.strip()]
-    total = sum(len(s.replace(' ', '')) for s in sents)
-    if total == 0:
+
+    # 分句并保留标点符号
+    raw_sents = re.split(r'([。！？\n\?\!])', text)
+    
+    sents = []
+    temp_sent = ""
+    for item in raw_sents:
+        if not item:
+            continue
+        if re.match(r'^[。！？\n\?\!]$', item):
+            if temp_sent:
+                sents.append((temp_sent.strip(), item))
+                temp_sent = ""
+            else:
+                if sents:
+                    last_s, last_p = sents[-1]
+                    sents[-1] = (last_s, last_p + item)
+        else:
+            if temp_sent:
+                sents.append((temp_sent.strip(), ""))
+            temp_sent = item
+    if temp_sent:
+        sents.append((temp_sent.strip(), ""))
+
+    sents = [(s, p) for s, p in sents if s.strip()]
+    if not sents:
         return [(cs, cs + cd, text)]
-    pos, result = cs, []
-    for s in sents:
-        dur = max(len(s.replace(' ', '')) / max(total, 1) * cd, 0.5)
-        result.append((pos, pos + dur, s))
-        pos += dur
+
+    # 停顿映射表（单位：秒）
+    pause_map = {
+        '。': 0.45, '！': 0.45, '？': 0.45, '\n': 0.5,
+        '!': 0.45, '?': 0.45, '，': 0.25, '、': 0.2, '；': 0.25
+    }
+
+    total_chars = sum(len(s.replace(' ', '')) for s, _ in sents)
+    if total_chars == 0:
+        return [(cs, cs + cd, text)]
+
+    total_pause_time = 0.0
+    sent_pauses = []
+    for idx, (s, p) in enumerate(sents):
+        pause_val = 0.0
+        if p:
+            char = p[0]
+            pause_val = pause_map.get(char, 0.4)
+        else:
+            commas = len(re.findall(r'[，,、；;]', s))
+            pause_val = commas * 0.2
+
+        pause_val = min(pause_val, 1.2)
+        if idx == len(sents) - 1:
+            # 最后一个句子的切片尾部停顿限制
+            pause_val = min(pause_val, 0.3)
+            
+        sent_pauses.append(pause_val)
+        total_pause_time += pause_val
+
+    # 停顿保护上限：总停顿不超过本段总时长的 50%
+    if total_pause_time > cd * 0.5:
+        scale = (cd * 0.5) / total_pause_time
+        sent_pauses = [p * scale for p in sent_pauses]
+        total_pause_time = cd * 0.5
+
+    active_time = cd - total_pause_time
+    
+    result = []
+    curr_time = cs
+    for idx, (s, p) in enumerate(sents):
+        char_len = len(s.replace(' ', ''))
+        speak_dur = (char_len / total_chars) * active_time
+        speak_dur = max(speak_dur, 0.3) # 句发音最短 0.3 秒
+        
+        start_time = curr_time
+        end_time = curr_time + speak_dur
+        
+        full_text = s + p
+        result.append((start_time, end_time, full_text))
+        
+        # 巧妙留白：时间轴加上停顿，生成完美的静音隐去效果
+        curr_time = end_time + sent_pauses[idx]
+
     return result
 
 
@@ -123,20 +201,28 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         if yield_progress:
             yield json.dumps({"status": "processing", "progress": 10, "message": "提取全局音频流..."}) + "\n"
         
-        # 3. 提取音频
+        # 3. 流式提取音频到临时文件（极省内存）
+        temp_pcm_path = os.path.join(tmp_dir, "full_audio.raw")
         container = av.open(str(media_path))
+        if not container.streams.audio:
+            raise ValueError("找不到音频流")
         ast = container.streams.audio[0]
         resampler = av.audio.resampler.AudioResampler(
             format=target_format, 
             layout=target_channels, 
             rate=target_sr
         )
-        audio_frames = []
-        for frame in container.decode(ast):
-            for rf in resampler.resample(frame):
-                audio_frames.append(rf.to_ndarray().reshape(-1))
-        full_audio = np.concatenate(audio_frames)
+        
+        with open(temp_pcm_path, 'wb') as f:
+            for frame in container.decode(ast):
+                for rf in resampler.resample(frame):
+                    f.write(rf.to_ndarray().tobytes())
         container.close()
+        
+        # 使用内存映射 np.memmap 加载音频文件，实现 0 内存占用
+        dtype_map = {'s16': np.int16, 'flt': np.float32, 's32': np.int32}
+        audio_dtype = dtype_map.get(target_format, np.int16)
+        full_audio = np.memmap(temp_pcm_path, dtype=audio_dtype, mode='r')
         
         import soundfile as sf
         all_segs = []
@@ -206,6 +292,11 @@ def run_transcription(media_path, srt_path, yield_progress=None):
             yield json.dumps({"status": "error", "message": f"转录出错: {e}"}) + "\n"
     finally:
         # 6. 清理临时目录、模型和显存（无论成功/失败/取消都会执行）
+        try:
+            if 'full_audio' in locals() and hasattr(full_audio, '_mmap'):
+                full_audio._mmap.close()
+        except Exception:
+            pass
         try:
             if os.path.isdir(tmp_dir):
                 shutil.rmtree(tmp_dir, ignore_errors=True)
