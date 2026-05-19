@@ -506,7 +506,15 @@ async def api_summarize(request: SummarizeRequest):
         except Exception:
             pass
 
-    return StreamingResponse(generate_chunked(), media_type="text/plain")
+    return StreamingResponse(
+        generate_chunked(),
+        media_type="text/plain",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive"
+        }
+    )
 
 @app.get("/api/models")
 async def api_models():
