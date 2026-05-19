@@ -395,7 +395,7 @@ class LongTextSummarizer:
             is_thinking = False
             
             if is_ollama:
-                for line in response.iter_lines():
+                for line in response.iter_lines(chunk_size=1):
                     if not line: continue
                     try:
                         chunk = json.loads(line.decode('utf-8'))
@@ -419,7 +419,7 @@ class LongTextSummarizer:
                         logger.warning(f"解析 Ollama 原生流 chunk 失败: {ex}")
                         continue
             else:
-                for line in response.iter_lines():
+                for line in response.iter_lines(chunk_size=1):
                     if not line: continue
                     line_str = line.decode('utf-8')
                     if line_str.startswith("data: "):
