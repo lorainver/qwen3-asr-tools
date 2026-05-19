@@ -7,6 +7,7 @@ import uuid
 import logging
 import asyncio
 import re
+from concurrent.futures import ThreadPoolExecutor
 from typing import List, Optional, Any, Dict, Union
 
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
@@ -35,6 +36,9 @@ app.add_middleware(
 
 # 初始化模型 (单例模式)
 summarizer = LongTextSummarizer()
+
+# 线程池：将同步阻塞的 chat_stream 生成器桥接到异步 SSE
+_stream_executor = ThreadPoolExecutor(max_workers=2)
 
 # 初始化搜索器
 search_enabled = config.get('search.enabled', True)
@@ -279,15 +283,45 @@ async def api_chat_stream(request: ChatRequest):
         ctx_max = config.get('chat.context_max_tokens', 24576)
         yield f"data: {json.dumps({'type': 'context', 'original_tokens': orig_tokens, 'trimmed_tokens': trimmed_tokens, 'trimmed_count': trimmed_count, 'max_tokens': ctx_max}, ensure_ascii=False)}\n\n"
         await asyncio.sleep(0.01)
-        
+
         # 如果有搜索结果,先发送搜索状态
         if search_context:
             yield f"data: {json.dumps({'type': 'search', 'status': 'done'}, ensure_ascii=False)}\n\n"
             await asyncio.sleep(0.01)
 
         try:
-            for token in summarizer.chat_stream(messages, enable_think=request.enable_think):
+            # 关键修复：将同步阻塞的生成器放入线程池，通过 Queue 桥接到异步生成器
+            import queue
+            token_queue = queue.Queue()
+            _SENTINEL = object()
+
+            def _run_sync_stream():
+                try:
+                    for token in summarizer.chat_stream(messages, enable_think=request.enable_think):
+                        token_queue.put(token)
+                except Exception as e:
+                    token_queue.put(e)
+                finally:
+                    token_queue.put(_SENTINEL)
+
+            loop = asyncio.get_event_loop()
+            loop.run_in_executor(_stream_executor, _run_sync_stream)
+
+            while True:
+                # 非阻塞轮询 + 短暂 sleep，让事件循环有机会刷写已 yield 的数据
+                try:
+                    token = token_queue.get_nowait()
+                except queue.Empty:
+                    await asyncio.sleep(0.02)
+                    continue
+
+                if token is _SENTINEL:
+                    break
+                if isinstance(token, Exception):
+                    yield f"data: {json.dumps({'token': f'❌ 生成错误: {token}'}, ensure_ascii=False)}\n\n"
+                    break
                 yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
+
             yield "data: [DONE]\n\n"
         finally:
             # 自动清理显存碎片
