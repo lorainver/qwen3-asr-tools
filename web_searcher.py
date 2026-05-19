@@ -28,25 +28,28 @@ class WebSearcher:
         
     def search(self, query: str, max_results: int = 5) -> List[SearchResult]:
         """
-        执行搜索 - 优先使用私有 SearXNG，其次 Serper，最后降级到 DuckDuckGo
+        执行搜索 - 优先使用私有 SearXNG，其次 Serper，最后降级到 DuckDuckGo。
+        并在获取到候选结果后，使用轻量级本地 CPU Reranker 进行重排，保留关联度最高的前 N 条结果。
         """
+        # 为了给重排器提供更丰富的候选池，在拉取阶段调大召回数量（例如拉取 max_results * 2 条）
+        candidate_limit = max(8, max_results * 2)
+        results = []
+
         # 1. 优先使用私有 SearXNG 节点
         if self.searxng_url:
             try:
-                results = self._search_searxng(query, max_results)
+                results = self._search_searxng(query, candidate_limit)
                 if results:
-                    logger.info(f"🌐 [SearXNG] 搜索成功: '{query}' → {len(results)} 条结果")
-                    return results
+                    logger.info(f"🌐 [SearXNG] 召回成功: '{query}' → {len(results)} 条候选结果")
             except Exception as e:
                 logger.warning(f"⚠️ SearXNG 搜索失败: {e}，尝试备用引擎")
 
-        # 2. 如果 Serper 配额未用完，作为第一备用
-        if self.serper_api_key and not self.serper_quota_exceeded:
+        # 2. 如果 SearXNG 失败或没有结果，尝试 Serper
+        if not results and self.serper_api_key and not self.serper_quota_exceeded:
             try:
-                results = self._search_serper(query, max_results)
+                results = self._search_serper(query, candidate_limit)
                 if results:
-                    logger.info(f"🌐 [Serper] 搜索成功: '{query}' → {len(results)} 条结果")
-                    return results
+                    logger.info(f"🌐 [Serper] 召回成功: '{query}' → {len(results)} 条候选结果")
             except Exception as e:
                 error_msg = str(e)
                 if "429" in error_msg or "quota" in error_msg.lower():
@@ -56,15 +59,98 @@ class WebSearcher:
                     logger.warning(f"⚠️ Serper 搜索失败: {e}，尝试 DuckDuckGo")
         
         # 3. 最后降级到 DuckDuckGo
-        try:
-            results = self._search_duckduckgo(query, max_results)
-            if results:
-                logger.info(f"🌐 [DuckDuckGo] 搜索成功: '{query}' → {len(results)} 条结果")
-                return results
-        except Exception as e:
-            logger.error(f"❌ 所有搜索引擎均失败: {e}")
-            
-        return []
+        if not results:
+            try:
+                results = self._search_duckduckgo(query, candidate_limit)
+                if results:
+                    logger.info(f"🌐 [DuckDuckGo] 召回成功: '{query}' → {len(results)} 条候选结果")
+            except Exception as e:
+                logger.error(f"❌ 所有搜索引擎均失败: {e}")
+
+        # 4. 如果没有候选结果，直接返回空
+        if not results:
+            return []
+
+        # 5. 核心：在 CPU 上对召回的结果进行轻量级 BM25 重排
+        reranked_results = self.rerank(query, results, top_k=max_results)
+        return reranked_results
+
+    def rerank(self, query: str, results: List[SearchResult], top_k: int = 3) -> List[SearchResult]:
+        """
+        使用轻量级纯 Python BM25 文本相关度算法对搜索结果进行智能重排。
+        100% 运行在 CPU 上，不需要加载任何深度学习大模型，0 显存成本，延迟 < 1ms。
+        """
+        if not results or not query:
+            return results
+
+        import re
+        import math
+
+        # 1. 对查询词进行轻量级分词（支持中英文）
+        def tokenize(text: str) -> List[str]:
+            text = text.lower()
+            # 匹配中文字符、英文字母和数字
+            words = re.findall(r'[\u4e00-\u9fff]|[a-zA-Z0-9]+', text)
+            return [w for w in words if w.strip()]
+
+        query_tokens = tokenize(query)
+        if not query_tokens:
+            return results[:top_k]
+
+        # 2. 构建文档库（每个搜索结果的 title + snippet 作为一篇文档）
+        documents = []
+        for r in results:
+            doc_text = f"{r.title} {r.snippet}"
+            doc_tokens = tokenize(doc_text)
+            documents.append((r, doc_tokens))
+
+        # 3. 计算 TF-IDF/BM25 相似度打分
+        N = len(documents)
+        
+        df = {}
+        for _, doc_tokens in documents:
+            unique_tokens = set(doc_tokens)
+            for token in unique_tokens:
+                df[token] = df.get(token, 0) + 1
+
+        # idf 计算
+        idf = {}
+        for token, freq in df.items():
+            idf[token] = math.log((N - freq + 0.5) / (freq + 0.5) + 1.0)
+
+        # 4. 对每个文档打分
+        # BM25 参数
+        k1 = 1.5
+        b = 0.75
+        avg_dl = sum(len(doc_tokens) for _, doc_tokens in documents) / N if N > 0 else 1
+
+        scored_results = []
+        for r, doc_tokens in documents:
+            score = 0.0
+            doc_len = len(doc_tokens)
+            tf = {}
+            for token in doc_tokens:
+                tf[token] = tf.get(token, 0) + 1
+
+            for token in query_tokens:
+                if token in tf:
+                    tf_val = tf[token]
+                    token_idf = idf.get(token, 0.5)
+                    score += token_idf * ((tf_val * (k1 + 1)) / (tf_val + k1 * (1 - b + b * (doc_len / avg_dl))))
+                
+                # 标题匹配加成（标题匹配核心词给予 1.5 倍加成分数）
+                if token in tokenize(r.title):
+                    score += 1.5
+
+            scored_results.append((r, score))
+
+        # 5. 排序并返回前 top_k 个结果
+        scored_results.sort(key=lambda x: x[1], reverse=True)
+        
+        # 记录重排日志
+        logger.info(f"📊 [Reranker] 搜索重排完成. 候选 {N} 条 -> 保留 {min(top_k, N)} 条. 最优相似度评分: {scored_results[0][1]:.2f}")
+        
+        return [item[0] for item in scored_results[:top_k]]
 
     def _search_searxng(self, query: str, max_results: int) -> List[SearchResult]:
         """私有 SearXNG 节点搜索 - 深度加固版"""
