@@ -288,8 +288,6 @@ async def api_chat_stream(request: ChatRequest):
         try:
             for token in summarizer.chat_stream(messages, enable_think=request.enable_think):
                 yield f"data: {json.dumps({'token': token}, ensure_ascii=False)}\n\n"
-                # 添加微小延迟,确保每个 token 分开发送(打字机效果)
-                await asyncio.sleep(0.02)
             yield "data: [DONE]\n\n"
         finally:
             # 自动清理显存碎片
