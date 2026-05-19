@@ -1438,8 +1438,10 @@ document.addEventListener('DOMContentLoaded', () => {
         messages.push({ "role": "user", "content": messageContent });
         const loadingMsg = appendMessage('assistant', '');
 
-        // 显示"正在思考..."动画
-        loadingMsg.innerHTML = '<span class="thinking-dots">正在思考<span class="dot dot-1">.</span><span class="dot dot-2">.</span><span class="dot dot-3">.</span></span>';
+        // 初始化思考容器与正文容器（双轨渲染引擎底座）
+        loadingMsg.innerHTML = '<div class="thinking-container"><span class="thinking-dots">正在思考<span class="dot dot-1">.</span><span class="dot dot-2">.</span><span class="dot dot-3">.</span></span></div><div class="answer-container"></div>';
+        const thinkingContainer = loadingMsg.querySelector('.thinking-container');
+        const answerContainer = loadingMsg.querySelector('.answer-container');
 
         // 重置流式 TTS 状态
         streamingAudioQueue.clear();
@@ -1474,6 +1476,35 @@ document.addEventListener('DOMContentLoaded', () => {
             let typingTimer = null;
             let streamFinished = false; // 标记网络流是否已经接收完毕
 
+            // 局部虚拟 DOM 比对双轨更新器，完全杜绝 <details> 节点在打印正文时的撕裂与重绘
+            function updateDoubleTracks(text, isGenerating) {
+                const segments = parseThinking(text);
+                let thinkingHtml = '';
+                let answerHtml = '';
+                let localCounter = 0;
+
+                for (const seg of segments) {
+                    if (seg.type === 'thinking') {
+                        const c = seg.content.trim();
+                        if (c) {
+                            localCounter++;
+                            const openAttr = isGenerating ? ' open' : '';
+                            thinkingHtml += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${localCounter} (点击展开)</summary><div class="thinking-content">${renderMarkdown(c)}</div></details></div>`;
+                        }
+                    } else {
+                        answerHtml += `<div class="answer-content">${renderMarkdown(seg.content)}</div>`;
+                    }
+                }
+
+                // 核心优化：仅在 HTML 结构发生绝对变化时，才触动 innerHTML 重绘，极大降负 CPU
+                if (thinkingContainer.innerHTML !== thinkingHtml) {
+                    thinkingContainer.innerHTML = thinkingHtml;
+                }
+                if (answerContainer.innerHTML !== answerHtml) {
+                    answerContainer.innerHTML = answerHtml;
+                }
+            }
+
             function processTyping() {
                 if (typingQueue.length > 0) {
                     // 动态调整打字速率：如果后端数据堆积，每次多取几个字符以平滑跟上
@@ -1481,9 +1512,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const chunk = typingQueue.splice(0, batchSize).join('');
                     displayedResponse += chunk;
 
-                    // 流式更新:渲染 Markdown,生成时保持思考过程展开
-                    loadingMsg.innerHTML = renderWithThinking(displayedResponse, true);
-                    loadingMsg.dataset.rawContent = displayedResponse;
+                    // 双轨渲染：稳健驻留思考折叠框，只刷新正文区域
+                    updateDoubleTracks(displayedResponse, true);
                     chatHistory.scrollTop = chatHistory.scrollHeight;
 
                     // 16ms 黄金刷新频率调度下一帧打字，契合 60Hz 视觉残留
@@ -1534,8 +1564,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         if (json.token) {
                             fullResponse += json.token;
-                            // 将 Token 按字符粒度塞入排队队列
-                            typingQueue.push(...json.token.split(''));
+                            
+                            // 保护控制标签，绝不将其大卸八块为单字打字以防渲染状态闪烁
+                            const tokenTrimmed = json.token.trim();
+                            if (tokenTrimmed === '<think>' || tokenTrimmed === '</think>' || (tokenTrimmed.startsWith('<') && tokenTrimmed.endsWith('>'))) {
+                                typingQueue.push(json.token);
+                            } else {
+                                typingQueue.push(...json.token.split(''));
+                            }
                             
                             // 启动打字器运行
                             if (!typingTimer) {
@@ -1563,8 +1599,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             function finalizeChat() {
-                // 生成结束,进行最后一次渲染(允许折叠)
-                loadingMsg.innerHTML = renderWithThinking(fullResponse, false);
+                // 收尾更新，强制让 details 闭合（不传 isGenerating，即 details 不带 open）
+                updateDoubleTracks(fullResponse, false);
                 loadingMsg.dataset.rawContent = fullResponse;
 
                 // 完成后将回复加入消息历史
