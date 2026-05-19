@@ -1858,6 +1858,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const docsRendered = document.getElementById('docs-rendered');
     const docsIframe = document.getElementById('docs-iframe');
     const docsRawContent = document.getElementById('docs-raw-content');
+    const docsToc = document.getElementById('docs-toc');
+    const docsSearch = document.getElementById('docs-search');
+    const docsSortSelect = document.getElementById('docs-sort');
     const btnDocsRefresh = document.getElementById('btn-docs-refresh');
     const btnDocsCopy = document.getElementById('btn-docs-copy');
     const btnDocsView = document.getElementById('btn-docs-view');
@@ -1866,6 +1869,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let docsCurrentFile = null;  // 当前查看的文件信息
     let docsRawContent_text = '';  // 当前文件的原始内容
     let docsShowRaw = false;  // 是否显示源码
+    let _allDocsFiles = [];  // 缓存完整文件列表（用于搜索/排序）
     
     async function loadDocsList() {
         docsFileList.innerHTML = '<div class="docs-loading">加载中...</div>';
@@ -1874,27 +1878,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await resp.json();
             if (!data.files || data.files.length === 0) {
                 docsFileList.innerHTML = '<div class="docs-no-files">暂无 HTML/MD 文档</div>';
+                _allDocsFiles = [];
                 return;
             }
-            docsFileList.innerHTML = '';
-            data.files.forEach(f => {
-                const item = document.createElement('div');
-                item.className = 'docs-file-item';
-                item.dataset.path = f.path;
-                const icon = f.type === 'html' ? '🌐' : '📝';
-                item.innerHTML = `
-                    <span class="docs-file-icon">${icon}</span>
-                    <div class="docs-file-info">
-                        <div class="docs-file-name" title="${f.path}">${f.name}</div>
-                        <div class="docs-file-meta">${f.size_str} · ${f.modified_str}</div>
-                    </div>
-                `;
-                item.addEventListener('click', () => openDoc(f, item));
-                docsFileList.appendChild(item);
-            });
+            _allDocsFiles = data.files;  // 缓存完整列表
+            renderDocsList();  // 渲染（带搜索/排序）
         } catch (e) {
             docsFileList.innerHTML = '<div class="docs-no-files">加载失败</div>';
         }
+    }
+    
+    function renderDocsList() {
+        const query = (docsSearch ? docsSearch.value.toLowerCase() : '').trim();
+        const sort = docsSortSelect ? docsSortSelect.value : 'time-desc';
+        let files = [..._allDocsFiles];
+        
+        // 搜索过滤
+        if (query) {
+            files = files.filter(f => f.name.toLowerCase().includes(query) || f.path.toLowerCase().includes(query));
+        }
+        
+        // 排序
+        if (sort === 'time-desc') files.sort((a, b) => b.modified - a.modified);
+        else if (sort === 'time-asc') files.sort((a, b) => a.modified - b.modified);
+        else if (sort === 'name-asc') files.sort((a, b) => a.name.localeCompare(b.name));
+        else if (sort === 'name-desc') files.sort((a, b) => b.name.localeCompare(a.name));
+        else if (sort === 'size-desc') files.sort((a, b) => b.size - a.size);
+        else if (sort === 'size-asc') files.sort((a, b) => a.size - b.size);
+        
+        docsFileList.innerHTML = '';
+        if (files.length === 0) {
+            docsFileList.innerHTML = '<div class="docs-no-files">无匹配文件</div>';
+            return;
+        }
+        files.forEach(f => {
+            const item = document.createElement('div');
+            item.className = 'docs-file-item';
+            item.dataset.path = f.path;
+            const icon = f.type === 'html' ? '🌐' : '📝';
+            item.innerHTML = `
+                <span class="docs-file-icon">${icon}</span>
+                <div class="docs-file-info">
+                    <div class="docs-file-name" title="${f.path}">${f.name}</div>
+                    <div class="docs-file-meta">${f.size_str} · ${f.modified_str}</div>
+                </div>
+            `;
+            item.addEventListener('click', () => openDoc(f, item));
+            docsFileList.appendChild(item);
+        });
     }
     
     async function openDoc(fileInfo, itemEl) {
@@ -1928,10 +1959,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 docsIframe.srcdoc = data.content;
             } else {
                 showDocsViewer('markdown');
-                docsRendered.innerHTML = renderMarkdown(data.content);
-                if (typeof renderMermaidDiagrams === 'function') {
-                    renderMermaidDiagrams();
-                }
+                const rendered = renderMarkdown(data.content);
+                docsRendered.innerHTML = rendered;
+                // 为标题添加 id（支持 TOC 锚点跳转）
+                addHeadingIds(docsRendered);
+                // 渲染 TOC（仅 Markdown）
+                renderToc(data.content);
+                // 渲染 Mermaid 图表
+                renderMermaidInElement(docsRendered);
             }
         } catch (e) {
             // 预览加载失败不影响新标签页
@@ -1944,15 +1979,84 @@ document.addEventListener('DOMContentLoaded', () => {
         docsRendered.classList.add('hidden');
         docsIframe.classList.add('hidden');
         docsRawContent.classList.add('hidden');
+        if (docsToc) docsToc.classList.add('hidden');
         
         if (docsShowRaw) {
-            docsRawContent.textContent = docsRawContent_text;
+            // 带行号的源码视图
+            const lines = docsRawContent_text.split('\n');
+            docsRawContent.innerHTML = lines.map((line, i) =>
+                `<span class="line-num">${String(i + 1).padStart(String(lines.length).length, ' ') + ' '}</span>${escapeHtml(line)}`
+            ).join('\n');
             docsRawContent.classList.remove('hidden');
         } else if (type === 'html') {
             docsIframe.classList.remove('hidden');
         } else {
+            if (docsToc) docsToc.classList.remove('hidden');  // TOC 仅在 MD 模式显示
             docsRendered.classList.remove('hidden');
         }
+    }
+    
+    // 生成 Markdown 文档的目录（TOC）
+    function renderToc(mdText) {
+        if (!docsToc) return;
+        // 提取所有 h1/h2/h3 标题
+        const headingRe = /^(#{1,3})\s+(.+)$/gm;
+        const headings = [];
+        let m;
+        while ((m = headingRe.exec(mdText)) !== null) {
+            const level = m[1].length;
+            const text = m[2].replace(/`([^`]+)`/g, '$1').trim();
+            headings.push({ level, text });
+        }
+        
+        if (headings.length < 2) {
+            docsToc.classList.add('hidden');
+            return;
+        }
+        docsToc.classList.remove('hidden');
+        let html = '<div class="docs-toc-title">📑 目录</div><ul class="docs-toc-list">';
+        headings.forEach((h, i) => {
+            html += `<li class="docs-toc-item docs-toc-l${h.level}"><a href="#toc-h${i}" class="docs-toc-link">${h.text}</a></li>`;
+        });
+        html += '</ul>';
+        docsToc.innerHTML = html;
+    }
+    
+    // 在指定容器中渲染 Mermaid 图表
+    function renderMermaidInElement(container) {
+        if (!container) return;
+        const mermaidEls = container.querySelectorAll('.mermaid-code-block, pre code.language-mermaid');
+        if (mermaidEls.length === 0) return;
+        // 延迟渲染，等待 marked 处理完毕
+        setTimeout(() => {
+            try {
+                if (typeof mermaid !== 'undefined' && mermaid.run) {
+                    mermaid.run({ querySelector: '.mermaid-code-block, .language-mermaid' });
+                }
+            } catch (e) {
+                // 静默失败，Mermaid 可能未初始化
+            }
+        }, 150);
+    }
+    // 为容器中的 h1/h2/h3 按顺序添加 id 属性（支持 TOC 锚点跳转）
+    function addHeadingIds(container) {
+        if (!container) return;
+        const headings = container.querySelectorAll('h1, h2, h3');
+        headings.forEach((h, i) => {
+            h.id = 'toc-h' + i;
+        });
+    }
+    
+    // 更新 TOC 中的锚点链接，使其与 addHeadingIds 生成的 id 对应
+    function syncTocAnchors() {
+        if (!docsToc) return;
+        const links = docsToc.querySelectorAll('.docs-toc-link');
+        const headings = docsRendered.querySelectorAll('h1, h2, h3');
+        links.forEach((link, i) => {
+            if (i < headings.length) {
+                link.href = '#' + headings[i].id;
+            }
+        });
     }
     
     // 刷新按钮
@@ -1997,9 +2101,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const docsTabBtn = document.querySelector('[data-tab="docs"]');
     if (docsTabBtn) {
         docsTabBtn.addEventListener('click', () => {
-            if (docsFileList.children.length <= 1 && docsFileList.querySelector('.docs-loading')) {
+            if (_allDocsFiles.length === 0 && docsFileList.querySelector('.docs-loading')) {
                 loadDocsList();
             }
         });
+    }
+    
+    // 搜索输入事件
+    if (docsSearch) {
+        docsSearch.addEventListener('input', () => renderDocsList());
+    }
+    
+    // 排序切换事件
+    if (docsSortSelect) {
+        docsSortSelect.addEventListener('change', () => renderDocsList());
     }
 });

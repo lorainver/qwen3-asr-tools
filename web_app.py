@@ -577,9 +577,17 @@ DOCS_SCAN_DIRS = ["", "docs", "templates"]  # 空字符串表示根目录
 # 排除的目录名
 DOCS_EXCLUDE_DIRS = {"venv", "models", "scratch", "__pycache__", ".git", "node_modules", "gptqmodel_build"}
 
+# 文件列表缓存（5 秒 TTL）
+_docs_cache = {"ts": 0.0, "data": None}
+
 @app.get("/api/docs/list")
 async def api_docs_list():
-    """列出项目目录下的 HTML 和 Markdown 文件"""
+    """列出项目目录下的 HTML 和 Markdown 文件（带 5 秒 TTL 缓存）"""
+    global _docs_cache
+    now = time.time()
+    if _docs_cache["data"] is not None and (now - _docs_cache["ts"]) < 5:
+        return {"files": _docs_cache["data"], "cached": True}
+
     files = []
     seen = set()  # 去重（按相对路径）
     
@@ -633,22 +641,18 @@ async def api_docs_list():
         else:
             f["size_str"] = f"{size/1024/1024:.1f} MB"
     
+    _docs_cache = {"ts": now, "data": files}
     return {"files": files}
 
 
 @app.get("/api/docs/read")
 async def api_docs_read(path: str):
     """读取文档文件内容"""
-    # 安全检查：防止路径遍历
-    safe_path = path.replace("\\", "/").lstrip("/")
-    if ".." in safe_path.split("/"):
-        return {"error": "路径不合法"}
-    
-    full_path = os.path.join(BASE_DIR, safe_path)
-    full_path = os.path.normpath(full_path)
-    
-    # 确保在 BASE_DIR 内
-    if not full_path.startswith(os.path.normpath(BASE_DIR)):
+    # 安全检查：用 realpath 解析所有 .. 和符号链接，防止路径遍历
+    raw = os.path.join(BASE_DIR, path.replace("\\", "/"))
+    full_path = os.path.realpath(raw)
+    base_real = os.path.realpath(BASE_DIR)
+    if not (full_path == base_real or full_path.startswith(base_real + os.sep)):
         return {"error": "路径不合法"}
     
     if not os.path.isfile(full_path):
@@ -680,21 +684,20 @@ async def api_docs_read(path: str):
 @app.get("/api/docs/view")
 async def api_docs_view(path: str):
     """在新标签页中全屏查看文档（返回完整 HTML 页面）"""
-    # 安全检查：防止路径遍历
-    safe_path = path.replace("\\", "/").lstrip("/")
-    if ".." in safe_path.split("/"):
-        return HTMLResponse("<h1>路径不合法</h1>", status_code=400)
-    
-    full_path = os.path.join(BASE_DIR, safe_path)
-    full_path = os.path.normpath(full_path)
-    
-    if not full_path.startswith(os.path.normpath(BASE_DIR)):
+    # 安全检查：用 realpath 解析所有 .. 和符号链接，防止路径遍历
+    raw = os.path.join(BASE_DIR, path.replace("\\", "/"))
+    full_path = os.path.realpath(raw)
+    base_real = os.path.realpath(BASE_DIR)
+    if not (full_path == base_real or full_path.startswith(base_real + os.sep)):
         return HTMLResponse("<h1>路径不合法</h1>", status_code=400)
     
     if not os.path.isfile(full_path):
         return HTMLResponse("<h1>文件不存在</h1>", status_code=404)
     
+    # 二次确认扩展名（realpath 解析后再次检查）
     ext = os.path.splitext(full_path)[1].lower()
+    if ext not in ('.html', '.htm', '.md'):
+        return HTMLResponse("<h1>不支持的文件类型</h1>", status_code=400)
     
     try:
         try:

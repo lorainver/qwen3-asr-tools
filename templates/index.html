@@ -404,6 +404,17 @@
                             <h3>📄 文档浏览</h3>
                             <button id="btn-docs-refresh" class="btn-small" title="刷新文件列表">🔄</button>
                         </div>
+                        <div class="docs-sidebar-filters">
+                            <input id="docs-search" class="docs-search-input" type="text" placeholder="🔍 搜索文件..." autocomplete="off">
+                            <select id="docs-sort" class="docs-sort-select">
+                                <option value="time-desc">⏱ 最新在前</option>
+                                <option value="time-asc">⏱ 最旧在前</option>
+                                <option value="name-asc">🔤 名称 A-Z</option>
+                                <option value="name-desc">🔤 名称 Z-A</option>
+                                <option value="size-desc">📦 最大在前</option>
+                                <option value="size-asc">📦 最小在前</option>
+                            </select>
+                        </div>
                         <div id="docs-file-list" class="docs-file-list">
                             <div class="docs-loading">加载中...</div>
                         </div>
@@ -424,6 +435,7 @@
                                     <button id="btn-docs-raw" class="btn-small" title="查看源码/渲染切换">🔤 源码</button>
                                 </div>
                             </div>
+                            <nav id="docs-toc" class="docs-toc hidden"></nav>
                             <div id="docs-rendered" class="docs-rendered markdown-content"></div>
                             <iframe id="docs-iframe" class="docs-iframe hidden" sandbox="allow-same-origin"></iframe>
                             <pre id="docs-raw-content" class="docs-raw-content hidden"></pre>
