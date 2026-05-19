@@ -764,6 +764,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 流式增量渲染
                         fullText += data.delta;
                         currentChunkText += data.delta;
+                        sumResult.dataset.rawContent = fullText;
                         
                         // 分块处理：已完成的段 + 当前正在流的段
                         if (chunkResults.length > 0) {
@@ -801,9 +802,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 html += `<div class="translate-chunk"><div class="translate-chunk-label">第 ${idx+1}/${chunkResults.length} 段</div>${renderWithThinking(r, false, globalCounter)}</div>`;
                             });
                             sumResult.innerHTML = html;
+                            sumResult.dataset.rawContent = chunkResults.join('\n\n');
                         } else {
                             // 无分块：直接渲染
                             sumResult.innerHTML = renderWithThinking(data.result, false);
+                            sumResult.dataset.rawContent = data.result || fullText;
                         }
 
                         // 计算并展示摘要统计看板
@@ -853,12 +856,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         sumCopyBtn.innerHTML = '📋 复制';
                         sumCopyBtn.onclick = async () => {
                             try {
-                                const answerEls = sumResult.querySelectorAll('.answer-content');
-                                const copyText = Array.from(answerEls)
-                                    .map(el => el.innerText.trim())
-                                    .filter(t => t)
-                                    .join('\n\n');
-                                await navigator.clipboard.writeText(copyText);
+                                let toCopyText = '';
+                                const rawMarkdown = sumResult.dataset.rawContent || '';
+                                if (rawMarkdown) {
+                                    // 完美剥离 <think>...</think> 标签，保留最纯正的原始 Markdown
+                                    toCopyText = rawMarkdown.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+                                } else {
+                                    const answerEls = sumResult.querySelectorAll('.answer-content');
+                                    toCopyText = Array.from(answerEls)
+                                        .map(el => el.innerText.trim())
+                                        .filter(t => t)
+                                        .join('\n\n') || sumResult.innerText.trim();
+                                }
+                                await navigator.clipboard.writeText(toCopyText);
                                 sumCopyBtn.innerHTML = '✅ 已复制';
                                 sumCopyBtn.classList.add('copied');
                                 setTimeout(() => {
@@ -1475,6 +1485,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             fullResponse += json.token;
                             // 流式更新:渲染 Markdown,生成时保持思考过程展开
                             loadingMsg.innerHTML = renderWithThinking(fullResponse, true);
+                            loadingMsg.dataset.rawContent = fullResponse;
                             chatHistory.scrollTop = chatHistory.scrollHeight;
 
                             // 流式语音:检测到完整句子立即送 TTS
@@ -1491,6 +1502,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 生成结束,进行最后一次渲染(允许折叠)
             loadingMsg.innerHTML = renderWithThinking(fullResponse, false);
+            loadingMsg.dataset.rawContent = fullResponse;
 
             // 完成后将回复加入消息历史
             messages.push({ "role": "assistant", "content": fullResponse });
@@ -1518,6 +1530,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 创建实际消息体 (使用 div 替代 span,以支持内部包含思考块等块级元素)
         const messageBody = document.createElement('div');
+        messageBody.dataset.rawContent = text;
 
         if (role === 'assistant') {
             // 助手消息:渲染 Markdown
@@ -1545,14 +1558,20 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 let copyText;
                 if (role === 'assistant') {
-                    // 只提取 .answer-content 的纯文本,不含思考块
-                    const answerEls = messageBody.querySelectorAll('.answer-content');
-                    copyText = Array.from(answerEls)
-                        .map(el => el.innerText.trim())
-                        .filter(t => t)
-                        .join('\n\n');
+                    const rawMarkdown = messageBody.dataset.rawContent || '';
+                    if (rawMarkdown) {
+                        // 只提取正文部分，自适应剥离 <think>...</think> 标签，保留完美原始 Markdown
+                        copyText = rawMarkdown.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+                    } else {
+                        // 降级：只提取 .answer-content 的纯文本
+                        const answerEls = messageBody.querySelectorAll('.answer-content');
+                        copyText = Array.from(answerEls)
+                            .map(el => el.innerText.trim())
+                            .filter(t => t)
+                            .join('\n\n');
+                    }
                 } else {
-                    copyText = messageBody.innerText;
+                    copyText = messageBody.dataset.rawContent || messageBody.innerText;
                 }
                 await navigator.clipboard.writeText(copyText);
                 copyBtn.innerHTML = '✅ 已复制';
@@ -1607,11 +1626,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // 取最新一条助手消息
             const lastMsg = allAssistantMsgs[allAssistantMsgs.length - 1];
             const body = lastMsg.querySelector('.markdown-content');
-            const answerEls = body ? body.querySelectorAll('.answer-content') : [];
-            const text = Array.from(answerEls)
-                .map(el => el.innerText.trim())
-                .filter(t => t)
-                .join('\n\n');
+            let text = '';
+            if (body) {
+                const rawMarkdown = body.dataset.rawContent || '';
+                if (rawMarkdown) {
+                    // 自适应剔除思考块并提取完美 Markdown
+                    text = rawMarkdown.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+                } else {
+                    const answerEls = body.querySelectorAll('.answer-content');
+                    text = Array.from(answerEls)
+                        .map(el => el.innerText.trim())
+                        .filter(t => t)
+                        .join('\n\n');
+                }
+            }
             if (!text) {
                 btnCopyLast.textContent = '⚠️ 无正文';
                 setTimeout(() => { btnCopyLast.textContent = '📋 复制正文'; }, 2000);
