@@ -1469,6 +1469,33 @@ document.addEventListener('DOMContentLoaded', () => {
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let fullResponse = '';
+            let displayedResponse = ''; // 打字机实际渲染呈现出的字符内容
+            let typingQueue = [];       // 平滑打字渲染排队缓冲区
+            let typingTimer = null;
+            let streamFinished = false; // 标记网络流是否已经接收完毕
+
+            function processTyping() {
+                if (typingQueue.length > 0) {
+                    // 动态调整打字速率：如果后端数据堆积，每次多取几个字符以平滑跟上
+                    const batchSize = Math.max(1, Math.floor(typingQueue.length / 8));
+                    const chunk = typingQueue.splice(0, batchSize).join('');
+                    displayedResponse += chunk;
+
+                    // 流式更新:渲染 Markdown,生成时保持思考过程展开
+                    loadingMsg.innerHTML = renderWithThinking(displayedResponse, true);
+                    loadingMsg.dataset.rawContent = displayedResponse;
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                    // 16ms 黄金刷新频率调度下一帧打字，契合 60Hz 视觉残留
+                    typingTimer = setTimeout(processTyping, 16);
+                } else {
+                    typingTimer = null;
+                    // 流已结束且缓存队列空了，执行最终合并收尾渲染
+                    if (streamFinished) {
+                        finalizeChat();
+                    }
+                }
+            }
 
             let buffer = '';
             while (true) {
@@ -1507,12 +1534,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         if (json.token) {
                             fullResponse += json.token;
-                            // 流式更新:渲染 Markdown,生成时保持思考过程展开
-                            loadingMsg.innerHTML = renderWithThinking(fullResponse, true);
-                            loadingMsg.dataset.rawContent = fullResponse;
-                            chatHistory.scrollTop = chatHistory.scrollHeight;
+                            // 将 Token 按字符粒度塞入排队队列
+                            typingQueue.push(...json.token.split(''));
+                            
+                            // 启动打字器运行
+                            if (!typingTimer) {
+                                processTyping();
+                            }
 
-                            // 流式语音:检测到完整句子立即送 TTS
+                            // 流式语音:检测到完整句子立即送 TTS（基于 fullResponse，零延迟触发）
                             if (useStreamingTTS) {
                                 const newSentences = extractNewSentences(fullResponse);
                                 newSentences.forEach(s => streamingAudioQueue.enqueue(s));
@@ -1524,19 +1554,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 生成结束,进行最后一次渲染(允许折叠)
-            loadingMsg.innerHTML = renderWithThinking(fullResponse, false);
-            loadingMsg.dataset.rawContent = fullResponse;
+            // 标记网络流已全部加载完
+            streamFinished = true;
+            
+            // 如果此时打字缓冲队列已无数据，立即收尾；否则等待打字完毕后在 processTyping 中收尾
+            if (!typingTimer) {
+                finalizeChat();
+            }
 
-            // 完成后将回复加入消息历史
-            messages.push({ "role": "assistant", "content": fullResponse });
+            function finalizeChat() {
+                // 生成结束,进行最后一次渲染(允许折叠)
+                loadingMsg.innerHTML = renderWithThinking(fullResponse, false);
+                loadingMsg.dataset.rawContent = fullResponse;
 
-            // 渲染 Mermaid 图表(流式结束后可能有未渲染的图表)
-            renderMermaidDiagrams();
+                // 完成后将回复加入消息历史
+                messages.push({ "role": "assistant", "content": fullResponse });
 
-            // 流式 TTS:刷入剩余未完句子
-            if (useStreamingTTS && fullResponse.substring(ttsPointer).trim()) {
-                streamingAudioQueue.enqueue(fullResponse.substring(ttsPointer).trim());
+                // 渲染 Mermaid 图表(流式结束后可能有未渲染 of 图表)
+                renderMermaidDiagrams();
+
+                // 流式 TTS:刷入剩余未完句子
+                if (useStreamingTTS && fullResponse.substring(ttsPointer).trim()) {
+                    streamingAudioQueue.enqueue(fullResponse.substring(ttsPointer).trim());
+                }
             }
         } catch (error) {
             loadingMsg.innerText = "出错了: " + error.message;
