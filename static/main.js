@@ -256,6 +256,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sumProgCont = document.getElementById('sum-progress-container');
     const sumStatus = document.getElementById('sum-status');
     const sumResult = document.getElementById('sum-result');
+    const sumAnalyticsBar = document.getElementById('sum-analytics-bar');
+    const sumAnalyticsText = document.getElementById('sum-analytics-text');
+    const sumAnalyticsFill = document.getElementById('sum-analytics-fill');
 
     // 转录卡片
     const dropZone = document.getElementById('drop-zone');
@@ -698,6 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sumProgCont.classList.remove('hidden');
             sumResult.classList.remove('hidden');
             sumResult.innerText = "";
+            if (sumAnalyticsBar) sumAnalyticsBar.classList.add('hidden');
 
             const promptType = document.getElementById('prompt-type').value;
             const targetLang = targetLangSelect && promptType === 'translate' ? targetLangSelect.value : null;
@@ -801,6 +805,48 @@ document.addEventListener('DOMContentLoaded', () => {
                             // 无分块：直接渲染
                             sumResult.innerHTML = renderWithThinking(data.result, false);
                         }
+
+                        // 计算并展示摘要统计看板
+                        let copyText = '';
+                        try {
+                            const answerEls = sumResult.querySelectorAll('.answer-content');
+                            copyText = Array.from(answerEls)
+                                .map(el => el.innerText.trim())
+                                .filter(t => t)
+                                .join('\n\n');
+                        } catch (e) {}
+                        if (!copyText) {
+                            copyText = sumResult.innerText.trim();
+                        }
+
+                        if (sumAnalyticsBar && sumAnalyticsText && sumAnalyticsFill) {
+                            const inputLen = text.length;
+                            const outputLen = copyText.length;
+                            
+                            function getEstTokens(str) {
+                                if (!str) return 0;
+                                let zh = 0;
+                                for (let i = 0; i < str.length; i++) {
+                                    if (str.charCodeAt(i) >= 0x4e00 && str.charCodeAt(i) <= 0x9fff) {
+                                        zh++;
+                                    }
+                                }
+                                const other = str.length - zh;
+                                return Math.round(zh * 1.5 + other / 4);
+                            }
+
+                            const inputTokens = getEstTokens(text);
+                            const outputTokens = getEstTokens(copyText);
+
+                            const compressRatio = (inputLen / Math.max(1, outputLen)).toFixed(1);
+                            const compressPct = Math.max(0, Math.min(100, (1 - outputLen / inputLen) * 100)).toFixed(1);
+
+                            sumAnalyticsText.innerHTML = `输入: <strong>${(inputLen/1000).toFixed(1)}K</strong> 字 (${(inputTokens/1000).toFixed(1)}K Token) ➜ 摘要: <strong>${(outputLen/1000).toFixed(1)}K</strong> 字 (${(outputTokens/1000).toFixed(1)}K Token) | 提炼率: <strong>${compressPct}%</strong> (约 <strong>${compressRatio}x</strong> 压缩)`;
+                            sumAnalyticsFill.style.width = `${compressPct}%`;
+                            sumAnalyticsBar.title = `智库摘要内容精炼指标：为您压缩了 ${compressPct}% 的文章篇幅，提炼出核心骨架。`;
+                            sumAnalyticsBar.classList.remove('hidden');
+                        }
+
                         // 添加复制按钮（只复制正文，不含思考块）
                         const sumCopyBtn = document.createElement('button');
                         sumCopyBtn.className = 'btn-icon btn-copy-result';
@@ -859,6 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 清理可能存在的复制按钮
             const existCopyBtn = sumResult.parentNode.querySelector('.btn-copy-result');
             if (existCopyBtn) existCopyBtn.remove();
+            if (sumAnalyticsBar) sumAnalyticsBar.classList.add('hidden');
             sumProgCont.classList.add('hidden');
             btnNewTask.classList.add('hidden');
             meetingText.classList.remove('hidden');

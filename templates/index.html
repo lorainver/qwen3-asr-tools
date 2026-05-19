@@ -143,6 +143,11 @@
                             <div class="result-box-wrapper" style="position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100%;">
                                 <div id="sum-result" class="result-box markdown-content hidden" style="width: 100%;"></div>
                             </div>
+                            <!-- 智库摘要分析看板 -->
+                            <div id="sum-analytics-bar" class="context-indicator hidden" style="margin-top: var(--space-md); padding: 8px 12px; background: rgba(56, 189, 248, 0.03); border: 1px solid rgba(56, 189, 248, 0.08); border-radius: 6px; display: flex; align-items: center; width: 100%;">
+                                <span id="sum-analytics-text" style="font-weight: 500; font-size: 0.8rem; color: var(--text-muted); white-space: nowrap;">输入: 0 字 -> 摘要: 0 字 (压缩率: 0.0%)</span>
+                                <div class="context-bar" style="margin-left: 10px; height: 4px; background: rgba(255,255,255,0.05);"><div id="sum-analytics-fill" class="context-bar-fill" style="width: 0%; background: linear-gradient(90deg, #3b82f6, #38bdf8);"></div></div>
+                            </div>
                             <button id="btn-new-task" class="btn secondary hidden">📝 新建任务</button>
                         </div>
                     </div>
