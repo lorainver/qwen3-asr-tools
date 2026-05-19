@@ -80,6 +80,28 @@ class LongTextSummarizer:
             return {'id': self.current_model_id, 'name': model_info.get('name', self.current_model_id), 'path': model_info.get('path', self.model_path)}
         return {'id': self.current_model_id, 'name': 'Unknown', 'path': self.model_path}
 
+    def _is_ollama_model(self, model_id):
+        if not model_id:
+            return False
+        if model_id.startswith("ollama:"):
+            return True
+        model_info = self.available_models.get(model_id)
+        if model_info and model_info.get('is_remote', False):
+            api_url = model_info.get('api_url', '')
+            if api_url and "11434" in api_url:
+                return True
+        return False
+
+    def _get_ollama_model_name(self, model_id):
+        if not model_id:
+            return None
+        if model_id.startswith("ollama:"):
+            return model_id.split(":", 1)[1]
+        model_info = self.available_models.get(model_id)
+        if model_info:
+            return model_info.get('model_id', model_id)
+        return None
+
     def _unload_ollama_model(self, model_name: str):
         """向本地 Ollama 服务发送请求，立即从显存中释放指定模型"""
         try:
@@ -98,14 +120,16 @@ class LongTextSummarizer:
             logger.warning(f"无法向 Ollama 发送卸载请求 (可能本地 Ollama 未启动): {e}")
 
     def switch_model(self, model_id):
-        # 【动作 A】：如果当前使用的是 Ollama，且新模型是本地模型或非相同 Ollama 模型，则强行退掉旧 Ollama 显存
-        if self.current_model_id.startswith("ollama:") and not model_id.startswith("ollama:"):
-            last_ollama_name = self.current_model_id.split(":", 1)[1]
-            self._unload_ollama_model(last_ollama_name)
-        elif self.current_model_id.startswith("ollama:") and model_id.startswith("ollama:") and model_id != self.current_model_id:
-            # 切换到不同的 Ollama 模型，把当前的 Ollama 模型也退掉，防止显存重叠
-            last_ollama_name = self.current_model_id.split(":", 1)[1]
-            self._unload_ollama_model(last_ollama_name)
+        # 【动作 A】：如果当前使用的是 Ollama 模型，且即将切换到本地模型，或者切换到不同的 Ollama 模型，则强行退掉旧 Ollama 显存
+        if self._is_ollama_model(self.current_model_id):
+            is_new_ollama = self._is_ollama_model(model_id)
+            current_ollama_name = self._get_ollama_model_name(self.current_model_id)
+            new_ollama_name = self._get_ollama_model_name(model_id)
+            
+            if not is_new_ollama or (is_new_ollama and current_ollama_name != new_ollama_name):
+                # 切换到非 Ollama 模型，或者不同的 Ollama 模型，触发卸载
+                if current_ollama_name:
+                    self._unload_ollama_model(current_ollama_name)
 
         # 处理动态 Ollama 模型 ID (格式: ollama:name)
         if model_id.startswith("ollama:"):
@@ -148,6 +172,12 @@ class LongTextSummarizer:
         self.api_url = model_info.get('api_url')
         self.is_remote = model_info.get('is_remote', False)
         
+        # 【动作 C】：如果要从本地切到 predefined Ollama 模型，也自动帮用户把本地模型退掉
+        if self._is_ollama_model(model_id):
+            if self.model is not None:
+                logger.info("⚡ 检测到当前载入了本地模型，正在自动卸载以释放显存给 Ollama...")
+                self._unload_model()
+
         if self.is_remote:
             logger.info(f"🌐 已切换到远程模型 '{model_id}' -> {self.api_url}")
         else:
@@ -214,9 +244,10 @@ class LongTextSummarizer:
 
     def _unload_model(self):
         # 1. 如果当前是 Ollama 模型，且主动触发卸载（如一键释放），则通知 Ollama 释放显存
-        if self.current_model_id and self.current_model_id.startswith("ollama:"):
-            ollama_name = self.current_model_id.split(":", 1)[1]
-            self._unload_ollama_model(ollama_name)
+        if self._is_ollama_model(self.current_model_id):
+            ollama_name = self._get_ollama_model_name(self.current_model_id)
+            if ollama_name:
+                self._unload_ollama_model(ollama_name)
 
         # 2. 如果是本地模型，执行标准的 HuggingFace 卸载与显存回收
         if self.model is not None:
