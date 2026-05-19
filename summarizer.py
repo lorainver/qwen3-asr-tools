@@ -128,6 +128,9 @@ class LongTextSummarizer:
 
     def _load_model(self):
         if self.model is None:
+            # 1.5 显存互斥锁：确保 ASR 模型已被释放以腾空 VRAM 给 LLM 模型
+            model_manager.prepare_for_llm()
+            
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, AutoConfig
             from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor

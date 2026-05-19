@@ -141,6 +141,64 @@ class ModelManager:
         print("[ModelManager] ✓ 显存释放完成，Web 服务继续运行")
         return {"status": "ok", "message": "GPU memory released, server still running"}
     
+    def prepare_for_transcription(self):
+        """
+        为加载 ASR 转录模型做准备
+        核心逻辑：若 LLM (Summarizer) 已载入显存，则自动执行卸载以完全释放显存给 ASR 模型。
+        """
+        print("\n[ModelManager] [Exclusive Lock] 检测是否需要释放 LLM 显存以准备 ASR 转录...")
+        with self._lock:
+            summarizer = self._summarizer
+            is_processing = self._is_processing
+            
+        if is_processing and summarizer is not None and hasattr(summarizer, 'model') and summarizer.model is not None:
+            raise RuntimeError("当前有正在运行的 LLM 任务，请稍后再试或点击取消。")
+            
+        if summarizer is not None:
+            try:
+                has_model = hasattr(summarizer, 'model') and summarizer.model is not None
+                if has_model:
+                    print("[ModelManager] [Exclusive Lock] 发现 LLM 已载入显存，触发自动卸载...")
+                    summarizer._unload_model()
+                    
+                    # 强力回收
+                    import gc
+                    import torch
+                    gc.collect()
+                    torch.cuda.empty_cache()
+                    print("[ModelManager] [Exclusive Lock] ✓ LLM 已被成功卸载，显存已清空。")
+                else:
+                    print("[ModelManager] [Exclusive Lock] 确认 LLM 未载入显存，无需释放。")
+            except Exception as e:
+                print(f"[ModelManager] [Exclusive Lock] 自动释放 LLM 显存失败: {e}")
+
+    def prepare_for_llm(self):
+        """
+        为加载 LLM 模型做准备
+        核心逻辑：若 ASR 任务处于运行中，拒绝加载以避免冲突；若 ASR 转录模型载入但未清理，自动进行清理释放。
+        """
+        print("\n[ModelManager] [Exclusive Lock] 检测是否需要释放 ASR 显存以准备 LLM 任务...")
+        with self._lock:
+            transcriber_model = self._transcriber_model
+            is_processing = self._is_processing
+            
+        if is_processing and transcriber_model is not None:
+            raise RuntimeError("当前有正在运行的语音转录任务，无法同时加载 LLM 模型。请稍候或取消转录任务。")
+            
+        if transcriber_model is not None:
+            try:
+                print("[ModelManager] [Exclusive Lock] 发现残留的 ASR 模型对象，触发自动释放清理...")
+                self._transcriber_model = None
+                
+                # 强力回收
+                import gc
+                import torch
+                gc.collect()
+                torch.cuda.empty_cache()
+                print("[ModelManager] [Exclusive Lock] ✓ ASR 残留资源已成功释放。")
+            except Exception as e:
+                print(f"[ModelManager] [Exclusive Lock] 自动释放 ASR 显存失败: {e}")
+
     def get_status(self):
         """获取当前状态"""
         with self._lock:

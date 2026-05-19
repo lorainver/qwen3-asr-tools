@@ -97,8 +97,14 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         n_chunks = int(np.ceil(total_sec / chunk_size))
         
         if yield_progress:
-            yield json.dumps({"status": "processing", "progress": 5, "message": "正在加载 Qwen3-ASR 模型..."}) + "\n"
+            yield json.dumps({"status": "processing", "progress": 5, "message": "检测显存并释放冲突模型..."}) + "\n"
         
+        # 1.5 显存互斥锁：确保 LLM 模型已被释放以腾空 VRAM 给 ASR 模型
+        model_manager.prepare_for_transcription()
+        
+        if yield_progress:
+            yield json.dumps({"status": "processing", "progress": 7, "message": "正在加载 Qwen3-ASR 模型..."}) + "\n"
+            
         # 2. 加载模型
         from qwen_asr import Qwen3ASRModel
         import transformers
