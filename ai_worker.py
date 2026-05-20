@@ -290,31 +290,24 @@ async def api_chat_stream(request: ChatRequest):
             await asyncio.sleep(0.01)
 
         try:
-            # 关键修复：将同步阻塞的生成器放入线程池，通过 Queue 桥接到异步生成器
-            import queue
-            token_queue = queue.Queue()
+            # 关键修复：将同步阻塞的生成器放入线程池，通过 asyncio.Queue 零延迟桥接到异步生成器
+            async_queue = asyncio.Queue()
             _SENTINEL = object()
+            loop = asyncio.get_running_loop()
 
             def _run_sync_stream():
                 try:
                     for token in summarizer.chat_stream(messages, enable_think=request.enable_think):
-                        token_queue.put(token)
+                        loop.call_soon_threadsafe(async_queue.put_nowait, token)
                 except Exception as e:
-                    token_queue.put(e)
+                    loop.call_soon_threadsafe(async_queue.put_nowait, e)
                 finally:
-                    token_queue.put(_SENTINEL)
+                    loop.call_soon_threadsafe(async_queue.put_nowait, _SENTINEL)
 
-            loop = asyncio.get_event_loop()
             loop.run_in_executor(_stream_executor, _run_sync_stream)
 
             while True:
-                # 非阻塞轮询 + 短暂 sleep，让事件循环有机会刷写已 yield 的数据
-                try:
-                    token = token_queue.get_nowait()
-                except queue.Empty:
-                    await asyncio.sleep(0.02)
-                    continue
-
+                token = await async_queue.get()
                 if token is _SENTINEL:
                     break
                 if isinstance(token, Exception):
@@ -516,7 +509,7 @@ async def api_summarize(request: SummarizeRequest):
                     chunk_result += token
                     full_result += token
                     yield json.dumps({"status": "streaming", "delta": token}) + "\n"
-                    await asyncio.sleep(0.01)
+                    await asyncio.sleep(0)
 
                 # 分块完成:发送 chunk_complete 事件(前端据此分段渲染)
                 yield json.dumps({"status": "chunk_complete", "chunk": i + 1, "total_chunks": total_chunks, "chunk_result": chunk_result}) + "\n"

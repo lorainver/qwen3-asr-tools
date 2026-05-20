@@ -29,6 +29,102 @@ document.addEventListener('DOMContentLoaded', () => {
     // 全局 Mermaid 计数器
     let mermaidCounter = 0;
 
+    // 增量 Markdown 解析段落缓存
+    let paragraphsCache = [];
+
+    /**
+     * 高性能增量防抖 Markdown 解析渲染引擎
+     * 对未闭合的代码块和公式提供精美的高科技防抖包裹效果，其余部分使用增量缓存渲染
+     */
+    function renderParagraphsIncremental(text, isGenerating) {
+        if (!text) return '';
+        
+        // 分割段落
+        const paragraphs = text.split('\n\n');
+        let answerHtml = '';
+
+        // 比对并更新缓存
+        for (let i = 0; i < paragraphs.length; i++) {
+            const pText = paragraphs[i];
+            const isLast = i === paragraphs.length - 1;
+
+            if (!isLast) {
+                // 历史段落：查表缓存
+                if (paragraphsCache[i] && paragraphsCache[i].raw === pText) {
+                    answerHtml += paragraphsCache[i].rendered;
+                } else {
+                    const rendered = `<div class="p-markdown">${renderMarkdown(pText)}</div>`;
+                    paragraphsCache[i] = { raw: pText, rendered: rendered };
+                    answerHtml += rendered;
+                }
+            } else {
+                // 活跃段落（最后一段）：频繁变动，不存长期缓存，直接实时防抖渲染
+                let renderedLast = '';
+                if (isGenerating) {
+                    const codeBlockCount = (pText.match(/```/g) || []).length;
+                    const isCodeBlockUnclosed = codeBlockCount % 2 === 1;
+
+                    const mathBlockCount = (pText.match(/\$\$/g) || []).length;
+                    const isMathBlockUnclosed = mathBlockCount % 2 === 1;
+
+                    if (isCodeBlockUnclosed) {
+                        const lastCodeIndex = pText.lastIndexOf('```');
+                        const preCodeText = pText.substring(0, lastCodeIndex);
+                        const codeBlockText = pText.substring(lastCodeIndex + 3);
+                        
+                        const matchLang = codeBlockText.match(/^([a-zA-Z0-9+#-]+)?\n?/);
+                        const lang = matchLang ? (matchLang[1] || '') : '';
+                        const codeContent = codeBlockText.substring(lang.length).replace(/^\n/, '');
+
+                        const renderedPre = renderMarkdown(preCodeText);
+                        renderedLast = `<div class="p-markdown">${renderedPre}</div>` +
+                            `<div class="incremental-code-block">` +
+                                `<div class="code-block-header">` +
+                                    `<span class="code-lang-tag">${(lang || 'CODE').toUpperCase()}</span>` +
+                                    `<span class="pulse-dot"></span>` +
+                                    `<span class="status-text">⚙️ 正在输出代码...</span>` +
+                                `</div>` +
+                                `<pre class="hljs"><code>${escapeHtmlForCode(codeContent)}</code></pre>` +
+                            `</div>`;
+                    } else if (isMathBlockUnclosed) {
+                        const lastMathIndex = pText.lastIndexOf('$$');
+                        const preMathText = pText.substring(0, lastMathIndex);
+                        const mathContent = pText.substring(lastMathIndex + 2);
+
+                        const renderedPre = renderMarkdown(preMathText);
+                        renderedLast = `<div class="p-markdown">${renderedPre}</div>` +
+                            `<div class="incremental-math-block">` +
+                                `<div class="math-block-header">⚙️ 正在输出数学公式...</div>` +
+                                `<div class="math-preview-content">$$ ${escapeHtmlForCode(mathContent)}</div>` +
+                            `</div>`;
+                    } else {
+                        renderedLast = `<div class="p-markdown">${renderMarkdown(pText)}</div>`;
+                    }
+                } else {
+                    renderedLast = `<div class="p-markdown">${renderMarkdown(pText)}</div>`;
+                }
+                answerHtml += renderedLast;
+            }
+        }
+        
+        // 缓存截断，防多余段落堆积
+        if (paragraphsCache.length > paragraphs.length - 1) {
+            paragraphsCache.length = Math.max(0, paragraphs.length - 1);
+        }
+
+        return answerHtml;
+    }
+
+    function escapeHtmlForCode(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     /**
      * 渲染 Markdown 文本为 HTML
      * 支持:标准 Markdown + KaTeX 数学公式 + Mermaid 图表
@@ -1140,6 +1236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnNewChat) {
         btnNewChat.addEventListener('click', () => {
+            paragraphsCache = []; // 清空增量 Markdown 解析缓存
             // 如果当前有对话内容，在后台静默备份保存，绝对不让 UI 等待 AI 标题生成
             if (messages.length > 1) {
                 // 深度复制 messages，防止在保存过程中被 messages = [] 瞬间清空导致上传空数据
@@ -1388,6 +1485,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const loadResp = await fetch(`/api/history/load?path=${encodeURIComponent(item.path)}`);
                         const loadData = await loadResp.json();
                         if (loadData.messages) {
+                            paragraphsCache = []; // 重新加载历史，必须完全重置段落解析缓存
                             messages = loadData.messages;
                             currentChatPath = item.path;
                             currentChatTitle = loadData.title || item.title;
@@ -1625,6 +1723,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function sendChatMessage() {
+        paragraphsCache = []; // 清空增量 Markdown 解析缓存
         // 从当前活动的输入框获取文本
         const activeInput = isInputExpanded ? chatInputExpanded : chatInput;
         const text = activeInput.value.trim();
@@ -1728,13 +1827,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (c) {
                             localCounter++;
                             const openAttr = isGenerating ? ' open' : '';
-                            // 【修复问题 1】轻量模式下跳过 renderMarkdown，直接转义显示
+                            // 思考过程内容，仍可使用 light/full 渲染
                             const contentHtml = lightweight ? escapeHtml(c) : renderMarkdown(c);
                             thinkingHtml += `<div class="thinking-block"><details${openAttr}><summary>💭 思考过程 #${localCounter} (点击展开)</summary><div class="thinking-content">${contentHtml}</div></details></div>`;
                         }
                     } else {
-                        // 【修复问题 1】轻量模式下跳过 renderMarkdown，直接转义显示
-                        const contentHtml = lightweight ? escapeHtml(seg.content) : renderMarkdown(seg.content);
+                        // 思考之外的正文，流式期间使用我们的高性能增量防抖 Markdown 解析渲染引擎
+                        const contentHtml = renderParagraphsIncremental(seg.content, isGenerating);
                         answerHtml += `<div class="answer-content">${contentHtml}</div>`;
                     }
                 }
@@ -1766,14 +1865,32 @@ document.addEventListener('DOMContentLoaded', () => {
             
             function processTyping() {
                 typingRAF = null;
-                if (typingQueue.length > 0) {
-                    // 动态调整打字速率：如果后端数据堆积，每次多取几个字符以平滑跟上
-                    const batchSize = Math.max(1, Math.floor(typingQueue.length / 8));
+                const queueLength = typingQueue.length;
+                if (queueLength > 0) {
+                    // 超频自适应打字消费算法，从物理上杜绝队列积压卡顿
+                    let batchSize = 1;
+                    if (queueLength > 150) {
+                        // 极其严重积压，直接一次吞噬全部，瞬间追平网络
+                        batchSize = queueLength;
+                    } else if (queueLength > 80) {
+                        // 严重积压，按 1/3 速度吞噬
+                        batchSize = Math.max(8, Math.floor(queueLength / 3));
+                    } else if (queueLength > 30) {
+                        // 中度积压，按 1/5 速度吞噬
+                        batchSize = Math.max(4, Math.floor(queueLength / 5));
+                    } else if (queueLength > 10) {
+                        // 轻度积压，每次出 2-3 个字
+                        batchSize = 2;
+                    } else {
+                        // 无积压，单字精致吐墨
+                        batchSize = 1;
+                    }
+
                     const chunk = typingQueue.splice(0, batchSize).join('');
                     displayedResponse += chunk;
 
-                    // 双轨渲染：流式期间使用轻量模式（跳过 renderMarkdown），避免全文重解析卡顿
-                    updateDoubleTracks(displayedResponse, true, true);
+                    // 禁用 lightweight，采用增量防抖引擎进行高质量渲染，Markdown 实时完美展现
+                    updateDoubleTracks(displayedResponse, true, false);
                     chatHistory.scrollTop = chatHistory.scrollHeight;
 
                     // 用 requestAnimationFrame 对齐屏幕刷新，避免 setTimeout 累积延迟
@@ -1781,14 +1898,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         typingRAF = requestAnimationFrame(processTyping);
                     }
                 } else {
-                    // 打字队列空了：如果流已结束则收尾；否则做一次完整 Markdown 渲染刷新
+                    // 打字队列空了：如果流已结束则收尾
                     if (streamFinished) {
                         finalizeChat();
-                    } else {
-                        // 队列暂时空但流未结束：做一次完整渲染（让 Markdown/KaTeX 生效）
-                        // 避免 lightweight ↔ fullMarkdown 高频切换导致视觉抖动
-                        // 完整 Markdown 渲染只在 finalizeChat() 中做一次
-                        //updateDoubleTracks(displayedResponse, true, false);
                     }
                 }
             }

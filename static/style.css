@@ -2491,3 +2491,127 @@ textarea:focus {
     opacity: 0.5;
 }
 
+/* ==========================================================================
+   高性能增量实时 Markdown 防抖渲染引擎样式
+   ========================================================================== */
+
+/* 增量段落容器，确保 Markdown 内部段落布局紧凑完美 */
+.p-markdown {
+    margin-bottom: 0.8em;
+}
+.p-markdown:last-child {
+    margin-bottom: 0;
+}
+
+/* 高科技未闭合代码块容器 */
+.incremental-code-block {
+    margin: 1em 0;
+    border: 1px solid rgba(14, 165, 233, 0.35); /* 青蓝发光边框 */
+    border-radius: var(--radius-sm);
+    background: rgba(15, 23, 42, 0.7); /* 暗色玻璃拟态底色 */
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.15), inset 0 0 12px rgba(14, 165, 233, 0.05);
+    animation: pulseBorder 2.5s infinite ease-in-out;
+}
+
+/* 高科技未闭合代码块头部 */
+.incremental-code-block .code-block-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    background: rgba(14, 165, 233, 0.08);
+    padding: var(--space-sm) var(--space-lg);
+    border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+}
+
+.incremental-code-block .code-lang-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    letter-spacing: 0.05em;
+}
+
+.incremental-code-block .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+    animation: typingPulse 1s infinite alternate;
+}
+
+.incremental-code-block .status-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.incremental-code-block pre {
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: var(--space-lg) !important;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    line-height: 1.5;
+    overflow-x: auto;
+}
+
+/* 高科技数学公式未闭合占位块 */
+.incremental-math-block {
+    margin: 1em 0;
+    border: 1px dashed rgba(168, 85, 247, 0.4); /* 紫色虚线发光边框 */
+    border-radius: var(--radius-sm);
+    background: rgba(15, 23, 42, 0.5);
+    padding: var(--space-lg);
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.1);
+}
+
+.incremental-math-block .math-block-header {
+    font-size: 0.75rem;
+    color: rgba(168, 85, 247, 0.8);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.incremental-math-block .math-preview-content {
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.88em;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    background: rgba(255, 255, 255, 0.02);
+    padding: var(--space-md);
+    border-radius: var(--radius-xs);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 浅色模式适配 */
+.light-mode .incremental-code-block {
+    background: rgba(248, 250, 252, 0.8);
+    border-color: rgba(14, 165, 233, 0.4);
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.08);
+}
+.light-mode .incremental-code-block .code-block-header {
+    background: rgba(14, 165, 233, 0.04);
+    border-bottom-color: rgba(14, 165, 233, 0.15);
+}
+.light-mode .incremental-math-block {
+    background: rgba(248, 250, 252, 0.8);
+    border-color: rgba(168, 85, 247, 0.4);
+}
+
+@keyframes typingPulse {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    100% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes pulseBorder {
+    0% { border-color: rgba(14, 165, 233, 0.3); box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1); }
+    50% { border-color: rgba(14, 165, 233, 0.6); box-shadow: 0 4px 20px rgba(14, 165, 233, 0.25); }
+    100% { border-color: rgba(14, 165, 233, 0.3); box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1); }
+}
