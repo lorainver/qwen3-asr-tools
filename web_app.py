@@ -143,11 +143,23 @@ async def shutdown_event():
     is_shutting_down = True
     ai_worker.intentional_stop = True
     logger.info("主服务正在关闭，通知所有后台长连接释放...")
+    try:
+        await http_client.aclose()
+        logger.info("✓ 全局 HTTP 客户端连接池已成功关闭并释放资源")
+    except Exception as e:
+        logger.warning(f"关闭全局 HTTP 客户端连接池时出错: {e}")
 
 # ========== 初始化 ==========
 
 pynvml.nvmlInit()
 tts_engine = TTSEngine()
+
+# 全局可复用的异步 HTTP 客户端连接池，配置大容量 keepalive
+# 消除系统后台高频轮询（GPU状态、Ollama存活等）导致的 Socket 端口重建开销与 TIME_WAIT 积压
+http_client = httpx.AsyncClient(
+    limits=httpx.Limits(max_keepalive_connections=50, max_connections=200),
+    timeout=httpx.Timeout(300.0)  # 对应大文件或长文 AI 响应的默认超时
+)
 
 # ========== AI Worker 进程管理 ==========
 
@@ -342,32 +354,34 @@ ai_worker = AIWorkerManager()
 # ========== 代理工具函数 ==========
 
 async def proxy_to_worker(method: str, path: str, **kwargs):
-    """代理请求到 AI Worker"""
+    """代理请求到 AI Worker (复用全局 HTTP 连接池)"""
     if not ai_worker.ensure_running():
         return {"error": "AI Worker 启动失败"}
     
     url = f"{AI_WORKER_URL}{path}"
     
-    async with httpx.AsyncClient(timeout=300.0) as client:
+    try:
+        if method.upper() == "GET":
+            resp = await http_client.get(url, **kwargs)
+        else:
+            resp = await http_client.post(url, **kwargs)
+        return resp.json()
+    except (httpx.ConnectError, httpx.ConnectTimeout):
+        # Worker 可能刚启动，重试一次
+        await asyncio.sleep(2)
         try:
             if method.upper() == "GET":
-                resp = await client.get(url, **kwargs)
+                resp = await http_client.get(url, **kwargs)
             else:
-                resp = await client.post(url, **kwargs)
-            return resp.json()
-        except httpx.ConnectError:
-            # Worker 可能刚启动，重试一次
-            await asyncio.sleep(2)
-            if method.upper() == "GET":
-                resp = await client.get(url, **kwargs)
-            else:
-                resp = await client.post(url, **kwargs)
+                resp = await http_client.post(url, **kwargs)
             return resp.json()
         except Exception as e:
             return {"error": str(e)}
+    except Exception as e:
+        return {"error": str(e)}
 
 async def proxy_stream_to_worker(method: str, path: str, **kwargs):
-    """代理流式请求到 AI Worker"""
+    """代理流式请求到 AI Worker (复用全局 HTTP 连接池)"""
     if not ai_worker.ensure_running():
         async def error_gen():
             yield (json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n").encode("utf-8")
@@ -383,48 +397,43 @@ async def proxy_stream_to_worker(method: str, path: str, **kwargs):
     
     url = f"{AI_WORKER_URL}{path}"
     
-    async with httpx.AsyncClient(timeout=300.0) as client:
-        try:
-            if method.upper() == "GET":
-                async with client.stream("GET", url, **kwargs) as resp:
-                    async def stream_gen():
-                        async for chunk in resp.aiter_bytes():
-                            yield chunk
-                    return StreamingResponse(
-                        stream_gen(),
-                        media_type="text/plain",
-                        headers={
-                            "Cache-Control": "no-cache",
-                            "X-Accel-Buffering": "no",
-                            "Connection": "keep-alive"
-                        }
-                    )
-            else:
-                async with client.stream("POST", url, **kwargs) as resp:
-                    async def stream_gen():
-                        async for chunk in resp.aiter_bytes():
-                            yield chunk
-                    return StreamingResponse(
-                        stream_gen(),
-                        media_type="text/plain",
-                        headers={
-                            "Cache-Control": "no-cache",
-                            "X-Accel-Buffering": "no",
-                            "Connection": "keep-alive"
-                        }
-                    )
-        except Exception as e:
-            async def error_gen():
-                yield (json.dumps({"status": "error", "message": str(e)}) + "\n").encode("utf-8")
-            return StreamingResponse(
-                error_gen(),
-                media_type="text/plain",
-                headers={
-                    "Cache-Control": "no-cache",
-                    "X-Accel-Buffering": "no",
-                    "Connection": "keep-alive"
-                }
-            )
+    try:
+        # 使用全局连接池发起流式请求，确保流结束后仅释放 response 资源，而非整个 client 资源
+        if method.upper() == "GET":
+            req = http_client.build_request("GET", url, **kwargs)
+        else:
+            req = http_client.build_request("POST", url, **kwargs)
+            
+        resp = await http_client.send(req, stream=True)
+        
+        async def stream_gen():
+            try:
+                async for chunk in resp.aiter_bytes():
+                    yield chunk
+            finally:
+                await resp.aclose()
+                
+        return StreamingResponse(
+            stream_gen(),
+            media_type="text/plain",
+            headers={
+                "Cache-Control": "no-cache",
+                "X-Accel-Buffering": "no",
+                "Connection": "keep-alive"
+            }
+        )
+    except Exception as e:
+        async def error_gen():
+            yield (json.dumps({"status": "error", "message": f"代理流式请求失败: {e}"}) + "\n").encode("utf-8")
+        return StreamingResponse(
+            error_gen(),
+            media_type="text/plain",
+            headers={
+                "Cache-Control": "no-cache",
+                "X-Accel-Buffering": "no",
+                "Connection": "keep-alive"
+            }
+        )
 
 # ========== Pydantic 模型 ==========
 
@@ -1026,49 +1035,48 @@ async def get_ollama_status():
     
     ps_url = f"{base_url}/api/ps"
     
-    async with httpx.AsyncClient(timeout=2.0) as client:
-        try:
-            resp = await client.get(ps_url)
-            if resp.status_code == 200:
-                data = resp.json()
-                models = data.get("models", [])
-                if not models:
-                    return {
-                        "running": True,
-                        "has_model": False,
-                        "message": "服务在线 (无运行模型)"
-                    }
-                else:
-                    # 获取当前所有加载的模型资源信息
-                    models_info = []
-                    for model in models:
-                        name = model.get("name", "Unknown")
-                        size = model.get("size", 0)
-                        size_vram = model.get("size_vram", 0)
-                        
-                        vram_gb = round(size_vram / (1024**3), 2)
-                        ram_gb = round((size - size_vram) / (1024**3), 2)
-                        total_gb = round(size / (1024**3), 2)
-                        
-                        vram_percent = round((size_vram / size) * 100, 1) if size > 0 else 0.0
-                        
-                        models_info.append({
-                            "name": name,
-                            "vram_gb": vram_gb,
-                            "ram_gb": ram_gb,
-                            "total_gb": total_gb,
-                            "vram_percent": vram_percent
-                        })
+    try:
+        resp = await http_client.get(ps_url, timeout=2.0)
+        if resp.status_code == 200:
+            data = resp.json()
+            models = data.get("models", [])
+            if not models:
+                return {
+                    "running": True,
+                    "has_model": False,
+                    "message": "服务在线 (无运行模型)"
+                }
+            else:
+                # 获取当前所有加载的模型资源信息
+                models_info = []
+                for model in models:
+                    name = model.get("name", "Unknown")
+                    size = model.get("size", 0)
+                    size_vram = model.get("size_vram", 0)
                     
-                    return {
-                        "running": True,
-                        "has_model": True,
-                        "models": models_info,
-                        "message": f"正在运行 {len(models_info)} 个模型"
-                    }
-        except Exception as e:
-            # 仅在 debug 日志记录，避免控制台刷屏
-            logger.debug(f"Ollama stats query failed: {e}")
+                    vram_gb = round(size_vram / (1024**3), 2)
+                    ram_gb = round((size - size_vram) / (1024**3), 2)
+                    total_gb = round(size / (1024**3), 2)
+                    
+                    vram_percent = round((size_vram / size) * 100, 1) if size > 0 else 0.0
+                    
+                    models_info.append({
+                        "name": name,
+                        "vram_gb": vram_gb,
+                        "ram_gb": ram_gb,
+                        "total_gb": total_gb,
+                        "vram_percent": vram_percent
+                    })
+                
+                return {
+                    "running": True,
+                    "has_model": True,
+                    "models": models_info,
+                    "message": f"正在运行 {len(models_info)} 个模型"
+                }
+    except Exception as e:
+        # 仅在 debug 日志记录，避免控制台刷屏
+        logger.debug(f"Ollama stats query failed: {e}")
             
     return {
         "running": False,
@@ -1103,9 +1111,8 @@ async def api_chat(request: ChatRequest):
         return {"response": "⚠️ AI Worker 启动中，请稍后重试..."}
     
     try:
-        async with httpx.AsyncClient(timeout=120.0, proxy=None, trust_env=False) as client:
-            resp = await client.post(f"{AI_WORKER_URL}/api/chat", json=request.dict())
-            return resp.json()
+        resp = await http_client.post(f"{AI_WORKER_URL}/api/chat", json=request.dict(), timeout=120.0)
+        return resp.json()
     except Exception as e:
         return {"response": f"❌ AI Worker 连接失败: {e}"}
 
@@ -1118,9 +1125,8 @@ async def api_chat_stream(request: ChatRequest):
             yield "data: [DONE]\n\n"
         return StreamingResponse(error_gen(), media_type="text/event-stream")
     
-    client = httpx.AsyncClient(timeout=None, proxy=None, trust_env=False)
-    req = client.build_request("POST", f"{AI_WORKER_URL}/api/chat_stream", json=request.dict())
-    resp = await client.send(req, stream=True)
+    req = http_client.build_request("POST", f"{AI_WORKER_URL}/api/chat_stream", json=request.dict(), timeout=None)
+    resp = await http_client.send(req, stream=True)
     
     async def stream_gen():
         try:
@@ -1129,7 +1135,6 @@ async def api_chat_stream(request: ChatRequest):
                     yield chunk
         finally:
             await resp.aclose()
-            await client.aclose()
     
     return StreamingResponse(
         stream_gen(), 
@@ -1150,9 +1155,8 @@ async def api_search_status():
         return {"enabled": False, "message": "AI Worker 未运行"}
     
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            resp = await client.get(f"{AI_WORKER_URL}/api/search/status")
-            return resp.json()
+        resp = await http_client.get(f"{AI_WORKER_URL}/api/search/status", timeout=10.0)
+        return resp.json()
     except Exception as e:
         return {"enabled": False, "message": f"查询失败: {e}"}
 
