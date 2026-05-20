@@ -1107,7 +1107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    let messages = [{ "role": "assistant", "content": "你好!我是你的本地 AI 助理。" }];
+    let messages = [];
     const audioPlayer = new Audio();
 
     async function playTTS(text, btn) {
@@ -1147,9 +1147,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            messages = [{ "role": "assistant", "content": "你好!我是你的本地 AI 助理。" }];
+            messages = [];
             chatHistory.innerHTML = "";
-            appendMessage('assistant', messages[0].content);
+            appendMessage('assistant', "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。");
             streamingAudioQueue.clear();
             // 重置上下文指示器
             updateContextIndicator(0, 0, 0);
