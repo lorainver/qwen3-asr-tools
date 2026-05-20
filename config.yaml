@@ -36,12 +36,12 @@ models:
       is_remote: true
       is_vl: true
       description: "运行在远程服务器上的视觉模型，支持图片分析"
-    qwen-ollama-7b:
-      name: "Qwen2.5-7B (本地 Ollama)"
-      model_id: "qwen2.5:7b"
+    qwen-ollama-3b:
+      name: "Qwen2.5-3B (本地 Ollama)"
+      model_id: "qwen2.5:3b"
       api_url: "http://127.0.0.1:11434/v1/chat/completions"
       is_remote: true
-      description: "本地 Ollama 驱动的 7B 模型，利用 RTX 5060 满血运行"
+      description: "本地 Ollama 驱动的 3B 模型，利用 RTX 5060 满血运行"
     qwen-ollama-9b:
       name: "Qwen3.5-9B (旗舰版)"
       model_id: "qwen3.5:9b"
@@ -111,8 +111,8 @@ summarization:
 
 # ===== 对话参数 =====
 chat:
-  context_max_tokens: 24576   # 上下文截断上限(tokens)，超出自动从顶部截断旧对话。建议模型上下文长度-8K(留给回复)
-  max_new_tokens: 4096
+  context_max_tokens: 245760  # 上下文截断上限(tokens)，超出自动从顶部截断旧对话。建议模型上下文长度-8K(留给回复)
+  max_new_tokens: 40960
   temperature: 0.7
   top_p: 0.9
   do_sample: true

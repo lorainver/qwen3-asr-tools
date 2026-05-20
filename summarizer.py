@@ -14,7 +14,7 @@ class LongTextSummarizer:
         # 从配置文件读取模型路径
         self.default_model_path = config['models']['llm']
         self.model_path = self.default_model_path
-        self.current_model_id = 'qwen-ollama-7b'
+        self.current_model_id = 'qwen-ollama-3b'
         self.available_models = config['models'].get('llm_models', {})
         self.tokenizer = None
         self.processor = None

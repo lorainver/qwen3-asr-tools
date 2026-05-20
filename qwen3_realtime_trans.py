@@ -194,7 +194,7 @@ class FloatingCaption:
 
 class OllamaTranslator:
     """Ollama API 翻译器 (利用本地 7B 或其他大模型)"""
-    def __init__(self, model_id="qwen2.5:7b", url="http://localhost:11434/v1/chat/completions"):
+    def __init__(self, model_id="qwen2.5:3b", url="http://localhost:11434/v1/chat/completions"):
         self.model_id = model_id
         self.url = url
         # 强制禁用代理

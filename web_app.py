@@ -1004,7 +1004,7 @@ async def worker_status():
 async def get_ollama_status():
     """获取 Ollama 的当前运行状态及模型资源分配关系"""
     # 默认从配置或本地获取 Ollama 的 API 地址
-    ollama_url = config.get("models.llm_models.qwen-ollama-7b.api_url", "http://127.0.0.1:11434/v1/chat/completions")
+    ollama_url = config.get("models.llm_models.qwen-ollama-3b.api_url", "http://127.0.0.1:11434/v1/chat/completions")
     from urllib.parse import urlparse
     parsed = urlparse(ollama_url)
     base_url = f"{parsed.scheme}://{parsed.netloc}" if parsed.netloc else "http://127.0.0.1:11434"
