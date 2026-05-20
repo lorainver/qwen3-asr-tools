@@ -318,6 +318,16 @@ class LongTextSummarizer:
                     payload["max_tokens"] = max_new_tokens
             
             response = requests.post(api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
+            
+            if response.status_code == 400:
+                try:
+                    err_msg = response.json().get('error', '')
+                    if "does not support thinking" in err_msg:
+                        payload.pop("think", None)
+                        response = requests.post(api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
+                except Exception:
+                    pass
+                    
             response.raise_for_status()
             data = response.json()
             
@@ -375,21 +385,6 @@ class LongTextSummarizer:
 
         # 构造发送给远程服务器的消息体
         local_messages = list(messages)
-        if not enable_think and is_ollama:
-            has_system = False
-            for msg in local_messages:
-                if msg.get("role") == "system":
-                    msg_copy = dict(msg)
-                    msg_copy["content"] = msg_copy.get("content", "") + "\n【重要要求】：请直接回答用户的问题，绝对不要进行任何推理（thinking），绝对不要输出 <think> 标签，也绝对不要产生任何思考过程。"
-                    idx = local_messages.index(msg)
-                    local_messages[idx] = msg_copy
-                    has_system = True
-                    break
-            if not has_system:
-                local_messages.insert(0, {
-                    "role": "system",
-                    "content": "你是一个助手。请直接回答用户的问题，绝对不要进行任何推理（thinking），绝对不要输出 <think> 标签，也绝对不要产生任何思考过程。"
-                })
 
         try:
             payload = {
@@ -408,6 +403,19 @@ class LongTextSummarizer:
                     payload["max_tokens"] = max_new_tokens
                     
             response = requests.post(api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
+            
+            if response.status_code == 400:
+                try:
+                    # requests stream=True might not read json immediately without closing, but we can check text
+                    # Wait, if we read json, we can't reuse response. So let's use response.text or load it.
+                    # Actually, if status code is 400, it's usually a small JSON error payload.
+                    err_msg = response.json().get('error', '')
+                    if "does not support thinking" in err_msg:
+                        payload.pop("think", None)
+                        response = requests.post(api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
+                except Exception:
+                    pass
+            
             response.raise_for_status()
             
             is_thinking = False
