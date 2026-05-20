@@ -447,6 +447,7 @@ class SwitchModelRequest(BaseModel):
 class SaveChatRequest(BaseModel):
     title: str
     messages: list
+    path: Optional[str] = None
 
 # ========== 对话历史存储逻辑 ==========
 
@@ -458,6 +459,20 @@ async def save_history(request: SaveChatRequest):
     """保存对话到本地磁盘"""
     try:
         from datetime import datetime
+        
+        # 覆盖写逻辑：若指定了已有文件路径，则覆盖更新，避免多余文件产生
+        if request.path:
+            safe_path = os.path.normpath(request.path).lstrip(os.sep + "/")
+            filepath = os.path.join(CHATS_DIR, safe_path)
+            if filepath.startswith(CHATS_DIR) and os.path.exists(filepath):
+                with open(filepath, "w", encoding="utf-8") as f:
+                    json.dump({
+                        "title": request.title,
+                        "timestamp": datetime.now().isoformat(),
+                        "messages": request.messages
+                    }, f, ensure_ascii=False, indent=2)
+                return {"status": "success", "path": safe_path.replace(os.sep, "/")}
+
         today = datetime.now().strftime("%Y-%m-%d")
         now_time = datetime.now().strftime("%H-%M-%S")
         
@@ -482,7 +497,7 @@ async def save_history(request: SaveChatRequest):
                 "messages": request.messages
             }, f, ensure_ascii=False, indent=2)
             
-        return {"status": "success", "path": f"{today}/{filename}"}
+        return {"status": "success", "path": f"{today}/{filename}".replace(os.sep, "/")}
     except Exception as e:
         logger.error(f"保存对话失败: {e}")
         return {"status": "error", "message": str(e)}

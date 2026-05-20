@@ -357,10 +357,8 @@
                             <!-- 历史管理组 -->
                             <div class="header-action-group">
                                 <button id="btn-copy-last-answer" class="btn-small" title="复制最新回答的正文内容（不含思考过程）">📋 复制正文</button>
-                                <input type="text" id="history-search" class="history-search-input" placeholder="🔍 搜索历史..." autocomplete="off">
-                                <select id="select-history" class="select-minimal">
-                                    <option value="">📜 历史对话</option>
-                                </select>
+                                <button id="btn-save-chat" class="btn-small" title="覆盖保存当前对话（保存当前为草稿）">💾 保存当前</button>
+                                <button id="btn-toggle-history" class="btn-small btn-premium" title="查看历史对话记录">📜 历史对话</button>
                                 <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
                             </div>
                         </div>
@@ -522,6 +520,23 @@
             }
         }
     </script>
+
+    <!-- 侧边历史抽屉 -->
+    <div id="history-drawer" class="history-drawer">
+        <div class="drawer-overlay" id="drawer-overlay"></div>
+        <div class="drawer-content glass-panel" id="drawer-content">
+            <div class="drawer-header">
+                <h3>📜 历史对话</h3>
+                <button id="btn-close-drawer" class="btn-close" title="关闭面板">&times;</button>
+            </div>
+            <div class="drawer-search-wrapper">
+                <input type="text" id="drawer-search" class="drawer-search-input" placeholder="🔍 搜索历史对话..." autocomplete="off">
+            </div>
+            <div id="drawer-history-list" class="drawer-history-list">
+                <!-- 动态渲染的历史对话卡片 -->
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

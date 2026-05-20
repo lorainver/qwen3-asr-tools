@@ -2254,3 +2254,240 @@ textarea:focus {
     color: #334155;
 }
 
+/* ==========================================================================
+   💎 尊贵版侧边历史对话抽屉 (History Drawer)
+   ========================================================================== */
+.history-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    visibility: hidden;
+    pointer-events: none;
+    transition: visibility var(--transition-normal);
+}
+
+.history-drawer.active {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* 遮罩背景 (模糊背景) */
+.drawer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-drawer.active .drawer-overlay {
+    opacity: 1;
+}
+
+/* 抽屉主体 (磨砂玻璃面板) */
+.drawer-content {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 400px;
+    height: 100%;
+    background: var(--panel-bg);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border-left: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg), -10px 0 30px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 2001;
+    overflow: hidden;
+}
+
+.history-drawer.active .drawer-content {
+    transform: translateX(0);
+}
+
+/* 抽屉头部 */
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xl) var(--space-2xl);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.drawer-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--text-primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.drawer-header .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+    line-height: 1;
+}
+
+.drawer-header .btn-close:hover {
+    color: var(--danger);
+    transform: scale(1.1);
+}
+
+/* 搜索框区 */
+.drawer-search-wrapper {
+    padding: var(--space-lg) var(--space-2xl);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.05);
+}
+
+.drawer-search-input {
+    width: 100%;
+    padding: 10px 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.drawer-search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* 动态列表容器 */
+.drawer-history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-xl) var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* 精致历史卡片 */
+.history-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    position: relative;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    user-select: none;
+}
+
+.history-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-sm), 0 4px 12px rgba(56, 189, 248, 0.08);
+    transform: translateY(-2px);
+}
+
+/* 当前高亮选中的历史对话 */
+.history-card.active-chat {
+    border-color: var(--accent);
+    background: rgba(56, 189, 248, 0.06);
+    box-shadow: 0 0 16px var(--accent-glow-strong);
+}
+
+/* 卡片文本内容 */
+.history-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding-right: 28px; /* 留空给垃圾桶按钮 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+}
+
+.history-card-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* 一键删除垃圾桶 */
+.btn-delete-card {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity var(--transition-normal), color var(--transition-fast), transform var(--transition-fast);
+    z-index: 10;
+}
+
+.history-card:hover .btn-delete-card {
+    opacity: 0.7;
+    transform: scale(1);
+}
+
+.btn-delete-card:hover {
+    color: var(--danger) !important;
+    opacity: 1 !important;
+    transform: scale(1.1) !important;
+}
+
+/* 按钮微调 - 给历史按钮加渐变科技感 */
+.btn-premium {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.15)) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--accent) !important;
+    transition: all var(--transition-fast);
+}
+
+.btn-premium:hover {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.25)) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 12px var(--accent-glow) !important;
+}
+
+/* 抽屉内无历史占位符 */
+.drawer-empty-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    gap: var(--space-sm);
+    padding: var(--space-3xl) 0;
+    text-align: center;
+}
+
+.drawer-empty-placeholder span {
+    font-size: 2.2rem;
+    opacity: 0.5;
+}
+

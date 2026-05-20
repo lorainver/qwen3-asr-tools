@@ -281,7 +281,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkOptimizeSearch = document.getElementById('check-optimize-search');
     const checkAutoSpeak = document.getElementById('check-auto-speak');
     const selectTTSEngine = document.getElementById('select-tts-engine');
-    const selectHistory = document.getElementById('select-history');
+    // 精致侧滑历史抽屉 DOM
+    const btnToggleHistory = document.getElementById('btn-toggle-history');
+    const btnSaveChat = document.getElementById('btn-save-chat');
+    const historyDrawer = document.getElementById('history-drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const drawerContent = document.getElementById('drawer-content');
+    const btnCloseDrawer = document.getElementById('btn-close-drawer');
+    const drawerSearch = document.getElementById('drawer-search');
+    const drawerHistoryList = document.getElementById('drawer-history-list');
     const checkEnableThink = document.getElementById('check-enable-think'); // 深度思考开关
     const btnThemeToggle = document.getElementById('btn-theme-toggle'); // 主题切换按钮
 
@@ -1108,6 +1116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let messages = [];
+    let currentChatPath = null; // 【新增】当前长对话的历史 JSON 文件路径，用于原地覆盖式增量保存
     const audioPlayer = new Audio();
 
     async function playTTS(text, btn) {
@@ -1130,39 +1139,150 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (btnNewChat) {
-        btnNewChat.addEventListener('click', async () => {
-            // 如果当前有对话内容(不仅仅是默认的第一条),则尝试保存
+        btnNewChat.addEventListener('click', () => {
+            // 如果当前有对话内容，在后台静默备份保存，绝对不让 UI 等待 AI 标题生成
             if (messages.length > 1) {
-                const originalText = btnNewChat.innerHTML;
-                btnNewChat.innerHTML = '💾 保存中...';
-                btnNewChat.disabled = true;
-
-                try {
-                    await saveCurrentChat();
-                } catch (e) {
-                    console.error('保存历史失败:', e);
-                } finally {
-                    btnNewChat.innerHTML = originalText;
-                    btnNewChat.disabled = false;
-                }
+                // 深度复制 messages，防止在保存过程中被 messages = [] 瞬间清空导致上传空数据
+                const backupMessages = JSON.parse(JSON.stringify(messages));
+                const backupPath = currentChatPath;
+                const backupTitle = currentChatTitle;
+                
+                // 启动后台静默备份
+                (async () => {
+                    try {
+                        // 提取用户首条消息
+                        const firstUserMsgObj = backupMessages.find(m => m.role === 'user')?.content || "新对话";
+                        let userText = "新对话";
+                        if (Array.isArray(firstUserMsgObj)) {
+                            const textPart = firstUserMsgObj.find(part => part.type === 'text');
+                            if (textPart) userText = textPart.text;
+                        } else {
+                            userText = firstUserMsgObj;
+                        }
+                        
+                        let saveTitle = backupTitle;
+                        if (!backupPath || backupTitle === "新对话") {
+                            saveTitle = userText.substring(0, 10) || "新对话";
+                        }
+                        
+                        // 1. 初次落盘
+                        const saveResp = await fetch('/api/history/save', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                title: saveTitle,
+                                messages: backupMessages,
+                                path: backupPath || undefined
+                            })
+                        });
+                        const saveResult = await saveResp.json();
+                        
+                        // 2. 如果是新建对话且保存成功，且原本没有智能标题，后台继续顺便生成个智能标题
+                        if (saveResult.status === 'success' && (!backupPath || backupTitle === "新对话")) {
+                            const savedPath = saveResult.path;
+                            try {
+                                const titlePrompt = `请为以下对话生成一个5字以内的简短标题。对话内容:${userText.substring(0, 100)}`;
+                                const resp = await fetch('/api/chat', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        messages: [{ role: 'user', content: titlePrompt }],
+                                        model_id: currentModelId
+                                    })
+                                });
+                                const data = await resp.json();
+                                if (data.response) {
+                                    const generatedTitle = data.response.replace(/[#"'\n\r]/g, '').substring(0, 15).trim() || saveTitle;
+                                    await fetch('/api/history/save', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            title: generatedTitle,
+                                            messages: backupMessages,
+                                            path: savedPath
+                                        })
+                                    });
+                                }
+                            } catch (e) {
+                                console.warn('后台备份生成智能标题失败:', e);
+                            }
+                        }
+                    } catch (e) {
+                        console.error('后台静默备份失败:', e);
+                    }
+                })();
+                
+                showToast("🧹 已开启全新对话 (历史已在后台备份)");
             }
 
+            // 0ms 瞬间清空重置界面与状态
             messages = [];
+            currentChatPath = null;
+            currentChatTitle = "新对话";
             chatHistory.innerHTML = "";
             appendMessage('assistant', "你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。");
             streamingAudioQueue.clear();
+            
             // 重置上下文指示器
             updateContextIndicator(0, 0, 0);
         });
     }
 
-    // === 5.1 对话历史管理逻辑 ===
+    // === 5.1 侧滑历史对话抽屉管理逻辑 ===
 
-    // 历史搜索框
-    const historySearchInput = document.getElementById('history-search');
-    if (historySearchInput) {
+    // 打开/收起侧滑面板
+    if (btnToggleHistory) {
+        btnToggleHistory.addEventListener('click', () => {
+            const isActive = historyDrawer.classList.toggle('active');
+            if (isActive) {
+                drawerContent.classList.add('active');
+                // 打开时加载列表
+                loadHistoryList(drawerSearch ? drawerSearch.value.trim() : '');
+            } else {
+                drawerContent.classList.remove('active');
+            }
+        });
+    }
+
+    // 点击遮罩层关闭抽屉
+    if (drawerOverlay) {
+        drawerOverlay.addEventListener('click', () => {
+            historyDrawer.classList.remove('active');
+            drawerContent.classList.remove('active');
+        });
+    }
+
+    // 点击关闭按钮关闭抽屉
+    if (btnCloseDrawer) {
+        btnCloseDrawer.addEventListener('click', () => {
+            historyDrawer.classList.remove('active');
+            drawerContent.classList.remove('active');
+        });
+    }
+
+    // 主动手动保存当前对话
+    if (btnSaveChat) {
+        btnSaveChat.addEventListener('click', async () => {
+            if (messages.length <= 1) {
+                showToast("⚠️ 当前对话为空，无需保存");
+                return;
+            }
+            const originalText = btnSaveChat.innerHTML;
+            btnSaveChat.innerHTML = '💾 保存中...';
+            btnSaveChat.disabled = true;
+            try {
+                await saveCurrentChat(false, false);
+            } finally {
+                btnSaveChat.innerHTML = originalText;
+                btnSaveChat.disabled = false;
+            }
+        });
+    }
+
+    // 抽屉内历史搜索框 (防抖检索过滤)
+    if (drawerSearch) {
         let searchDebounce = null;
-        historySearchInput.addEventListener('input', (e) => {
+        drawerSearch.addEventListener('input', (e) => {
             clearTimeout(searchDebounce);
             searchDebounce = setTimeout(() => {
                 loadHistoryList(e.target.value.trim());
@@ -1170,123 +1290,229 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 动态渲染历史卡片列表
     async function loadHistoryList(searchQuery = '') {
-        if (!selectHistory) return;
+        if (!drawerHistoryList) return;
         try {
-            const params = new URLSearchParams({ limit: '50', offset: '0' });
+            const params = new URLSearchParams({ limit: '100', offset: '0' });
             if (searchQuery) params.set('query', searchQuery);
             const resp = await fetch(`/api/history/list?${params}`);
             const data = await resp.json();
-            const list = data.items || data; // 兼容旧格式
+            const list = data.items || data; // 兼容旧格式及分页格式
 
-            // 保留第一项默认项
-            selectHistory.innerHTML = '<option value="">📜 历史对话</option>';
-            list.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.path;
-                opt.textContent = item.title;
-                selectHistory.appendChild(opt);
-            });
+            drawerHistoryList.innerHTML = '';
 
-            // 显示总数
-            if (data.total !== undefined) {
-                const totalOpt = document.createElement('option');
-                totalOpt.disabled = true;
-                totalOpt.textContent = `── 共 ${data.total} 条 ──`;
-                selectHistory.appendChild(totalOpt);
+            if (!list || list.length === 0) {
+                // 优雅的占位图/文
+                drawerHistoryList.innerHTML = `
+                    <div class="history-empty">
+                        <div class="empty-icon">📭</div>
+                        <div class="empty-text">无相关对话历史</div>
+                    </div>
+                `;
+                return;
             }
+
+            list.forEach(item => {
+                const isCurrent = item.path === currentChatPath;
+                
+                // 创建卡片容器
+                const card = document.createElement('div');
+                card.className = `history-card${isCurrent ? ' active-chat' : ''}`;
+                card.dataset.path = item.path;
+                card.dataset.title = item.title;
+
+                // 卡片主内容区
+                const info = document.createElement('div');
+                info.className = 'card-info';
+
+                const titleEl = document.createElement('div');
+                titleEl.className = 'card-title';
+                titleEl.textContent = item.title;
+
+                const metaEl = document.createElement('div');
+                metaEl.className = 'card-meta';
+                // 格式化一下时间（如果有）
+                let timeStr = '';
+                if (item.timestamp) {
+                    try {
+                        const date = new Date(item.timestamp);
+                        timeStr = date.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+                    } catch (e) {
+                        timeStr = item.timestamp;
+                    }
+                } else if (item.modified_str) {
+                    timeStr = item.modified_str;
+                }
+                metaEl.textContent = `💬 ${item.msg_count || 0} 轮对话  ·  ${timeStr}`;
+
+                info.appendChild(titleEl);
+                info.appendChild(metaEl);
+                card.appendChild(info);
+
+                // 垃圾桶按钮 (悬浮淡入)
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn-delete-card';
+                deleteBtn.innerHTML = '🗑️';
+                deleteBtn.title = '删除此对话';
+                deleteBtn.addEventListener('click', async (e) => {
+                    e.stopPropagation(); // 阻止事件冒泡到卡片点击加载
+                    
+                    if (!confirm(`确定彻底删除此对话？\n《${item.title}》`)) return;
+
+                    try {
+                        const delResp = await fetch(`/api/history/delete?path=${encodeURIComponent(item.path)}`, { method: 'DELETE' });
+                        const result = await delResp.json();
+                        if (result.status === 'success') {
+                            showToast('🗑️ 对话已删除');
+                            // 如果删除了当前正在聊天的文件，重置全局路径
+                            if (isCurrent) {
+                                currentChatPath = null;
+                                currentChatTitle = "新对话";
+                            }
+                            // 静默刷新列表
+                            loadHistoryList(drawerSearch ? drawerSearch.value.trim() : '');
+                        } else {
+                            showToast('❌ 删除失败: ' + result.message);
+                        }
+                    } catch (err) {
+                        showToast('❌ 删除失败: ' + err.message);
+                    }
+                });
+                card.appendChild(deleteBtn);
+
+                // 点击卡片：加载历史
+                card.addEventListener('click', async () => {
+                    try {
+                        card.style.opacity = '0.7'; // 给予点击反馈
+                        const loadResp = await fetch(`/api/history/load?path=${encodeURIComponent(item.path)}`);
+                        const loadData = await loadResp.json();
+                        if (loadData.messages) {
+                            messages = loadData.messages;
+                            currentChatPath = item.path;
+                            currentChatTitle = loadData.title || item.title;
+                            
+                            // 渲染消息
+                            chatHistory.innerHTML = "";
+                            messages.forEach(msg => {
+                                appendMessage(msg.role, msg.content);
+                            });
+                            showToast(`📂 已加载: ${currentChatTitle}`);
+                            
+                            // 关闭侧滑抽屉
+                            historyDrawer.classList.remove('active');
+                            drawerContent.classList.remove('active');
+                        }
+                    } catch (err) {
+                        showToast('❌ 加载失败: ' + err.message);
+                        card.style.opacity = '1';
+                    }
+                });
+
+                drawerHistoryList.appendChild(card);
+            });
         } catch (e) {
             console.error('加载历史列表失败:', e);
+            if (drawerHistoryList) {
+                drawerHistoryList.innerHTML = '<div class="history-empty"><div class="empty-text">⚠️ 列表加载失败</div></div>';
+            }
         }
     }
 
-    async function saveCurrentChat() {
+    /**
+     * 保存当前对话到本地磁盘。
+     * 支持覆盖式增量自动保存，防止对话碎片文件泛滥。
+     * @param {boolean} isAuto - 是否是后台自动保存
+     * @param {boolean} silent - 是否静默，不弹出 Toast
+     */
+    async function saveCurrentChat(isAuto = false, silent = false) {
         if (messages.length <= 1) return;
 
-        // 1. 获取第一条用户消息作为标题基础
-        const firstUserMsg = messages.find(m => m.role === 'user')?.content || "新对话";
-        let title = firstUserMsg.substring(0, 10);
+        // 1. 获取用户首条消息作为标题基础
+        const firstUserMsgObj = messages.find(m => m.role === 'user')?.content || "新对话";
+        let userText = "新对话";
+        if (Array.isArray(firstUserMsgObj)) {
+            const textPart = firstUserMsgObj.find(part => part.type === 'text');
+            if (textPart) userText = textPart.text;
+        } else {
+            userText = firstUserMsgObj;
+        }
 
-        // 2. 尝试让 AI 生成一个更智能的标题 (非流式请求)
+        // 2. 确定本次保存的标题
+        // 如果是全新对话（currentChatPath 为空），我们先生成一个临时的前10个字的标题并进行初次落盘，
+        // 然后再异步去请求 AI 生成智能标题。这样能彻底打通“秒清无卡顿”。
+        let isFirstSave = !currentChatPath;
+        if (isFirstSave) {
+            currentChatTitle = userText.substring(0, 10) || "新对话";
+        }
+
         try {
-            const titlePrompt = `请为以下对话生成一个5字以内的简短标题。对话内容:${firstUserMsg.substring(0, 100)}`;
-            const resp = await fetch('/api/chat', {
+            // 3. 提交保存
+            const saveResp = await fetch('/api/history/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    messages: [{ role: 'user', content: titlePrompt }],
-                    model_id: currentModelId
+                    title: currentChatTitle,
+                    messages: messages,
+                    path: currentChatPath || undefined
                 })
             });
-            const data = await resp.json();
-            if (data.response) {
-                title = data.response.replace(/[#"'\n\r]/g, '').substring(0, 15);
+            const saveResult = await saveResp.json();
+            if (saveResult.status === 'success') {
+                currentChatPath = saveResult.path; // 记录/更新当前 JSON 路径
+                if (!silent) {
+                    showToast(isAuto ? "💾 已自动保存草稿" : "💾 对话保存成功");
+                }
+                
+                // 如果是第一次保存，我们在后台默默向 AI 请求个智能标题并覆盖更新
+                if (isFirstSave) {
+                    // 异步请求标题生成，绝不阻塞 UI
+                    (async () => {
+                        try {
+                            const titlePrompt = `请为以下对话生成一个5字以内的简短标题。对话内容:${userText.substring(0, 100)}`;
+                            const resp = await fetch('/api/chat', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    messages: [{ role: 'user', content: titlePrompt }],
+                                    model_id: currentModelId
+                                })
+                            });
+                            const data = await resp.json();
+                            if (data.response) {
+                                const generatedTitle = data.response.replace(/[#"'\n\r]/g, '').substring(0, 15).trim() || currentChatTitle;
+                                currentChatTitle = generatedTitle;
+                                
+                                // 得到 AI 标题后，默默覆盖保存一次
+                                await fetch('/api/history/save', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        title: currentChatTitle,
+                                        messages: messages,
+                                        path: currentChatPath
+                                    })
+                                });
+                                // 刷新可能正处于打开状态的历史抽屉列表
+                                if (historyDrawer && historyDrawer.classList.contains('active')) {
+                                    loadHistoryList(drawerSearch ? drawerSearch.value.trim() : '');
+                                }
+                            }
+                        } catch (err) {
+                            console.warn('AI 生成标题失败:', err);
+                        }
+                    })();
+                } else {
+                    // 如果不是第一次保存，也静默刷新一下列表
+                    if (historyDrawer && historyDrawer.classList.contains('active')) {
+                        loadHistoryList(drawerSearch ? drawerSearch.value.trim() : '');
+                    }
+                }
             }
         } catch (e) {
-            console.warn('AI 生成标题失败,使用默认标题');
+            console.error('保存当前对话失败:', e);
+            if (!silent) showToast("❌ 保存失败: " + e.message);
         }
-
-        // 3. 提交保存
-        const saveResp = await fetch('/api/history/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: title,
-                messages: messages
-            })
-        });
-        const saveResult = await saveResp.json();
-        if (saveResult.status === 'success') {
-            loadHistoryList(); // 刷新列表
-        }
-    }
-
-    if (selectHistory) {
-        selectHistory.addEventListener('change', async (e) => {
-            const path = e.target.value;
-            if (!path) return;
-
-            try {
-                const resp = await fetch(`/api/history/load?path=${encodeURIComponent(path)}`);
-                const data = await resp.json();
-                if (data.messages) {
-                    // 清空并重新加载消息
-                    messages = data.messages;
-                    chatHistory.innerHTML = "";
-                    messages.forEach(msg => {
-                        appendMessage(msg.role, msg.content);
-                    });
-                    showToast(`📂 已加载历史: ${data.title}`);
-                }
-            } catch (e) {
-                showToast('❌ 加载失败: ' + e.message);
-            } finally {
-                selectHistory.value = ""; // 重置下拉框
-            }
-        });
-
-        // 右键删除历史
-        selectHistory.addEventListener('contextmenu', async (e) => {
-            e.preventDefault();
-            const path = selectHistory.value;
-            if (!path) return;
-
-            const title = selectHistory.options[selectHistory.selectedIndex]?.textContent || '';
-            if (!confirm(`确定删除此对话？\n${title}`)) return;
-
-            try {
-                const resp = await fetch(`/api/history/delete?path=${encodeURIComponent(path)}`, { method: 'DELETE' });
-                const result = await resp.json();
-                if (result.status === 'success') {
-                    showToast('🗑️ 已删除');
-                    loadHistoryList();
-                } else {
-                    showToast('❌ 删除失败: ' + result.message);
-                }
-            } catch (e) {
-                showToast('❌ 删除失败: ' + e.message);
-            }
-        });
     }
 
     // === 流式语音队列(带预加载) ===
@@ -1653,6 +1879,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (useStreamingTTS && fullResponse.substring(ttsPointer).trim()) {
                     streamingAudioQueue.enqueue(fullResponse.substring(ttsPointer).trim());
                 }
+
+                // 覆盖式增量自动保存：每一轮流式响应结束，后台静默自动保存草稿
+                saveCurrentChat(true, true);
             }
         } catch (error) {
             loadingMsg.innerText = "出错了: " + error.message;
