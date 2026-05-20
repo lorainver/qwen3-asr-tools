@@ -18,6 +18,34 @@
     <script src="/static/js/katex.min.js"></script>
     <!-- Mermaid 图表 -->
     <script src="/static/js/mermaid.min.js"></script>
+    <style>
+        .switch-container {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .switch-container:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(56, 189, 248, 0.3);
+            color: #e2e8f0;
+        }
+        .switch-container input[type="checkbox"] {
+            margin-right: 6px;
+            accent-color: #0ea5e9;
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+        }
+    </style>
 </head>
 
 <body>
@@ -134,6 +162,10 @@
                                     <option value="fr">→ Français</option>
                                     <option value="de">→ Deutsch</option>
                                 </select>
+                                <label class="switch-container" title="开启并行分块加速，多线程并发总结，速度提升数倍（推荐搭配远程/Ollama并发模型）">
+                                    <input type="checkbox" id="sum-parallel" checked>
+                                    <span class="switch-label">⚡ 并发加速</span>
+                                </label>
                                 <button id="btn-summarize" class="btn primary">开始执行</button>
                             </div>
                             <div id="sum-progress-container" class="hidden">

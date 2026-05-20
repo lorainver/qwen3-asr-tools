@@ -833,8 +833,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const promptType = document.getElementById('prompt-type').value;
             const targetLang = targetLangSelect && promptType === 'translate' ? targetLangSelect.value : null;
+            const parallel = document.getElementById('sum-parallel')?.checked || false;
 
-            const requestBody = { text: text, prompt_type: promptType };
+            const requestBody = { text: text, prompt_type: promptType, parallel: parallel };
             if (targetLang) requestBody.target_lang = targetLang;
 
             try {

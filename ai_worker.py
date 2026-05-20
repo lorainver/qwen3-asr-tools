@@ -37,8 +37,8 @@ app.add_middleware(
 # 初始化模型 (单例模式)
 summarizer = LongTextSummarizer()
 
-# 线程池：将同步阻塞的 chat_stream 生成器桥接到异步 SSE
-_stream_executor = ThreadPoolExecutor(max_workers=2)
+# 线程池：将同步阻塞的 chat_stream 生成器桥接到异步 SSE 及并发任务
+_stream_executor = ThreadPoolExecutor(max_workers=16)
 
 # 初始化搜索器
 search_enabled = config.get('search.enabled', True)
@@ -93,6 +93,7 @@ class SummarizeRequest(BaseModel):
     text: str
     prompt_type: Optional[str] = "summarize"
     target_lang: Optional[str] = None  # 目标语言,仅用于翻译模式
+    parallel: Optional[bool] = False
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -479,48 +480,125 @@ async def api_summarize(request: SummarizeRequest):
     async def generate_chunked():
         full_result = ""
 
-        for i, chunk in enumerate(chunks):
-            # 发送分块进度
-            if needs_chunking:
+        # 检测是否为本地原生模型，若是且开启了并发，强制优雅退化并发送提示
+        is_local_model = not getattr(summarizer, "is_remote", False)
+        actual_parallel = request.parallel
+        if actual_parallel and is_local_model:
+            logger.info("⚠️ 检测到当前为本地原生模型，不支持并行总结，已自动优雅降级为串行模式。")
+            actual_parallel = False
+            yield json.dumps({"status": "processing", "message": "💡 提示：本地加载模型暂不支持并发加速，已自动转换为安全串行模式以防止 GPU 显存溢出..."}) + "\n"
+            await asyncio.sleep(1.0)
+
+        if actual_parallel:
+            yield json.dumps({"status": "processing", "message": f"⚡ 正在启动多路并行加速总结（并发数: {total_chunks} 组）..."}) + "\n"
+            await asyncio.sleep(0.01)
+            
+            queues = [asyncio.Queue() for _ in range(total_chunks)]
+            _SENTINEL = object()
+            loop = asyncio.get_running_loop()
+            
+            def run_chunk_inference(idx, chunk_msg, queue):
+                try:
+                    chunk_res = ""
+                    for token in summarizer.chat_stream(chunk_msg, max_new_tokens=max_new_tokens):
+                        chunk_res += token
+                        loop.call_soon_threadsafe(queue.put_nowait, {"type": "streaming", "delta": token})
+                    loop.call_soon_threadsafe(queue.put_nowait, {"type": "chunk_complete", "result": chunk_res})
+                except Exception as e:
+                    logger.error(f"{action}第 {idx+1} 段并发推理失败: {e}")
+                    loop.call_soon_threadsafe(queue.put_nowait, {"type": "error", "message": f"{action}第 {idx+1}/{total_chunks} 段并发处理失败: {str(e)}"})
+                finally:
+                    loop.call_soon_threadsafe(queue.put_nowait, _SENTINEL)
+
+            # 1. 并发派发所有分块的线程任务到线程池
+            for i, chunk in enumerate(chunks):
+                if prompt_type == 'translate':
+                    user_content = chunk
+                else:
+                    user_content = f"以下是需要处理的文本内容:\n\n{chunk}"
+
+                chunk_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_content}
+                ]
+                
+                # 并发执行
+                loop.run_in_executor(_stream_executor, run_chunk_inference, i, chunk_messages, queues[i])
+
+            # 2. 按顺序从各个队列中读取并流式发送，保证前端 100% 物理顺序和流式渲染兼容
+            for i in range(total_chunks):
+                queue = queues[i]
+                chunk_result = ""
+                
+                # 发送分块开始进度
                 yield json.dumps({
                     "status": "processing",
-                    "message": f"正在{action}第 {i+1}/{total_chunks} 段...",
+                    "message": f"正在并发流式输出第 {i+1}/{total_chunks} 段...",
                     "chunk": i + 1,
                     "total_chunks": total_chunks
                 }) + "\n"
-            else:
-                yield json.dumps({"status": "processing", "message": f"正在{action}..."}) + "\n"
-            await asyncio.sleep(0.01)
-
-            # 构建消息:翻译直接传原文,其他类型加前缀
-            if prompt_type == 'translate':
-                user_content = chunk
-            else:
-                user_content = f"以下是需要处理的文本内容:\n\n{chunk}"
-
-            chunk_messages = [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_content}
-            ]
-
-            try:
-                chunk_result = ""
-                for token in summarizer.chat_stream(chunk_messages, max_new_tokens=max_new_tokens):
-                    chunk_result += token
-                    full_result += token
-                    yield json.dumps({"status": "streaming", "delta": token}) + "\n"
-                    await asyncio.sleep(0)
-
-                # 分块完成:发送 chunk_complete 事件(前端据此分段渲染)
-                yield json.dumps({"status": "chunk_complete", "chunk": i + 1, "total_chunks": total_chunks, "chunk_result": chunk_result}) + "\n"
-
-                # 分块间添加换行(非最后一块)
+                await asyncio.sleep(0.01)
+                
+                while True:
+                    msg = await queue.get()
+                    if msg is _SENTINEL:
+                        break
+                    if msg["type"] == "error":
+                        yield json.dumps({"status": "error", "message": msg["message"]}) + "\n"
+                        return
+                    elif msg["type"] == "streaming":
+                        token = msg["delta"]
+                        chunk_result += token
+                        full_result += token
+                        yield json.dumps({"status": "streaming", "delta": token}) + "\n"
+                        await asyncio.sleep(0)
+                    elif msg["type"] == "chunk_complete":
+                        yield json.dumps({"status": "chunk_complete", "chunk": i + 1, "total_chunks": total_chunks, "chunk_result": chunk_result}) + "\n"
+                
+                # 块之间添加换行
                 if i < total_chunks - 1:
                     full_result += "\n\n"
-            except Exception as e:
-                logger.error(f"{action}第 {i+1} 段失败: {e}")
-                yield json.dumps({"status": "error", "message": f"{action}第 {i+1}/{total_chunks} 段失败: {str(e)}"}) + "\n"
-                break
+        else:
+            # 串行流式处理
+            for i, chunk in enumerate(chunks):
+                # 发送分块进度
+                if needs_chunking:
+                    yield json.dumps({
+                        "status": "processing",
+                        "message": f"正在{action}第 {i+1}/{total_chunks} 段...",
+                        "chunk": i + 1,
+                        "total_chunks": total_chunks
+                    }) + "\n"
+                else:
+                    yield json.dumps({"status": "processing", "message": f"正在{action}..."}) + "\n"
+                await asyncio.sleep(0.01)
+
+                if prompt_type == 'translate':
+                    user_content = chunk
+                else:
+                    user_content = f"以下是需要处理的文本内容:\n\n{chunk}"
+
+                chunk_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_content}
+                ]
+
+                try:
+                    chunk_result = ""
+                    for token in summarizer.chat_stream(chunk_messages, max_new_tokens=max_new_tokens):
+                        chunk_result += token
+                        full_result += token
+                        yield json.dumps({"status": "streaming", "delta": token}) + "\n"
+                        await asyncio.sleep(0)
+
+                    yield json.dumps({"status": "chunk_complete", "chunk": i + 1, "total_chunks": total_chunks, "chunk_result": chunk_result}) + "\n"
+
+                    if i < total_chunks - 1:
+                        full_result += "\n\n"
+                except Exception as e:
+                    logger.error(f"{action}第 {i+1} 段失败: {e}")
+                    yield json.dumps({"status": "error", "message": f"{action}第 {i+1}/{total_chunks} 段失败: {str(e)}"}) + "\n"
+                    break
 
         yield json.dumps({"status": "done", "result": full_result}) + "\n"
 
