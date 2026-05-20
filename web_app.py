@@ -745,11 +745,11 @@ async def api_docs_view(path: str):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{filename}</title>
 <!-- KaTeX CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="/static/css/katex.min.css">
 <!-- marked.js -->
-<script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+<script src="/static/js/marked.min.js"></script>
 <!-- Mermaid -->
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.js" type="module"></script>
+<script src="/static/js/mermaid.min.js"></script>
 <style>
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 body {{ 
@@ -791,8 +791,8 @@ body {{
 <div id="content"></div>
 
 <!-- KaTeX JS -->
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="/static/js/katex.min.js"></script>
+<script src="/static/js/auto-render.min.js"></script>
 <script>
 // 将原始 MD 内容嵌入页面
 const rawMd = {json.dumps(content)};
@@ -835,8 +835,7 @@ renderMathInElement(document.getElementById('content'), {{
 }});
 
 // 渲染 Mermaid 图表
-import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.js';
-await mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
+mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
 const containers = document.querySelectorAll('.mermaid-container');
 for (const container of containers) {{
     const code = decodeURIComponent(container.dataset.mermaidCode);
