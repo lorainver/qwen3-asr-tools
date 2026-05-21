@@ -2615,3 +2615,262 @@ textarea:focus {
     50% { border-color: rgba(14, 165, 233, 0.6); box-shadow: 0 4px 20px rgba(14, 165, 233, 0.25); }
     100% { border-color: rgba(14, 165, 233, 0.3); box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1); }
 }
+
+
+/* ==========================================================================
+   📱 移动端响应式布局优化 (@media (max-width: 768px))
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* 1. 全局容器与布局重塑 */
+    .app-container {
+        flex-direction: column-reverse; /* 侧边栏（GPU监控）流向底部，核心区在最上方 */
+        padding: var(--space-md);
+        gap: var(--space-lg);
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: var(--space-lg);
+        flex-shrink: 0;
+        margin-top: var(--space-sm);
+    }
+
+    .logo {
+        margin-bottom: var(--space-lg);
+    }
+
+    .content {
+        width: 100%;
+    }
+
+    header {
+        margin-bottom: var(--space-lg);
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header p {
+        font-size: 0.85rem;
+    }
+
+    /* 2. 标签切换栏优化 */
+    .tab-bar {
+        margin-bottom: var(--space-lg);
+    }
+
+    .tab-btn {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.85rem;
+    }
+
+    /* 3. 工作站 (Workstation) 页面适配 */
+    .cards-grid {
+        grid-template-columns: 1fr; /* 双栏网格降维为单列铺满 */
+        gap: var(--space-lg);
+    }
+
+    .card {
+        padding: var(--space-lg);
+    }
+
+    /* 智库摘要控制栏垂直排布 */
+    .summary-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-sm);
+    }
+
+    .summary-controls .form-select,
+    .summary-controls .switch-container,
+    .summary-controls .btn {
+        width: 100%;
+        margin-left: 0;
+        box-sizing: border-box;
+    }
+    
+    .summary-controls .switch-container {
+        justify-content: center;
+    }
+
+    /* 转录选项垂直堆叠 */
+    .trans-options {
+        flex-direction: column;
+        gap: var(--space-md) !important;
+        margin: var(--space-md) 0 !important;
+    }
+
+    .trans-options > div {
+        width: 100% !important;
+    }
+
+    /* 绝对路径输入与下载按钮排版 */
+    .path-input-mode > div:last-child {
+        flex-direction: column;
+        gap: var(--space-sm) !important;
+    }
+
+    .path-input-mode input[type="text"],
+    .path-input-mode button {
+        width: 100% !important;
+    }
+
+    #download-container > div:last-child {
+        flex-direction: column;
+        gap: var(--space-sm) !important;
+    }
+
+    #download-container .btn {
+        width: 100% !important;
+        flex: none !important;
+    }
+
+    /* 终端命令控制栏 */
+    .run-control-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-sm);
+    }
+
+    .run-control-row .code-block {
+        width: 100%;
+    }
+
+    .run-control-row .run-actions {
+        display: flex;
+        gap: var(--space-sm);
+        width: 100%;
+    }
+
+    .run-control-row .run-actions .id-input {
+        flex: 1;
+        width: auto;
+    }
+
+    .run-control-row .run-actions .btn-run {
+        flex: 2;
+    }
+
+    /* 4. AI 助理 (Assistant) 页面适配 */
+    .chat-fullscreen {
+        padding: var(--space-md);
+    }
+
+    .chat-header-bar {
+        padding: var(--space-sm) var(--space-md);
+        gap: var(--space-sm);
+    }
+
+    .chat-header-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-sm);
+        padding-top: var(--space-sm);
+    }
+
+    .header-action-group {
+        flex-wrap: wrap;
+        width: 100%;
+        gap: var(--space-xs);
+    }
+
+    .header-action-group .select-minimal,
+    .header-action-group .btn-small,
+    .header-action-group .auto-speak-toggle {
+        flex: 1 1 calc(50% - 4px); /* 让按钮在两列中等分并排 */
+        min-width: 110px;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    /* 聊天消息与历史气泡优化 */
+    .chat-history-full {
+        padding: var(--space-md);
+        min-height: 350px;
+    }
+
+    .msg-wrapper {
+        max-width: 95%; /* 移动端气泡加宽，充分利用屏幕宽度 */
+    }
+
+    .msg-content {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.88rem;
+    }
+
+    /* 展开的多行输入框最大高度限制，防止遮住对话 */
+    .chat-input-expanded {
+        max-height: 90px;
+        height: 90px !important;
+    }
+
+    /* 5. 文档浏览器 (Docs Viewer) 适配 */
+    .docs-viewer {
+        flex-direction: column; /* 左右分栏重构为上下堆叠结构 */
+        height: calc(100vh - 200px);
+        min-height: 500px;
+    }
+
+    .docs-sidebar {
+        width: 100%;
+        height: 180px; /* 固定上方列表高度 */
+        min-height: 180px;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.08));
+        flex-shrink: 0;
+    }
+
+    .docs-sidebar-filters {
+        flex-direction: row; /* 搜索和排序在移动端并排 */
+        gap: var(--space-sm);
+    }
+
+    .docs-search-input,
+    .docs-sort-select {
+        flex: 1;
+    }
+
+    .docs-content-area {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .docs-rendered {
+        padding: var(--space-md) var(--space-lg);
+        font-size: 0.9rem;
+    }
+
+    .docs-viewer-header {
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .docs-viewer-actions {
+        gap: var(--space-xs);
+    }
+
+    /* 6. 侧滑抽屉与弹窗优化 */
+    .drawer-content {
+        width: 85vw; /* 滑出时左侧留空 15% 突出半透明遮罩 */
+        max-width: 340px;
+    }
+
+    .drawer-header {
+        padding: var(--space-md) var(--space-lg);
+    }
+
+    .drawer-search-wrapper {
+        padding: var(--space-sm) var(--space-lg);
+    }
+
+    .drawer-history-list {
+        padding: var(--space-md) var(--space-lg);
+    }
+
+    .settings-panel {
+        width: 95vw !important;
+        padding: var(--space-lg);
+    }
+}
