@@ -59,3 +59,19 @@ test_*.out
 *_analysis*.html
 *_analysis*.md
 Enhancing Qwen3-ASR*.md
+
+# 忽略临时草稿与测试目录
+scratch/
+test_gemma_thinking.py
+test_parse.js
+
+# 忽略画像和个人文档
+2031songyufeng*.md
+
+# 忽略 docs 目录下生成的 HTML 部署或分析报告
+docs/*.html
+
+# 忽略临时讲座备份文件
+*巴蜀*.html
+*蜀文*.html
+
