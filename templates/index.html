@@ -198,6 +198,25 @@
                                 <input type="file" id="file-input" class="hidden" accept="video/*,audio/*">
                             </div>
 
+                            <div class="trans-options" style="display: flex; gap: var(--space-md); margin: var(--space-lg) 0;">
+                                <div style="flex: 1; display: flex; flex-direction: column; gap: var(--space-xs);">
+                                    <label for="trans-language" style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">🎯 目标语言</label>
+                                    <select id="trans-language" class="form-select" style="width: 100%;">
+                                        <option value="auto">🌍 自动语言检测 (auto)</option>
+                                        <option value="japanese">🇯🇵 锁定日语 (japanese)</option>
+                                        <option value="chinese">🇨🇳 锁定中文 (chinese)</option>
+                                        <option value="english">🇺🇸 锁定英文 (english)</option>
+                                    </select>
+                                </div>
+                                <div style="flex: 1; display: flex; flex-direction: column; gap: var(--space-xs);">
+                                    <label for="trans-model-size" style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">💎 模型规格</label>
+                                    <select id="trans-model-size" class="form-select" style="width: 100%;">
+                                        <option value="1.7B">💎 1.7B 高精度原生版 (1.7B)</option>
+                                        <option value="0.6B">⚡ 0.6B 轻量快速版 (0.6B)</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="path-input-mode">
                                 <div>直接输入视频绝对路径（原地读取，不占用额外空间）：
                                 </div>

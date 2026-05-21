@@ -141,50 +141,42 @@ def write_txt(segments, out_path):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("input", help="输入媒体文件 (视频或音频)")
-    p.add_argument("--chunk", type=float, default=30)
+    p.add_argument("--chunk", type=float, default=10, help="VAD切片的最大长度（秒）")
     p.add_argument("--model_dir", default=r"D:\qwen3-asr\models")
     p.add_argument("--output", default=None, help="输出SRT路径 (可选)")
     p.add_argument("--resume", action="store_true", help="从 checkpoint 继续")
     p.add_argument("--batch", type=int, default=8, help="批处理大小，一次处理多少段")
+    p.add_argument("--language", default=None, help="锁定目标语言，例如 Japanese, Chinese, English")
+    p.add_argument("--model_size", default="1.7B", choices=["1.7B", "0.6B"], help="模型规格规格，可选 1.7B 或 0.6B")
     args = p.parse_args()
 
     media_file = Path(args.input)
     srt_path = Path(args.output) if args.output else media_file.with_name(f"{media_file.stem}_qwen3.srt")
     txt_path = srt_path.with_suffix(".txt")
     ckpt_path = media_file.with_name(f"{media_file.stem}_qwen3_ckpt.json")
-    model_path = str(Path(args.model_dir) / "Qwen" / "Qwen3-ASR-0___6B")
+
+    # 映射模型路径并支持降级
+    model_size = args.model_size
+    model_name = f"Qwen3-ASR-{model_size.replace('.', '___')}"
+    model_path = str(Path(args.model_dir) / "Qwen" / model_name)
+    if not os.path.exists(model_path) and model_size == "1.7B":
+        print(f"警告: 本地未找到 1.7B 模型 ({model_path})，自动降级为 0.6B 模型。")
+        model_name = "Qwen3-ASR-0___6B"
+        model_path = str(Path(args.model_dir) / "Qwen" / model_name)
+
+    # 规范化目标语言
+    norm_lang = None
+    if args.language and args.language.lower() != 'auto':
+        from qwen_asr.inference.utils import normalize_language_name
+        try:
+            norm_lang = normalize_language_name(args.language)
+        except Exception:
+            norm_lang = args.language
 
     # Duration
     container = av.open(str(media_file))
     total_sec = float(container.duration) / float(av.time_base)
     container.close()
-
-    n = int(np.ceil(total_sec / args.chunk))
-    print("=" * 60)
-    print(f"  Qwen3-ASR GPU 批处理模式 (Batch Size: {args.batch})")
-    print(f"  文件: {media_file.name}  |  时长: {total_sec:.1f}s")
-    print(f"  配置: {n} 段 x {args.chunk}s")
-    print("=" * 60)
-
-    # Resume from checkpoint
-    all_segs, done = [], set()
-    if args.resume and ckpt_path.exists():
-        ckpt = json.loads(ckpt_path.read_text(encoding='utf-8'))
-        all_segs = ckpt['segments']
-        done = set(ckpt['done'])
-        print(f"恢复进度: {len(done)}/{n} 已完成")
-
-    # 记录初始完成数用于计算 ETA
-    initial_done_count = len(done)
-
-    # Load model
-    t0 = time.time()
-    from qwen_asr import Qwen3ASRModel
-    import transformers
-    transformers.logging.set_verbosity_error()
-    
-    model = Qwen3ASRModel.from_pretrained(model_path, device_map='cuda', max_inference_batch_size=args.batch, max_new_tokens=512)
-    print(f"模型加载完毕: {time.time()-t0:.1f}s")
 
     # 1. 流式提取音频到临时文件（极省内存）
     print("正在预提取全局音频...")
@@ -204,7 +196,41 @@ def main():
     
     # 使用内存映射 np.memmap 加载音频文件，实现 0 内存占用
     full_audio = np.memmap(temp_pcm_path, dtype=np.int16, mode='r')
-    print(f"音频流提取完毕并已映射，开始转录...")
+    print("正在进行智能 VAD 静音切片...")
+    
+    # 归一化并转成 float32 数组进行 VAD 静音切分
+    full_audio_float = full_audio.astype(np.float32) / 32768.0
+    from qwen_asr.inference.utils import split_audio_into_chunks
+    chunks = split_audio_into_chunks(full_audio_float, 16000, max_chunk_sec=args.chunk)
+    n = len(chunks)
+
+    print("=" * 60)
+    print(f"  Qwen3-ASR GPU 批处理模式 (Batch Size: {args.batch})")
+    print(f"  文件: {media_file.name}  |  时长: {total_sec:.1f}s")
+    print(f"  配置: 智能 VAD 划分出 {n} 个切片 (Max Chunk: {args.chunk}s)")
+    print(f"  模型: {model_name}  |  锁定语言: {norm_lang or '🌍 自动检测'}")
+    print("=" * 60)
+
+    # Resume from checkpoint (必须在 n 算出之后)
+    all_segs, done = [], set()
+    if args.resume and ckpt_path.exists():
+        ckpt = json.loads(ckpt_path.read_text(encoding='utf-8'))
+        all_segs = ckpt['segments']
+        done = set(ckpt['done'])
+        print(f"恢复进度: {len(done)}/{n} 已完成")
+
+    # 记录初始完成数用于计算 ETA
+    initial_done_count = len(done)
+
+    # Load model
+    t0 = time.time()
+    from qwen_asr import Qwen3ASRModel
+    import transformers
+    transformers.logging.set_verbosity_error()
+    
+    model = Qwen3ASRModel.from_pretrained(model_path, device_map='cuda', max_inference_batch_size=args.batch, max_new_tokens=512)
+    print(f"模型加载完毕: {time.time()-t0:.1f}s")
+    print("音频流提取完毕并已映射，开始转录...")
 
     tt = time.time()
     
@@ -217,18 +243,20 @@ def main():
         batch_wavs = []
         batch_info = []
 
-        # 2. 内存切片（毫秒级）
+        # 2. 内存切片（智能 VAD 分段）
         for i in batch_indices:
-            cs, cd = i * args.chunk, min(args.chunk, total_sec - i * args.chunk)
+            chunk_wav, cs = chunks[i]
+            cd = chunk_wav.shape[0] / 16000.0
             chunk_path = f"D:\\qwen3-asr\\chunk_{i}.wav"
-            extract_wav_from_array(full_audio, 16000, cs, cd, chunk_path)
+            import soundfile as sf
+            sf.write(chunk_path, chunk_wav, 16000)
             batch_wavs.append(chunk_path)
             batch_info.append((i, cs, cd))
 
         try:
             t1 = time.time()
-            # 3. 批量推理
-            results = model.transcribe(audio=batch_wavs, language=None)
+            # 3. 批量推理，使用锁定的语言前缀
+            results = model.transcribe(audio=batch_wavs, language=norm_lang)
             
             # 处理结果（针对单条和多条返回值的兼容处理）
             if not isinstance(results, list):
@@ -254,7 +282,8 @@ def main():
 
             # 4. 单行显示进度
             dt = time.time() - t1
-            rtf = dt / (len(batch_indices) * args.chunk)
+            batch_total_duration = sum(cd for _, _, cd in batch_info)
+            rtf = dt / batch_total_duration if batch_total_duration > 0 else 0
             percent = (len(done) / n) * 100
             
             # 计算剩余时间 (ETA)

@@ -10,7 +10,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Optional, Any, Dict, Union
 
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, File, UploadFile, Form
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -97,6 +97,157 @@ class SummarizeRequest(BaseModel):
 
 class SwitchModelRequest(BaseModel):
     model_id: str
+
+class TranscribePathRequest(BaseModel):
+    path: str
+    language: Optional[str] = None
+    model_size: Optional[str] = "1.7B"
+
+@app.post("/api/transcribe")
+async def api_transcribe(
+    file: UploadFile = File(...),
+    language: Optional[str] = Form(None),
+    model_size: Optional[str] = Form("1.7B"),
+):
+    """
+    处理上传文件转录的流式端点 (AI Worker)
+    """
+    logger.info(f"🎤 AI Worker 收到上传文件转录请求: filename={file.filename}, language={language}, model_size={model_size}")
+    
+    # 1. 暂存到临时目录
+    import tempfile
+    temp_dir = tempfile.gettempdir()
+    unique_id = uuid.uuid4().hex
+    temp_file_path = os.path.join(temp_dir, f"upload_{unique_id}_{file.filename}")
+    
+    try:
+        with open(temp_file_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+        
+        # 对应 SRT 保存路径
+        srt_path = temp_file_path + ".srt"
+        
+        # 2. 桥接为流式响应
+        async def event_generator():
+            try:
+                from transcriber import run_transcription
+                loop = asyncio.get_running_loop()
+                queue = asyncio.Queue()
+                _SENTINEL = object()
+                
+                def _run_transcribe():
+                    try:
+                        for chunk in run_transcription(
+                            temp_file_path,
+                            srt_path,
+                            yield_progress=True,
+                            language=language,
+                            model_size=model_size
+                        ):
+                            loop.call_soon_threadsafe(queue.put_nowait, chunk)
+                    except Exception as exc:
+                        loop.call_soon_threadsafe(queue.put_nowait, exc)
+                    finally:
+                        loop.call_soon_threadsafe(queue.put_nowait, _SENTINEL)
+                
+                loop.run_in_executor(_stream_executor, _run_transcribe)
+                
+                while True:
+                    item = await queue.get()
+                    if item is _SENTINEL:
+                        break
+                    if isinstance(item, Exception):
+                        yield json.dumps({"status": "error", "message": str(item)}) + "\n"
+                        break
+                    yield item
+                    
+            except Exception as e:
+                yield json.dumps({"status": "error", "message": f"转录执行出错: {e}"}) + "\n"
+                
+            finally:
+                # 3. 完美清理临时上传的文件
+                try:
+                    if os.path.exists(temp_file_path):
+                        os.remove(temp_file_path)
+                except Exception:
+                    pass
+                try:
+                    if os.path.exists(srt_path):
+                        os.remove(srt_path)
+                except Exception:
+                    pass
+                    
+        return StreamingResponse(
+            event_generator(),
+            media_type="text/event-stream"
+        )
+        
+    except Exception as e:
+        logger.error(f"上传文件处理失败: {e}")
+        try:
+            if os.path.exists(temp_file_path):
+                os.remove(temp_file_path)
+        except Exception:
+            pass
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/transcribe_path")
+async def api_transcribe_path(request: TranscribePathRequest):
+    """
+    处理本地视频路径转录的流式端点 (AI Worker)
+    """
+    media_path = request.path
+    language = request.language
+    model_size = request.model_size
+    
+    logger.info(f"🎤 AI Worker 收到本地路径转录请求: path={media_path}, language={language}, model_size={model_size}")
+    
+    if not os.path.exists(media_path):
+        raise HTTPException(status_code=400, detail=f"文件不存在: {media_path}")
+        
+    srt_path = os.path.splitext(media_path)[0] + "_qwen3.srt"
+    
+    async def event_generator():
+        try:
+            from transcriber import run_transcription
+            loop = asyncio.get_running_loop()
+            queue = asyncio.Queue()
+            _SENTINEL = object()
+            
+            def _run_transcribe():
+                try:
+                    for chunk in run_transcription(
+                        media_path,
+                        srt_path,
+                        yield_progress=True,
+                        language=language,
+                        model_size=model_size
+                    ):
+                        loop.call_soon_threadsafe(queue.put_nowait, chunk)
+                except Exception as exc:
+                    loop.call_soon_threadsafe(queue.put_nowait, exc)
+                finally:
+                    loop.call_soon_threadsafe(queue.put_nowait, _SENTINEL)
+            
+            loop.run_in_executor(_stream_executor, _run_transcribe)
+            
+            while True:
+                item = await queue.get()
+                if item is _SENTINEL:
+                    break
+                if isinstance(item, Exception):
+                    yield json.dumps({"status": "error", "message": str(item)}) + "\n"
+                    break
+                yield item
+                
+        except Exception as e:
+            yield json.dumps({"status": "error", "message": f"转录执行出错: {e}"}) + "\n"
+            
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream"
+    )
 
 # ========== 上下文截断 ==========
 

@@ -366,6 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnDownload = document.getElementById('btn-download');
     const btnStartPath = document.getElementById('btn-start-path');
     const localPathInput = document.getElementById('local-video-path');
+    const transLanguage = document.getElementById('trans-language');
+    const transModelSize = document.getElementById('trans-model-size');
 
     // AI 聊天
     const chatHistory = document.getElementById('chat-history');
@@ -1083,12 +1085,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleUpload(file) {
         if (document.querySelector('.path-input-mode')) document.querySelector('.path-input-mode').classList.add('hidden');
+        if (document.querySelector('.trans-options')) document.querySelector('.trans-options').classList.add('hidden');
         dropZone.classList.add('hidden');
         transProgCont.classList.remove('hidden');
         transStatus.innerText = "正在上传并启动模型...";
         transBar.style.width = "5%";
         const formData = new FormData();
         formData.append('file', file);
+        if (transLanguage) formData.append('language', transLanguage.value);
+        if (transModelSize) formData.append('model_size', transModelSize.value);
         try {
             const response = await fetch('/api/transcribe', { method: 'POST', body: formData });
             await processStream(response);
@@ -1104,12 +1109,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const path = localPathInput.value.trim();
             if (!path) return alert("请输入完整路径!");
             if (document.querySelector('.path-input-mode')) document.querySelector('.path-input-mode').classList.add('hidden');
+            if (document.querySelector('.trans-options')) document.querySelector('.trans-options').classList.add('hidden');
             dropZone.classList.add('hidden');
             transProgCont.classList.remove('hidden');
             transStatus.innerText = "正在定位文件并启动...";
             transBar.style.width = "5%";
             const formData = new FormData();
             formData.append('path', path);
+            if (transLanguage) formData.append('language', transLanguage.value);
+            if (transModelSize) formData.append('model_size', transModelSize.value);
             try {
                 const response = await fetch('/api/transcribe_path', { method: 'POST', body: formData });
                 await processStream(response);

@@ -137,7 +137,7 @@ def write_srt(segments, out_path):
             f.write(f"{i}\n{format_time(s)} --> {format_time(e)}\n{t}\n\n")
 
 
-def run_transcription(media_path, srt_path, yield_progress=None):
+def run_transcription(media_path, srt_path, yield_progress=None, language=None, model_size="1.7B"):
     """
     执行视频转字幕任务
     
@@ -145,14 +145,43 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         media_path: 视频/音频文件路径
         srt_path: 输出 SRT 文件路径
         yield_progress: 是否返回进度流（用于 Web 界面）
+        language: 锁定识别的目标语言，如 Japanese, Chinese, English
+        model_size: 选择模型规格，可选 1.7B 或 0.6B
         
     返回：
         如果 yield_progress=True，返回 JSON 格式的进度流
         支持取消：通过 model_manager.cancel() 发送取消信号
     """
-    # 从配置文件读取参数
-    model_path = config['models']['asr']
-    chunk_size = config.get('gpu.chunk_size', 30.0)
+    # 从配置文件读取参数并解析物理路径
+    config_asr_path = config['models']['asr']
+    from pathlib import Path
+    try:
+        model_dir = str(Path(config_asr_path).parent.parent)
+    except Exception:
+        model_dir = r"D:\qwen3-asr\models"
+
+    if not model_size:
+        model_size = "1.7B"
+
+    model_name = f"Qwen3-ASR-{model_size.replace('.', '___')}"
+    model_path = os.path.join(model_dir, "Qwen", model_name)
+
+    # 支持 1.7B 向 0.6B 的自动退化
+    if not os.path.exists(model_path) and model_size == "1.7B":
+        logger.warning(f"1.7B model not found at {model_path}, fallback to 0.6B.")
+        model_name = "Qwen3-ASR-0___6B"
+        model_path = os.path.join(model_dir, "Qwen", model_name)
+
+    # 规范化目标语言
+    norm_lang = None
+    if language and language.lower() != 'auto':
+        from qwen_asr.inference.utils import normalize_language_name
+        try:
+            norm_lang = normalize_language_name(language)
+        except Exception:
+            norm_lang = language
+
+    chunk_size = config.get('gpu.chunk_size', 10.0) # VAD最大分块默认推荐10s
     batch_size = config.get('gpu.batch_size', 8)
     target_sr = config.get('audio.sample_rate', 16000)
     target_format = config.get('audio.format', 's16')
@@ -172,7 +201,6 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         container = av.open(str(media_path))
         total_sec = float(container.duration) / float(av.time_base)
         container.close()
-        n_chunks = int(np.ceil(total_sec / chunk_size))
         
         if yield_progress:
             yield json.dumps({"status": "processing", "progress": 5, "message": "检测显存并释放冲突模型..."}) + "\n"
@@ -181,7 +209,7 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         model_manager.prepare_for_transcription()
         
         if yield_progress:
-            yield json.dumps({"status": "processing", "progress": 7, "message": "正在加载 Qwen3-ASR 模型..."}) + "\n"
+            yield json.dumps({"status": "processing", "progress": 7, "message": f"正在加载 {model_name} 模型..."}) + "\n"
             
         # 2. 加载模型
         from qwen_asr import Qwen3ASRModel
@@ -207,9 +235,18 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         if not container.streams.audio:
             raise ValueError("找不到音频流")
         ast = container.streams.audio[0]
+        
+        # 转换声道格式，防止 PyAV 报 layout 错误 (如：layout must be of type: string | av.AudioLayout, got <class 'int'>)
+        layout_val = target_channels
+        if isinstance(layout_val, int):
+            if layout_val == 1:
+                layout_val = 'mono'
+            elif layout_val == 2:
+                layout_val = 'stereo'
+                
         resampler = av.audio.resampler.AudioResampler(
             format=target_format, 
-            layout=target_channels, 
+            layout=layout_val, 
             rate=target_sr
         )
         
@@ -224,12 +261,27 @@ def run_transcription(media_path, srt_path, yield_progress=None):
         audio_dtype = dtype_map.get(target_format, np.int16)
         full_audio = np.memmap(temp_pcm_path, dtype=audio_dtype, mode='r')
         
+        if yield_progress:
+            yield json.dumps({"status": "processing", "progress": 12, "message": "正在进行智能 VAD 静音切片..."}) + "\n"
+
+        # 归一化并转成 float32 数组进行 VAD 静音切分
+        if audio_dtype == np.int16:
+            full_audio_float = full_audio.astype(np.float32) / 32768.0
+        elif audio_dtype == np.int32:
+            full_audio_float = full_audio.astype(np.float32) / 2147483648.0
+        else:
+            full_audio_float = full_audio.astype(np.float32)
+
+        from qwen_asr.inference.utils import split_audio_into_chunks
+        chunks = split_audio_into_chunks(full_audio_float, target_sr, max_chunk_sec=chunk_size)
+        n_chunks = len(chunks)
+
         import soundfile as sf
         all_segs = []
         done_count = 0
         tt = time.time()
         
-        logger.info(f"Starting batch processing: batch_size={batch_size}, chunk_size={chunk_size}s")
+        logger.info(f"Starting batch processing: batch_size={batch_size}, chunks={n_chunks}, model={model_name}, lang={norm_lang}")
         
         # 4. 批处理转录
         for batch_start in range(0, n_chunks, batch_size):
@@ -245,17 +297,14 @@ def run_transcription(media_path, srt_path, yield_progress=None):
             batch_info = []
             
             for i in batch_indices:
-                cs = i * chunk_size
-                cd = min(chunk_size, total_sec - cs)
+                chunk_wav, cs = chunks[i]
+                cd = chunk_wav.shape[0] / float(target_sr)
                 chunk_path = os.path.join(tmp_dir, f"chunk_{i}.wav")
-                start_idx = int(cs * target_sr)
-                end_idx = int((cs + cd) * target_sr)
-                chunk = full_audio[start_idx:end_idx]
-                sf.write(chunk_path, chunk, target_sr)
+                sf.write(chunk_path, chunk_wav, target_sr)
                 batch_wavs.append(chunk_path)
                 batch_info.append((i, cs, cd))
                 
-            results = model.transcribe(audio=batch_wavs, language=None)
+            results = model.transcribe(audio=batch_wavs, language=norm_lang)
             if not isinstance(results, list): results = [results]
             
             for idx, res in enumerate(results):

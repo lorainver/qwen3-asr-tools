@@ -292,6 +292,7 @@ class AIWorkerManager:
     
     def kill(self) -> dict:
         """终止 AI Worker 子进程（完全释放显存）"""
+        logger.info("终止 AI Worker 子进程...")
         self.intentional_stop = True
         self.respawn_count = 0  # 释放时重置所有重试状态
         self.is_respawning = False
@@ -303,8 +304,6 @@ class AIWorkerManager:
         if not self.is_running():
             self.process = None
             return {"status": "already_stopped", "message": "AI Worker 已停止"}
-        
-        logger.info("终止 AI Worker 子进程...")
         
         # Windows: 使用 terminate() 或 taskkill
         self.process.terminate()
@@ -355,33 +354,16 @@ ai_worker = AIWorkerManager()
 
 async def proxy_to_worker(method: str, path: str, **kwargs):
     """代理请求到 AI Worker (复用全局 HTTP 连接池)"""
+    # 确保 worker 已启动，如果未启动则返回错误
     if not ai_worker.ensure_running():
         return {"error": "AI Worker 启动失败"}
-    
     url = f"{AI_WORKER_URL}{path}"
-    
-    try:
-        if method.upper() == "GET":
-            resp = await http_client.get(url, **kwargs)
-        else:
-            resp = await http_client.post(url, **kwargs)
-        return resp.json()
-    except (httpx.ConnectError, httpx.ConnectTimeout):
-        # Worker 可能刚启动，重试一次
-        await asyncio.sleep(2)
-        try:
-            if method.upper() == "GET":
-                resp = await http_client.get(url, **kwargs)
-            else:
-                resp = await http_client.post(url, **kwargs)
-            return resp.json()
-        except Exception as e:
-            return {"error": str(e)}
-    except Exception as e:
-        return {"error": str(e)}
+    resp = await http_client.request(method, url, **kwargs)
+    return resp.json()
 
 async def proxy_stream_to_worker(method: str, path: str, **kwargs):
     """代理流式请求到 AI Worker (复用全局 HTTP 连接池)"""
+    # 确保 worker 已启动，如果未启动则返回错误并自动托起
     if not ai_worker.ensure_running():
         async def error_gen():
             yield (json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n").encode("utf-8")
@@ -1068,6 +1050,23 @@ async def get_ollama_status():
                         "vram_percent": vram_percent
                     })
                 
+                try:
+                    async with httpx.AsyncClient(timeout=2.0) as health_client:
+                        resp = await health_client.get(f"{AI_WORKER_URL}/health")
+                        if resp.status_code != 200:
+                            raise Exception("health check failed")
+                except Exception:
+                    async def error_gen():
+                        yield (json.dumps({"status": "error", "message": "AI Worker 启动失败"}) + "\n").encode("utf-8")
+                    return StreamingResponse(
+                        error_gen(),
+                        media_type="text/plain",
+                        headers={
+                            "Cache-Control": "no-cache",
+                            "X-Accel-Buffering": "no",
+                            "Connection": "keep-alive"
+                        }
+                    )
                 return {
                     "running": True,
                     "has_model": True,
@@ -1200,7 +1199,11 @@ async def api_summarize(request: SummarizeRequest):
     )
 
 @app.post("/api/transcribe")
-async def api_transcribe(file: UploadFile = File(...)):
+async def api_transcribe(
+    file: UploadFile = File(...),
+    language: Optional[str] = Form(None),
+    model_size: Optional[str] = Form("1.7B"),
+):
     """视频转录（代理到 worker）"""
     if not ai_worker.ensure_running():
         async def error_gen():
@@ -1216,24 +1219,33 @@ async def api_transcribe(file: UploadFile = File(...)):
         )
     
     # 直接转发文件到 worker
-    async with httpx.AsyncClient(timeout=600.0) as client:
-        files = {"file": (file.filename, await file.read(), file.content_type)}
-        async with client.stream("POST", f"{AI_WORKER_URL}/api/transcribe", files=files) as resp:
-            async def stream_gen():
+    async def stream_gen():
+        async with httpx.AsyncClient(timeout=600.0) as client:
+            files = {"file": (file.filename, await file.read(), file.content_type)}
+            data = {}
+            if language:
+                data["language"] = language
+            if model_size:
+                data["model_size"] = model_size
+            async with client.stream("POST", f"{AI_WORKER_URL}/api/transcribe", files=files, data=data) as resp:
                 async for chunk in resp.aiter_bytes():
                     yield chunk
-            return StreamingResponse(
-                stream_gen(),
-                media_type="text/plain",
-                headers={
-                    "Cache-Control": "no-cache",
-                    "X-Accel-Buffering": "no",
-                    "Connection": "keep-alive"
-                }
-            )
+    return StreamingResponse(
+        stream_gen(),
+        media_type="text/plain",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive"
+        }
+    )
 
 @app.post("/api/transcribe_path")
-async def api_transcribe_path(path: str = Form(...)):
+async def api_transcribe_path(
+    path: str = Form(...),
+    language: Optional[str] = Form(None),
+    model_size: Optional[str] = Form("1.7B"),
+):
     """本地路径转录（代理到 worker）"""
     if not ai_worker.ensure_running():
         async def error_gen():
@@ -1248,21 +1260,25 @@ async def api_transcribe_path(path: str = Form(...)):
             }
         )
     
-    async with httpx.AsyncClient(timeout=600.0) as client:
-        data = {"path": path}
-        async with client.stream("POST", f"{AI_WORKER_URL}/api/transcribe_path", data=data) as resp:
-            async def stream_gen():
+    async def stream_gen():
+        async with httpx.AsyncClient(timeout=600.0) as client:
+            req_body = {
+                "path": path,
+                "language": language,
+                "model_size": model_size
+            }
+            async with client.stream("POST", f"{AI_WORKER_URL}/api/transcribe_path", json=req_body) as resp:
                 async for chunk in resp.aiter_bytes():
                     yield chunk
-            return StreamingResponse(
-                stream_gen(),
-                media_type="text/plain",
-                headers={
-                    "Cache-Control": "no-cache",
-                    "X-Accel-Buffering": "no",
-                    "Connection": "keep-alive"
-                }
-            )
+    return StreamingResponse(
+        stream_gen(),
+        media_type="text/plain",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive"
+        }
+    )
 
 # ========== 文件操作端点 ==========
 
