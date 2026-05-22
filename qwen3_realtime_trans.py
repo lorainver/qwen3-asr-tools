@@ -197,6 +197,9 @@ class FloatingCaption:
         self.full_history = []
         self.companion_window = None
         self.companion_text = None
+        self.companion_display_mode = 0  # 0: 双语对照, 1: 仅原文, 2: 仅译文
+        self.companion_mode_names = ["双语对照", "仅原文", "仅译文"]
+        self.comp_mode_btn = None
         
         # 线程安全 UI 调度队列
         self.ui_queue = queue.Queue()
@@ -523,6 +526,16 @@ class FloatingCaption:
             export_btn.bind("<Enter>", lambda e: export_btn.config(fg="white", bg="#10b981"))
             export_btn.bind("<Leave>", lambda e: export_btn.config(fg="#94a3b8", bg="#1e293b"))
 
+            # 🎨 伴读显示模式切换按钮
+            self.comp_mode_btn = tk.Label(
+                top_bar, text=self.companion_mode_names[self.companion_display_mode], font=("Microsoft YaHei", 9, "bold"), 
+                fg="white", bg="#0078d4", cursor="hand2", padx=8, pady=3
+            )
+            self.comp_mode_btn.pack(side=tk.RIGHT, padx=3)
+            self.comp_mode_btn.bind("<Button-1>", self.cycle_companion_mode)
+            self.comp_mode_btn.bind("<Enter>", lambda e: self.comp_mode_btn.config(bg="#1d4ed8"))
+            self.comp_mode_btn.bind("<Leave>", lambda e: self.comp_mode_btn.config(bg="#0078d4"))
+
             # 滚动文本框主容器 (精致Slate灰极细描边)
             text_frame = tk.Frame(self.companion_window, bg="#0f172a", highlightthickness=1, highlightbackground="#334155")
             text_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 12))
@@ -554,6 +567,15 @@ class FloatingCaption:
             self.companion_window.destroy()
             self.companion_window = None
             self.companion_btn.config(fg="#94a3b8", bg="#1e293b")
+            self.comp_mode_btn = None
+
+    def cycle_companion_mode(self, event=None):
+        """循环切换伴读显示模式 (双语对照、仅原文、仅译文)"""
+        self.companion_display_mode = (self.companion_display_mode + 1) % 3
+        if self.comp_mode_btn and self.comp_mode_btn.winfo_exists():
+            self.comp_mode_btn.config(text=self.companion_mode_names[self.companion_display_mode])
+        self.render_companion_history()
+        print(f" >>> 伴读显示模式切换为: {self.companion_mode_names[self.companion_display_mode]}")
 
     def render_companion_history(self):
         """流式高拟真重新渲染伴读内容 (极速毫秒级)"""
@@ -567,15 +589,22 @@ class FloatingCaption:
         recent_history = self.full_history[-150:]
         
         for item in recent_history:
-            idx_str = f"#{item['index']} "
-            self.companion_text.insert(tk.END, idx_str, "time")
-            self.companion_text.insert(tk.END, f"[{item['time']}]\n", "time")
-            self.companion_text.insert(tk.END, " 原文: ", "time")
-            self.companion_text.insert(tk.END, f"{item['raw']}\n", "raw")
-            if item['trans']:
-                self.companion_text.insert(tk.END, " 译文: ", "time")
-                self.companion_text.insert(tk.END, f"{item['trans']}\n", "trans")
-            self.companion_text.insert(tk.END, "-" * 50 + "\n", "line")
+            if self.companion_display_mode == 0:  # 双语对照
+                self.companion_text.insert(tk.END, " 原文: ", "time")
+                self.companion_text.insert(tk.END, f"{item['raw']}\n", "raw")
+                if item['trans']:
+                    self.companion_text.insert(tk.END, " 译文: ", "time")
+                    self.companion_text.insert(tk.END, f"{item['trans']}\n", "trans")
+                self.companion_text.insert(tk.END, "-" * 50 + "\n", "line")
+            elif self.companion_display_mode == 1:  # 仅原文
+                self.companion_text.insert(tk.END, " 原文: ", "time")
+                self.companion_text.insert(tk.END, f"{item['raw']}\n", "raw")
+                self.companion_text.insert(tk.END, "-" * 50 + "\n", "line")
+            elif self.companion_display_mode == 2:  # 仅译文
+                if item['trans']:
+                    self.companion_text.insert(tk.END, " 译文: ", "time")
+                    self.companion_text.insert(tk.END, f"{item['trans']}\n", "trans")
+                    self.companion_text.insert(tk.END, "-" * 50 + "\n", "line")
             
         self.companion_text.config(state=tk.DISABLED)
         # 始终平滑滚动至最尾端
@@ -599,13 +628,23 @@ class FloatingCaption:
             
             with open(filepath, "w", encoding="utf-8") as f:
                 f.write(f"# Qwen3 智能同传学习笔记\n")
-                f.write(f"生成时间: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n---\n\n")
+                f.write(f"生成时间: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"学习模式: {self.companion_mode_names[self.companion_display_mode]}\n\n---\n\n")
+                
                 for item in self.full_history:
-                    f.write(f"### 📍 句段 {item['index']} `[{item['time']}]`\n")
-                    f.write(f"- **原文 (日/英)**: {item['raw']}\n")
-                    if item['trans']:
-                        f.write(f"- **中文译文**: {item['trans']}\n")
-                    f.write(f"\n")
+                    if self.companion_display_mode == 0:  # 双语对照
+                        f.write(f"**原文**: {item['raw']}\n")
+                        if item['trans']:
+                            f.write(f"**译文**: {item['trans']}\n")
+                        f.write(f"\n---\n\n")
+                    elif self.companion_display_mode == 1:  # 仅原文
+                        f.write(f"**原文**: {item['raw']}\n")
+                        f.write(f"\n---\n\n")
+                    elif self.companion_display_mode == 2:  # 仅译文
+                        if item['trans']:
+                            f.write(f"**译文**: {item['trans']}\n")
+                            f.write(f"\n---\n\n")
+                            
             print(f" >>> 伴读学习笔记导出成功: {filepath}")
             if self.companion_window:
                 self.companion_window.title("📚 导出成功! 笔记已存至 recordings 目录")
