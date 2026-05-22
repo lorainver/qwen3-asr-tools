@@ -553,10 +553,10 @@ class FloatingCaption:
             scrollbar.config(command=self.companion_text.yview)
             
             # 注入高亮配色 tag (时间戳/原文翠绿/译文青蓝/分割线暗灰)
-            self.companion_text.tag_config("time", fg="#64748b", font=("Cascadia Code", 9))
-            self.companion_text.tag_config("raw", fg="#34d399", font=("Microsoft YaHei", 10, "bold"))
-            self.companion_text.tag_config("trans", fg="#38bdf8", font=("Microsoft YaHei", 10))
-            self.companion_text.tag_config("line", fg="#334155")
+            self.companion_text.tag_config("time", foreground="#64748b", font=("Cascadia Code", 9))
+            self.companion_text.tag_config("raw", foreground="#34d399", font=("Microsoft YaHei", 10, "bold"))
+            self.companion_text.tag_config("trans", foreground="#38bdf8", font=("Microsoft YaHei", 10))
+            self.companion_text.tag_config("line", foreground="#334155")
             
             # 加载并渲染当前已积攒的历史
             self.render_companion_history()
