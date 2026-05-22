@@ -891,10 +891,14 @@ async def run_script(request: Request):
             # 同传模式：使用指定的 Ollama 模型
             script_file = os.path.join(BASE_DIR, "qwen3_realtime_trans.py")
             cmd_args = [venv_python, script_file, "--device_id", str(device_id), "--chunk", "1.5", "--model_size", "1.7B", "--model_type", "ollama", "--ollama_model", model_name]
+        elif script_type == "trans_local":
+            # 殿堂级推荐：本地 GPU 4-bit 翻译加速版 (1.7B ASR + 1.5B 4-bit 本地模型)
+            script_file = os.path.join(BASE_DIR, "qwen3_realtime_trans.py")
+            cmd_args = [venv_python, script_file, "--device_id", str(device_id), "--chunk", "2.5", "--model_size", "1.7B", "--model_type", "1.5b"]
         else:
             # 纯转录模式
             script_file = os.path.join(BASE_DIR, "qwen3_realtime.py")
-            cmd_args = [venv_python, script_file, "--device_id", str(device_id), "--chunk", "1.5", "--model_size", "1.7B"]
+            cmd_args = [venv_python, script_file, "--device_id", str(device_id), "--chunk", "2.5", "--model_size", "1.7B"]
 
         # 1. 清理旧进程
         if "active_task" in running_processes:
