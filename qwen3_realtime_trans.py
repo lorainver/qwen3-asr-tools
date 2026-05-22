@@ -136,6 +136,16 @@ class FloatingCaption:
         self.btn_frame = tk.Frame(self.frame, bg="#1e293b")
         self.btn_frame.place(relx=1.0, rely=1.0, anchor="se", x=-15, y=-15)
         
+        # 伴读窗口按钮
+        self.companion_btn = tk.Label(
+            self.btn_frame, text="📖 伴读", font=("Microsoft YaHei", 9, "bold"),
+            fg="#94a3b8", bg="#1e293b", cursor="hand2", padx=8, pady=3
+        )
+        self.companion_btn.pack(side=tk.LEFT, padx=2)
+        self.companion_btn.bind("<Button-1>", self.toggle_companion)
+        self.companion_btn.bind("<Enter>", lambda e: self.companion_btn.config(fg="white", bg="#8b5cf6") if (self.companion_window is None or not self.companion_window.winfo_exists()) else None)
+        self.companion_btn.bind("<Leave>", lambda e: self.companion_btn.config(fg="#94a3b8", bg="#1e293b") if (self.companion_window is None or not self.companion_window.winfo_exists()) else None)
+
         # 语言选择按钮 (磨砂精致小卡片)
         self.lang_btn = tk.Label(
             self.btn_frame, text=self.lang_names[self.lang_idx], font=("Arial", 10, "bold"),
@@ -183,9 +193,17 @@ class FloatingCaption:
         self.trans_cursor_visible = True
         self.trans_is_typing = False
         
+        # 伴读学习历史状态与伴读窗口
+        self.full_history = []
+        self.companion_window = None
+        self.companion_text = None
+        
         # 线程安全 UI 调度队列
         self.ui_queue = queue.Queue()
         self._process_ui_queue()
+
+        # 当主悬浮字幕窗口关闭时，连防同步关闭伴读子窗口
+        self.root.bind("<Destroy>", self.on_main_window_destroy)
 
         # 初始化界面布局
         self.refresh_display()
@@ -195,15 +213,15 @@ class FloatingCaption:
         self._blink_cursor_trans()
 
     def _process_ui_queue(self):
-        """主线程轮询，消费来自后台线程的 GUI 更新任务"""
+        """主线程轮询，消费来自后台线程 of GUI 更新任务"""
         try:
             while True:
                 task = self.ui_queue.get_nowait()
                 action = task.get("action")
                 if action == "update_raw":
-                    self._do_update_raw(task["text"])
+                    self._do_update_raw(task["text"], task.get("item_index"))
                 elif action == "update_trans":
-                    self._do_update_trans(task["text"])
+                    self._do_update_trans(task["text"], task.get("item_index"))
                 self.ui_queue.task_done()
         except queue.Empty:
             pass
@@ -371,19 +389,32 @@ class FloatingCaption:
             self.trans_typewriter_after_id = None
             self._blink_cursor_trans()
 
-    def update_raw(self, text):
-        self.ui_queue.put({"action": "update_raw", "text": text})
+    def update_raw(self, text, item_index=None):
+        self.ui_queue.put({"action": "update_raw", "text": text, "item_index": item_index})
 
-    def update_trans(self, text):
-        self.ui_queue.put({"action": "update_trans", "text": text})
+    def update_trans(self, text, item_index=None):
+        self.ui_queue.put({"action": "update_trans", "text": text, "item_index": item_index})
 
-    def _do_update_raw(self, text):
+    def _do_update_raw(self, text, item_index=None):
         if text:
             if self.raw_history and text == self.raw_history[-1]:
                 return
             self.raw_history.append(text)
             if len(self.raw_history) > self.max_display_lines:
                 self.raw_history.pop(0)
+                
+            # 记录到完整的同传学习历史
+            if item_index is not None:
+                # 安全去重过滤
+                exists = any(item["index"] == item_index for item in self.full_history)
+                if not exists:
+                    self.full_history.append({
+                        "index": item_index,
+                        "time": time.strftime("%H:%M:%S"),
+                        "raw": text,
+                        "trans": ""
+                    })
+                    self.render_companion_history()
 
         n_history = len(self.raw_history)
         # 1. 刷新历史行（不带打字机，直接渲染自适应退火变暗）
@@ -409,13 +440,21 @@ class FloatingCaption:
             self.raw_mains[2].config(text="等待识别..." if self.display_mode != 2 else "")
             self.raw_shadows[2].config(text="等待识别..." if self.display_mode != 2 else "")
 
-    def _do_update_trans(self, text):
+    def _do_update_trans(self, text, item_index=None):
         if text:
             if self.trans_history and text == self.trans_history[-1]:
                 return
             self.trans_history.append(text)
             if len(self.trans_history) > self.max_display_lines:
                 self.trans_history.pop(0)
+                
+            # 填入到完整同传学习历史中
+            if item_index is not None:
+                for item in self.full_history:
+                    if item["index"] == item_index:
+                        item["trans"] = text
+                        break
+                self.render_companion_history()
 
         n_history = len(self.trans_history)
         # 1. 刷新历史老行
@@ -440,6 +479,145 @@ class FloatingCaption:
         else:
             self.trans_mains[2].config(text="等待翻译..." if self.display_mode != 1 else "")
             self.trans_shadows[2].config(text="等待翻译..." if self.display_mode != 1 else "")
+
+    def toggle_companion(self, event=None):
+        """打开或关闭独立的“伴读外语学习舱”窗口"""
+        if self.companion_window is None or not self.companion_window.winfo_exists():
+            # 新建伴读子窗口
+            self.companion_window = tk.Toplevel(self.root)
+            self.companion_window.title("Qwen3 同传伴读与外语学习舱")
+            self.companion_window.geometry("460x620")
+            self.companion_window.configure(bg="#0f172a") # Obsidian 深蓝
+            
+            # 设置窗口属性
+            self.companion_window.attributes("-topmost", True) # 置顶以利学习
+            self.companion_window.attributes("-alpha", 0.92)  # 科技微磨砂透视感
+            
+            # 顶部美化标题与控制条
+            top_bar = tk.Frame(self.companion_window, bg="#0f172a", height=40)
+            top_bar.pack(fill=tk.X, padx=12, pady=8)
+            
+            title_lbl = tk.Label(
+                top_bar, text="📚 外语学习伴读舱", 
+                font=("Microsoft YaHei", 11, "bold"), fg="#38bdf8", bg="#0f172a"
+            )
+            title_lbl.pack(side=tk.LEFT)
+            
+            # 🧹 清空按钮
+            clear_btn = tk.Label(
+                top_bar, text="🧹 清空", font=("Microsoft YaHei", 9, "bold"), 
+                fg="#94a3b8", bg="#1e293b", cursor="hand2", padx=8, pady=3
+            )
+            clear_btn.pack(side=tk.RIGHT, padx=3)
+            clear_btn.bind("<Button-1>", self.clear_companion_history)
+            clear_btn.bind("<Enter>", lambda e: clear_btn.config(fg="white", bg="#ef4444"))
+            clear_btn.bind("<Leave>", lambda e: clear_btn.config(fg="#94a3b8", bg="#1e293b"))
+            
+            # 💾 导出按钮
+            export_btn = tk.Label(
+                top_bar, text="💾 导出", font=("Microsoft YaHei", 9, "bold"), 
+                fg="#94a3b8", bg="#1e293b", cursor="hand2", padx=8, pady=3
+            )
+            export_btn.pack(side=tk.RIGHT, padx=3)
+            export_btn.bind("<Button-1>", self.export_companion_history)
+            export_btn.bind("<Enter>", lambda e: export_btn.config(fg="white", bg="#10b981"))
+            export_btn.bind("<Leave>", lambda e: export_btn.config(fg="#94a3b8", bg="#1e293b"))
+
+            # 滚动文本框主容器 (精致Slate灰极细描边)
+            text_frame = tk.Frame(self.companion_window, bg="#0f172a", highlightthickness=1, highlightbackground="#334155")
+            text_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 12))
+            
+            scrollbar = tk.Scrollbar(text_frame)
+            scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+            
+            # 创建只读文本渲染框，配置行高和段落边距
+            self.companion_text = tk.Text(
+                text_frame, bg="#0b0f19", fg="#e2e8f0", 
+                font=("Microsoft YaHei", 10), yscrollcommand=scrollbar.set,
+                bd=0, padx=12, pady=12, spacing1=6, spacing3=6, wrap=tk.WORD
+            )
+            self.companion_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+            scrollbar.config(command=self.companion_text.yview)
+            
+            # 注入高亮配色 tag (时间戳/原文翠绿/译文青蓝/分割线暗灰)
+            self.companion_text.tag_config("time", fg="#64748b", font=("Cascadia Code", 9))
+            self.companion_text.tag_config("raw", fg="#34d399", font=("Microsoft YaHei", 10, "bold"))
+            self.companion_text.tag_config("trans", fg="#38bdf8", font=("Microsoft YaHei", 10))
+            self.companion_text.tag_config("line", fg="#334155")
+            
+            # 加载并渲染当前已积攒的历史
+            self.render_companion_history()
+            
+            # 切换主悬浮窗伴读按钮为明亮高贵紫
+            self.companion_btn.config(fg="white", bg="#7c3aed")
+        else:
+            self.companion_window.destroy()
+            self.companion_window = None
+            self.companion_btn.config(fg="#94a3b8", bg="#1e293b")
+
+    def render_companion_history(self):
+        """流式高拟真重新渲染伴读内容 (极速毫秒级)"""
+        if self.companion_text is None or not self.companion_window or not self.companion_window.winfo_exists():
+            return
+            
+        self.companion_text.config(state=tk.NORMAL)
+        self.companion_text.delete("1.0", tk.END)
+        
+        # 仅截取最新的 150 句，确保性能和内存安全性
+        recent_history = self.full_history[-150:]
+        
+        for item in recent_history:
+            idx_str = f"#{item['index']} "
+            self.companion_text.insert(tk.END, idx_str, "time")
+            self.companion_text.insert(tk.END, f"[{item['time']}]\n", "time")
+            self.companion_text.insert(tk.END, " 原文: ", "time")
+            self.companion_text.insert(tk.END, f"{item['raw']}\n", "raw")
+            if item['trans']:
+                self.companion_text.insert(tk.END, " 译文: ", "time")
+                self.companion_text.insert(tk.END, f"{item['trans']}\n", "trans")
+            self.companion_text.insert(tk.END, "-" * 50 + "\n", "line")
+            
+        self.companion_text.config(state=tk.DISABLED)
+        # 始终平滑滚动至最尾端
+        self.companion_text.see(tk.END)
+
+    def clear_companion_history(self, event=None):
+        """清空伴读历史缓存"""
+        self.full_history = []
+        self.render_companion_history()
+        print(" >>> 伴读历史已清空")
+
+    def export_companion_history(self, event=None):
+        """一键导出高颜值 Markdown 对照笔记到 recordings 目录"""
+        if not self.full_history:
+            return
+        try:
+            record_dir = r"D:\qwen3-asr\recordings"
+            os.makedirs(record_dir, exist_ok=True)
+            filename = f"同传学习笔记_{time.strftime('%Y%m%d_%H%M%S')}.md"
+            filepath = os.path.normpath(os.path.join(record_dir, filename))
+            
+            with open(filepath, "w", encoding="utf-8") as f:
+                f.write(f"# Qwen3 智能同传学习笔记\n")
+                f.write(f"生成时间: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n---\n\n")
+                for item in self.full_history:
+                    f.write(f"### 📍 句段 {item['index']} `[{item['time']}]`\n")
+                    f.write(f"- **原文 (日/英)**: {item['raw']}\n")
+                    if item['trans']:
+                        f.write(f"- **中文译文**: {item['trans']}\n")
+                    f.write(f"\n")
+            print(f" >>> 伴读学习笔记导出成功: {filepath}")
+            if self.companion_window:
+                self.companion_window.title("📚 导出成功! 笔记已存至 recordings 目录")
+                self.root.after(3000, lambda: self.companion_window.title("Qwen3 同传伴读与外语学习舱") if self.companion_window else None)
+        except Exception as e:
+            print(f"导出伴读笔记失败: {e}")
+
+    def on_main_window_destroy(self, event):
+        """主窗口关闭时，连防自动销毁伴读子窗口"""
+        if self.companion_window and self.companion_window.winfo_exists():
+            self.companion_window.destroy()
+            self.companion_window = None
 
     def run(self):
         self.root.mainloop()
@@ -648,14 +826,17 @@ def main():
 
         # 创建一个异步翻译线程池 (2个worker保证多任务不重叠)
         executor = ThreadPoolExecutor(max_workers=2)
+        
+        # 定义自增主键，绑定异步 ASR 和 LLM 并发，防乱序
+        current_index = [0]
 
-        def async_translate(raw_text, context_str):
+        def async_translate(raw_text, context_str, item_idx):
             try:
                 t_start = time.time()
                 cn_text = translator.translate(raw_text, history=context_str)
                 print(f"译: {cn_text} (耗时: {time.time()-t_start:.2f}s)")
-                # 回调 GUI 更新译文
-                gui.update_trans(cn_text)
+                # 回调 GUI 更新译文，传入 item_idx
+                gui.update_trans(cn_text, item_idx)
             except Exception as e:
                 print(f"翻译失败: {e}")
 
@@ -697,23 +878,24 @@ def main():
                             
                             if raw_text:
                                 print(f"[{time.strftime('%H:%M:%S')}] 原: {raw_text} (ASR: {dt:.2f}s)")
-                                # 原文瞬间上屏渲染打字机
-                                gui.update_raw(raw_text)
+                                current_index[0] += 1
+                                # 原文瞬间上屏渲染打字机，并传入 ID
+                                gui.update_raw(raw_text, current_index[0])
                                 
                                 # 只有在双语或仅译文模式下才翻译
                                 if gui.display_mode != 1:
                                     # 彻底解耦上下文，采用单句直译模式以 100% 命中 Ollama 提示词缓存
                                     context_str = ""
                                     
-                                    # 异步提交翻译任务到线程池，绝不阻塞 ASR 录音线程
-                                    executor.submit(async_translate, raw_text, context_str)
+                                    # 异步提交翻译任务到线程池，绝不阻塞 ASR 录音线程，传入自增 ID
+                                    executor.submit(async_translate, raw_text, context_str, current_index[0])
                                     
                                     # 更新上下文历史
                                     trans_history.append(raw_text)
                                     if len(trans_history) > 10: 
                                         trans_history.pop(0)
                                 else:
-                                    gui.update_trans("") # 清空译文行
+                                    gui.update_trans("", current_index[0]) # 清空译文行
                                 
                         if torch.cuda.is_available(): 
                             torch.cuda.empty_cache()
