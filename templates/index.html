@@ -91,6 +91,43 @@
             color: var(--text-primary);
             box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(56, 189, 248, 0.05);
         }
+
+        /* ── AI助理快捷提示词下拉框样式 ── */
+        .chat-prompt-select {
+            background: var(--btn-secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 0 var(--space-md);
+            height: 40px; /* 和图片上传等控制按钮高度一致 */
+            line-height: 40px;
+            cursor: pointer;
+            outline: none;
+            transition: all var(--transition-fast);
+            appearance: none;
+            /* 加上精美的发光小三角指示标 */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px;
+            padding-right: 24px;
+            max-width: 105px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 2px;
+        }
+        .chat-prompt-select:hover {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: var(--accent);
+            color: var(--accent);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2338bdf8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .chat-prompt-select option {
+            background: var(--select-option-bg);
+            color: var(--select-option-color);
+        }
     </style>
 </head>
 
@@ -494,6 +531,12 @@
                         <div class="chat-input-row">
                             <button id="btn-image-upload" class="btn-icon-expand" title="上传图片">🖼️</button>
                             <input type="file" id="image-input" accept="image/*" class="hidden">
+                            <select id="chat-prompt-select" class="chat-prompt-select" title="引用提示词模板">
+                                <option value="">💡 快捷模板</option>
+                                {% for key, p in config.prompts.items() %}
+                                <option value="{{ key }}">{{ p.name }}</option>
+                                {% endfor %}
+                            </select>
                             <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
                             <button id="btn-expand-input" class="btn-icon-expand" title="展开多行输入">📝</button>
                             <button id="btn-chat-send" class="btn primary">发送</button>
@@ -668,6 +711,41 @@
             
             // 首次加载初始化显示
             updatePromptPreview();
+
+            // ─── AI助理快捷引用提示词绑定逻辑 ───
+            const chatPromptSelect = document.getElementById('chat-prompt-select');
+            const chatInput = document.getElementById('chat-input');
+            const chatInputExpanded = document.getElementById('chat-input-expanded');
+            const btnExpandInput = document.getElementById('btn-expand-input');
+            
+            if (chatPromptSelect) {
+                chatPromptSelect.addEventListener('change', () => {
+                    const selectedKey = chatPromptSelect.value;
+                    if (!selectedKey || !window.promptPresets) return;
+                    const preset = window.promptPresets[selectedKey];
+                    if (preset && preset.content) {
+                        const promptContent = preset.content.trim() + "\n";
+                        
+                        // 1. 检查多行输入框是否处于显示状态
+                        const isExpanded = chatInputExpanded && !chatInputExpanded.classList.contains('hidden');
+                        if (!isExpanded) {
+                            // 2. 自动触发展开多行输入
+                            if (btnExpandInput) {
+                                btnExpandInput.click();
+                            }
+                        }
+                        
+                        // 3. 填入多行输入框，并自动聚焦在末尾
+                        if (chatInputExpanded) {
+                            chatInputExpanded.value = promptContent;
+                            chatInputExpanded.focus();
+                        }
+                        
+                        // 4. 重置下拉选择框为默认的“💡 快捷模板”
+                        chatPromptSelect.value = '';
+                    }
+                });
+            }
         });
     </script>
 
