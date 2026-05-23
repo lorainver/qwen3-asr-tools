@@ -45,6 +45,52 @@
             width: 14px;
             height: 14px;
         }
+
+        /* ── 提示词预设预览专属高颜值样式 ── */
+        .prompt-preview-container {
+            margin-top: calc(-1 * var(--space-sm)); /* 紧贴上方的控制条 */
+            margin-bottom: var(--space-lg);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            opacity: 0.95;
+            transition: opacity var(--transition-normal);
+        }
+        .prompt-preview-header {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .prompt-preview-textarea {
+            width: 100%;
+            height: 80px; /* 固定高度，完美控制页面长度 */
+            min-height: 80px;
+            max-height: 120px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            padding: var(--space-sm) var(--space-md);
+            font-family: inherit;
+            font-size: 0.82rem;
+            resize: vertical; /* 允许高度拉伸，但限制 max-height */
+            line-height: 1.5;
+            overflow-y: auto; /* 自动增加上下滚动条 */
+            margin-bottom: 0;
+            transition: border-color var(--transition-normal), color var(--transition-normal);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .prompt-preview-textarea:focus {
+            border-color: rgba(56, 189, 248, 0.3);
+            color: var(--text-primary);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(56, 189, 248, 0.05);
+        }
     </style>
 </head>
 
@@ -167,6 +213,11 @@
                                     <span class="switch-label">⚡ 并发加速</span>
                                 </label>
                                 <button id="btn-summarize" class="btn primary">开始执行</button>
+                            </div>
+                            <!-- 💡 提示词模板预览框 -->
+                            <div id="prompt-preview-container" class="prompt-preview-container">
+                                <div class="prompt-preview-header">📋 当前选择提示词模板内容:</div>
+                                <textarea id="prompt-preview" readonly class="prompt-preview-textarea" placeholder="当前提示词模板内容将在此显示..."></textarea>
                             </div>
                             <div id="sum-progress-container" class="hidden">
                                 <div class="status-text" id="sum-status">正在准备数据...</div>
@@ -587,6 +638,37 @@
                 window.showToast(`🚨 网络错误: ${error.message}`);
             }
         }
+    </script>
+
+    <!-- 💡 提示词模板数据注入与绑定逻辑 -->
+    <script>
+        // 1. 将后端的 prompts 预设安全注入为前端全局 JS 对象
+        window.promptPresets = {{ config.prompts | tojson }};
+
+        // 2. 绑定下拉框 change 事件，动态刷新提示词内容
+        document.addEventListener('DOMContentLoaded', () => {
+            const promptSelect = document.getElementById('prompt-type');
+            const promptPreview = document.getElementById('prompt-preview');
+            
+            function updatePromptPreview() {
+                if (!promptSelect || !promptPreview || !window.promptPresets) return;
+                const selectedKey = promptSelect.value;
+                const preset = window.promptPresets[selectedKey];
+                if (preset && preset.content) {
+                    promptPreview.value = preset.content.trim();
+                } else {
+                    promptPreview.value = '';
+                }
+            }
+            
+            // 绑定事件
+            if (promptSelect) {
+                promptSelect.addEventListener('change', updatePromptPreview);
+            }
+            
+            // 首次加载初始化显示
+            updatePromptPreview();
+        });
     </script>
 
     <!-- 侧边历史抽屉 -->
