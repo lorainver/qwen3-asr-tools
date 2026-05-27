@@ -48,6 +48,23 @@ models:
       api_url: "http://127.0.0.1:11434/v1/chat/completions"
       is_remote: true
       description: "2026年最新 Qwen 3.5 旗舰模型，9B 参数配合 128k 上下文，翻译与逻辑性能封神"
+    
+    # 小米 MiMo Token Plan 在线模型
+    mimo-v2.5-pro:
+      name: "MiMo-V2.5-Pro (小米在线)"
+      model_id: "mimo-v2.5-pro"
+      api_url: "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
+      api_key: "tp-ccp0qo9pnulek1fo2n93lpgt92z5fkkac9lb4p4tpny1rroo"  # 请在此填写您的 API Key，格式为 tp-xxxxx
+      is_remote: true
+      description: "小米旗舰级基座大模型，支持 1M 长度超长上下文，多轮逻辑及 Agent 能力极其出色"
+    mimo-v2.5:
+      name: "MiMo-V2.5 (小米在线)"
+      model_id: "mimo-v2.5"
+      api_url: "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
+      api_key: "tp-ccp0qo9pnulek1fo2n93lpgt92z5fkkac9lb4p4tpny1rroo"  # 请在此填写您的 API Key，格式为 tp-xxxxx
+      is_remote: true
+      description: "小米原生多模态大模型，具备极佳的图文、视频及音频理解与流式推理能力"
+  
   
   # Sherpa-ONNX 离线 TTS 模型
   tts: "D:/qwen3-asr/models/tts/vits-icefall-zh-aishell3"

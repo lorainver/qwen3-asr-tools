@@ -301,6 +301,15 @@ class LongTextSummarizer:
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', self.current_model_id)
 
+        # 动态解析鉴权 Headers
+        headers = {}
+        api_key = model_info.get('api_key')
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+        custom_headers = model_info.get('headers')
+        if custom_headers and isinstance(custom_headers, dict):
+            headers.update(custom_headers)
+
         try:
             payload = {
                 "model": remote_model,
@@ -317,14 +326,14 @@ class LongTextSummarizer:
                 if max_new_tokens is not None and max_new_tokens > 0:
                     payload["max_tokens"] = max_new_tokens
             
-            response = requests.post(api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
+            response = requests.post(api_url, json=payload, headers=headers, timeout=60, proxies={'http': None, 'https': None})
             
             if response.status_code == 400:
                 try:
                     err_msg = response.json().get('error', '')
                     if "does not support thinking" in err_msg:
                         payload.pop("think", None)
-                        response = requests.post(api_url, json=payload, timeout=60, proxies={'http': None, 'https': None})
+                        response = requests.post(api_url, json=payload, headers=headers, timeout=60, proxies={'http': None, 'https': None})
                 except Exception:
                     pass
                     
@@ -383,6 +392,15 @@ class LongTextSummarizer:
         model_info = self.available_models.get(self.current_model_id, {})
         remote_model = model_info.get('model_id', self.current_model_id)
 
+        # 动态解析鉴权 Headers
+        headers = {}
+        api_key = model_info.get('api_key')
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+        custom_headers = model_info.get('headers')
+        if custom_headers and isinstance(custom_headers, dict):
+            headers.update(custom_headers)
+
         # 构造发送给远程服务器的消息体
         local_messages = list(messages)
 
@@ -402,7 +420,7 @@ class LongTextSummarizer:
                 if max_new_tokens is not None and max_new_tokens > 0:
                     payload["max_tokens"] = max_new_tokens
                     
-            response = requests.post(api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
+            response = requests.post(api_url, json=payload, headers=headers, stream=True, timeout=600, proxies={'http': None, 'https': None})
             
             if response.status_code == 400:
                 try:
@@ -412,7 +430,7 @@ class LongTextSummarizer:
                     err_msg = response.json().get('error', '')
                     if "does not support thinking" in err_msg:
                         payload.pop("think", None)
-                        response = requests.post(api_url, json=payload, stream=True, timeout=600, proxies={'http': None, 'https': None})
+                        response = requests.post(api_url, json=payload, headers=headers, stream=True, timeout=600, proxies={'http': None, 'https': None})
                 except Exception:
                     pass
             
