@@ -128,6 +128,116 @@
             background: var(--select-option-bg);
             color: var(--select-option-color);
         }
+
+        /* ── 高颜值水晶音频播放状态栏 ── */
+        .voice-player-card {
+            margin-top: var(--space-md);
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 12px;
+            width: 100%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+        }
+        .voice-player-card:hover {
+            border-color: rgba(56, 189, 248, 0.35);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.05);
+        }
+        .btn-voice-control {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            background: rgba(56, 189, 248, 0.08);
+            color: var(--accent);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.05);
+            margin: 0;
+            padding: 0;
+        }
+        .btn-voice-control:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent);
+            transform: scale(1.08);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+            color: #fff;
+        }
+        .btn-voice-control:active {
+            transform: scale(0.95);
+        }
+        .voice-progress-container {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: height 0.15s ease;
+        }
+        .voice-progress-container:hover {
+            height: 8px;
+        }
+        .voice-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+        }
+        .voice-progress-thumb {
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 10px #38bdf8, 0 0 20px #0ea5e9;
+            transition: transform 0.15s ease;
+            pointer-events: none;
+        }
+        .voice-progress-container:hover .voice-progress-thumb {
+            transform: translateY(-50%) scale(1);
+        }
+        .btn-voice-download {
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 0 14px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            font-weight: 700;
+            border-radius: 8px;
+            margin: 0;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            background: rgba(16, 185, 129, 0.08);
+            color: #34d399;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-voice-download:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #34d399;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            color: #fff;
+        }
+        .btn-voice-download:active {
+            transform: translateY(0) scale(0.98);
+        }
     </style>
 </head>
 
@@ -253,9 +363,26 @@
                             </div>
                             <!-- 💡 提示词模板预览框 -->
                             <div id="prompt-preview-container" class="prompt-preview-container">
-                                <div class="prompt-preview-header">📋 当前选择提示词模板内容:</div>
-                                <textarea id="prompt-preview" readonly class="prompt-preview-textarea" placeholder="当前提示词模板内容将在此显示..."></textarea>
+                                <div class="prompt-preview-header">📋 当前选择提示词模板内容（可直接编辑自定义）:</div>
+                                <textarea id="prompt-preview" class="prompt-preview-textarea" placeholder="当前提示词模板内容将在此显示..."></textarea>
                             </div>
+                             <!-- 🎙️ 声音设计合成专属高颜值水晶播放控制面板 -->
+                             <div id="voice-player-panel" class="voice-player-card hidden">
+                                 <audio id="voice-audio"></audio>
+                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                     <strong style="color: var(--accent); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; letter-spacing: 0.05em;">🎙️ 专属设计音色 • 已成功合成</strong>
+                                     <span id="voice-time-display" style="font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.75rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px;">00:00 / 00:00</span>
+                                 </div>
+                                 <div style="display: flex; align-items: center; gap: 14px; width: 100%;">
+                                     <button id="btn-voice-play-pause" class="btn-voice-control">▶</button>
+                                     <div id="voice-progress-container" class="voice-progress-container">
+                                         <div id="voice-progress-fill" class="voice-progress-fill">
+                                             <div class="voice-progress-thumb"></div>
+                                         </div>
+                                     </div>
+                                     <a id="btn-download-voice" class="btn-voice-download" href="#" download>💾 下载 MP3</a>
+                                 </div>
+                             </div>
                             <div id="sum-progress-container" class="hidden">
                                 <div class="status-text" id="sum-status">正在准备数据...</div>
                                 <div class="progress-bar active"></div>
@@ -600,7 +727,7 @@
             </div><!-- end page-docs -->
         </main>
     </div>
-    <script src="/static/main.js"></script>
+    <script src="/static/main.js?v=20260528_voice"></script>
     <style>
         /* 执行控件样式 */
         .run-control-row {

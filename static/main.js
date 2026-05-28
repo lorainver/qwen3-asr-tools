@@ -356,6 +356,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const sumAnalyticsText = document.getElementById('sum-analytics-text');
     const sumAnalyticsFill = document.getElementById('sum-analytics-fill');
 
+    // 声音设计水晶播放器 DOM 元素
+    const voiceAudio = document.getElementById('voice-audio');
+    const btnVoicePlayPause = document.getElementById('btn-voice-play-pause');
+    const voiceProgressContainer = document.getElementById('voice-progress-container');
+    const voiceProgressFill = document.getElementById('voice-progress-fill');
+    const voiceTimeDisplay = document.getElementById('voice-time-display');
+
     // 转录卡片
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
@@ -826,6 +833,66 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSummarize.addEventListener('click', async () => {
             const text = meetingText.value.trim();
             if (!text) return alert("请先粘贴文本内容!");
+
+            const promptType = document.getElementById('prompt-type').value;
+            if (promptType === 'voice_design') {
+                const voicePrompt = document.getElementById('prompt-preview').value.trim();
+                if (!voicePrompt) return alert("声音提示词不能为空!");
+                
+                meetingText.classList.add('hidden');
+                btnSummarize.classList.add('hidden');
+                sumProgCont.classList.remove('hidden');
+                sumStatus.innerText = "🎙️ 正在进行零样本声音设计与语音合成，请稍候...";
+                
+                // 清理可能存在的上一次复制按钮，隐藏结果框与分析条
+                const existCopyBtn = sumResult.parentNode.querySelector('.btn-copy-result');
+                if (existCopyBtn) existCopyBtn.remove();
+                sumResult.classList.add('hidden');
+                sumResult.innerHTML = '';
+                if (sumAnalyticsBar) sumAnalyticsBar.classList.add('hidden');
+                
+                // 隐藏上一次生成的播放面板
+                const voicePlayerPanel = document.getElementById('voice-player-panel');
+                if (voicePlayerPanel) voicePlayerPanel.classList.add('hidden');
+                
+                try {
+                    const response = await fetch('/api/voice_design', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ voice_prompt: voicePrompt, text: text })
+                    });
+                    const result = await response.json();
+                    
+                    sumProgCont.classList.add('hidden');
+                    
+                    if (result.status === 'success') {
+                        if (voicePlayerPanel) {
+                            voicePlayerPanel.classList.remove('hidden');
+                            const voiceAudio = document.getElementById('voice-audio');
+                            const btnDownloadVoice = document.getElementById('btn-download-voice');
+                            if (voiceAudio) {
+                                voiceAudio.src = result.url;
+                                voiceAudio.play().catch(e => console.log("自动播放被浏览器拦截:", e));
+                            }
+                            if (btnDownloadVoice) {
+                                btnDownloadVoice.href = result.url;
+                            }
+                        }
+                        btnNewTask.classList.remove('hidden');
+                    } else {
+                        alert("❌ 声音合成失败: " + result.message);
+                        meetingText.classList.remove('hidden');
+                        btnSummarize.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    sumProgCont.classList.add('hidden');
+                    alert("🚨 声音合成请求出错: " + error.message);
+                    meetingText.classList.remove('hidden');
+                    btnSummarize.classList.remove('hidden');
+                }
+                return; // 拦截常规总结流程
+            }
+
             meetingText.classList.add('hidden');
             btnSummarize.classList.add('hidden');
             sumProgCont.classList.remove('hidden');
@@ -833,7 +900,6 @@ document.addEventListener('DOMContentLoaded', () => {
             sumResult.innerText = "";
             if (sumAnalyticsBar) sumAnalyticsBar.classList.add('hidden');
 
-            const promptType = document.getElementById('prompt-type').value;
             const targetLang = targetLangSelect && promptType === 'translate' ? targetLangSelect.value : null;
             const parallel = document.getElementById('sum-parallel')?.checked || false;
 
@@ -1049,10 +1115,95 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sumAnalyticsBar) sumAnalyticsBar.classList.add('hidden');
             sumProgCont.classList.add('hidden');
             btnNewTask.classList.add('hidden');
+
+            // 隐藏声音播放器并重置
+            const voicePlayerPanel = document.getElementById('voice-player-panel');
+            if (voicePlayerPanel) {
+                voicePlayerPanel.classList.add('hidden');
+                const voiceAudio = document.getElementById('voice-audio');
+                if (voiceAudio) {
+                    voiceAudio.pause();
+                    voiceAudio.src = '';
+                }
+            }
+
             meetingText.classList.remove('hidden');
             btnSummarize.classList.remove('hidden');
             meetingText.focus();
         });
+    }
+
+    // === 2.5 声音设计水晶播放器控制逻辑 ===
+    if (voiceAudio && btnVoicePlayPause) {
+        // 播放与暂停切换
+        btnVoicePlayPause.addEventListener('click', () => {
+            if (voiceAudio.paused) {
+                voiceAudio.play().catch(e => console.log("播放失败:", e));
+            } else {
+                voiceAudio.pause();
+            }
+        });
+
+        // 监听播放状态更改按钮图标
+        voiceAudio.addEventListener('play', () => {
+            btnVoicePlayPause.innerHTML = '❚❚';
+            btnVoicePlayPause.title = '暂停';
+        });
+
+        voiceAudio.addEventListener('pause', () => {
+            btnVoicePlayPause.innerHTML = '▶';
+            btnVoicePlayPause.title = '播放';
+        });
+
+        // 辅助时间格式化函数 (e.g. 75 -> "01:15")
+        function formatAudioTime(secs) {
+            if (isNaN(secs) || secs === Infinity) return "00:00";
+            const m = Math.floor(secs / 60).toString().padStart(2, '0');
+            const s = Math.floor(secs % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        // 监听音频加载，显示总时长
+        voiceAudio.addEventListener('loadedmetadata', () => {
+            if (voiceTimeDisplay) {
+                voiceTimeDisplay.textContent = `00:00 / ${formatAudioTime(voiceAudio.duration)}`;
+            }
+        });
+
+        // 监听播放进度实时流动进度条与时间显示
+        voiceAudio.addEventListener('timeupdate', () => {
+            if (!voiceAudio.duration) return;
+            const pct = (voiceAudio.currentTime / voiceAudio.duration) * 100;
+            if (voiceProgressFill) {
+                voiceProgressFill.style.width = `${pct}%`;
+            }
+            if (voiceTimeDisplay) {
+                voiceTimeDisplay.textContent = `${formatAudioTime(voiceAudio.currentTime)} / ${formatAudioTime(voiceAudio.duration)}`;
+            }
+        });
+
+        // 播放结束自动复位
+        voiceAudio.addEventListener('ended', () => {
+            if (voiceProgressFill) {
+                voiceProgressFill.style.width = '0%';
+            }
+            if (voiceTimeDisplay) {
+                voiceTimeDisplay.textContent = `00:00 / ${formatAudioTime(voiceAudio.duration)}`;
+            }
+            btnVoicePlayPause.innerHTML = '▶';
+        });
+
+        // 进度条可点击/拖拽调整进度
+        if (voiceProgressContainer) {
+            voiceProgressContainer.addEventListener('click', (e) => {
+                if (!voiceAudio.duration) return;
+                const rect = voiceProgressContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const width = rect.width;
+                const pct = Math.max(0, Math.min(1, clickX / width));
+                voiceAudio.currentTime = pct * voiceAudio.duration;
+            });
+        }
     }
 
     // 初始化搜索优化设置 (主界面开关)

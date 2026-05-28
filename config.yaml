@@ -64,6 +64,27 @@ models:
       api_key: "tp-ccp0qo9pnulek1fo2n93lpgt92z5fkkac9lb4p4tpny1rroo"  # 请在此填写您的 API Key，格式为 tp-xxxxx
       is_remote: true
       description: "小米原生多模态大模型，具备极佳的图文、视频及音频理解与流式推理能力"
+    mimo-v2-omni:
+      name: "MiMo-V2-Omni (小米在线)"
+      model_id: "mimo-v2-omni"
+      api_url: "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
+      api_key: "tp-ccp0qo9pnulek1fo2n93lpgt92z5fkkac9lb4p4tpny1rroo"  # 请在此填写您的 API Key，格式为 tp-xxxxx
+      is_remote: true
+      description: "小米极速全能语音多模态大模型，响应速度爆表，1秒内极速推理"
+    mimo-v2-pro:
+      name: "MiMo-V2-Pro (小米在线)"
+      model_id: "mimo-v2-pro"
+      api_url: "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
+      api_key: "tp-ccp0qo9pnulek1fo2n93lpgt92z5fkkac9lb4p4tpny1rroo"  # 请在此填写您的 API Key，格式为 tp-xxxxx
+      is_remote: true
+      description: "小米经典旗舰大模型，拥有坚实的日常推理与对话逻辑分析能力"
+    mimo-v2.5-tts-voicedesign:
+      name: "MiMo-V2.5-TTS-VoiceDesign (声音设计)"
+      model_id: "mimo-v2.5-tts-voicedesign"
+      api_url: "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
+      api_key: "tp-ccp0qo9pnulek1fo2n93lpgt92z5fkkac9lb4p4tpny1rroo"  # 请在此填写您的 API Key，格式为 tp-xxxxx
+      is_remote: true
+      description: "小米声音设计大模型，支持通过自然语言微调与生成高度自定义音色"
   
   
   # Sherpa-ONNX 离线 TTS 模型
@@ -306,3 +327,6 @@ prompts:
       4. 下次遇到同类事的最优处理方案；
       5. 可执行的改进动作、短期小目标。
       客观中立，不讲鸡汤，只讲逻辑与解法。
+  voice_design:
+    name: "🎙️ 声音设计/合成"
+    content: "一个极有磁性、沉稳而富有磁性的中年绅士声音，说话语速慢，带着优雅的英伦贵族口音。"

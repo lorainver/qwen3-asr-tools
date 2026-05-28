@@ -158,7 +158,8 @@ tts_engine = TTSEngine()
 # 消除系统后台高频轮询（GPU状态、Ollama存活等）导致的 Socket 端口重建开销与 TIME_WAIT 积压
 http_client = httpx.AsyncClient(
     limits=httpx.Limits(max_keepalive_connections=50, max_connections=200),
-    timeout=httpx.Timeout(300.0)  # 对应大文件或长文 AI 响应的默认超时
+    timeout=httpx.Timeout(300.0),  # 对应大文件或长文 AI 响应 the default timeout
+    trust_env=False  # 核心修复：强制忽略本地代理，防止本地 Clash / v2rayN 劫持本地 127.0.0.1:8001 导致 500
 )
 
 # ========== AI Worker 进程管理 ==========
@@ -1162,6 +1163,88 @@ async def api_search_status():
         return resp.json()
     except Exception as e:
         return {"enabled": False, "message": f"查询失败: {e}"}
+
+class VoiceDesignRequest(BaseModel):
+    voice_prompt: str
+    text: str
+
+@app.post("/api/voice_design")
+async def api_voice_design(request: VoiceDesignRequest):
+    """声音设计与语音合成（本地直连小米官方 API，忽略本地系统代理）"""
+    logger.info(f"🎙️ 收到声音设计请求: prompt={request.voice_prompt[:30]}..., text={request.text[:30]}...")
+    
+    # 动态加载 API Key
+    api_key = config.get("models.llm_models.mimo-v2.5-pro.api_key", "tp-ccp0qo9pnulek1fo2n93lpgt92z5fkkac9lb4p4tpny1rroo")
+    
+    url = "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "model": "mimo-v2.5-tts-voicedesign",
+        "messages": [
+            {"role": "user", "content": request.voice_prompt},
+            {"role": "assistant", "content": request.text}
+        ],
+        "audio": {"format": "mp3"},
+        "audio_format": "mp3"
+    }
+    
+    try:
+        import base64
+        import requests
+        
+        # 强制禁用本地系统代理，直连极速公网
+        resp = requests.post(url, json=payload, headers=headers, timeout=40, proxies={'http': None, 'https': None})
+        
+        if resp.status_code == 200:
+            data = resp.json()
+            audio_data_base64 = None
+            
+            # 兼容性多层级提取 base64
+            try:
+                audio_data_base64 = data['choices'][0]['message']['audio']['data']
+            except:
+                pass
+                
+            if not audio_data_base64:
+                try:
+                    content = data['choices'][0]['message']['content']
+                    if len(content) > 1000 and (content.startswith('/') or content.startswith('i')):
+                        audio_data_base64 = content
+                except:
+                    pass
+            
+            if not audio_data_base64:
+                try:
+                    audio_data_base64 = data['audio']['data']
+                except:
+                    pass
+            
+            if audio_data_base64:
+                # 完美解码并存入静态音频缓存目录
+                import time
+                filename = f"designed_voice_{int(time.time())}.mp3"
+                filepath = os.path.join(AUDIO_DIR, filename)
+                
+                with open(filepath, "wb") as f:
+                    f.write(base64.b64decode(audio_data_base64))
+                
+                web_url = f"/static/audio/{filename}"
+                logger.info(f"✓ 声音设计合成成功: {web_url}")
+                return {"status": "success", "url": web_url}
+            else:
+                logger.error("未能在 API 响应体中找到 Base64 音频")
+                return {"status": "error", "message": "API 未返回有效的音频数据"}
+        else:
+            logger.error(f"小米 API 报错: {resp.status_code} - {resp.text}")
+            return {"status": "error", "message": f"小米 API 报错: {resp.status_code}"}
+            
+    except Exception as e:
+        logger.error(f"声音设计接口异常: {e}")
+        return {"status": "error", "message": str(e)}
 
 # 注意：搜索功能已集成到 /api/chat_stream 中，无需单独的 /api/search 端点
 
