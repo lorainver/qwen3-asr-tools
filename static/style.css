@@ -181,6 +181,7 @@ body {
     margin: 0 auto;
     padding: var(--space-2xl);
     gap: var(--space-2xl);
+    position: relative; /* 为绝对定位折叠按钮提供锚定 */
 }
 
 /* ============================
@@ -192,6 +193,67 @@ body {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                margin 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.2s ease, 
+                border-color 0.3s ease;
+    overflow: hidden; /* 折叠时隐藏内容 */
+}
+
+/* 侧边栏折叠状态 */
+.sidebar.collapsed {
+    width: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-right: calc(-1 * var(--space-2xl)) !important; /* 抵消 gap 占位 */
+    border-color: transparent !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* 侧边栏折叠切换按钮（高颜值玻璃微光动效句柄） */
+.btn-sidebar-toggle {
+    position: absolute;
+    top: 36px; /* 移到顶端，方便操作，避免长页面滚动时找不到 */
+    left: 296px; /* 24px (container padding) + 290px (sidebar width) - 18px (offset) */
+    width: 24px;
+    height: 60px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    color: var(--text-secondary);
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    outline: none;
+    font-size: 0.75rem;
+    padding: 0;
+}
+
+.btn-sidebar-toggle:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow-strong);
+    height: 70px; /* 悬浮时微拉长，强化操作暗示 */
+}
+
+.btn-sidebar-toggle:active {
+    transform: scale(0.95);
+}
+
+/* 侧边栏折叠后，切换按钮定位和圆角形态自适应变更 */
+.sidebar.collapsed + .btn-sidebar-toggle {
+    left: 12px; /* 靠左停靠 */
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    box-shadow: var(--shadow-glow-accent);
 }
 
 .logo {

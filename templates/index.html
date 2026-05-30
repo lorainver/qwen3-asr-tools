@@ -244,7 +244,7 @@
 <body>
     <div class="app-container">
         <!-- 侧边栏：GPU 监控 -->
-        <aside class="sidebar glass-panel">
+        <aside class="sidebar glass-panel" id="sidebar">
             <div class="logo">
                 <div class="logo-icon"></div>
                 <h2>Qwen AI</h2>
@@ -314,6 +314,9 @@
                 </div>
             </div>
         </aside>
+
+        <!-- 折叠切换按钮 -->
+        <button id="btn-sidebar-toggle" class="btn-sidebar-toggle" title="收起/展开信息栏">◀</button>
 
         <!-- 主内容区 -->
         <main class="content">
@@ -688,6 +691,9 @@
                         </div>
                         <div class="docs-sidebar-filters">
                             <input id="docs-search" class="docs-search-input" type="text" placeholder="🔍 搜索文件..." autocomplete="off">
+                            <select id="docs-dir-filter" class="docs-sort-select">
+                                <option value="all">📂 所有目录</option>
+                            </select>
                             <select id="docs-sort" class="docs-sort-select">
                                 <option value="time-desc">⏱ 最新在前</option>
                                 <option value="time-asc">⏱ 最旧在前</option>

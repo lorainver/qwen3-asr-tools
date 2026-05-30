@@ -2366,6 +2366,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnDocsCopy = document.getElementById('btn-docs-copy');
     const btnDocsView = document.getElementById('btn-docs-view');
     const btnDocsRaw = document.getElementById('btn-docs-raw');
+    const docsDirFilter = document.getElementById('docs-dir-filter');
     
     let docsCurrentFile = null;  // 当前查看的文件信息
     let docsRawContent_text = '';  // 当前文件的原始内容
@@ -2380,26 +2381,85 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!data.files || data.files.length === 0) {
                 docsFileList.innerHTML = '<div class="docs-no-files">暂无 HTML/MD 文档</div>';
                 _allDocsFiles = [];
+                updateDirFilterDropdown([]);
                 return;
             }
             _allDocsFiles = data.files;  // 缓存完整列表
-            renderDocsList();  // 渲染（带搜索/排序）
+            updateDirFilterDropdown(data.files); // 动态更新目录筛选器内容
+            renderDocsList();  // 渲染（带目录/搜索/排序）
         } catch (e) {
             docsFileList.innerHTML = '<div class="docs-no-files">加载失败</div>';
+        }
+    }
+    
+    // 动态提取并生成唯一的子目录下拉选项
+    function updateDirFilterDropdown(files) {
+        if (!docsDirFilter) return;
+        
+        // 记住用户当前的选项以防被覆盖
+        const prevSelected = docsDirFilter.value;
+        
+        const dirs = new Set();
+        files.forEach(f => {
+            let dir = "";
+            const slashIdx = f.path.lastIndexOf('/');
+            if (slashIdx !== -1) {
+                dir = f.path.substring(0, slashIdx);
+            } else {
+                dir = "/"; // 根目录
+            }
+            dirs.add(dir);
+        });
+        
+        // 排序规则：[根目录] 置顶，其余文件夹按字母 A-Z 排序
+        const sortedDirs = Array.from(dirs).sort((a, b) => {
+            if (a === "/") return -1;
+            if (b === "/") return 1;
+            return a.localeCompare(b);
+        });
+        
+        let html = '<option value="all">📂 所有目录</option>';
+        sortedDirs.forEach(dir => {
+            const label = dir === "/" ? "📁 [根目录]" : `📁 ${dir}`;
+            html += `<option value="${dir}">${label}</option>`;
+        });
+        
+        docsDirFilter.innerHTML = html;
+        
+        // 如果之前选中的值在新列表中依然存在，则还原选中状态，否则默认选“所有目录”
+        if (sortedDirs.includes(prevSelected) || prevSelected === 'all') {
+            docsDirFilter.value = prevSelected;
+        } else {
+            docsDirFilter.value = 'all';
         }
     }
     
     function renderDocsList() {
         const query = (docsSearch ? docsSearch.value.toLowerCase() : '').trim();
         const sort = docsSortSelect ? docsSortSelect.value : 'time-desc';
+        const dirFilter = docsDirFilter ? docsDirFilter.value : 'all';
         let files = [..._allDocsFiles];
         
-        // 搜索过滤
+        // 1. 目录筛选
+        if (dirFilter !== 'all') {
+            files = files.filter(f => {
+                let dir = "";
+                const slashIdx = f.path.lastIndexOf('/');
+                if (slashIdx !== -1) {
+                    dir = f.path.substring(0, slashIdx);
+                } else {
+                    dir = "/";
+                }
+                return dir === dirFilter;
+            });
+        }
+        
+        // 2. 搜索过滤
         if (query) {
             files = files.filter(f => f.name.toLowerCase().includes(query) || f.path.toLowerCase().includes(query));
         }
         
-        // 排序
+        // 3. 排序
         if (sort === 'time-desc') files.sort((a, b) => b.modified - a.modified);
         else if (sort === 'time-asc') files.sort((a, b) => a.modified - b.modified);
         else if (sort === 'name-asc') files.sort((a, b) => a.name.localeCompare(b.name));
@@ -2616,5 +2676,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // 排序切换事件
     if (docsSortSelect) {
         docsSortSelect.addEventListener('change', () => renderDocsList());
+    }
+
+    // 目录筛选切换事件
+    if (docsDirFilter) {
+        docsDirFilter.addEventListener('change', () => renderDocsList());
+    }
+
+    // === 侧边栏折叠/展开逻辑 ===
+    const sidebar = document.getElementById('sidebar');
+    const btnSidebarToggle = document.getElementById('btn-sidebar-toggle');
+    
+    if (sidebar && btnSidebarToggle) {
+        // 从 localStorage 恢复侧边栏折叠状态
+        const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+        if (isCollapsed) {
+            sidebar.classList.add('collapsed');
+            btnSidebarToggle.textContent = '▶';
+            btnSidebarToggle.title = '展开信息栏';
+        }
+        
+        btnSidebarToggle.addEventListener('click', () => {
+            const willCollapse = sidebar.classList.toggle('collapsed');
+            localStorage.setItem('sidebar_collapsed', willCollapse);
+            btnSidebarToggle.textContent = willCollapse ? '▶' : '◀';
+            btnSidebarToggle.title = willCollapse ? '展开信息栏' : '收起信息栏';
+        });
     }
 });
