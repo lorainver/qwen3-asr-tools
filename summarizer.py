@@ -262,7 +262,9 @@ class LongTextSummarizer:
             torch.cuda.empty_cache()
             model_manager.set_processing(False)
 
-    def chat(self, messages, max_new_tokens=2048, enable_think=True):
+    def chat(self, messages, max_new_tokens=None, enable_think=True):
+        if max_new_tokens is None:
+            max_new_tokens = config.get('chat', {}).get('max_new_tokens', 4096)
         if not max_new_tokens or max_new_tokens <= 0:
             max_new_tokens = None
         if self.is_remote:
@@ -291,7 +293,7 @@ class LongTextSummarizer:
         finally:
             model_manager.set_processing(False)
 
-    def _chat_remote(self, messages, max_new_tokens=2048, enable_think=True):
+    def _chat_remote(self, messages, max_new_tokens=None, enable_think=True):
         is_ollama = self._is_ollama_model(self.current_model_id)
         api_url = self.api_url
         if is_ollama and api_url and "/v1/chat/completions" in api_url:
@@ -349,7 +351,9 @@ class LongTextSummarizer:
             logger.error(error_msg)
             return error_msg
 
-    def chat_stream(self, messages, enable_think=True, max_new_tokens=2048):
+    def chat_stream(self, messages, enable_think=True, max_new_tokens=None):
+        if max_new_tokens is None:
+            max_new_tokens = config.get('chat', {}).get('max_new_tokens', 4096)
         if not max_new_tokens or max_new_tokens <= 0:
             max_new_tokens = None
         if self.is_remote:
@@ -382,7 +386,7 @@ class LongTextSummarizer:
         finally:
             model_manager.set_processing(False)
 
-    def _chat_stream_remote(self, messages, enable_think=True, max_new_tokens=2048):
+    def _chat_stream_remote(self, messages, enable_think=True, max_new_tokens=None):
         is_ollama = self._is_ollama_model(self.current_model_id)
         api_url = self.api_url
         if is_ollama and api_url and "/v1/chat/completions" in api_url:

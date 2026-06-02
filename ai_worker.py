@@ -388,8 +388,8 @@ async def api_chat_stream(request: ChatRequest):
                     keyword_prompt = request.search_optimize_prompt.replace("{query}", query_text) if request.search_optimize_prompt else default_optimizer_prompt
 
                     logger.debug(f"📝 优化 Prompt: {keyword_prompt}")
-                    # 使用当前活动的模型生成
-                    keywords = summarizer.chat([{"role": "user", "content": keyword_prompt}]).strip()
+                    # 使用当前活动的模型生成 (限制最大 100 token 以免关键词生成失控)
+                    keywords = summarizer.chat([{"role": "user", "content": keyword_prompt}], max_new_tokens=100).strip()
 
                     # 强力清洗
                     keywords = keywords.replace("\n", " ").replace("\r", " ")
@@ -845,7 +845,7 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
             created_time = int(time.time())
 
             try:
-                for token in summarizer.chat_stream(request.messages):
+                for token in summarizer.chat_stream(request.messages, max_new_tokens=request.max_tokens):
                     chunk = {
                         "id": request_id,
                         "object": "chat.completion.chunk",
@@ -878,7 +878,7 @@ async def v1_chat_completions(request: OpenAICompletionRequest):
 
     # 3. 非流式响应
     else:
-        response_text = summarizer.chat(request.messages)
+        response_text = summarizer.chat(request.messages, max_new_tokens=request.max_tokens)
         return {
             "id": f"chatcmpl-{uuid.uuid4()}",
             "object": "chat.completion",
