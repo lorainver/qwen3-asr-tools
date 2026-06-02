@@ -35,6 +35,20 @@ class ConfigLoader:
         
         with open(config_path, 'r', encoding='utf-8') as f:
             self._config = yaml.safe_load(f)
+            
+        # 动态合并 prompts.yaml 中的预设提示词
+        prompts_path = self._base_dir / "prompts.yaml"
+        if 'prompts' not in self._config or self._config['prompts'] is None:
+            self._config['prompts'] = {}
+            
+        if prompts_path.exists():
+            try:
+                with open(prompts_path, 'r', encoding='utf-8') as f:
+                    prompts_data = yaml.safe_load(f)
+                    if prompts_data and 'prompts' in prompts_data and isinstance(prompts_data['prompts'], dict):
+                        self._config['prompts'].update(prompts_data['prompts'])
+            except Exception as e:
+                print(f"警告：加载 prompts.yaml 失败: {e}")
         
         # 将相对路径转换为绝对路径（基于项目根目录）
         self._resolve_paths()
@@ -106,3 +120,6 @@ if __name__ == '__main__':
     print("ASR 模型路径:", config['models']['asr'])
     print("TTS 模型路径:", config['models']['tts'])
     print("服务器端口:", config['server']['port'])
+    prompts = config['prompts']
+    print(f"已加载的提示词数量: {len(prompts)}")
+    print("所有提示词 Key 列表:", list(prompts.keys()))
