@@ -1106,7 +1106,7 @@ async def api_models():
 @app.post("/api/switch_model")
 async def api_switch_model(request: SwitchModelRequest):
     """切换对话模型（代理到 worker）"""
-    return await proxy_to_worker("POST", "/api/switch_model", json=request.dict())
+    return await proxy_to_worker("POST", "/api/switch_model", json=request.model_dump())
 
 @app.post("/api/chat")
 async def api_chat(request: ChatRequest):
@@ -1115,7 +1115,7 @@ async def api_chat(request: ChatRequest):
         return {"response": "⚠️ AI Worker 启动中，请稍后重试..."}
     
     try:
-        resp = await http_client.post(f"{AI_WORKER_URL}/api/chat", json=request.dict(), timeout=120.0)
+        resp = await http_client.post(f"{AI_WORKER_URL}/api/chat", json=request.model_dump(), timeout=120.0)
         return resp.json()
     except Exception as e:
         return {"response": f"❌ AI Worker 连接失败: {e}"}
@@ -1129,7 +1129,7 @@ async def api_chat_stream(request: ChatRequest):
             yield "data: [DONE]\n\n"
         return StreamingResponse(error_gen(), media_type="text/event-stream")
     
-    req = http_client.build_request("POST", f"{AI_WORKER_URL}/api/chat_stream", json=request.dict(), timeout=None)
+    req = http_client.build_request("POST", f"{AI_WORKER_URL}/api/chat_stream", json=request.model_dump(), timeout=None)
     resp = await http_client.send(req, stream=True)
     
     async def stream_gen():

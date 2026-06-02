@@ -238,6 +238,440 @@
         .btn-voice-download:active {
             transform: translateY(0) scale(0.98);
         }
+
+        /* ── 多维智能提示词协同库 Modal ── */
+        .prompt-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .prompt-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .prompt-modal-container {
+            width: 90%;
+            max-width: 800px;
+            height: 80%;
+            max-height: 650px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .prompt-modal-overlay.active .prompt-modal-container {
+            transform: scale(1);
+        }
+        .prompt-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+        .prompt-modal-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-close-prompt-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        .btn-close-prompt-modal:hover {
+            color: #f43f5e;
+            background: rgba(244, 63, 94, 0.1);
+            transform: rotate(90deg);
+        }
+        .prompt-modal-search-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .prompt-search-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: #e2e8f0;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .prompt-search-input:focus {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.1);
+        }
+        .prompt-modal-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+        }
+        .prompt-tab-btn {
+            background: none;
+            border: 1px solid transparent;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .prompt-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+        }
+        .prompt-tab-btn.active {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.25);
+        }
+        .prompt-cards-grid {
+            flex: 1;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            padding-right: 4px;
+        }
+        .prompt-card {
+            background: rgba(15, 23, 42, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .prompt-card:hover {
+            border-color: rgba(56, 189, 248, 0.35);
+            background: rgba(15, 23, 42, 0.45);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+        }
+        .prompt-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .prompt-card-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+        .prompt-card-star {
+            cursor: pointer;
+            font-size: 1.05rem;
+            color: #475569;
+            transition: color 0.15s ease, transform 0.15s ease;
+            user-select: none;
+        }
+        .prompt-card-star:hover {
+            transform: scale(1.15);
+        }
+        .prompt-card-star.active {
+            color: #fbbf24;
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+        }
+        .prompt-card-content {
+            font-size: 0.76rem;
+            color: #94a3b8;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+            height: 4.5em;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .prompt-card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 8px;
+        }
+        .prompt-card-badge {
+            font-size: 0.68rem;
+            color: #64748b;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .prompt-card-badge.custom {
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.12);
+        }
+        .prompt-card-btns {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .prompt-card-btn {
+            background: none;
+            border: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            transition: all 0.15s ease;
+        }
+        .prompt-card-btn:hover {
+            color: #fff;
+            background: #0ea5e9;
+            border-color: #0ea5e9;
+            transform: scale(1.02);
+        }
+        
+        /* ── 新建/编辑表单 ── */
+        .prompt-form-container {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 4px;
+            animation: promptSlideDown 0.25s ease-out;
+        }
+        @keyframes promptSlideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .prompt-form-container h4 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin: 0;
+        }
+        .prompt-form-row {
+            display: flex;
+            gap: 10px;
+        }
+        .prompt-form-row input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .prompt-form-row input:focus {
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        .prompt-form-container textarea {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            outline: none;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .prompt-form-container textarea:focus {
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        .prompt-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        
+        .prompt-card-menu-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+        .prompt-card-menu-btn:hover {
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        /* ── 多维智能提示词协同库 Light Mode ── */
+        .light-mode .prompt-modal-overlay {
+            background: rgba(241, 245, 249, 0.55);
+        }
+        .light-mode .prompt-modal-container {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(14, 165, 233, 0.2);
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+        }
+        .light-mode .prompt-modal-header {
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+        .light-mode .prompt-modal-header h3 {
+            color: #0284c7;
+        }
+        .light-mode .btn-close-prompt-modal {
+            color: #64748b;
+        }
+        .light-mode .btn-close-prompt-modal:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.08);
+        }
+        .light-mode .prompt-search-input {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(148, 163, 184, 0.3);
+            color: #0f172a;
+        }
+        .light-mode .prompt-search-input:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.12);
+        }
+        .light-mode .prompt-modal-tabs {
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+        .light-mode .prompt-tab-btn {
+            color: #64748b;
+        }
+        .light-mode .prompt-tab-btn:hover {
+            color: #0f172a;
+            background: rgba(0, 0, 0, 0.03);
+        }
+        .light-mode .prompt-tab-btn.active {
+            background: rgba(14, 165, 233, 0.08);
+            color: #0ea5e9;
+            border-color: rgba(14, 165, 233, 0.2);
+        }
+        .light-mode .prompt-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(148, 163, 184, 0.15);
+            box-shadow: 0 4px 8px rgba(15, 23, 42, 0.04);
+        }
+        .light-mode .prompt-card:hover {
+            border-color: rgba(14, 165, 233, 0.4);
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.08);
+        }
+        .light-mode .prompt-card-title {
+            color: #0f172a;
+        }
+        .light-mode .prompt-card-star {
+            color: #cbd5e1;
+        }
+        .light-mode .prompt-card-star.active {
+            color: #fbbf24;
+        }
+        .light-mode .prompt-card-content {
+            color: #475569;
+        }
+        .light-mode .prompt-card-actions {
+            border-top-color: rgba(0, 0, 0, 0.05);
+        }
+        .light-mode .prompt-card-badge {
+            color: #64748b;
+            background: rgba(0, 0, 0, 0.04);
+        }
+        .light-mode .prompt-card-badge.custom {
+            color: #0284c7;
+            background: rgba(14, 165, 233, 0.06);
+            border-color: rgba(14, 165, 233, 0.12);
+        }
+        .light-mode .prompt-card-btn {
+            color: #0284c7;
+            background: rgba(14, 165, 233, 0.06);
+            border-color: rgba(14, 165, 233, 0.12);
+        }
+        .light-mode .prompt-card-btn:hover {
+            color: #fff;
+            background: #0ea5e9;
+            border-color: #0ea5e9;
+        }
+        .light-mode .prompt-card-btn.action-btn-del {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.1);
+        }
+        .light-mode .prompt-card-btn.action-btn-del:hover {
+            color: #fff;
+            background: #ef4444;
+            border-color: #ef4444;
+        }
+        .light-mode .prompt-form-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(14, 165, 233, 0.15);
+        }
+        .light-mode .prompt-form-container h4 {
+            color: #0284c7;
+        }
+        .light-mode .prompt-form-row input {
+            background: #ffffff;
+            border-color: rgba(148, 163, 184, 0.3);
+            color: #0f172a;
+        }
+        .light-mode .prompt-form-container textarea {
+            background: #ffffff;
+            border-color: rgba(148, 163, 184, 0.3);
+            color: #0f172a;
+        }
+        .light-mode .prompt-card-menu-btn {
+            color: #64748b;
+        }
+        .light-mode .prompt-card-menu-btn:hover {
+            color: #0284c7;
+            background: rgba(14, 165, 233, 0.06);
+        }
     </style>
 </head>
 
@@ -667,6 +1101,7 @@
                                 <option value="{{ key }}">{{ p.name }}</option>
                                 {% endfor %}
                             </select>
+                            <button id="btn-prompt-library" class="btn-icon-expand" title="打开提示词多维协同库" style="margin-right: 2px;">📚</button>
                             <input type="text" id="chat-input" placeholder="输入消息内容..." autocomplete="off">
                             <button id="btn-expand-input" class="btn-icon-expand" title="展开多行输入">📝</button>
                             <button id="btn-chat-send" class="btn primary">发送</button>
@@ -898,6 +1333,387 @@
             </div>
         </div>
     </div>
+    </div>
+
+    <!-- 📚 提示词多维协同库 Modal -->
+    <div id="prompt-library-modal" class="prompt-modal-overlay">
+        <div class="prompt-modal-container glass-panel">
+            <div class="prompt-modal-header">
+                <h3>📚 提示词多维协同库</h3>
+                <button id="btn-close-prompt-modal" class="btn-close-prompt-modal" title="关闭面板">&times;</button>
+            </div>
+            <div class="prompt-modal-search-bar">
+                <input type="text" id="prompt-search-input" class="prompt-search-input" placeholder="🔍 搜索提示词名称或内容..." autocomplete="off">
+                <button id="btn-open-add-prompt" class="btn primary" style="font-size: 0.8rem; padding: 0 14px; height: 36px; line-height: 36px; margin: 0;">➕ 新建提示词</button>
+            </div>
+            <div class="prompt-modal-tabs">
+                <button class="prompt-tab-btn active" data-tab="all">📁 全部</button>
+                <button class="prompt-tab-btn" data-tab="star">⭐ 收藏夹</button>
+                <button class="prompt-tab-btn" data-tab="system">🏠 系统预设</button>
+                <button class="prompt-tab-btn" data-tab="custom">✍️ 我的自定义</button>
+            </div>
+            
+            <!-- 新增/编辑提示词的表单容器 (默认隐藏) -->
+            <div id="prompt-form-container" class="prompt-form-container hidden">
+                <h4 id="prompt-form-title">➕ 新建自定义提示词</h4>
+                <div class="prompt-form-row">
+                    <input type="text" id="prompt-form-name" placeholder="提示词名称 (例如: 🎨 画图大师)" autocomplete="off">
+                    <input type="hidden" id="prompt-form-edit-key" value="">
+                </div>
+                <textarea id="prompt-form-content" placeholder="在此输入详细的提示词 Prompt 内容..." rows="4"></textarea>
+                <div class="prompt-form-actions">
+                    <button id="btn-cancel-prompt" class="btn secondary" style="font-size: 0.8rem; padding: 0 12px; height: 32px; line-height: 32px; margin: 0;">取消</button>
+                    <button id="btn-save-prompt" class="btn primary" style="font-size: 0.8rem; padding: 0 12px; height: 32px; line-height: 32px; margin: 0;">保存提示词</button>
+                </div>
+            </div>
+
+            <div id="prompt-cards-grid" class="prompt-cards-grid">
+                <!-- 动态渲染的提示词卡片 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 📚 提示词多维协同库 JS 核心逻辑 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnPromptLib = document.getElementById('btn-prompt-library');
+            const promptModal = document.getElementById('prompt-library-modal');
+            const btnClosePromptModal = document.getElementById('btn-close-prompt-modal');
+            const promptSearchInput = document.getElementById('prompt-search-input');
+            const btnOpenAddPrompt = document.getElementById('btn-open-add-prompt');
+            const promptFormContainer = document.getElementById('prompt-form-container');
+            const promptFormTitle = document.getElementById('prompt-form-title');
+            const promptFormName = document.getElementById('prompt-form-name');
+            const promptFormContent = document.getElementById('prompt-form-content');
+            const promptFormEditKey = document.getElementById('prompt-form-edit-key');
+            const btnCancelPrompt = document.getElementById('btn-cancel-prompt');
+            const btnSavePrompt = document.getElementById('btn-save-prompt');
+            const promptCardsGrid = document.getElementById('prompt-cards-grid');
+            const promptTabBtns = document.querySelectorAll('.prompt-tab-btn');
+            
+            // 缓存与状态管理
+            let customPrompts = {};
+            let starredPrompts = [];
+            let currentTab = 'all';
+            let searchQuery = '';
+
+            // 从 LocalStorage 加载用户数据
+            function loadUserData() {
+                try {
+                    const savedCustom = localStorage.getItem('qwen3_custom_prompts');
+                    if (savedCustom) {
+                        customPrompts = JSON.parse(savedCustom);
+                    }
+                    const savedStarred = localStorage.getItem('qwen3_starred_prompts');
+                    if (savedStarred) {
+                        starredPrompts = JSON.parse(savedStarred);
+                    }
+                } catch (e) {
+                    console.error("加载本地提示词数据失败:", e);
+                }
+            }
+
+            // 保存用户数据到 LocalStorage
+            function saveUserData() {
+                try {
+                    localStorage.setItem('qwen3_custom_prompts', JSON.stringify(customPrompts));
+                    localStorage.setItem('qwen3_starred_prompts', JSON.stringify(starredPrompts));
+                } catch (e) {
+                    console.error("保存本地提示词数据失败:", e);
+                }
+            }
+
+            // 合并系统预设与用户自定义提示词
+            function getAllPrompts() {
+                const list = [];
+                // 1. 系统预设
+                if (window.promptPresets) {
+                    Object.entries(window.promptPresets).forEach(([key, p]) => {
+                        list.push({
+                            key: key,
+                            name: p.name,
+                            content: p.content,
+                            isSystem: true,
+                            isStarred: starredPrompts.includes(key)
+                        });
+                    });
+                }
+                // 2. 自定义提示词
+                Object.entries(customPrompts).forEach(([key, p]) => {
+                    list.push({
+                        key: key,
+                        name: p.name,
+                        content: p.content,
+                        isSystem: false,
+                        isStarred: starredPrompts.includes(key)
+                    });
+                });
+                return list;
+            }
+
+            // 渲染提示词网格
+            function renderPromptCards() {
+                if (!promptCardsGrid) return;
+                promptCardsGrid.innerHTML = '';
+                
+                const allPrompts = getAllPrompts();
+                
+                // 过滤逻辑
+                let filtered = allPrompts.filter(p => {
+                    // Tab 过滤
+                    if (currentTab === 'star' && !p.isStarred) return false;
+                    if (currentTab === 'system' && !p.isSystem) return false;
+                    if (currentTab === 'custom' && p.isSystem) return false;
+                    
+                    // 关键词搜索过滤
+                    if (searchQuery) {
+                        const q = searchQuery.toLowerCase();
+                        const nameMatch = p.name && p.name.toLowerCase().includes(q);
+                        const contentMatch = p.content && p.content.toLowerCase().includes(q);
+                        return nameMatch || contentMatch;
+                    }
+                    return true;
+                });
+
+                // 置顶排序逻辑：已收藏的排在未收藏的前面
+                filtered.sort((a, b) => {
+                    if (a.isStarred && !b.isStarred) return -1;
+                    if (!a.isStarred && b.isStarred) return 1;
+                    return 0;
+                });
+
+                if (filtered.length === 0) {
+                    promptCardsGrid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px var(--space-md);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">📭</div>
+                            <p style="font-size: 0.85rem;">没有找到匹配的提示词模板</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                filtered.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'prompt-card';
+                    card.dataset.key = p.key;
+
+                    // 简写内容预览
+                    const contentClean = p.content ? p.content.replace(/<[^>]*>/g, '') : '';
+
+                    card.innerHTML = `
+                        <div class="prompt-card-header">
+                            <h4 class="prompt-card-title" title="${p.name}">${p.name}</h4>
+                            <div class="prompt-card-star ${p.isStarred ? 'active' : ''}" title="${p.isStarred ? '取消收藏' : '加入收藏'}">★</div>
+                        </div>
+                        <div class="prompt-card-content" title="点击可快速复制内容">${contentClean}</div>
+                        <div class="prompt-card-actions">
+                            <span class="prompt-card-badge ${p.isSystem ? '' : 'custom'}">${p.isSystem ? '系统预设' : '我的自定义'}</span>
+                            <div class="prompt-card-btns">
+                                ${p.isSystem ? '' : `
+                                    <button class="prompt-card-menu-btn action-edit" title="编辑提示词">✍️</button>
+                                    <button class="prompt-card-menu-btn action-del" title="删除提示词">❌</button>
+                                `}
+                                <button class="prompt-card-btn action-chat" title="填入对话输入框">🚀 对话</button>
+                                <button class="prompt-card-btn action-summary" title="填入智库总结模板">📄 总结</button>
+                            </div>
+                        </div>
+                    `;
+
+                    // 绑定事件
+                    // 1. 星标收藏事件
+                    const starBtn = card.querySelector('.prompt-card-star');
+                    starBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const idx = starredPrompts.indexOf(p.key);
+                        if (idx > -1) {
+                            starredPrompts.splice(idx, 1);
+                            starBtn.classList.remove('active');
+                            starBtn.title = '加入收藏';
+                        } else {
+                            starredPrompts.push(p.key);
+                            starBtn.classList.add('active');
+                            starBtn.title = '取消收藏';
+                        }
+                        saveUserData();
+                        renderPromptCards();
+                    });
+
+                    // 2. 点击文本快速复制
+                    const contentDiv = card.querySelector('.prompt-card-content');
+                    contentDiv.addEventListener('click', (e) => {
+                        navigator.clipboard.writeText(p.content).then(() => {
+                            window.showToast("📋 提示词内容已成功复制到剪贴板！");
+                        });
+                    });
+
+                    // 3. 编辑事件
+                    if (!p.isSystem) {
+                        card.querySelector('.action-edit').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            promptFormContainer.classList.remove('hidden');
+                            promptFormTitle.textContent = '✍️ 编辑自定义提示词';
+                            promptFormName.value = p.name;
+                            promptFormContent.value = p.content;
+                            promptFormEditKey.value = p.key;
+                            promptFormName.focus();
+                        });
+
+                        // 4. 删除事件
+                        card.querySelector('.action-del').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (confirm(`确定要删除自定义提示词“${p.name}”吗？`)) {
+                                delete customPrompts[p.key];
+                                const starIdx = starredPrompts.indexOf(p.key);
+                                if (starIdx > -1) starredPrompts.splice(starIdx, 1);
+                                saveUserData();
+                                renderPromptCards();
+                                window.showToast("🗑️ 提示词删除成功！");
+                            }
+                        });
+                    }
+
+                    // 5. 填入对话框
+                    card.querySelector('.action-chat').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const chatInputExpanded = document.getElementById('chat-input-expanded');
+                        const btnExpandInput = document.getElementById('btn-expand-input');
+                        
+                        // 触展开多行输入
+                        const isExpanded = chatInputExpanded && !chatInputExpanded.classList.contains('hidden');
+                        if (!isExpanded && btnExpandInput) {
+                            btnExpandInput.click();
+                        }
+                        
+                        if (chatInputExpanded) {
+                            chatInputExpanded.value = p.content + "\n";
+                            chatInputExpanded.focus();
+                        }
+                        promptModal.classList.remove('active');
+                        window.showToast(`🚀 已成功填入 AI 助理对话框！`);
+                    });
+
+                    // 6. 填入总结模板
+                    card.querySelector('.action-summary').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        
+                        // 切换 Tab 到工作站
+                        const tabBtnWork = document.querySelector('.tab-btn[data-tab="workstation"]');
+                        if (tabBtnWork) tabBtnWork.click();
+                        
+                        // 填入提示词预览框
+                        const promptPreview = document.getElementById('prompt-preview');
+                        if (promptPreview) {
+                            promptPreview.value = p.content.trim();
+                            // 手动触发展开提示词预览框，以保证显示出来
+                            const previewContainer = document.getElementById('prompt-preview-container');
+                            if (previewContainer) previewContainer.classList.remove('hidden');
+                        }
+                        
+                        // 重置工作站里的 select 下拉框
+                        const promptSelect = document.getElementById('prompt-type');
+                        if (promptSelect) promptSelect.value = '';
+                        
+                        promptModal.classList.remove('active');
+                        window.showToast(`📄 已成功导入 AI 智库执行模板！`);
+                    });
+
+                    promptCardsGrid.appendChild(card);
+                });
+            }
+
+            // 初始化加载数据并渲染
+            loadUserData();
+
+            // 打开 Modal
+            if (btnPromptLib) {
+                btnPromptLib.addEventListener('click', () => {
+                    loadUserData();
+                    renderPromptCards();
+                    promptModal.classList.add('active');
+                    promptSearchInput.focus();
+                });
+            }
+
+            // 关闭 Modal
+            if (btnClosePromptModal) {
+                btnClosePromptModal.addEventListener('click', () => {
+                    promptModal.classList.remove('active');
+                    promptFormContainer.classList.add('hidden');
+                });
+            }
+
+            promptModal.addEventListener('click', (e) => {
+                if (e.target === promptModal) {
+                    promptModal.classList.remove('active');
+                    promptFormContainer.classList.add('hidden');
+                }
+            });
+
+            // 搜索过滤逻辑
+            promptSearchInput.addEventListener('input', () => {
+                searchQuery = promptSearchInput.value.trim();
+                renderPromptCards();
+            });
+
+            // Tab 切换逻辑
+            promptTabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    promptTabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTab = btn.dataset.tab;
+                    renderPromptCards();
+                });
+            });
+
+            // 打开添加表单
+            btnOpenAddPrompt.addEventListener('click', () => {
+                promptFormContainer.classList.remove('hidden');
+                promptFormTitle.textContent = '➕ 新建自定义提示词';
+                promptFormName.value = '';
+                promptFormContent.value = '';
+                promptFormEditKey.value = '';
+                promptFormName.focus();
+            });
+
+            // 取消保存表单
+            btnCancelPrompt.addEventListener('click', () => {
+                promptFormContainer.classList.add('hidden');
+            });
+
+            // 保存自定义提示词
+            btnSavePrompt.addEventListener('click', () => {
+                const name = promptFormName.value.trim();
+                const content = promptFormContent.value.trim();
+                const editKey = promptFormEditKey.value;
+
+                if (!name) {
+                    alert("请填写提示词名称！");
+                    promptFormName.focus();
+                    return;
+                }
+                if (!content) {
+                    alert("请填写提示词内容 Prompt！");
+                    promptFormContent.focus();
+                    return;
+                }
+
+                if (editKey) {
+                    // 编辑原有
+                    customPrompts[editKey] = { name, content };
+                    window.showToast("✓ 自定义提示词修改保存成功！");
+                } else {
+                    // 新增提示词
+                    const key = 'custom_' + Date.now();
+                    customPrompts[key] = { name, content };
+                    window.showToast("✓ 新建自定义提示词成功！");
+                }
+
+                saveUserData();
+                promptFormContainer.classList.add('hidden');
+                renderPromptCards();
+            });
+        });
+    </script>
 </body>
 
 </html>
