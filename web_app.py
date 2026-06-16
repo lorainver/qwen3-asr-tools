@@ -433,6 +433,7 @@ class SummarizeRequest(BaseModel):
     prompt_type: Optional[str] = "summarize"
     target_lang: Optional[str] = None  # 目标语言，仅用于翻译模式
     parallel: Optional[bool] = False
+    chunk_size: Optional[int] = None
 
 class SwitchModelRequest(BaseModel):
     model_id: str

@@ -906,6 +906,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const requestBody = { text: text, prompt_type: promptType, parallel: parallel };
             if (targetLang) requestBody.target_lang = targetLang;
 
+            const chunkSizeInput = document.getElementById('sum-chunk-size');
+            if (chunkSizeInput && chunkSizeInput.value.trim() !== '') {
+                const val = parseInt(chunkSizeInput.value, 10);
+                if (!isNaN(val) && val > 0) {
+                    requestBody.chunk_size = val;
+                }
+            }
+
             try {
                 const response = await fetch('/api/summarize', {
                     method: 'POST',
