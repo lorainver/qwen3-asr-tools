@@ -797,48 +797,80 @@ marked.setOptions({{
     gfm: true,
 }});
 
-// 收集 Mermaid 代码块
-const mermaidBlocks = [];
-let mdForRender = rawMd.replace(/```mermaid\\n([\\s\\S]*?)```/g, (match, code) => {{
-    const idx = mermaidBlocks.length;
-    mermaidBlocks.push(code.trim());
-    return `%%MERMAID_${{idx}}%%`;
-}});
+function renderMarkdown(text) {{
+    if (!text) return '';
 
-// 渲染为 HTML
-const renderedHtml = marked.parse(mdForRender);
+    // 1. 保护 Mermaid 代码块,避免被 marked 解析
+    const mermaidBlocks = [];
+    text = text.replace(/```mermaid\\n([\\s\\S]*?)```/g, (match, code) => {{
+        const placeholder = `%%MERMAID_${{mermaidBlocks.length}}%%`;
+        mermaidBlocks.push(code.trim());
+        return placeholder;
+    }});
 
-// 还原 Mermaid 占位符
-let finalHtml = renderedHtml;
-mermaidBlocks.forEach((code, i) => {{
-    const containerId = `mermaid-docs-${{i}}`;
-    const container = `<div class="mermaid-container" id="${{containerId}}" data-mermaid-code="${{encodeURIComponent(code)}}">`
-        + `<div class="mermaid-loading">🔄 图表加载中...</div></div>`;
-    finalHtml = finalHtml.replace(`%%MERMAID_${{i}}%%`, container);
-}});
+    // 2. 保护数学公式,避免被 marked 解析
+    const mathBlocks = [];
+    // 块级公式 $$...$$
+    text = text.replace(/\\$\\$([\\s\\S]*?)\\$\\$/g, (match, formula) => {{
+        const placeholder = `%%MATH_BLOCK_${{mathBlocks.length}}%%`;
+        mathBlocks.push({{ formula: formula.trim(), display: true }});
+        return placeholder;
+    }});
+    // 行内公式 $...$
+    text = text.replace(/\\$([^$\\n]+?)\\$/g, (match, formula) => {{
+        const placeholder = `%%MATH_INLINE_${{mathBlocks.length}}%%`;
+        mathBlocks.push({{ formula: formula.trim(), display: false }});
+        return placeholder;
+    }});
 
-document.getElementById('content').innerHTML = finalHtml;
+    // 3. 用 marked 渲染 Markdown
+    let html = marked.parse(text);
 
-// 渲染数学公式
-renderMathInElement(document.getElementById('content'), {{
-    delimiters: [
-        {{left: '$$', right: '$$', display: true}},
-        {{left: '$', right: '$', display: false}},
-    ],
-    throwOnError: false,
-}});
+    // 4. 还原并渲染 KaTeX 数学公式
+    mathBlocks.forEach((item, i) => {{
+        const blockKey = `%%MATH_BLOCK_${{i}}%%`;
+        const inlineKey = `%%MATH_INLINE_${{i}}%%`;
+        const key = item.display ? blockKey : inlineKey;
+        try {{
+            const rendered = katex.renderToString(item.formula, {{
+                displayMode: item.display,
+                throwOnError: false,
+                trust: true
+            }});
+            html = html.replace(key, rendered);
+        }} catch (e) {{
+            html = html.replace(key, item.display ? '$$' + item.formula + '$$' : '$' + item.formula + '$');
+        }}
+    }});
 
-// 渲染 Mermaid 图表
-mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
-const containers = document.querySelectorAll('.mermaid-container');
-for (const container of containers) {{
-    const code = decodeURIComponent(container.dataset.mermaidCode);
-    try {{
-        const {{ svg }} = await mermaid.render(`mermaid-svg-${{Date.now()}}-${{container.id}}`, code);
-        container.innerHTML = svg;
-    }} catch (e) {{
-        container.innerHTML = `<div class="mermaid-error">⚠️ Mermaid 渲染失败: ${{e.message}}</div>`;
+    // 5. 还原 Mermaid 占位符
+    mermaidBlocks.forEach((code, i) => {{
+        const containerId = `mermaid-docs-${{i}}`;
+        const container = `<div class="mermaid-container" id="${{containerId}}" data-mermaid-code="${{encodeURIComponent(code)}}">`
+            + `<div class="mermaid-loading">🔄 图表加载中...</div></div>`;
+        html = html.replace(`%%MERMAID_${{i}}%%`, container);
+    }});
+
+    return html;
+}}
+
+document.getElementById('content').innerHTML = renderMarkdown(rawMd);
+
+// 异步渲染 Mermaid 图表
+try {{
+    mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
+    const containers = document.querySelectorAll('.mermaid-container');
+    for (const container of containers) {{
+        const code = decodeURIComponent(container.dataset.mermaidCode);
+        try {{
+            const {{ svg }} = await mermaid.render(`mermaid-svg-${{Date.now()}}-${{container.id}}`, code);
+            container.innerHTML = svg;
+        }} catch (e) {{
+            container.innerHTML = `<div class="mermaid-error">⚠️ Mermaid 渲染失败: ${{e.message}}</div>`;
+        }}
     }}
+}} catch (e) {{
+    console.error('Mermaid render error:', e);
 }}
 </script>
 </body>
