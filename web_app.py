@@ -778,9 +778,44 @@ body {{
 .mermaid-container {{ text-align: center; margin: 1em 0; }}
 .mermaid-container svg {{ max-width: 100%; }}
 .mermaid-error {{ color: #ef4444; font-size: 0.9em; }}
+
+body.light-mode {{
+    background: #f1f5f9;
+    color: #0f172a;
+}}
+body.light-mode #content code {{
+    background: rgba(0,0,0,0.05);
+    color: #0f172a;
+}}
+body.light-mode #content pre {{
+    background: #cbd5e1;
+}}
+body.light-mode #content pre code {{
+    color: #0f172a;
+}}
+body.light-mode #content blockquote {{
+    color: rgba(15,23,42,0.7);
+    border-left-color: #0284c7;
+}}
+body.light-mode #content table th {{
+    background: rgba(0,0,0,0.03);
+}}
+body.light-mode #content th, body.light-mode #content td {{
+    border-color: #cbd5e1;
+}}
+body.light-mode #content a {{
+    color: #0284c7;
+}}
 </style>
 </head>
 <body>
+<script>
+// 立即从 localStorage 恢复主题，防止黑屏闪烁
+const savedTheme = localStorage.getItem('theme') || 'dark';
+if (savedTheme === 'light') {{
+    document.body.classList.add('light-mode');
+}}
+</script>
 <a id="back-btn" href="/" target="_self">← 返回</a>
 <div id="content"></div>
 
@@ -859,7 +894,9 @@ document.getElementById('content').innerHTML = renderMarkdown(rawMd);
 // 异步渲染 Mermaid 图表
 (async () => {{
     try {{
-        mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        const mermaidTheme = savedTheme === 'light' ? 'default' : 'dark';
+        mermaid.initialize({{ startOnLoad: false, theme: mermaidTheme }});
         const containers = document.querySelectorAll('.mermaid-container');
         for (const container of containers) {{
             const code = decodeURIComponent(container.dataset.mermaidCode);
