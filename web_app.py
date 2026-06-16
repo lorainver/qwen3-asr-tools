@@ -802,7 +802,7 @@ const mermaidBlocks = [];
 let mdForRender = rawMd.replace(/```mermaid\\n([\\s\\S]*?)```/g, (match, code) => {{
     const idx = mermaidBlocks.length;
     mermaidBlocks.push(code.trim());
-    return `%%MERMAID_${idx}%%`;
+    return `%%MERMAID_${{idx}}%%`;
 }});
 
 // 渲染为 HTML
@@ -811,10 +811,10 @@ const renderedHtml = marked.parse(mdForRender);
 // 还原 Mermaid 占位符
 let finalHtml = renderedHtml;
 mermaidBlocks.forEach((code, i) => {{
-    const containerId = `mermaid-docs-${i}`;
-    const container = `<div class="mermaid-container" id="${containerId}" data-mermaid-code="${encodeURIComponent(code)}">`
+    const containerId = `mermaid-docs-${{i}}`;
+    const container = `<div class="mermaid-container" id="${{containerId}}" data-mermaid-code="${{encodeURIComponent(code)}}">`
         + `<div class="mermaid-loading">🔄 图表加载中...</div></div>`;
-    finalHtml = finalHtml.replace(`%%MERMAID_${i}%%`, container);
+    finalHtml = finalHtml.replace(`%%MERMAID_${{i}}%%`, container);
 }});
 
 document.getElementById('content').innerHTML = finalHtml;
