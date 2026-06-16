@@ -857,21 +857,23 @@ function renderMarkdown(text) {{
 document.getElementById('content').innerHTML = renderMarkdown(rawMd);
 
 // 异步渲染 Mermaid 图表
-try {{
-    mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
-    const containers = document.querySelectorAll('.mermaid-container');
-    for (const container of containers) {{
-        const code = decodeURIComponent(container.dataset.mermaidCode);
-        try {{
-            const {{ svg }} = await mermaid.render(`mermaid-svg-${{Date.now()}}-${{container.id}}`, code);
-            container.innerHTML = svg;
-        }} catch (e) {{
-            container.innerHTML = `<div class="mermaid-error">⚠️ Mermaid 渲染失败: ${{e.message}}</div>`;
+(async () => {{
+    try {{
+        mermaid.initialize({{ startOnLoad: false, theme: 'dark' }});
+        const containers = document.querySelectorAll('.mermaid-container');
+        for (const container of containers) {{
+            const code = decodeURIComponent(container.dataset.mermaidCode);
+            try {{
+                const {{ svg }} = await mermaid.render(`mermaid-svg-${{Date.now()}}-${{container.id}}`, code);
+                container.innerHTML = svg;
+            }} catch (e) {{
+                container.innerHTML = `<div class="mermaid-error">⚠️ Mermaid 渲染失败: ${{e.message}}</div>`;
+            }}
         }}
+    }} catch (e) {{
+        console.error('Mermaid render error:', e);
     }}
-}} catch (e) {{
-    console.error('Mermaid render error:', e);
-}}
+}})();
 </script>
 </body>
 </html>'''
