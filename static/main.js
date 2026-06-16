@@ -314,6 +314,20 @@ document.addEventListener('DOMContentLoaded', () => {
             tabPages.forEach(page => page.classList.remove('active'));
             const targetPage = document.getElementById(`page-${targetTab}`);
             if (targetPage) targetPage.classList.add('active');
+
+            // 如果切离了文档页面，自动还原最大化状态
+            if (targetTab !== 'docs') {
+                const viewerContainer = document.getElementById('docs-viewer-container');
+                const btnMaximize = document.getElementById('btn-docs-maximize');
+                if (viewerContainer && viewerContainer.classList.contains('maximized')) {
+                    viewerContainer.classList.remove('maximized');
+                    document.body.style.overflow = '';
+                    if (btnMaximize) {
+                        btnMaximize.innerHTML = '⛶ 最大化';
+                        btnMaximize.title = '最大化窗口';
+                    }
+                }
+            }
         });
     });
 
@@ -2374,6 +2388,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnDocsCopy = document.getElementById('btn-docs-copy');
     const btnDocsView = document.getElementById('btn-docs-view');
     const btnDocsRaw = document.getElementById('btn-docs-raw');
+    const btnDocsMaximize = document.getElementById('btn-docs-maximize');
     const docsDirFilter = document.getElementById('docs-dir-filter');
     
     let docsCurrentFile = null;  // 当前查看的文件信息
@@ -2665,6 +2680,21 @@ document.addEventListener('DOMContentLoaded', () => {
             showDocsViewer(type);
         }
     });
+
+    // 最大化/还原切换
+    if (btnDocsMaximize) {
+        btnDocsMaximize.addEventListener('click', () => {
+            if (!docsViewerContainer) return;
+            const isMaximized = docsViewerContainer.classList.toggle('maximized');
+            btnDocsMaximize.innerHTML = isMaximized ? '🗗 还原' : '⛶ 最大化';
+            btnDocsMaximize.title = isMaximized ? '还原窗口' : '最大化窗口';
+            if (isMaximized) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+    }
     
     // 首次切换到文档页时加载列表
     const docsTabBtn = document.querySelector('[data-tab="docs"]');

@@ -2135,6 +2135,24 @@ textarea:focus {
     overflow: hidden;
 }
 
+.docs-viewer-container.maximized {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2500;
+    background: var(--bg-color);
+    background-image:
+        radial-gradient(ellipse at 10% 40%, var(--bg-gradient-1), transparent 50%),
+        radial-gradient(ellipse at 90% 20%, var(--bg-gradient-2), transparent 50%),
+        radial-gradient(ellipse at 50% 100%, rgba(56, 189, 248, 0.02), transparent 40%);
+    box-sizing: border-box;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+}
+
 .docs-viewer-header {
     display: flex;
     align-items: center;
