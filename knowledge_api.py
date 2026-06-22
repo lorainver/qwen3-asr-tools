@@ -29,7 +29,7 @@ if str(BASE_DIR) not in sys.path:
 
 from knowledge_store import (
     init_knowledge_base,
-    index_document,
+    get_last_init_error,
     get_loader,
     get_vectorstore,
     get_embedder,
@@ -113,13 +113,17 @@ async def init_kb(
         from summarizer import LongTextSummarizer
         summarizer = LongTextSummarizer()
 
-    success = init_knowledge_base(
-        summarizer=summarizer,
-        chunk_size=chunk_size,
-        overlap=overlap,
-        embed_provider=embed_provider,
-        embed_model=embed_model
-    )
+    try:
+        success = init_knowledge_base(
+            summarizer=summarizer,
+            chunk_size=chunk_size,
+            overlap=overlap,
+            embed_provider=embed_provider,
+            embed_model=embed_model
+        )
+    except Exception as e:
+        logger.error(f"KB init exception: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"知识库初始化异常: {str(e)}")
 
     if success:
         vs = get_vectorstore()
@@ -132,7 +136,8 @@ async def init_kb(
             }
         }
     else:
-        raise HTTPException(status_code=500, detail="知识库初始化失败")
+        err = get_last_init_error()
+        raise HTTPException(status_code=500, detail=f"知识库初始化失败: {err}")
 
 
 @router.post("/upload")

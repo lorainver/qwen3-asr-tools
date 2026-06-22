@@ -595,7 +595,7 @@ def init_knowledge_base(summarizer: Any,
     Returns:
         是否初始化成功
     """
-    global _loader, _chunker, _embedder, _vectorstore, _rag_chain, _summarizer_ref
+    global _loader, _chunker, _embedder, _vectorstore, _rag_chain, _summarizer_ref, _last_init_error
 
     try:
         logger.info("🔧 正在初始化知识库模块...")
@@ -614,7 +614,19 @@ def init_knowledge_base(summarizer: Any,
 
     except Exception as e:
         logger.error(f"❌ 知识库初始化失败: {e}")
+        # 记录详细堆栈到 stderr，方便排查
+        import traceback
+        traceback.print_exc()
+        # 把错误存到全局变量，让 API 层可以读取
+        global _last_init_error
+        _last_init_error = str(e)
         return False
+
+
+def get_last_init_error() -> str:
+    """获取最后一次初始化失败的具体错误"""
+    global _last_init_error
+    return _last_init_error or "未知错误"
 
 
 def get_loader() -> DocumentLoader:
