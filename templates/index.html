@@ -7,6 +7,7 @@
     <title>多维智能协同工作站</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/kb.css">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <!-- Markdown 渲染库 -->
     <script src="/static/js/marked.min.js"></script>
@@ -764,6 +765,7 @@
                 <button class="tab-btn active" data-tab="workstation">🎬 工作站</button>
                 <button class="tab-btn" data-tab="assistant">💬 AI 助理</button>
                 <button class="tab-btn" data-tab="docs">📄 文档</button>
+                <button class="tab-btn" data-tab="knowledge">📚 知识库</button>
             </div>
 
             <!-- 页面1：工作站 -->
@@ -1171,6 +1173,70 @@
                     </div>
                 </div>
             </div><!-- end page-docs -->
+
+            <!-- 页面4：知识库 -->
+            <div id="page-knowledge" class="tab-page">
+                <div class="kb-container glass-panel">
+                    <!-- 顶部状态栏 -->
+                    <div class="kb-header">
+                        <div class="kb-header-left">
+                            <h2>📚 知识库</h2>
+                            <span class="kb-badge" id="kb-stats-badge">🔄 加载中...</span>
+                        </div>
+                        <div class="kb-header-actions">
+                            <button class="kb-btn kb-btn-secondary" id="kb-btn-refresh">🔄 刷新</button>
+                            <button class="kb-btn kb-btn-danger" id="kb-btn-clear">🗑️ 清空</button>
+                        </div>
+                    </div>
+
+                    <!-- 上传区域 -->
+                    <div class="kb-upload-area">
+                        <div class="kb-upload-row">
+                            <input type="file" id="kb-file-input" class="kb-file-input" multiple>
+                            <input type="text" id="kb-category-input" class="kb-input kb-input-sm" placeholder="分类（可选）" style="width:120px">
+                            <button class="kb-btn kb-btn-primary" id="kb-btn-upload">📤 上传并索引</button>
+                        </div>
+                        <div id="kb-upload-progress" class="kb-progress hidden"></div>
+                    </div>
+
+                    <!-- 文档列表 -->
+                    <div class="kb-section">
+                        <div class="kb-section-header">
+                            <h3>📋 已索引文档</h3>
+                            <span id="kb-doc-count" class="kb-count">0 篇</span>
+                        </div>
+                        <div id="kb-doc-list" class="kb-doc-list">
+                            <div class="kb-empty">暂无文档，请上传文件</div>
+                        </div>
+                    </div>
+
+                    <!-- 语义搜索 -->
+                    <div class="kb-section">
+                        <div class="kb-section-header">
+                            <h3>🔍 语义搜索</h3>
+                        </div>
+                        <div class="kb-search-row">
+                            <input type="text" id="kb-search-input" class="kb-input" placeholder="输入搜索关键词...">
+                            <button class="kb-btn kb-btn-primary" id="kb-btn-search">🔍 搜索</button>
+                        </div>
+                        <div id="kb-search-results" class="kb-search-results"></div>
+                    </div>
+
+                    <!-- RAG 对话 -->
+                    <div class="kb-section">
+                        <div class="kb-section-header">
+                            <h3>💬 RAG 对话</h3>
+                        </div>
+                        <div class="kb-chat-box" id="kb-chat-box">
+                            <div class="kb-chat-placeholder">输入问题，AI 将结合知识库内容回答</div>
+                        </div>
+                        <div class="kb-chat-input-row">
+                            <input type="text" id="kb-chat-input" class="kb-input" placeholder="输入问题..." onkeydown="if(event.key==='Enter') document.getElementById('kb-btn-chat').click()">
+                            <button class="kb-btn kb-btn-primary" id="kb-btn-chat">➡️ 发送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
     <script src="/static/main.js?v=20260528_voice"></script>
@@ -1755,6 +1821,276 @@
                 promptFormContainer.classList.add('hidden');
                 renderPromptCards();
             });
+        });
+
+        // ========== 主标签页切换 ==========
+        const tabBar = document.querySelector('.tab-bar');
+        const tabPages = {
+            workstation: document.getElementById('page-workstation'),
+            assistant: document.getElementById('page-assistant'),
+            docs: document.getElementById('page-docs'),
+            knowledge: document.getElementById('page-knowledge'),
+        };
+
+        if (tabBar) {
+            tabBar.addEventListener('click', (e) => {
+                const btn = e.target.closest('.tab-btn');
+                if (!btn) return;
+                const tab = btn.dataset.tab;
+
+                // 切换按钮 active 状态
+                tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 切换页面
+                Object.keys(tabPages).forEach(key => {
+                    if (tabPages[key]) {
+                        tabPages[key].classList.toggle('active', key === tab);
+                    }
+                });
+            });
+        }
+
+        // ========== 知识库 (Knowledge Base) ==========
+
+        const KB_API_BASE = '/api/kb';
+
+        // --- 加载文档列表 ---
+        async function loadKbDocs() {
+            try {
+                const [statsRes, docsRes] = await Promise.all([
+                    fetch(`${KB_API_BASE}/stats`).then(r => r.json()),
+                    fetch(`${KB_API_BASE}/docs`).then(r => r.json())
+                ]);
+
+                // 更新 badge
+                const badge = document.getElementById('kb-stats-badge');
+                if (badge) badge.textContent = `📊 ${statsRes.total_chunks || 0} 个块 / ${statsRes.total_docs || 0} 篇文档`;
+
+                // 更新文档列表
+                const list = document.getElementById('kb-doc-list');
+                const count = document.getElementById('kb-doc-count');
+                if (!list) return;
+
+                const docs = docsRes.docs || [];
+                if (count) count.textContent = `${docs.length} 篇`;
+
+                if (docs.length === 0) {
+                    list.innerHTML = '<div class="kb-empty">暂无文档，请上传文件</div>';
+                    return;
+                }
+
+                list.innerHTML = docs.map(d => `
+                    <div class="kb-doc-item" data-doc-id="${d.doc_id}">
+                        <div class="kb-doc-info">
+                            <span class="kb-doc-name">${escapeHtml(d.filename || 'unknown')}</span>
+                            <span class="kb-doc-meta">${d.chunk_count || 0} 块</span>
+                            ${d.category ? `<span class="kb-doc-category">${escapeHtml(d.category)}</span>` : ''}
+                        </div>
+                        <button class="kb-doc-delete" onclick="deleteKbDoc('${d.doc_id}')" title="删除">✕</button>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('KB load error:', err);
+            }
+        }
+
+        // --- 删除文档 ---
+        async function deleteKbDoc(docId) {
+            try {
+                const res = await fetch(`${KB_API_BASE}/doc/${docId}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    window.showToast && window.showToast('🗑️ 文档已删除');
+                    loadKbDocs();
+                }
+            } catch (err) {
+                console.error('delete error:', err);
+            }
+        }
+
+        // --- 上传文件 ---
+        async function uploadKbFile() {
+            const fileInput = document.getElementById('kb-file-input');
+            const catInput = document.getElementById('kb-category-input');
+            const progress = document.getElementById('kb-upload-progress');
+            if (!fileInput || !fileInput.files.length) {
+                window.showToast && window.showToast('请选择文件');
+                return;
+            }
+
+            progress.classList.remove('hidden');
+            progress.textContent = '⏳ 正在上传并索引...';
+
+            const formData = new FormData();
+            for (const file of fileInput.files) {
+                formData.append('file', file);
+            }
+            const category = catInput ? catInput.value.trim() : '';
+            if (category) formData.append('category', category);
+
+            try {
+                const res = await fetch(`${KB_API_BASE}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    progress.textContent = `✅ 索引成功：${data.chunk_count || '?'} 个块`;
+                    window.showToast && window.showToast(`✅ ${data.message}`);
+                    fileInput.value = '';
+                    loadKbDocs();
+                } else {
+                    progress.textContent = `❌ 上传失败：${data.message || data.error || '未知错误'}`;
+                }
+            } catch (err) {
+                progress.textContent = `❌ 网络错误：${err.message}`;
+            }
+
+            setTimeout(() => {
+                progress.classList.add('hidden');
+            }, 5000);
+        }
+
+        // --- 搜索 ---
+        async function searchKb() {
+            const input = document.getElementById('kb-search-input');
+            const results = document.getElementById('kb-search-results');
+            if (!input || !results) return;
+
+            const q = input.value.trim();
+            if (!q) {
+                results.innerHTML = '';
+                return;
+            }
+
+            results.innerHTML = '<div class="kb-chat-msg loading">🔍 搜索中...</div>';
+
+            try {
+                const res = await fetch(`${KB_API_BASE}/search?q=${encodeURIComponent(q)}&top_k=8`);
+                const data = await res.json();
+
+                if (!data.results || data.results.length === 0) {
+                    results.innerHTML = '<div class="kb-empty">未找到相关结果</div>';
+                    return;
+                }
+
+                results.innerHTML = data.results.map(hit => `
+                    <div class="kb-search-hit">
+                        <div class="kb-search-hit-header">
+                            <span>📄 ${escapeHtml(hit.filename || '')}</span>
+                            <span class="kb-search-hit-score">距离: ${hit.distance ? hit.distance.toFixed(1) : '-'}</span>
+                        </div>
+                        <div class="kb-search-hit-text">${escapeHtml(truncate(hit.text, 300))}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                results.innerHTML = `<div class="kb-empty">❌ 搜索失败：${err.message}</div>`;
+            }
+        }
+
+        // --- RAG 对话 ---
+        async function ragChat() {
+            const input = document.getElementById('kb-chat-input');
+            const box = document.getElementById('kb-chat-box');
+            if (!input || !box) return;
+
+            const q = input.value.trim();
+            if (!q) return;
+
+            // 清除 placeholder
+            const placeholder = box.querySelector('.kb-chat-placeholder');
+            if (placeholder) placeholder.remove();
+
+            // 添加用户消息
+            box.innerHTML += `<div class="kb-chat-msg user"><span class="label">🧑 你：</span>${escapeHtml(q)}</div>`;
+            input.value = '';
+
+            // 添加加载状态
+            const loaderId = 'kb-loading-' + Date.now();
+            box.innerHTML += `<div class="kb-chat-msg loading" id="${loaderId}">🤖 AI 思考中...</div>`;
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const res = await fetch(`${KB_API_BASE}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: q })
+                });
+                const data = await res.json();
+
+                // 移除 loading
+                const loader = document.getElementById(loaderId);
+                if (loader) loader.remove();
+
+                // 添加 AI 回复
+                const sourcesHtml = data.sources && data.sources.length
+                    ? `<div class="kb-chat-sources">📎 参考来源：${data.sources.map(s => escapeHtml(s.filename)).join('、')}</div>`
+                    : '';
+                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">🤖 AI：</span>${escapeHtml(data.answer || data.message || '无回复')}${sourcesHtml}</div>`;
+            } catch (err) {
+                const loader = document.getElementById(loaderId);
+                if (loader) loader.remove();
+                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">❌ 错误：</span>${escapeHtml(err.message)}</div>`;
+            }
+
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // --- 清空知识库 ---
+        async function clearKb() {
+            if (!confirm('确定清空所有知识库数据？此操作不可撤销。')) return;
+            try {
+                const res = await fetch(`${KB_API_BASE}/clear`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    window.showToast && window.showToast('🗑️ 知识库已清空');
+                    loadKbDocs();
+                    document.getElementById('kb-search-results').innerHTML = '';
+                }
+            } catch (err) {
+                console.error('clear error:', err);
+            }
+        }
+
+        // --- 工具函数 ---
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function truncate(text, maxLen) {
+            if (!text || text.length <= maxLen) return text || '';
+            return text.substring(0, maxLen) + '...';
+        }
+
+        // --- 绑定事件 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 加载知识库
+            loadKbDocs();
+
+            // 绑定按钮事件
+            const btnRefresh = document.getElementById('kb-btn-refresh');
+            if (btnRefresh) btnRefresh.addEventListener('click', loadKbDocs);
+
+            const btnClear = document.getElementById('kb-btn-clear');
+            if (btnClear) btnClear.addEventListener('click', clearKb);
+
+            const btnUpload = document.getElementById('kb-btn-upload');
+            if (btnUpload) btnUpload.addEventListener('click', uploadKbFile);
+
+            const btnSearch = document.getElementById('kb-btn-search');
+            if (btnSearch) btnSearch.addEventListener('click', searchKb);
+
+            const searchInput = document.getElementById('kb-search-input');
+            if (searchInput) searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') searchKb();
+            });
+
+            const btnChat = document.getElementById('kb-btn-chat');
+            if (btnChat) btnChat.addEventListener('click', ragChat);
         });
     </script>
 </body>

@@ -29,6 +29,7 @@ if str(BASE_DIR) not in sys.path:
 
 from knowledge_store import (
     init_knowledge_base,
+    index_document,
     get_last_init_error,
     get_loader,
     get_vectorstore,
