@@ -42,6 +42,15 @@ from knowledge_store import (
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/kb", tags=["knowledge_base"])
 
+# 外部注入的 summarizer 引用（由 ai_worker.py 在挂载路由后设置）
+_external_summarizer = None
+
+
+def set_summarizer(summarizer):
+    """由 ai_worker.py 调用，注入全局 summarizer 实例"""
+    global _external_summarizer
+    _external_summarizer = summarizer
+
 # ========== 数据模型 ==========
 
 class KBSearchRequest(BaseModel):
@@ -95,9 +104,14 @@ async def init_kb(
     embed_model: str = Query(default="nomic-embed-text", description="Embedding 模型名称")
 ):
     """初始化知识库模块"""
-    from summarizer import LongTextSummarizer
+    from knowledge_store import init_knowledge_base as _init
 
-    summarizer = LongTextSummarizer()
+    # 优先使用外部注入的 summarizer（ai_worker.py 全局实例）
+    if _external_summarizer is not None:
+        summarizer = _external_summarizer
+    else:
+        from summarizer import LongTextSummarizer
+        summarizer = LongTextSummarizer()
 
     success = init_knowledge_base(
         summarizer=summarizer,

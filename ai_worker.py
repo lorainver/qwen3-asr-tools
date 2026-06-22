@@ -63,6 +63,8 @@ else:
 
 # 挂载知识库 API 路由（知识库独立初始化，不影响 ASR 显存管理）
 app.include_router(kb_router)
+from knowledge_api import set_summarizer as _set_kb_summarizer
+_set_kb_summarizer(summarizer)
 logger.info("📚 知识库路由已挂载: /api/kb/*")
 
 # ========== Pydantic 模型 (简化版,避免 Pydantic 验证错误) ==========
