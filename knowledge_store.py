@@ -238,6 +238,7 @@ class TextChunker:
             chunk_index=idx,
             metadata={
                 **doc.metadata,
+                "doc_id": doc.doc_id,
                 "chunk_index": idx,
                 "char_count": len(text)
             }
