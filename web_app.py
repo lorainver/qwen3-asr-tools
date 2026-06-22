@@ -36,7 +36,7 @@ import httpx
 # 存储正在运行的子进程：{ "task_name": process_object }
 running_processes = {}
 from fastapi import FastAPI, UploadFile, File, Request, Form
-from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse, Response, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -1470,62 +1470,41 @@ async def open_recordings():
 
 # ========== 知识库 API 代理 ==========
 
-@app.get("/api/kb/status")
-@app.get("/api/kb/stats")
-@app.get("/api/kb/search")
-@app.get("/api/kb/docs")
-@app.post("/api/kb/init")
-@app.post("/api/kb/index")
-@app.post("/api/kb/chat")
-@app.delete("/api/kb/clear")
-@app.delete("/api/kb/doc/{doc_id}")
-async def proxy_kb_api(request: Request, doc_id: Optional[str] = None):
-    """代理知识库 API 到 AI Worker"""
-    if not ai_worker.ensure_running():
-        raise HTTPException(status_code=503, detail="AI Worker 未运行")
+@app.middleware("http")
+async def proxy_kb_api(request: Request, call_next):
+    """拦截 /api/kb/* 请求并代理到 AI Worker"""
+    if not request.url.path.startswith("/api/kb/"):
+        return await call_next(request)
     
-    # 构建目标 URL
-    path = request.url.path
-    if request.url.query:
-        path = f"{path}?{request.url.query}"
-    url = f"{AI_WORKER_URL}{path}"
-    
-    # 读取请求体
-    body = await request.body()
-    headers = dict(request.headers)
-    # 移除 hop-by-hop headers
-    for h in ['host', 'connection', 'content-length', 'transfer-encoding']:
-        headers.pop(h, None)
-    
-    # 发送请求到 worker
-    async with http_client.request(
-        request.method,
-        url,
-        headers=headers,
-        content=body or None
-    ) as resp:
-        return resp.json()
-
-
-@app.post("/api/kb/upload")
-async def proxy_kb_upload(request: Request):
-    """代理知识库文件上传到 AI Worker"""
-    if not ai_worker.ensure_running():
-        raise HTTPException(status_code=503, detail="AI Worker 未运行")
-    
-    # 读取原始 multipart body 直接透传
-    body = await request.body()
-    content_type = request.headers.get("content-type", "")
-    
-    url = f"{AI_WORKER_URL}/api/kb/upload"
-    
-    async with http_client.request(
-        "POST",
-        url,
-        headers={"Content-Type": content_type},
-        content=body
-    ) as resp:
-        return resp.json()
+    try:
+        if not ai_worker.ensure_running():
+            return JSONResponse({"error": "AI Worker 未运行"}, status_code=503)
+        
+        # 构建目标 URL
+        target_path = request.url.path
+        if request.url.query:
+            target_path = f"{target_path}?{request.url.query}"
+        url = f"{AI_WORKER_URL}{target_path}"
+        
+        # 读取请求体并转发
+        body = await request.body()
+        
+        resp = await http_client.request(
+            request.method,
+            url,
+            content=body or None,
+            headers={"Content-Type": request.headers.get("content-type", "application/json")}
+        )
+        
+        response_headers = {}
+        for key, value in resp.headers.items():
+            if key.lower() not in ("content-encoding", "transfer-encoding", "content-length"):
+                response_headers[key] = value
+        
+        return Response(content=resp.content, status_code=resp.status_code, headers=response_headers, media_type=resp.headers.get("content-type", "application/json"))
+    except Exception as e:
+        logger.error(f"KB 代理错误: {e}", exc_info=True)
+        return JSONResponse({"error": str(e)}, status_code=500)
 
 # ========== 启动 ==========
 
