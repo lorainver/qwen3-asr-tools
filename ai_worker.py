@@ -20,6 +20,10 @@ from summarizer import LongTextSummarizer
 from web_searcher import get_searcher, reset_searcher
 from config_loader import config
 
+# 知识库模块（延迟初始化，避免与 ASR 模型争抢显存）
+from knowledge_api import router as kb_router
+from knowledge_store import init_knowledge_base
+
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -56,6 +60,10 @@ if search_enabled:
         logger.info(f"联网搜索已启用 (使用备用引擎: {'Serper' if serper_api_key else 'DuckDuckGo'})")
 else:
     searcher = None
+
+# 挂载知识库 API 路由（知识库独立初始化，不影响 ASR 显存管理）
+app.include_router(kb_router)
+logger.info("📚 知识库路由已挂载: /api/kb/*")
 
 # ========== Pydantic 模型 (简化版,避免 Pydantic 验证错误) ==========
 
