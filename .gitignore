@@ -75,3 +75,14 @@ docs/*.html
 *巴蜀*.html
 *蜀文*.html
 
+
+# 忽略其他虚拟环境
+venv312/
+
+# 忽略临时脚本
+git_commit.sh
+scripts/
+
+# 忽略测试文件
+magic11.in
+
