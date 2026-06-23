@@ -1223,9 +1223,10 @@
                     </div>
 
                     <!-- RAG 对话 -->
-                    <div class="kb-section">
+                    <div class="kb-section" id="kb-chat-section">
                         <div class="kb-section-header">
                             <h3>💬 RAG 对话</h3>
+                            <button class="kb-btn-maximize" id="kb-btn-maximize" title="最大化/还原对话框" onclick="toggleKbMaximize()">⬜</button>
                         </div>
                         <div class="kb-chat-box" id="kb-chat-box">
                             <div class="kb-chat-placeholder">输入问题，AI 将结合知识库内容回答</div>
@@ -2044,6 +2045,19 @@
                 // fallback: 纯文本
                 return escapeHtml(text);
             }
+        }
+
+        // --- KB Chat Maximize ---
+        function toggleKbMaximize() {
+            const section = document.getElementById('kb-chat-section');
+            const btn = document.getElementById('kb-btn-maximize');
+            section.classList.toggle('kb-maximized');
+            const isMax = section.classList.contains('kb-maximized');
+            btn.textContent = isMax ? '❎' : '⬜';
+            btn.title = isMax ? '还原对话框' : '最大化对话框';
+            // Scroll to bottom of chat
+            const box = document.getElementById('kb-chat-box');
+            if (isMax) box.scrollTop = box.scrollHeight;
         }
 
         // --- RAG 对话 ---
