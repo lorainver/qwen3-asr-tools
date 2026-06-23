@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2031songyufeng 冲刺前5学习计划</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #4a6cf7; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; }
+        body { background: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem 0; }
+        .stat-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .problem-card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-left: 4px solid var(--primary); }
+        .problem-card.priority-high { border-left-color: var(--danger); }
+        .problem-card.priority-mid { border-left-color: var(--warning); }
+        .problem-card.priority-low { border-left-color: var(--success); }
+        .diff-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; color: white; font-size: 0.75rem; font-weight: 600; }
+        .diff-7 { background: #3498db; } .diff-6 { background: #52c41a; } .diff-5 { background: #f39c11; } .diff-4 { background: #f39c11; } .diff-0 { background: #bfbfbf; }
+        pre { background: #1e1e2e; color: #cdd6f4; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+        .tag { display: inline-block; padding: 2px 6px; margin: 2px; border-radius: 4px; font-size: 0.7rem; background: #e8f0fe; color: #1a73e8; }
+        .flow-box { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 1rem; margin: 0.5rem 0; text-align: center; }
+        .flow-arrow { font-size: 1.5rem; color: var(--primary); }
+        .section-title { font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary); }
+        .code-analysis { background: #fff3cd; border-left: 4px solid var(--warning); padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+        .recommend { background: #d4edda; border-left: 4px solid var(--success); padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="container">
+        <h1>2031songyufeng 冲刺前5学习计划</h1>
+        <p class="mb-0">当前: 第6名 (RP=347.41) | 目标: 前5名 (需+6.73 RP) | 共8道高价值题目</p>
+    </div>
+</div>
+
+<div class="container my-4">
+
+    <!-- 概览 -->
+    <div class="row mb-4">
+        <div class="col-md-3"><div class="stat-card text-center"><h3 class="text-primary mb-0">795</h3><small class="text-muted">已AC题目</small></div></div>
+        <div class="col-md-3"><div class="stat-card text-center"><h3 class="text-warning mb-0">第6名</h3><small class="text-muted">当前排名</small></div></div>
+        <div class="col-md-3"><div class="stat-card text-center"><h3 class="text-danger mb-0">6.73</h3><small class="text-muted">距前5 RP差</small></div></div>
+        <div class="col-md-3"><div class="stat-card text-center"><h3 class="text-success mb-0">8</h3><small class="text-muted">推荐题目</small></div></div>
+    </div>
+
+    <div class="alert alert-info">
+        <strong>排名分析：</strong>前5名 solved 都比你少（421~815 vs 795），但 RP 更高。RP 算法重度加权题目难度 — 做难题比做简单题提分快得多。以下8道题是前5名全部/多数AC但你未AC的，价值最高。
+    </div>
+
+    <!-- ==================== B0135 ==================== -->
+    <div class="problem-card priority-high" id="B0135">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0135 【递推练习】邮票问题 <span class="diff-badge diff-7">提高+/省选-</span></h4>
+                <div><span class="tag">递推</span><span class="tag">DP</span><span class="tag">NOIP提高</span></div>
+            </div>
+            <span class="badge bg-danger">5/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名全部AC | RP加成最高 | 优先级: ★★★</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>给定 n 种面值的邮票，每种无限张，求组成 1~m 各面值所需的最少邮票数。经典完全背包/递推问题。</p>
+
+        <h5 class="section-title">2. 代码分析</h5>
+        <div class="code-analysis">
+            <strong>现有代码问题：</strong>当前 AC 代码实际是素数判断程序，不是邮票问题的解法。需要重写。
+        </div>
+
+        <h5 class="section-title">3. 参考代码（递推 + DP）</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int MAXN = 100005;
+int n, m, stamp[20], dp[MAXN];
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; i++) cin >> stamp[i];
+
+    // dp[j] = 组成面值 j 所需的最少邮票数
+    memset(dp, 0x3f, sizeof(dp));
+    dp[0] = 0;
+
+    for (int i = 1; i <= n; i++)           // 每种邮票
+        for (int j = stamp[i]; j <= m; j++) // 完全背包正序
+            dp[j] = min(dp[j], dp[j - stamp[i]] + 1);
+
+    // 输出 1~m 每个面值的最少邮票数
+    for (int j = 1; j <= m; j++)
+        cout &lt;&lt; dp[j] &lt;&lt; (j &lt; m ? ' ' : '\n');
+
+    return 0;
+}</pre>
+
+        <h5 class="section-title">4. 算法流程图</h5>
+        <div class="row text-center">
+            <div class="col-md-3"><div class="flow-box">读入面值<br><small>stamp[1..n]</small></div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-3"><div class="flow-box">初始化 dp[0]=0<br><small>其余为 INF</small></div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-3"><div class="flow-box">完全背包递推<br><small>dp[j]=min(dp[j], dp[j-stamp[i]]+1)</small></div></div>
+        </div>
+
+        <h5 class="section-title">5. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P1020" target="_blank">P1020 导弹拦截</a>（LIS/递推）、
+            <a href="https://www.luogu.com.cn/problem/P1880" target="_blank">P1880 石子合并</a>（区间DP）、
+            <a href="https://www.luogu.com.cn/problem/P1048" target="_blank">P1048 采药</a>（01背包）
+        </div>
+    </div>
+
+    <!-- ==================== B0397 ==================== -->
+    <div class="problem-card priority-high" id="B0397">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0397 【DP练习】糖果 <span class="diff-badge diff-7">提高+/省选-</span></h4>
+                <div><span class="tag">DP</span><span class="tag">背包</span></div>
+            </div>
+            <span class="badge bg-danger">5/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名全部AC | RP加成最高 | 优先级: ★★★</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>有 n 个糖果，每个有重量 a[i]，选择若干个使得总重量恰好为 k 的倍数，最大化选择的糖果数。模 k 背包问题。</p>
+
+        <h5 class="section-title">2. 代码分析</h5>
+        <div class="code-analysis">
+            <strong>现有代码分析：</strong>使用了 01 背包 + 状态记录。思路正确（dp[j] 记录最大数量，tj[j] 记录实际重量）。
+            <br><strong>建议：</strong>可以简化为只用 dp[j] 表示模 k 余 j 时的最大数量，避免 tj 数组。
+        </div>
+
+        <h5 class="section-title">3. 优化代码</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+const int MAXN = 105;
+const int MAXK = 1005;
+int n, k, a[MAXN], dp[MAXK];
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cin >> n >> k;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+
+    // dp[j] = 总重量模 k 余 j 时的最大糖果数
+    memset(dp, -1, sizeof(dp));
+    dp[0] = 0;
+
+    for (int i = 1; i <= n; i++) {
+        int tmp[MAXK];
+        memcpy(tmp, dp, sizeof(dp));
+        for (int j = 0; j &lt; k; j++) {
+            if (tmp[j] &gt;= 0) {
+                int nj = (j + a[i]) % k;
+                dp[nj] = max(dp[nj], tmp[j] + 1);
+            }
+        }
+    }
+
+    cout &lt;&lt; dp[0] &lt;&lt; endl;
+    return 0;
+}</pre>
+
+        <h5 class="section-title">4. 算法流程图</h5>
+        <div class="row text-center">
+            <div class="col-md-3"><div class="flow-box">读入糖果重量<br><small>a[1..n], k</small></div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-3"><div class="flow-box">初始化 dp[0]=0<br><small>其余为 -1</small></div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-3"><div class="flow-box">01背包转移<br><small>dp[(j+a[i])%k] = max(...)</small></div></div>
+        </div>
+
+        <h5 class="section-title">5. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P1048" target="_blank">P1048 采药</a>（01背包）、
+            <a href="https://www.luogu.com.cn/problem/P1616" target="_blank">P1616 疯狂的采药</a>（完全背包）、
+            <a href="https://www.luogu.com.cn/problem/P2918" target="_blank">P2918 拿走稻草</a>（完全背包变体）
+        </div>
+    </div>
+
+    <!-- ==================== B0167 ==================== -->
+    <div class="problem-card priority-mid" id="B0167">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0167 【NOIP2012联赛】开车旅行 <span class="diff-badge diff-6">普及+/提高</span></h4>
+                <div><span class="tag">NOIP</span><span class="tag">模拟</span><span class="tag">排序</span><span class="tag">set</span></div>
+            </div>
+            <span class="badge bg-danger">5/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名全部AC | NOIP真题 | 优先级: ★★★</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>NOIP2012 经典题。A 和 B 交替开车，A 每次走最近的未访问城市，B 每次走次近的。给定起始城市和总距离限制，求最远能到达的城市。需要平衡树（set）+ 模拟。</p>
+
+        <h5 class="section-title">2. 无本地代码，提供模板算法</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+typedef long long ll;
+const int MAXN = 100005;
+int n, x0, ans;
+ll h[MAXN], dist_a, dist_b;
+set&lt;pair&lt;ll,int&gt;&gt; cities;  // (高度, 编号)
+
+// 找到距离 city 最近/次近的城市
+int findNearest(int city, int type) {
+    // type=1: A走最近, type=2: B走次近
+    auto it = cities.lower_bound({h[city], city});
+    vector&lt;pair&lt;ll,int&gt;&gt; candidates;
+    auto tmp = it;
+    for (int i = 0; i &lt; 4 &amp;&amp; tmp != cities.end(); i++, tmp++)
+        candidates.push_back(*tmp);
+    tmp = it;
+    if (tmp != cities.begin()) {
+        tmp--;
+        for (int i = 0; i &lt; 4; i++, tmp--) {
+            candidates.push_back(*tmp);
+            if (tmp == cities.begin()) break;
+        }
+    }
+    sort(candidates.begin(), candidates.end(),
+         [&](const pair&lt;ll,int&gt;&amp;a, const pair&lt;ll,int&gt;&amp;b) {
+             ll da = abs(h[a.second] - h[city]);
+             ll db = abs(h[b.second] - h[city]);
+             return da != db ? da &lt; db : a.second &lt; b.second;
+         });
+    if (candidates.size() &lt; type) return 0;
+    return candidates[type-1].second;
+}
+
+int main() {
+    cin >> n;
+    for (int i = 1; i &lt;= n; i++) { cin >> h[i]; cities.insert({h[i], i}); }
+    cin >> x0 >> dist_a >> dist_b;
+
+    int cur = x0, step = 0;
+    ll total_a = 0, total_b = 0;
+    cities.erase({h[x0], x0});
+
+    while (true) {
+        int nxt = findNearest(cur, 1);  // A 走最近
+        if (!nxt) break;
+        total_a += abs(h[nxt] - h[cur]);
+        cities.erase({h[nxt], nxt});
+        cur = nxt; step++;
+
+        nxt = findNearest(cur, 2);      // B 走次近
+        if (!nxt) break;
+        total_b += abs(h[nxt] - h[cur]);
+        if (total_a + total_b &gt; dist_a + dist_b) break;
+        cities.erase({h[nxt], nxt});
+        cur = nxt; step++;
+    }
+    cout &lt;&lt; cur &lt;&lt; endl;
+    return 0;
+}</pre>
+
+        <h5 class="section-title">3. 算法结构图</h5>
+        <div class="row text-center">
+            <div class="col-md-2"><div class="flow-box">set 存储<br>所有城市</div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-2"><div class="flow-box">A选择<br>最近城市</div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-2"><div class="flow-box">B选择<br>次近城市</div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-2"><div class="flow-box">判断距离<br>是否超限</div></div>
+        </div>
+
+        <h5 class="section-title">4. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P1082" target="_blank">P1082 同余方程</a>（NOIP2012）、
+            <a href="https://www.luogu.com.cn/problem/P1314" target="_blank">P1314 聪明的质检员</a>（NOIP2012）、
+            <a href="https://www.luogu.com.cn/problem/P1080" target="_blank">P1080 国王游戏</a>（NOIP2012）
+        </div>
+    </div>
+
+    <!-- ==================== B0516 ==================== -->
+    <div class="problem-card priority-mid" id="B0516">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0516 【堆练习】哈夫曼编码 <span class="diff-badge diff-6">普及+/提高</span></h4>
+                <div><span class="tag">二叉堆</span><span class="tag">哈夫曼树</span><span class="tag">贪心</span><span class="tag">SPJ</span></div>
+            </div>
+            <span class="badge bg-danger">5/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名全部AC | 堆+贪心经典 | 优先级: ★★★</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>给定字符频率，构造哈夫曼编码使得总编码长度最短。经典哈夫曼树 + 最小堆应用。</p>
+
+        <h5 class="section-title">2. 模板算法（优先队列/最小堆）</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+typedef long long ll;
+
+struct Node {
+    ll weight;
+    Node *left, *right;
+    Node(ll w) : weight(w), left(nullptr), right(nullptr) {}
+};
+
+struct cmp {
+    bool operator()(Node* a, Node* b) {
+        return a->weight > b->weight;
+    }
+};
+
+int n;
+string codes[256];
+ll totalBits = 0;
+
+void buildHuffman(priority_queue&lt;Node*, vector&lt;Node*&gt;, cmp&gt;&amp; pq) {
+    while (pq.size() > 1) {
+        Node* left = pq.top(); pq.pop();
+        Node* right = pq.top(); pq.pop();
+        Node* parent = new Node(left->weight + right->weight);
+        parent->left = left;
+        parent->right = right;
+        pq.push(parent);
+    }
+}
+
+void assignCodes(Node* root, string code) {
+    if (!root) return;
+    if (!root->left && !root->right) {
+        codes[(unsigned char)root->weight] = code.empty() ? "0" : code;
+        return;
+    }
+    assignCodes(root->left, code + "0");
+    assignCodes(root->right, code + "1");
+}
+
+int main() {
+    cin >> n;
+    priority_queue&lt;Node*, vector&lt;Node*&gt;, cmp&gt; pq;
+    for (int i = 0; i &lt; n; i++) {
+        char ch; int w;
+        cin >> ch >> w;
+        pq.push(new Node(w));
+    }
+
+    buildHuffman(pq);
+    // 计算总编码长度（WPL）
+    // assignCodes(pq.top(), "");
+
+    // 输出结果（按题目要求格式）
+    Node* root = pq.top();
+    ll wpl = 0;
+    // 用 BFS 计算 WPL
+    queue&lt;pair&lt;Node*,int&gt;&gt; q;
+    q.push({root, 0});
+    while (!q.empty()) {
+        auto [node, depth] = q.front(); q.pop();
+        if (!node->left && !node->right) {
+            wpl += node->weight * depth;
+            continue;
+        }
+        if (node->left) q.push({node->left, depth+1});
+        if (node->right) q.push({node->right, depth+1});
+    }
+    cout &lt;&lt; wpl &lt;&lt; endl;
+    return 0;
+}</pre>
+
+        <h5 class="section-title">3. 算法流程图</h5>
+        <div class="row text-center">
+            <div class="col-md-2"><div class="flow-box">读入字符<br>频率</div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-2"><div class="flow-box">构建最小堆<br>priority_queue</div></div>
+            <div class="col-md-1 d-flex align-items-center justify-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-2"><div class="flow-box">合并最小两节点<br>创建新节点</div></div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center"><span class="flow-arrow">→</span></div>
+            <div class="col-md-2"><div class="flow-box">堆中只剩1个<br>哈夫曼树完成</div></div>
+        </div>
+
+        <h5 class="section-title">4. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P1629" target="_blank">P1629 邮递员问题</a>（最短路）、
+            <a href="https://www.luogu.com.cn/problem/P1801" target="_blank">P1801 黑匣子</a>（堆）、
+            <a href="https://www.luogu.com.cn/problem/P1198" target="_blank">P1198 单调栈</a>
+        </div>
+    </div>
+
+    <!-- ==================== B0272 ==================== -->
+    <div class="problem-card priority-mid" id="B0272">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0272 【树练习】FBI树 <span class="diff-badge diff-5">普及/提高-</span></h4>
+                <div><span class="tag">树</span><span class="tag">递归</span><span class="tag">NOIP提高</span></div>
+            </div>
+            <span class="badge bg-danger">5/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名全部AC | 优先级: ★★☆</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>给定 01 串，按规则构建 FBI 树：全0为B，全1为I，混合为F，然后递归分治左右子树。NOIP2004真题。</p>
+
+        <h5 class="section-title">2. 模板算法（递归分治）</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+int n;
+string s;
+
+char buildTree(int l, int r) {
+    if (l == r) return s[l] == '0' ? 'B' : 'I';
+
+    // 检查是否全0或全1
+    bool all0 = true, all1 = true;
+    for (int i = l; i &lt;= r; i++) {
+        if (s[i] == '0') all1 = false;
+        else all0 = false;
+    }
+
+    if (all0) return 'B';
+    if (all1) return 'I';
+
+    // 混合 → F，递归构建左右子树
+    int mid = (l + r) / 2;
+    char left = buildTree(l, mid);
+    char right = buildTree(mid + 1, r);
+    cout &lt;&lt; left &lt;&lt; right;  // 后序遍历输出
+    return 'F';
+}
+
+int main() {
+    cin >> n >> s;
+    buildTree(0, s.size() - 1);
+    cout &lt;&lt; endl;
+    return 0;
+}</pre>
+
+        <h5 class="section-title">3. 算法流程图</h5>
+        <div class="flow-box">输入 01 串 → 检查区间是否全0/全1 → 全0返回B, 全1返回I, 混合返回F并递归左右子树 → 后序遍历输出</div>
+
+        <h5 class="section-title">4. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P1305" target="_blank">P1305 新二叉树</a>（树遍历）、
+            <a href="https://www.luogu.com.cn/problem/P1229" target="_blank">P1229 遍历问题</a>（二叉树重建）
+        </div>
+    </div>
+
+    <!-- ==================== B0267 ==================== -->
+    <div class="problem-card priority-low" id="B0267">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0267 【树练习】求后序遍历 <span class="diff-badge diff-4">普及-</span></h4>
+                <div><span class="tag">树</span><span class="tag">递归</span><span class="tag">二叉树遍历</span></div>
+            </div>
+            <span class="badge bg-danger">5/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名全部AC | 相对简单 | 优先级: ★★☆</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>给定前序和中序遍历，求后序遍历。二叉树基础操作。</p>
+
+        <h5 class="section-title">2. 模板算法（递归构建）</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+string pre, in;
+
+void postOrder(int preL, int preR, int inL, int inR) {
+    if (preL > preR) return;
+
+    char root = pre[preL];
+    int k = inL;
+    while (k &lt;= inR && in[k] != root) k++;
+
+    int leftLen = k - inL;
+    postOrder(preL + 1, preL + leftLen, inL, k - 1);
+    postOrder(preL + leftLen + 1, preR, k + 1, inR);
+    cout &lt;&lt; root;
+}
+
+int main() {
+    cin >> pre >> in;
+    postOrder(0, pre.size()-1, 0, in.size()-1);
+    cout &lt;&lt; endl;
+    return 0;
+}</pre>
+
+        <h5 class="section-title">3. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P1827" target="_blank">P1827 美国血统</a>（前序+中序→后序）、
+            <a href="https://www.luogu.com.cn/problem/P1030" target="_blank">P1030 求先序排列</a>
+        </div>
+    </div>
+
+    <!-- ==================== B0163 ==================== -->
+    <div class="problem-card priority-low" id="B0163">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0163 【递归练习】逆波兰表达式 <span class="diff-badge diff-5">普及/提高-</span></h4>
+                <div><span class="tag">递归</span><span class="tag">栈</span><span class="tag">表达式求值</span></div>
+            </div>
+            <span class="badge bg-danger">5/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名全部AC | 优先级: ★★☆</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>逆波兰表达式（后缀表达式）求值。用栈或递归实现。</p>
+
+        <h5 class="section-title">2. 模板算法（递归）</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+
+double evaluate() {
+    string token;
+    cin >> token;
+
+    if (token == "+" || token == "-" || token == "*" || token == "/") {
+        double a = evaluate();
+        double b = evaluate();
+        if (token == "+") return a + b;
+        if (token == "-") return a - b;
+        if (token == "*") return a * b;
+        if (token == "/") return a / b;
+    }
+    return stod(token);
+}
+
+int main() {
+    printf("%.6f\n", evaluate());
+    return 0;
+}</pre>
+
+        <h5 class="section-title">3. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P1449" target="_blank">P1449 后缀表达式</a>（栈实现）、
+            <a href="https://www.luogu.com.cn/problem/P1981" target="_blank">P1981 表达式求值</a>
+        </div>
+    </div>
+
+    <!-- ==================== B0172 ==================== -->
+    <div class="problem-card priority-low" id="B0172">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h4>B0172 【分治练习】一元三次方程求解 <span class="diff-badge diff-0">未评定</span></h4>
+                <div><span class="tag">分治</span><span class="tag">二分</span><span class="tag">数学</span></div>
+            </div>
+            <span class="badge bg-warning text-dark">4/5 Top用户AC</span>
+        </div>
+        <p class="text-muted mt-2">前5名中4人AC | 优先级: ★☆☆</p>
+
+        <h5 class="section-title">1. 题目分析</h5>
+        <p>求解 ax³+bx²+cx+d=0 的实根。可用二分法/牛顿法/分治法。</p>
+
+        <h5 class="section-title">2. 模板算法（二分法）</h5>
+<pre>#include&lt;bits/stdc++.h&gt;
+using namespace std;
+double a, b, c, d;
+
+double f(double x) {
+    return a*x*x*x + b*x*x + c*x + d;
+}
+
+double solve(double l, double r) {
+    if (fabs(r - l) &lt; 1e-6) return (l + r) / 2;
+    double mid = (l + r) / 2;
+    if (f(mid) * f(l) &lt; 0) return solve(l, mid);
+    else return solve(mid, r);
+}
+
+int main() {
+    cin >> a >> b >> c >> d;
+    // 在 [-100, 100] 范围内找根
+    for (double i = -100; i &lt; 100; i += 1) {
+        if (f(i) * f(i+1) &lt;= 0) {
+            printf("%.2f ", solve(i, i+1));
+        }
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</pre>
+
+        <h5 class="section-title">3. 进阶练习</h5>
+        <div class="recommend">
+            <strong>洛谷推荐：</strong>
+            <a href="https://www.luogu.com.cn/problem/P3382" target="_blank">P3382 凸包</a>（三分搜索）、
+            <a href="https://www.luogu.com.cn/problem/P2440" target="_blank">P2440 木材加工</a>（二分答案）
+        </div>
+    </div>
+
+    <!-- ==================== B0135 复习提示 ==================== -->
+    <div class="alert alert-warning mt-4">
+        <h5>重要提醒</h5>
+        <p class="mb-0"><strong>B0135（邮票问题）</strong>的现有 AC 代码实际上是素数判断程序，不是邮票问题的解法。建议用上面提供的递推/DP代码重新提交。</p>
+    </div>
+
+    <!-- 学习路线总结 -->
+    <div class="stat-card mt-4">
+        <h4>学习路线建议</h4>
+        <table class="table table-bordered mt-3">
+            <thead class="table-light">
+                <tr><th>阶段</th><th>题目</th><th>知识点</th><th>预计时间</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>第一周</td><td>B0267, B0272</td><td>二叉树遍历、递归分治</td><td>2天</td></tr>
+                <tr><td>第一周</td><td>B0163, B0172</td><td>递归、二分法</td><td>2天</td></tr>
+                <tr><td>第二周</td><td>B0135, B0397</td><td>递推、背包DP</td><td>3天</td></tr>
+                <tr><td>第二周</td><td>B0516</td><td>哈夫曼树、堆</td><td>2天</td></tr>
+                <tr><td>第三周</td><td>B0167</td><td>模拟、set平衡树</td><td>3天</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

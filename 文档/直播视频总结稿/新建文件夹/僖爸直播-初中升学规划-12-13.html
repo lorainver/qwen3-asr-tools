@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初中升学规划与寒假课程体系说明会</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --surface: #ffffff;
+            --surface-alt: #f3efe9;
+            --accent: #b8432f;
+            --accent-light: #e8d5d0;
+            --text-primary: #2c2420;
+            --text-muted: #8a7e76;
+            --text-light: #b5a99e;
+            --border: #e6e0d8;
+            --highlight-bg: #fdf6ec;
+            --highlight-border: #e6a817;
+            --key-bg: #f0f7ed;
+            --key-border: #4a8c3f;
+            --danger-bg: #fdf0f0;
+            --danger-border: #c0392b;
+            --info-bg: #eef4fb;
+            --info-border: #2980b9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.9;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #2c2420 0%, #5a3a2a 50%, #8b5e3c 100%);
+            color: #f0ece4;
+            padding: 80px 40px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #e8c547;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.8em;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .hero-sub {
+            font-size: 1.05em;
+            color: #c4b5a8;
+            font-weight: 300;
+            max-width: 600px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 32px 36px;
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        .toc h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            columns: 2;
+            column-gap: 40px;
+        }
+
+        .toc li {
+            font-size: 0.92em;
+            line-height: 2;
+            color: var(--text-primary);
+            break-inside: avoid;
+        }
+
+        .toc a {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--text-light);
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        section {
+            margin: 56px auto;
+            max-width: 900px;
+        }
+
+        section > h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent);
+            padding-left: 16px;
+            margin-bottom: 28px;
+            line-height: 1.4;
+        }
+
+        section > h3,
+        h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 36px;
+            margin-bottom: 14px;
+        }
+
+        h4 {
+            font-weight: 500;
+            font-size: 1.05em;
+            color: var(--text-primary);
+            margin-top: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        .key-point {
+            background: var(--highlight-bg);
+            border-left: 4px solid var(--highlight-border);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.98em;
+        }
+
+        .key-point strong {
+            color: var(--accent);
+        }
+
+        .info-box {
+            background: var(--info-bg);
+            border-left: 4px solid var(--info-border);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95em;
+        }
+
+        .danger-box {
+            background: var(--danger-bg);
+            border-left: 4px solid var(--danger-border);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95em;
+        }
+
+        .strategy-box {
+            background: var(--key-bg);
+            border-left: 4px solid var(--key-border);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.93em;
+        }
+
+        thead {
+            background: var(--text-primary);
+            color: #f0ece4;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--surface-alt);
+        }
+
+        tbody tr:hover {
+            background: var(--highlight-bg);
+        }
+
+        .highlight {
+            background: linear-gradient(transparent 60%, #e8c54733 60%);
+            font-weight: 600;
+        }
+
+        mark {
+            background: var(--highlight-border);
+            color: #fff;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+            margin: 24px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+            padding: 14px 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .timeline-item .time-label {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+
+        .grade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .grade-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: box-shadow 0.2s;
+        }
+
+        .grade-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+
+        .grade-card h4 {
+            margin-top: 0;
+            color: var(--accent);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .grade-card ul {
+            font-size: 0.92em;
+            margin-bottom: 0;
+        }
+
+        .teacher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .teacher-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .teacher-card .t-name {
+            font-weight: 700;
+            font-size: 1.05em;
+            margin-bottom: 4px;
+        }
+
+        .teacher-card .t-title {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .teacher-card .t-subject {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.8em;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .footer-note {
+            margin: 60px auto 40px;
+            max-width: 900px;
+            padding: 24px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 700px) {
+            .hero { padding: 48px 24px 40px; }
+            .hero h1 { font-size: 1.8em; }
+            .toc ol { columns: 1; }
+            section > h2 { font-size: 1.3em; }
+            .grade-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="hero-content">
+        <div class="hero-tag">直播说明会 · 结构化整理</div>
+        <h1>初中升学规划<br>与寒假课程体系</h1>
+        <p class="hero-sub">围绕初升高升学路径，系统梳理初中各年级学业规划、关键时间节点、常见误区及寒假课程安排</p>
+    </div>
+</header>
+
+<nav class="toc">
+    <h2>目录</h2>
+    <ol>
+        <li><a href="#s1">直播概要与会议背景</a></li>
+        <li><a href="#s2">核心理念：目标清晰，规划先行</a></li>
+        <li><a href="#s3">初一机会：二加四选拔</a></li>
+        <li><a href="#s4">A等线解读与本部录取</a></li>
+        <li><a href="#s5">升学关键时间节点</a></li>
+        <li><a href="#s6">报课常见误区</a></li>
+        <li><a href="#s7">班课 vs 一对一的选择逻辑</a></li>
+        <li><a href="#s8">机构介绍：零知教育</a></li>
+        <li><a href="#s9">初中各年级学习规划路线</a></li>
+        <li><a href="#s10">寒假课程安排（数学）</a></li>
+        <li><a href="#s11">其他学科课程安排</a></li>
+        <li><a href="#s12">师资团队</a></li>
+        <li><a href="#s13">试听与报名方式</a></li>
+        <li><a href="#s14">常见问题 Q&amp;A</a></li>
+    </ol>
+</nav>
+
+<main class="container">
+
+    <!-- ===================== 第一章 ===================== -->
+    <section id="s1">
+        <h2>一、直播概要与会议背景</h2>
+        <p>本次直播原定于晚间七点开始，因时间临时调整至<strong>七点半</strong>，主讲人在开场阶段先与家长进行互动答疑。会议由<strong>零知教育创始人（"喜爸"）</strong>与<strong>初中部负责人张老师</strong>共同主讲，面向初一至初三学生家长。</p>
+
+        <div class="key-point">
+            <strong>今晚议程：</strong><br>
+            ① 初中整体学业规划与升学逻辑<br>
+            ② 寒假课程体系介绍（数学/英语/物理/化学）<br>
+            ③ 机构介绍、师资展示与报名方式<br>
+            ④ 互动答疑
+        </div>
+    </section>
+
+    <!-- ===================== 第二章 ===================== -->
+    <section id="s2">
+        <h2>二、核心理念：目标清晰，规划先行</h2>
+        <p>主讲人反复强调：初中学习最大的不同在于<strong>升学逻辑要清晰</strong>。小升初阶段大多数家长都做到了有目标、有规划（什么时候学完板块、什么时候刷题、考哪些学校），但进入初中后很多家长变得迷茫。</p>
+
+        <div class="key-point">
+            <strong>核心观点：</strong>你把目标定清楚，规划会很清晰，你会比 70%-80% 的家长和孩子更省心。学习安排一定要有目标，目标越清晰、越简单、越明了越好。
+        </div>
+
+        <h3>不同层次学生的定位</h3>
+        <div class="grade-grid">
+            <div class="grade-card">
+                <h4>牛娃（顶尖学生）</h4>
+                <ul>
+                    <li>目标：冲刺<strong>二加四</strong>选拔</li>
+                    <li>初一、初二通过校内大考表现争取机会</li>
+                    <li>若成功，相当于提前锁定高中</li>
+                </ul>
+            </div>
+            <div class="grade-card">
+                <h4>中等偏上学生</h4>
+                <ul>
+                    <li>目标：持续保持<strong>A等</strong></li>
+                    <li>争取本校保送签约或降分录取</li>
+                    <li>初二暑假开始准备自主招生</li>
+                </ul>
+            </div>
+            <div class="grade-card">
+                <h4>中等及以下学生</h4>
+                <ul>
+                    <li>目标：提升校内成绩，争取<strong>A等</strong></li>
+                    <li>春季/秋季以同步为主，解决压轴题</li>
+                    <li>后期考虑指标到校或中考</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== 第三章 ===================== -->
+    <section id="s3">
+        <h2>三、初一机会：二加四选拔</h2>
+        <p>对于<strong>初一</strong>家长来说，最大的机会就是<strong>二加四</strong>选拔。很多重庆直属校在初一、初二阶段会开设二加四通道：</p>
+
+        <table>
+            <thead>
+                <tr><th>学校</th><th>二加四项目名称</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>巴蜀中学</td><td>学堂班</td></tr>
+                <tr><td>西大附中</td><td>广元班</td></tr>
+                <tr><td>重庆八中</td><td>二加四选拔</td></tr>
+            </tbody>
+        </table>
+
+        <div class="key-point">
+            <strong>选拔依据：</strong>二加四一定会参考半期、期末的<strong>大考成绩</strong>，加上周考/能力测验。不会只看一次，越靠近选拔节点的那次权重越高。
+        </div>
+
+        <p>如果初一有很好的表现，能够围绕二加四去训练，实际上孩子的<strong>初升高问题已经解决了</strong>，后续压力会小很多。当然，能够成功的同学比例较少，主要针对成绩比较好、或早培做得比较好的学生。</p>
+    </section>
+
+    <!-- ===================== 第四章 ===================== -->
+    <section id="s4">
+        <h2>四、A等线解读与本部录取</h2>
+        <p>对于大多数同学来说，<strong>A等</strong>是最关键的目标。A等线基本上意味着<strong>能不能读自己学校的本部</strong>。</p>
+
+        <h3>A等线的真实含义（以八中为例）</h3>
+
+        <table>
+            <thead>
+                <tr><th>年级</th><th>A等线人数</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>初一</td><td>约 2000 人</td><td>范围最广</td></tr>
+                <tr><td>初二</td><td>约 1500-1600 人</td><td>逐步收紧</td></tr>
+                <tr><td>初三</td><td>约 1200 人</td><td>最接近实际录取</td></tr>
+            </tbody>
+        </table>
+
+        <div class="danger-box">
+            <strong>重要提醒：</strong>进了A等线<strong>不一定</strong>意味着能上本部。以八中为例——
+            <ul style="margin-top:8px;margin-bottom:0;">
+                <li>八中双校区（渝八+沙八）合计录取约 <strong>1100-1200 人</strong></li>
+                <li>本部实际能考上的约 <strong>700-800 人</strong></li>
+                <li>真正能保送本部的约 <strong>前 400-500 名</strong></li>
+            </ul>
+            <p style="margin-top:8px;margin-bottom:0;"><strong>A等靠前一半 → 稳上本部；A等后一半 → 踩线，可能只上分校。</strong></p>
+        </div>
+
+        <h3>为什么初一A等 &gt; 初二A等 &gt; 初三A等？</h3>
+        <p>学校为了照顾学生心理（特别是刚经历小升初的学生），初一的A等线人数会画得比较宽松，逐步收紧。这并不意味着初一拿到A等就高枕无忧。</p>
+
+        <div class="key-point">
+            <strong>同一等级内部差距巨大：</strong>
+            <ul style="margin-bottom:0;">
+                <li>B等内部，B+ 和 B- 可能相差 <strong>一两千名</strong></li>
+                <li>A等内部，初一、初二的悬殊同样非常大</li>
+                <li>要了解自己的<strong>具体排名</strong>（单科排名、总分排名、过往排名），需主动与学校沟通</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ===================== 第五章 ===================== -->
+    <section id="s5">
+        <h2>五、升学关键时间节点</h2>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="time-label">初一 ~ 初二上学期</div>
+                <p>保持校内大考成绩（A等），为二加四选拔积累依据。每一次大考的排名都会被记录。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">初二寒假</div>
+                <p><strong>关键节点</strong>——应完成初中新课内容（含专题），开始系统复习与刷题。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">初二下学期</div>
+                <p>进行各章节重点题目复习 + 逐步进入刷题阶段。五月份左右有<strong>指标到校考试</strong>。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">初二暑假</div>
+                <p><strong>最重要的准备期</strong>——安排两期刷题：第一期刷校内压轴题（为初三上大考+自主招生打底）；第二期针对四大金刚等学校的自主招生专项训练。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">初三上学期（~ 国庆前）</div>
+                <p>多数直属校结束全部新课，进入中考复习+刷题集训。该阶段大考成绩极为重要，决定保送签约。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">寒假 ~ 三月份</div>
+                <p><strong>自主招生集中期</strong>——寒假冲完后，三月开学立即参加考试。最迟<strong>三四月份</strong>结束。</p>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">四 ~ 五月份</div>
+                <p><strong>指标到校</strong>阶段；同时学校开始严格管控自主招生名额。此时再签的"协议"多为<strong>假协议</strong>（人人都可以拿，无实质降分）。</p>
+            </div>
+        </div>
+
+        <div class="danger-box">
+            <strong>核心警告：</strong>真正有用的<strong>降分协议和自主招生签约在三四月份就已发完</strong>。如果到那时还没有拿到合适的签约，就要转向准备指标到校或中考。
+        </div>
+    </section>
+
+    <!-- ===================== 第六章 ===================== -->
+    <section id="s6">
+        <h2>六、报课常见误区</h2>
+
+        <h3>误区一：校外学习与校内脱节</h3>
+        <p>很多孩子一直在外面超前学，结果学的东西<strong>当期不考</strong>，学校没搞懂的也没人教。最终校外学的对校内成绩没有帮助，既浪费时间又影响保送。</p>
+
+        <div class="strategy-box">
+            <strong>正确做法：</strong>春秋季一定要以<strong>校内同步</strong>为主，解决当期的压轴题和重难点。寒暑假再做超前学习和专题训练。
+        </div>
+
+        <h3>误区二：不了解各阶段选拔机制就盲目报班</h3>
+        <p>如果不清楚自己孩子在哪个阶段、目标是什么、要参加什么考试，就容易"为了补课而补课"——听外面机构推荐什么就报什么，实际上没有针对性。</p>
+
+        <h3>误区三：目标定得太低还报班课</h3>
+
+        <div class="danger-box">
+            <strong>直白建议：</strong>如果孩子的目标只是考到 120 分（满分150）或拿个 B 等，<strong>不需要报班课</strong>。
+            <ul style="margin-bottom:0;">
+                <li>学校老师天天上课、早自习晚自习，该讲的都讲了</li>
+                <li>没考好说明是<strong>上课习惯问题</strong>（走神、不自律）或<strong>思维反应慢</strong></li>
+                <li>这种情况下上十多人的班课<strong>绝对学不好</strong></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ===================== 第七章 ===================== -->
+    <section id="s7">
+        <h2>七、班课 vs 一对一的选择逻辑</h2>
+
+        <table>
+            <thead>
+                <tr><th>学生情况</th><th>推荐方式</th><th>原因</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>120分以下，习惯差/反应慢</td>
+                    <td><strong>一对一</strong>（找信得过的老师）</td>
+                    <td>班课无法解决个人习惯和基础问题</td>
+                </tr>
+                <tr>
+                    <td>120-130分，基础没问题</td>
+                    <td><strong>班课（高质量）</strong></td>
+                    <td>需要的是细节、专项训练、重难点突破</td>
+                </tr>
+                <tr>
+                    <td>130分以上，冲击140-150</td>
+                    <td><strong>班课</strong></td>
+                    <td>基础完全没问题，需拔高和竞赛级别训练</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="key-point">
+            <strong>关于一对一的现实：</strong>
+            <ul style="margin-bottom:0;">
+                <li>好老师<strong>不愿意</strong>接一对一——因为收入远低于班课</li>
+                <li>一个好老师上十人班课，300元/人×10人 = 几千元/两小时</li>
+                <li>一对一找好老师<strong>不容易</strong>，不要贪图便宜，要找信得过的</li>
+                <li>零知的一对一收费：<strong>350元/小时（700元/两小时）</strong>，优先班课，时间碰得上才接</li>
+            </ul>
+        </div>
+
+        <div class="key-point">
+            <strong>上简单课的误区：</strong>如果孩子中等偏上，上太简单的课<strong>意义不大</strong>。目标是上本部，课程难度需要匹配目标难度，不能只图轻松。
+        </div>
+    </section>
+
+    <!-- ===================== 第八章 ===================== -->
+    <section id="s8">
+        <h2>八、机构介绍：零知教育</h2>
+
+        <h3>机构概况</h3>
+        <ul>
+            <li>创始人深耕教培行业<strong>约十年</strong>，零知教育成立<strong>约七年</strong></li>
+            <li>2019年与重庆八中原校长合作创办</li>
+            <li>定位：<strong>精英教育</strong>，根植重庆本地名校</li>
+            <li>目前<strong>七大校区</strong>：沙坪坝（江天、渝北）、照母山、南坪、巴南、江北、大渡口、九龙坡</li>
+        </ul>
+
+        <h3>三大特色</h3>
+        <ol>
+            <li><strong>关注学生全面成长：</strong>不仅教知识，更注重引导兴趣、习惯、态度和方法。老师经常请学生喝奶茶、谈心，"有时候一杯奶茶、一个拍肩膀、一次课堂发言的机会，远远超过讲知识本身"</li>
+            <li><strong>精准规划：</strong>不按全国统一体系，而是针对重庆本地各校的选拔要求做定向教研。初一冲二加四/拿A等，初二冲自主招生，初三签约保送或中考——各阶段目标清晰</li>
+            <li><strong>坚持价值教育：</strong>不忽悠家长，不赚不该赚的钱。每年小升初、初升高上岸率远超同行</li>
+        </ol>
+
+        <h3>教学服务</h3>
+        <ul>
+            <li>全部课堂<strong>自带视频回放</strong>（走读生回家可反复消化）</li>
+            <li>每个班提供<strong>课堂笔记</strong></li>
+            <li>作业<strong>全批全改</strong>，有反馈</li>
+            <li>测试<strong>与名校完全同步</strong>，使用往届原题组合卷</li>
+            <li>AI系统即将上线（针对初一初二家长）</li>
+        </ul>
+
+        <div class="key-point">
+            <strong>教研特色：</strong>所有资料均针对重庆本地名校（一中、南开、八中、巴蜀、西大附中、育才等），<strong>不是学而思全国体系</strong>。练习题、考试题均源自各校真题。
+        </div>
+    </section>
+
+    <!-- ===================== 第九章 ===================== -->
+    <section id="s9">
+        <h2>九、初中各年级学习规划路线</h2>
+
+        <h3>学校进度规律</h3>
+        <div class="info-box">
+            <strong>初中进度最快的年级是：初二下。</strong>初一相对温柔（每学期超前1-2章），但初二下学期学校会把整个初三内容基本学完。到了初三上，可能国庆前就结束新课，留大量时间复习和刷题。
+        </div>
+
+        <h3>零知的规划安排</h3>
+        <table>
+            <thead>
+                <tr><th>阶段</th><th>学习内容</th><th>目标</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>初二寒假</strong></td>
+                    <td>完成初中全部内容（含专题重难点）</td>
+                    <td>为复习和刷题留出时间</td>
+                </tr>
+                <tr>
+                    <td><strong>初二下（春季）</strong></td>
+                    <td>各章节重点题目复习（函数、几何为核心）</td>
+                    <td>巩固 + 逐步进入刷题</td>
+                </tr>
+                <tr>
+                    <td><strong>初二暑假</strong></td>
+                    <td>两期刷题：①校内压轴题 ②自主招生专项</td>
+                    <td>校内签约保送 + 自主招生</td>
+                </tr>
+                <tr>
+                    <td><strong>初三上</strong></td>
+                    <td>中考复习 + 刷题集训</td>
+                    <td>争取保送签约</td>
+                </tr>
+                <tr>
+                    <td><strong>初三寒假</strong></td>
+                    <td>指标到校集训 + 中考集训 + 自主招生试卷</td>
+                    <td>全面冲刺</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>各年级寒假重点</h3>
+        <div class="grade-grid">
+            <div class="grade-card">
+                <h4>初一寒假</h4>
+                <p>不要学后面初二初三的内容，而是<strong>专门训练初一下几何</strong>（三角形全等——初中最难啃的几何）。若把初一几何抓住，下学期会很轻松；否则初一下将成为<strong>成绩分界点</strong>。</p>
+            </div>
+            <div class="grade-card">
+                <h4>初二寒假</h4>
+                <p>完成初三内容（三角函数、反比例函数、二次函数、圆），为初二下复习+刷题做准备。<strong>这是最关键的节点。</strong></p>
+            </div>
+            <div class="grade-card">
+                <h4>初三寒假</h4>
+                <p>集训三个方向：①去年各区<strong>指标到校</strong>重点题型 ②近两年<strong>中考</strong>模拟精选 ③约五套<strong>自主招生</strong>试卷</p>
+            </div>
+        </div>
+
+        <h3>刷题策略</h3>
+        <div class="strategy-box">
+            <strong>第一轮刷题（重要）：</strong>刷校内压轴题——既为校内成绩服务，也为大部分学校自主招生打底（除一中、南开、巴蜀外，其他学校自主招生难度封顶于直属校压轴题）。<br><br>
+            <strong>第二轮刷题：</strong>专门针对四大金刚（一中、南开、巴蜀等）的自主招生，补充高中内容和超前内容的专项训练。
+        </div>
+    </section>
+
+    <!-- ===================== 第十章 ===================== -->
+    <section id="s10">
+        <h2>十、寒假课程安排（数学）</h2>
+
+        <h3>早培课程</h3>
+        <p>零知早培的两个核心原则：</p>
+        <ol>
+            <li><strong>顺序与学校一致</strong>——严格按照初中学校的学习顺序系统化早培（人教版/北师版），不随意打乱板块</li>
+            <li><strong>难度对标直属校</strong>——从零基础开始学，但学完后达到直属校校内考试难度，不超纲</li>
+        </ol>
+
+        <h4>初一寒假课纲</h4>
+        <table>
+            <thead>
+                <tr><th>进度</th><th>适用对象</th><th>主要内容</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>进度一</strong></td>
+                    <td>北师版学校 / 想超前多学的人教版学生</td>
+                    <td>①动角问题（初一上最难压轴）②几何板块（初一下最难部分）③材料阅读训练 ④一次函数引入</td>
+                </tr>
+                <tr>
+                    <td><strong>进度二</strong></td>
+                    <td>人教版学校</td>
+                    <td>①实数 ②二元一次方程组 ③不等式组 ④应用题 ⑤几何训练</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>初二寒假课纲</h4>
+        <table>
+            <thead>
+                <tr><th>进度</th><th>主要内容</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>领航班（进度一）</strong></td>
+                    <td>完成初三全部内容：三角函数、反比例函数、二次函数、圆（综合计算）</td>
+                </tr>
+                <tr>
+                    <td><strong>进度二</strong></td>
+                    <td>加入四边形基础 + 相似，圆放到下学期复习后再学。部分学校（如育才）已在学一次函数</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>初三寒假</h4>
+        <ul>
+            <li>去年各区（约9-10个区）指标到校考试<strong>重点题型集训</strong></li>
+            <li>近两年中考 + 模拟<strong>精选集训</strong></li>
+            <li>约五套自主招生<strong>试卷训练</strong></li>
+        </ul>
+
+        <div class="info-box">
+            <strong>课程时间：</strong>寒假共 <strong>15 次课</strong>，安排为"10+5"模式——节前上 10 天，节后上 5 天。
+        </div>
+    </section>
+
+    <!-- ===================== 第十一章 ===================== -->
+    <section id="s11">
+        <h2>十一、其他学科课程安排</h2>
+
+        <h3>英语</h3>
+        <ul>
+            <li><strong>早培阶段</strong>：先搞定人教版校内词汇量，尽量在初一之前完成</li>
+            <li><strong>在读学生</strong>：重心转向<strong>英文原版阅读</strong> + 专项训练（阅读、完形填空等）+ 原版新思维教材</li>
+            <li>为高中和初中重难点做衔接</li>
+            <li>英语老师均为<strong>专业八级</strong></li>
+        </ul>
+
+        <h3>物理</h3>
+        <ul>
+            <li><strong>初一</strong>：若数学英语均为 A 等且孩子不反对，可开始学物理；否则建议暑假开始</li>
+            <li><strong>初二</strong>：力学未学完的继续力学（浮力、压轴题）；已学完的上电学部分</li>
+            <li><strong>初三</strong>：中考+指标到校集训班；自主招生部分已结束</li>
+            <li>物理与数学同步，自主招生权重极高</li>
+            <li>物理共设 <strong>4 个班型</strong>，需测试后分班</li>
+        </ul>
+
+        <h3>化学</h3>
+        <p>由化学专业出身的<strong>喻老师</strong>重点负责。</p>
+
+        <h3>语文（建议）</h3>
+        <div class="key-point">
+            <strong>主讲人直白建议：</strong>初二、初三不建议花大量时间补语文。语文是积累性学科，短期补课提分效果不好。建议多阅读、上课认真听讲。如确有阅读写作问题，可约一两节一对一指导，不必长期报班。
+        </div>
+    </section>
+
+    <!-- ===================== 第十二章 ===================== -->
+    <section id="s12">
+        <h2>十二、师资团队</h2>
+
+        <div class="teacher-grid">
+            <div class="teacher-card">
+                <div class="t-name">张老师</div>
+                <div class="t-title">初中部负责人 · 重大荣誉班 · 本硕 · 曾任学而思S级教师</div>
+                <span class="t-subject">初中数学</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">王老师</div>
+                <div class="t-title">学而思广州数学教研组核心成员</div>
+                <span class="t-subject">初中数学</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">李老师</div>
+                <div class="t-title">物理讲解生动有趣 · 多届教学经验</div>
+                <span class="t-subject">物理</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">吴老师</div>
+                <div class="t-title">物理竞赛获奖 · 资深教师</div>
+                <span class="t-subject">物理</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">喻老师</div>
+                <div class="t-title">化学专业出身</div>
+                <span class="t-subject">化学</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">陈老师</div>
+                <div class="t-title">211院校 · 专业八级 · 高中英语常年140+</div>
+                <span class="t-subject">英语</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">张老师（南区）</div>
+                <div class="t-title">南开大学</div>
+                <span class="t-subject">数学</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">谷老师</div>
+                <div class="t-title">川大数学与应用数学系</div>
+                <span class="t-subject">数学</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">廖老师</div>
+                <div class="t-title">资深语文教师</div>
+                <span class="t-subject">语文</span>
+            </div>
+            <div class="teacher-card">
+                <div class="t-name">潘老师</div>
+                <div class="t-title">资深语文教师</div>
+                <span class="t-subject">语文</span>
+            </div>
+        </div>
+
+        <p><strong>总体特征：</strong>英语老师全部专业八级，理科老师全部来自名校。团队中包括大学数学/物理竞赛获奖者、高中联赛二等奖获得者。</p>
+    </section>
+
+    <!-- ===================== 第十三章 ===================== -->
+    <section id="s13">
+        <h2>十三、试听与报名方式</h2>
+
+        <h3>两种试听方式</h3>
+        <ol>
+            <li><strong>报期末复习班：</strong>各年级两次期末复习课，先来上课体验，再决定是否报寒假班</li>
+            <li><strong>直接报寒假班：</strong>交 <strong>99 元</strong>占位 → 来测试/面试 → 安排班级 → 寒假正式上课 → <strong>第一节课满意后再续费</strong></li>
+        </ol>
+
+        <div class="key-point">
+            <strong>收费标准：</strong>寒假 15 次课 × 300 元/次 = <strong>4500 元</strong>（按课次扣费，未上课次可退）。老学员直接联系教务老师续报。
+        </div>
+
+        <div class="strategy-box">
+            <strong>线上课：</strong>支持线上直播授课（同步教材寄送），同样价格，带回放，可提问。但机构<strong>不鼓励</strong>线上，更推荐线下面授。
+        </div>
+
+        <p><strong>报名流程：</strong>扫码团购 → 机构联系家长 → 了解孩子情况/约测试 → 安排班级。新学员需备注孩子姓名、年级、学校。</p>
+    </section>
+
+    <!-- ===================== 第十四章 ===================== -->
+    <section id="s14">
+        <h2>十四、常见问题 Q&amp;A</h2>
+
+        <h4>Q：自主招生考试机会怎么获得？</h4>
+        <p>每年会对初三学生做专项培训和家长会，<strong>按照指导要求操作，一定会获得考试机会</strong>。简历制作、沟通方式等都会详细指导。如果确实搞不定，机构可以帮忙推荐（但不建议常规依赖，因为大面积推荐容易被发现）。</p>
+
+        <h4>Q：自主招生大概什么时候结束？</h4>
+        <p>一般在<strong>三四月份</strong>结束。今年因特殊原因（招办整顿），十一、十二月高峰期暂停，预计寒假和三月份会恢复。</p>
+
+        <h4>Q：物理什么时候开始学比较科学？</h4>
+        <p>初一学生若<strong>数学、英语均为A等</strong>且孩子不排斥，可以开始学物理。否则建议暑假开始。</p>
+
+        <h4>Q：物理八十多分（满分100），怎么提升？</h4>
+        <p>自主招生物理权重很高，<strong>起码要九成以上得分率</strong>。八十分的空间很大，一定要补。建议选择李老师的课。</p>
+
+        <h4>Q：一对一怎么收费？寒假能排吗？</h4>
+        <p><strong>350元/小时（一节课两小时 = 700元）</strong>。优先班课，时间碰得上才接。寒假排课非常满，一对一较难安排，建议平时（周五或周日晚）。</p>
+
+        <h4>Q：早培课程怎么选？</h4>
+        <p>有条件选<strong>语文+数学+英语</strong>；想节省选<strong>数学+英语</strong>。如果数学已经上得很好，可以加英语和语文。</p>
+
+        <h4>Q：政治历史要报班吗？</h4>
+        <p>开卷考试，以背为主。机构不设政治历史班，会教一些方法，但主要靠自己。</p>
+
+        <h4>Q：可以在渝北附近开课吗？</h4>
+        <p>暂时做不到。沙坪坝教育资源集中，好老师不愿意跑。可以去<strong>照母山校区</strong>或<strong>官桥校区</strong>。区县家长过来也很多，路上可以利用时间背书。</p>
+
+        <h4>Q：初二数学课时间能安排晚一点吗？</h4>
+        <p>分校校区可以协调（找最大公约数），但主校区课表动不了。先团购登记，后续会联系安排。</p>
+    </section>
+
+</main>
+
+<footer class="footer-note">
+    <p>本文档根据直播语音实录整理而成，内容经结构化处理以提升可读性。<br>
+    关键数据与时间节点请以现场确认为准。整理日期：2025年1月</p>
+</footer>
+
+</body>
+</html>

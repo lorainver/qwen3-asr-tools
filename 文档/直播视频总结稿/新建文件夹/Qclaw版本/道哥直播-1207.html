@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>道哥直播-1207</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>道哥直播-1207</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>第二如果你未来打竞赛的话，初联会是你的一个做题能力的一个提前的一个训练和培养</li>
+                <li>第三第三个原因也是绝大多数人重点关注的原因，在现在</li>
+                <li>大量的我们的高中，他会有一些，例如自主选拔或者额外的一些选拔的机会、特殊招生的机会在里面，往往考的是初联的内容</li>
+                <li>好，我们说回来那这种情况下，第一优选是跟着你的学校的教练学，因为最好还是那种初高一贯的这样的教练学，因为他知道你的学习的程度，按照他的节奏一直走下来</li>
+                <li>在业界有一些了解有几个老师在这个初练阶段讲的非常的好，例如有一个人，大家应该都知道叫做陈祖梅</li>
+                <li>第一个推荐是你可以都听一听，看看你们家孩子更适合哪一类</li>
+                <li>第二个呢，他们也有一个互相补充的一个作用</li>
+                <li>于洪斌老师应该现在不太讲初恋的内容吧</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>第二如果你未来打竞赛的话，初联会是你的一个做题能力的一个提前的一个训练和培养。叫做从你的初联到高联过渡一下，包括在初联，你能不能啃得动它的数论和组合的内容，很多时候决定你未来要不要成为一个全职的竞赛生。第三第三个原因也是绝大多数人重点关注的原因，在现在。</p>
+                <p>大量的我们的高中，他会有一些，例如自主选拔或者额外的一些选拔的机会、特殊招生的机会在里面，往往考的是初联的内容。当然，一些非常顶尖的班型是初联，还要加一些高中的内容，。好，来了解了初联的三个作用的家长你就打一个知道了，。</p>
+                <p>好，我们说回来那这种情况下，第一优选是跟着你的学校的教练学，因为最好还是那种初高一贯的这样的教练学，因为他知道你的学习的程度，按照他的节奏一直走下来。如果没有的话，跟大家说几个，讲的比较好的，包括我去听了他的课，包括我去。在业界有一些了解有几个老师在这个初练阶段讲的非常的好，例如有一个人，大家应该都知道叫做陈祖梅。</p>
+                <p>初恋二轮各地各各个地方分的不太一样，一般来说，初恋二轮刚刚我们所说的要学到初恋阶段的这个数论组合。包括我们说所说的这个代数和平几会会上到这个难一点的东西。对，陈祖维而且陈祖有很多的线上课这个是我们非陈姓陈。</p>
+                <p>你看，大家一直在打，大家一直在打，那 有很多的线上课你可以去搜一搜。推荐知识付费但是确实你去搜一搜还是能搜到的。好，然后除了陈祖维之外，还有几个比较优秀的老师有有两个推荐。</p>
+                <p>第一个推荐是你可以都听一听，看看你们家孩子更适合哪一类。头疼脑壳晕是的，颅顶，白子，我们说一个点白子当年免费的时候是他的巅峰。对，卢丁讲的也很好包括陈泽彤陈泽彤的，可以把他的名字打在评论区。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>提到了一位老师，叫做罗伟，平某县的那位老师，白子那位老师罗伟我们不不提谁最强这事儿太太拉仇恨了罗伟， 包括我们所说的邹锦老师，包括这个李伟顾老师，这些老师也都是属于比较强的那一波老师。对，罗伟的书论强，好，这是这是几个属于说，如果你看到有这个老师亲授的课程，你值得一听一听的。当然，你例如罗伟现在还有自己的管理的工作罗伟老师有自己的管理的工作，你得判断一下他，包括邹锦。</p>
+                <p>看看他自己在这一场集训里面，在这个课里面占了多大的比重。然后如果错错过前面的家长朋友，看到一些新进来的家长朋友们今天在聊的是树镜，然后重点跟大家分享了一下树镜的各个阶段怎么去选老师的一个问题。如果你进来的比较晚，没听到前面的内容的话，记得在在在大概这个位置应该有一个这个联系方式你就去添加上潘潘，然后我们回头把回放会发给你，再回头去听一下。</p>
+                <p>好，接下来我们分板块聊分板分板块聊，我们先聊代数我们先聊代数，来各位把代数打在评论区。我们一个一个板块聊，因为如果是混着聊的话，按人来聊的话，估计一会儿大家就聊懵了。那代数呢，属于是一个基础的板块，也是大部分的家长朋友们要去试着，大部分的同学朋友要去拿试着拿到分数的一个板块。</p>
+                <p>你像今年，如果代数你没有， 没有没有拿到分的话，那你基本上国籍无缘基本上就不太可能进国籍金牌都悬，。物镜其实能讲的不是特别多不像术镜有这么这么多老师。来，先说一个人，我们称之为计神计算的计，成绩。</p>
+                <p>不等式部分非常的厉害神祭神在不等式代数的不等式部分，非常的厉害。当然，季晨现在应该不上线上课应该应该是在江苏吧。计算的计，对，健康大神写的对对，哈哈哈，对是。</p>
+                <p>这种老师属于是爱的人特别爱，不爱的人特别不感冒。这为什么我们跟大家说，在每个板块儿给你讲很多老师，因为你得挑谁更能切到你的思路上面。包括在代数部分，来，刚刚有家长朋友打王永喜老师。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>然后一式的前面讲过了我们就不反复再给大家去讲了。好，那基本上我们今天说，呀，终于给大家把这个。欠了大家很久的这个老师给大家理了一下，然后在这儿大家对金某购的理解是什么呢。</p>
+                <p>当然，我们说这在这个竞赛的学习里面，一定是什么呢。二试去餐饮核心的原因，其实是在于很多学校的老师没有水平，能力不足以把二试讲的特别的精彩。对，基本上我们说，在整个竞赛的学习过程当中两成的这个这个你所学会的东西，或者让你的实力来自于。</p>
+                <p>老师的教授或者叫把你领进门，剩下的八成其实要靠你自学和内化。很密集的外培，就几乎一个连一个，一个连一个，一个连一个，。但是他没有时间去内化，没有时间把外培学的东西去做题，去变成自己的思路，变成自己的思维，效果也不太不是特别好。</p>
+                <p>所以大家不用去盲目的追求特别多的外培，更多的是一些精准的外培。二是没学完，是这样的，你你去看，你参这些营，有的是四大板块都讲的营。如果他讲的板块你已经自己过过一遍了，你就可以去听一听，就可以去学一学。</p>
+                <p>然后也不建议大家纯零基础去参加这种集训你很难。就这些老师很难从特别基础的一些知识内容给你去讲起更多还是一些思路上面的点拨，一些做题技巧上的点拨。这个这个所有的内容给大家整理完了之后，会发到群里面，然后今天的直播的回放也会放到群里面。</p>
+                <p>然后跟所有的数竞的家长朋友们，或者目标北大的家长朋友们。来，那所有的数竞的家长和目标北大的家长朋友们一定要听好，在下周三的时候。那我邀请了北大数院的柳斌老师来我们的社群里面做分享。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>好，那在能跟下来的情况下，来说说大家的节奏说说节奏。我这么说，大家应该能明白你在小小段去初段的时候，你是有着择校机会的。不管是一些M K密考，还是一些什么东西，你有机会。</p>
+                <p>好，如果你是有机会的，你打有；如果你是没机会的，你打没。当地有没有这样的机会，其实是一件非常非常重要的事情。因为如果有机会的话，我们先给所有大家有的家长朋友们去说。</p>
+                <p>但凡你们当地有机会，你就一定要抓住这个机会，。各位，你要记住一件事，叫做资源永远是富集的，永远是往尖尖上富集的。所以你如果能够进入到一个优秀的初段的学校，并且是通过这样的选拔进去的话，你就能够拿到更多的资源你就能够有更多的指引，你就能够看到更多的下一步考试的机会。</p>
+                <p>你就容易进一个更好的高中，拿到更多的资源，所以对于有机会的家长朋友们，你的三到六核心的事儿抓住这个机会。人家怎么考你就怎么准备，人家怎么考你就怎么准备。好，那如果是刚刚打没有的家长朋友们也简单，也简单。</p>
+                <p>叫做，如果你没有摇号的机会，不是，如果你没有考试的机会我看见进摇号，一下脑就跟着跑偏了。如果你没有这种择校的机会的话，你的核心的资源就变成了什么。来，各位，把“时间”两个字儿打在评论区，要么你有这个机会你能够抓更好的资源，进更好的学校能够踏上一个快车道，要么。</p>
+                <p>你能够借着这个时间，把你的最核心的一个东西——时间——拿到手里面。因为从大范围来看小升初的这样的，我们所说的择校的机会现在越来越少，但是初升高的机会越来越多。基本上是普遍的，各点都在开花，说提供更多的出升高的机会，给大家这样选拔的机会。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>好，然后关于哪些学校是平台校大家自己到群里面去对照表还挺长的，我都发到群里面了，你就自己去对照。是这样的丽丽，如果你已经到了决赛的层面，你一定是普物的某个板块，你需要提高。那不同的位置不同的板块，你要找的是不同的人。</p>
+                <p>不同的板块你要找不同的人也没有什么物理老师能给你一下吧。五个板块都讲的很好，因为讲普物的基本都是大学教授。好对这种平台效感兴趣的你就自己去这个群里面自己去对照就好了。</p>
+                <p>这个太长了，你让我记，我其实也不太记得住，。如果你在初中就能进平台校的话，最好的选择，各位听好最好的选择叫做你们这个平台校它有自己的初中。你就可以是一贯的，整个六年的时间交到你的教练手里面去走。</p>
+                <p>次之是你进高中的平台校然后初中你是平台校也好，不是平台校也好都可以，只要能高中进平台校就好。你需要的是高中第一教练的指引，第二，教练告诉你现在缺什么资源，你应该从哪补；第三，教练能给你提供一些资源。你要纯靠家长自己去补的话，太费劲了，真的，各位自己托举出一个竞赛生是非常非常费劲的事情。</p>
+                <p>是教练会换，所以就会牵扯到说有一个有的学校一换教练，然后整体成绩开始哭哭下降嘛。你例如我们说的海口中学海口中学最近这几年什么成绩做得特别好吗。海口中学这几年什么哪一科的成绩做得特别好吗。</p>
+                <p>海南的海口中学，对那本质上蔡老师带起来的呀。那本质上一个好教练的作用化学化学蔡老师带起来的。你想想，基本上我想想二三年开始出国籍，二四年开始出国际金牌，今年应该出了三个国籍。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

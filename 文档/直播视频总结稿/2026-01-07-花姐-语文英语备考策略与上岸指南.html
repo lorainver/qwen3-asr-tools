@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小学优生与初中A类生升学规划全攻略</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+  background: linear-gradient(135deg, #6b2d5b 0%, #4a1a3e 40%, #2d1028 100%);
+  color: #fff;
+  padding: 56px 40px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(184,134,11,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--accent-light) 50%, var(--gold) 100%);
+}
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.page-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.2em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.page-header .subtitle {
+  font-size: 1.05em;
+  color: rgba(255,255,255,0.75);
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+.tag-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+}
+.tag-purple { background: rgba(107,45,91,0.5); border-color: var(--accent-light); }
+.tag-gold { background: rgba(184,134,11,0.35); border-color: var(--gold); color: #ffe6a0; }
+.tag-green { background: rgba(45,107,63,0.4); border-color: #3a8a54; }
+.tag-white { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+
+/* ===== MAIN WRAPPER ===== */
+.main-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ===== NAV ===== */
+nav.toc {
+  margin: -32px auto 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+nav.toc::before {
+  content: '目录';
+  position: absolute;
+  top: -13px;
+  left: 24px;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 16px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+nav.toc ol {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 32px;
+  counter-reset: toc-counter;
+}
+nav.toc li {
+  counter-increment: toc-counter;
+}
+nav.toc li::before {
+  content: counter(toc-counter, decimal-leading-zero);
+  color: var(--accent);
+  font-weight: 700;
+  font-family: 'Noto Serif SC', serif;
+  margin-right: 8px;
+  font-size: 0.9em;
+}
+nav.toc a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.92em;
+  transition: color 0.2s;
+}
+nav.toc a:hover {
+  color: var(--accent);
+}
+
+/* ===== SECTIONS ===== */
+section {
+  margin-bottom: 48px;
+}
+.section-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  min-height: 32px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.section-title .sec-num {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.78em;
+  font-weight: 700;
+  color: var(--accent-light);
+  display: block;
+  margin-bottom: 2px;
+  letter-spacing: 0.05em;
+}
+.section-title h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.45em;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card p, .card li {
+  font-size: 0.95em;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+.card strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ===== ALERT BOXES ===== */
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.92em;
+  line-height: 1.85;
+  border-left: 4px solid;
+}
+.alert-gold {
+  background: var(--highlight);
+  border-left-color: var(--gold);
+  color: #6d5a00;
+}
+.alert-success {
+  background: #eaf5ed;
+  border-left-color: var(--success);
+  color: #1a4a2a;
+}
+.alert-danger {
+  background: #fdf0ec;
+  border-left-color: var(--danger);
+  color: #6d1a00;
+}
+.alert-info {
+  background: #eaf2f8;
+  border-left-color: var(--info);
+  color: #133a52;
+}
+.alert-purple {
+  background: var(--accent-bg);
+  border-left-color: var(--accent);
+  color: #4a1a3e;
+}
+
+/* ===== TWO-COL ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ===== TABLE ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 0.9em;
+}
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.88em;
+  letter-spacing: 0.03em;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+/* ===== FLOW / TIMELINE ===== */
+.flow {
+  position: relative;
+  padding-left: 36px;
+  margin-bottom: 16px;
+}
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+.flow-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.flow-item.gold::before { background: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.flow-item h4 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.flow-item p {
+  font-size: 0.9em;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* ===== DIFF BAR ===== */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.diff-bar .label {
+  font-size: 0.82em;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+}
+.diff-bar .bar {
+  flex: 1;
+  height: 10px;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.diff-bar .bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+.fill-purple { background: linear-gradient(90deg, var(--accent-light), var(--accent)); }
+.fill-gold { background: linear-gradient(90deg, #d4a017, var(--gold)); }
+.fill-green { background: linear-gradient(90deg, #3a8a54, var(--success)); }
+.fill-blue { background: linear-gradient(90deg, #2980b9, var(--info)); }
+.fill-red { background: linear-gradient(90deg, #c0392b, var(--danger)); }
+
+/* ===== UL / OL ===== */
+.card ul, .card ol {
+  padding-left: 22px;
+  margin: 8px 0;
+}
+.card ul li, .card ol li {
+  margin-bottom: 6px;
+}
+.card ul li::marker {
+  color: var(--accent);
+}
+.card ol li::marker {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ===== H3 ===== */
+h3.sub-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 20px 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--gold);
+}
+
+/* ===== H4 ===== */
+h4.minor-title {
+  font-weight: 600;
+  font-size: 0.98em;
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+}
+
+/* ===== TAG INLINE ===== */
+.tag-inline {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78em;
+  font-weight: 500;
+  margin-right: 4px;
+}
+.ti-purple { background: var(--accent-bg); color: var(--accent); }
+.ti-gold { background: #fef3d0; color: var(--gold); }
+.ti-green { background: #eaf5ed; color: var(--success); }
+.ti-red { background: #fdf0ec; color: var(--danger); }
+.ti-blue { background: #eaf2f8; color: var(--info); }
+
+/* ===== FOOTER ===== */
+.page-footer {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--text-muted);
+  font-size: 0.82em;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .page-header { padding: 36px 20px 32px; }
+  .page-header h1 { font-size: 1.5em; }
+  nav.toc { padding: 20px; margin: -24px 0 28px; }
+  nav.toc ol { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .main-wrap { padding: 0 16px 48px; }
+  section { margin-bottom: 32px; }
+  .card { padding: 18px; }
+  table { font-size: 0.82em; }
+  thead th, tbody td { padding: 8px 10px; }
+  .section-title h2 { font-size: 1.2em; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<header class="page-header">
+  <div class="header-inner">
+    <h1>小学优生与初中A类生升学规划全攻略</h1>
+    <p class="subtitle">—— 面向巴蜀系及四大金刚体系的五次衔接机会与培养路径深度解析</p>
+    <div class="tag-bar">
+      <span class="tag tag-purple">小学优生</span>
+      <span class="tag tag-purple">初中A类生</span>
+      <span class="tag tag-gold">五次衔接机会</span>
+      <span class="tag tag-green">二加四通道</span>
+      <span class="tag tag-white">竞赛培优</span>
+      <span class="tag tag-white">高阶早培</span>
+    </div>
+  </div>
+</header>
+
+<div class="main-wrap">
+
+<!-- ==================== NAV ==================== -->
+<nav class="toc">
+  <ol>
+    <li><a href="#s01">直播间定位与目标受众</a></li>
+    <li><a href="#s02">优生的定义与分层标准</a></li>
+    <li><a href="#s03">五次衔接机会全景图</a></li>
+    <li><a href="#s04">小学阶段：零加六与竞赛启蒙</a></li>
+    <li><a href="#s05">初一：首次选拔与竞赛分流</a></li>
+    <li><a href="#s06">初二：核心选拔与二加四组建</a></li>
+    <li><a href="#s07">初三：保送考试与最后机会</a></li>
+    <li><a href="#s08">AB卷考试深度剖析</a></li>
+    <li><a href="#s09">各学科培养策略</a></li>
+    <li><a href="#s10">高阶早培与初高衔接</a></li>
+    <li><a href="#s11">选课与机构选择建议</a></li>
+    <li><a href="#s12">各年级行动清单</a></li>
+  </ol>
+</nav>
+
+<!-- ==================== SECTION 01 ==================== -->
+<section id="s01">
+  <div class="section-title">
+    <div><span class="sec-num">第一章</span><h2>直播间定位与目标受众</h2></div>
+  </div>
+  <div class="card">
+    <p>本直播间属于<strong>小众定向输出</strong>，核心围绕<strong>优生规划</strong>展开，不适用于追求"快乐教育"或完全认同阳光招生政策的家长群体。</p>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h4 class="minor-title">面向小学阶段</h4>
+      <ul>
+        <li>学有余力的<strong>小学优生</strong>（小四、小五、小六）</li>
+        <li>重点小学中排名靠前的学生</li>
+        <li>普通小学中班级前几名的学生</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="minor-title">面向初中阶段</h4>
+      <ul>
+        <li>已进入<strong>青龙珠校</strong>实验班以上、年级排名<strong>前100名</strong>左右的A类生</li>
+        <li>区重学校（如二十九中、求精、复旦）年级前100名</li>
+        <li>两八、科八、鲁巴等校实验班以上学生</li>
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-purple">
+    <strong>核心定位：</strong>针对A类生和B+生（三门主课中有一门偶尔跌至B级、有提升可能的学生）。B类及以下学生建议优先走区内推优路线，夯实校内基础。
+  </div>
+</section>
+
+<!-- ==================== SECTION 02 ==================== -->
+<section id="s02">
+  <div class="section-title">
+    <div><span class="sec-num">第二章</span><h2>优生的定义与分层标准</h2></div>
+  </div>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>层级</th><th>标准描述</th><th>建议路径</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>A类生</strong></td>
+          <td>重点小学班级前几名；普通小学班级前3~5名；语数均在95分以上</td>
+          <td>冲四大金刚/七龙珠实验班以上，走竞赛或二加四通道</td>
+        </tr>
+        <tr>
+          <td><strong>B+生</strong></td>
+          <td>三门主课中有一门偶尔B级，其余均在A线以上</td>
+          <td>可尝试竞赛或二加四，同时保持综合成绩</td>
+        </tr>
+        <tr>
+          <td><strong>B类生</strong></td>
+          <td>综合成绩中等，某一科目有明显短板</td>
+          <td>针对性补弱（如语文刷真题），争取区内推优</td>
+        </tr>
+        <tr>
+          <td><strong>B-及以下</strong></td>
+          <td>校内成绩不突出，班级排名靠后</td>
+          <td>优先夯实校内知识，走区内推优，期望值不宜过高</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert alert-gold">
+    <strong>关键提醒：</strong>区内推优要求成绩在区内排名<strong>前50%</strong>以内才有机会。若连前50%都未达到，区里推优基本无望，更不适合走竞赛赛道。
+  </div>
+</section>
+
+<!-- ==================== SECTION 03 ==================== -->
+<section id="s03">
+  <div class="section-title">
+    <div><span class="sec-num">第三章</span><h2>五次衔接机会全景图</h2></div>
+  </div>
+  <div class="card">
+    <p>与巴蜀本部高中（八本）衔接的核心路径共<strong>五次机会</strong>（加上小学阶段共称"五加一次"），其他四大金刚及龙珠校基本跟随八本节奏，时间上<strong>提前一到两个月</strong>。</p>
+  </div>
+  <div class="flow">
+    <div class="flow-item gold">
+      <h4>第零次 · 小学阶段（零加六）</h4>
+      <p><strong>小四至小六</strong>期间，通过数学竞赛或信息竞赛与本部高中建立联系。最早四年级上岸，五年级大规模选拔。入选者几乎跳过正常初中学习，直接与高中竞赛板块无缝衔接（即"零加六"）。选拔科目：数学竞赛、信息竞赛、美术方向。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第一次 · 初一月考后（物化生竞赛选拔）</h4>
+      <p>初一入学后<strong>第一次月考</strong>即启动选拔。从全校4000~5000人中选出<strong>前1200名</strong>参加数学AB卷选拔（A/B卷各10道难题），最终选出约<strong>300人</strong>进入物化生竞赛培优。数学和信息仍延续小学阶段的童子功训练。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第二次 · 初二十月（物化生二次筛选）</h4>
+      <p>开学后对物化生竞赛进行<strong>第二次筛选</strong>，部分学生被淘汰或主动退出，同时综合特优生也可能被纳入选拔。数学AB卷难度继续提升。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>第三次 · 初二寒假（竞赛二加四 / 学堂一班组建）<span class="tag-inline ti-red">最关键</span></h4>
+      <p>这是<strong>最重要的选拔节点</strong>。针对所有竞赛生（数学、物理、化学、信息、生物五大学科）及综合特优生，选拔<strong>学堂一班</strong>（竞赛二加四）。考核科目：数学和物理的AB卷各三小时。最终学堂一班规模约<strong>120~150人</strong>（分A/B班），外校综合优生也可递交简历参选。同时可开始接收第二高中本部名单。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第四次 · 初二暑假（综合二加四）</h4>
+      <p>选拔综合二加四（综合学堂班），考核<strong>四门科目</strong>：数学和物理AB卷各三小时，语文和英语各一小时。组建综合学堂班，每班约50人，三个班（可能扩至四个班），为未来冲刺C9/华五储备力量。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第五次 · 初三三月（保送考试）</h4>
+      <p>初三<strong>三月份</strong>的保送考试，考核<strong>七门科目</strong>（与中考高度关联）。若前四次机会均未抓住，这是最后的自招窗口。保送率按AB档计算约<strong>80%</strong>，含CD档可达<strong>90%以上</strong>。中考结束后还会有<strong>估分群</strong>提供降分约和套餐约谈判支持。</p>
+    </div>
+  </div>
+  <div class="alert alert-danger">
+    <strong>警示：</strong>整个初中阶段A类生约<strong>700人</strong>线，二加四通道提供约<strong>300人</strong>名额（每校约150人 × 7所学校 ≈ 2100人）。若拖至保送阶段，名额大幅缩减且需应对七门考试，性价比显著下降。
+  </div>
+</section>
+
+<!-- ==================== SECTION 04 ==================== -->
+<section id="s04">
+  <div class="section-title">
+    <div><span class="sec-num">第四章</span><h2>小学阶段：零加六与竞赛启蒙</h2></div>
+  </div>
+  <div class="card">
+    <p>小学阶段对应"五次机会"中的<strong>零加六</strong>。核心逻辑：小学优生通过竞赛方向（数学/信息）或美术方向与名校建立早期链接。</p>
+  </div>
+  <h3 class="sub-title">4.1 小学阶段三件核心事项</h3>
+  <div class="card">
+    <ol>
+      <li><strong>竞赛方向一</strong>：数学竞赛 — 系统学习小奥基础后进入竞赛板块</li>
+      <li><strong>竞赛方向二</strong>：信息竞赛 — 编程方向，需评估孩子综合成绩是否能支撑</li>
+      <li><strong>美术方向</strong>：若孩子有美术天赋，走美育路线（三年约10万元），可衔接名校美育项目</li>
+    </ol>
+  </div>
+  <h3 class="sub-title">4.2 不学奥数的出路</h3>
+  <div class="alert alert-info">
+    <strong>客观说明：</strong>若孩子属于学困型（校内90分以下都困难），应优先抓校内成绩，争取区内推优。<strong>所有直属校不进行区内推优</strong>，均需通过内部选拔。不学奥数 = 无法参加选拔 = 天花板仅限龙珠校分校。
+  </div>
+  <h3 class="sub-title">4.3 上岸后的关键动作</h3>
+  <div class="card">
+    <ul>
+      <li>已上岸但学校可能暂停早培的，<strong>必须去参加高联一试免费测试</strong>，判断孩子是否适合竞赛方向</li>
+      <li>小四、小五、小六阶段，<strong>快速完成小奥</strong>后立即进入竞赛方向或高阶早培</li>
+      <li>无论上岸与否，校内语文和数学<strong>均不得低于95分</strong></li>
+    </ul>
+  </div>
+  <div class="alert alert-purple">
+    <strong>核心观点：</strong>只要有机会、有小范围隐蔽的活动出现，奥数仍然是筛选竞赛思维最优手段。学有余力的优生，奥数<strong>一定值得学</strong>。学完基础后进入竞赛板块，比拼的是思维深度而非刷题量。
+  </div>
+</section>
+
+<!-- ==================== SECTION 05 ==================== -->
+<section id="s05">
+  <div class="section-title">
+    <div><span class="sec-num">第五章</span><h2>初一：首次选拔与竞赛分流</h2></div>
+  </div>
+  <div class="card">
+    <p>初一第一次月考即启动选拔流程，节奏显著<strong>提前</strong>（以往初二才开始，现已提前至初一国庆期间）。</p>
+  </div>
+  <h3 class="sub-title">5.1 初一月考选拔</h3>
+  <div class="card">
+    <ul>
+      <li>时间：九月入学 → 十月第一次月考 → 十一期间启动选拔</li>
+      <li>规模：从4000~5000名大八系学生中，通知<strong>前1200名</strong>参加选拔</li>
+      <li>形式：数学A/B卷（10道难题）</li>
+      <li>结果：选出约<strong>300人</strong>进入物化生竞赛培优（物理、化学、生物各约100人）</li>
+      <li>数学和信息延续小学童子功训练</li>
+    </ul>
+  </div>
+  <div class="alert alert-gold">
+    <strong>重要说明：</strong>学校老师口头说"有兴趣的都可以去选拔"，实为体现公平性的客气话。实际通知的是<strong>前120名</strong>左右，排名靠后的即使参加也很难入选。
+  </div>
+  <h3 class="sub-title">5.2 竞赛身份的价值</h3>
+  <div class="card">
+    <ul>
+      <li>竞赛不是"要么拿金牌要么没用"，而是<strong>多次衔接机会的入场券</strong></li>
+      <li>有竞赛身份的学生，在各选拔环节会获得更多机会</li>
+      <li>竞赛锤炼后的学生，高中综合成绩<strong>往往非常突出</strong></li>
+      <li>即使最终成为"炮灰"，竞赛训练对数学思维和抗压能力的提升依然有长期价值</li>
+    </ul>
+  </div>
+  <div class="alert alert-success">
+    <strong>正面结论：</strong>学竞赛的孩子，退赛后回转综合方向，往往能冲到年级前50名。竞赛科目（除信息外）均与高考科目关联，不会浪费时间。
+  </div>
+</section>
+
+<!-- ==================== SECTION 06 ==================== -->
+<section id="s06">
+  <div class="section-title">
+    <div><span class="sec-num">第六章</span><h2>初二：核心选拔与二加四组建</h2></div>
+  </div>
+  <h3 class="sub-title">6.1 初二十月：物化生二次筛选</h3>
+  <div class="card">
+    <ul>
+      <li>对初一已入选的竞赛生进行二次筛选</li>
+      <li>部分学生自然淘汰（主动或被动），部分综合特优生可参与</li>
+      <li>竞赛班可能分A/B队，进度和难度有差异</li>
+      <li>数学AB卷难度继续提升</li>
+    </ul>
+  </div>
+  <h3 class="sub-title">6.2 初二寒假：最关键选拔——学堂一班</h3>
+  <div class="card">
+    <p>这是整个五次机会中<strong>最核心的节点</strong>。</p>
+    <table>
+      <thead>
+        <tr><th>维度</th><th>详情</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>参选范围</strong></td><td>所有竞赛生（数学/物理/化学/信息/生物）+ 综合特优生（需数学和物理排名达标）</td></tr>
+        <tr><td><strong>考核科目</strong></td><td>数学AB卷各3小时 + 物理AB卷各3小时</td></tr>
+        <tr><td><strong>录取规模</strong></td><td>学堂一班约120~150人（分A/B班），综合学堂班约150人（3个班，每班50人）</td></tr>
+        <tr><td><strong>外校参选</strong></td><td>外校综合优生可递交简历参选，可能获得更简单的题目</td></tr>
+        <tr><td><strong>保送名额</strong></td><td>学校力保，但不会明确承诺；实际给予的概率极高</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert alert-danger">
+    <strong>关键警示：</strong>学堂一班的选拔，B卷才是拉开差距的关键。A卷基于校内进度，而B卷涉及<strong>竞赛方向题目 + 高中内容</strong>。未提前准备B卷的学生，很可能"每个字都认识但不会做"。
+  </div>
+  <h3 class="sub-title">6.3 初二暑假：综合二加四</h3>
+  <div class="card">
+    <ul>
+      <li>正式组建<strong>综合学堂班</strong>，每班约50人</li>
+      <li>考核四门：数学AB卷3小时 + 物理AB卷3小时 + 语文1小时 + 英语1小时</li>
+      <li>综合学堂班为未来冲刺C9/华五的核心战队</li>
+      <li>保送名额在此阶段确定</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== SECTION 07 ==================== -->
+<section id="s07">
+  <div class="section-title">
+    <div><span class="sec-num">第七章</span><h2>初三：保送考试与最后机会</h2></div>
+  </div>
+  <div class="card">
+    <p>初三三月的保送考试是<strong>最后一次自招窗口</strong>。</p>
+  </div>
+  <h3 class="sub-title">7.1 保送考试要点</h3>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>项目</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>考试科目</strong></td><td>七门（与中考高度关联）</td></tr>
+        <tr><td><strong>难度定位</strong></td><td>综合压轴难度</td></tr>
+        <tr><td><strong>保送率</strong></td><td>AB档约80%，含CD档达90%以上</td></tr>
+        <tr><td><strong>名额特点</strong></td><td>不一定能给到三位数；相比二加四，名额显著减少</td></tr>
+        <tr><td><strong>体系类时间</strong></td><td>巴蜀体系类（柯巴、贵巴、黄巴、虎巴等）等三月份</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 class="sub-title">7.2 中考后的估分谈判</h3>
+  <div class="card">
+    <ul>
+      <li>中考结束后，会有<strong>估分群</strong>提供降分约和套餐约谈判支持</li>
+      <li>学校可能给出<strong>5~10分降分约</strong></li>
+      <li><strong>套餐约</strong>：第一志愿填八本/第二高中本部，第二梯队填科八/两八高中，第三梯队填B八高中</li>
+      <li>第二高中本部已开始收名单，名额有限，<strong>需尽快行动</strong></li>
+    </ul>
+  </div>
+  <div class="alert alert-purple">
+    <strong>核心建议：</strong>不要等到保送阶段才行动。保送考七门，名额少，压力远大于二加四（仅四门）。提前上岸后，重心应转向<strong>初高衔接</strong>，而非继续卷中考。
+  </div>
+</section>
+
+<!-- ==================== SECTION 08 ==================== -->
+<section id="s08">
+  <div class="section-title">
+    <div><span class="sec-num">第八章</span><h2>AB卷考试深度剖析</h2></div>
+  </div>
+  <div class="card">
+    <p>AB卷是巴蜀系选拔的核心形式，A卷与B卷的定位和难度有本质差异。</p>
+  </div>
+  <h3 class="sub-title">8.1 A卷定位</h3>
+  <div class="card">
+    <ul>
+      <li>基于校内学习进度，但以八本的教学目标为准</li>
+      <li>难度高于普通区中约<strong>20%</strong>，高于四大金刚约<strong>10%</strong></li>
+      <li>考察本学期内容的深化与综合应用</li>
+    </ul>
+  </div>
+  <h3 class="sub-title">8.2 B卷构成</h3>
+  <div class="card">
+    <p>B卷考核<strong>三大内容板块</strong>：</p>
+    <ol>
+      <li><strong>压轴升阶</strong>：本期学校内容的深化压轴题（A卷已部分涉及）</li>
+      <li><strong>竞赛方向</strong>：初联级别的数论、几何、代数、组合等题目</li>
+      <li><strong>高中内容</strong>：高中知识点的前半段（高一相关内容）</li>
+    </ol>
+  </div>
+  <div class="alert alert-gold">
+    <strong>关键提醒：</strong>最终得分差距主要体现在<strong>B卷</strong>上。A卷因校内选拔的持续训练，差异不大；而B卷是否学过，差距可达<strong>10~20分</strong>甚至更多。必须通过针对性训练攻克B卷。
+  </div>
+  <h3 class="sub-title">8.3 难度层级对比</h3>
+  <div class="card" style="padding:20px 24px;">
+    <div class="diff-bar">
+      <span class="label">区内推优</span>
+      <div class="bar"><div class="bar-fill fill-blue" style="width:30%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="label">A卷难度</span>
+      <div class="bar"><div class="bar-fill fill-green" style="width:55%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="label">二加四难度</span>
+      <div class="bar"><div class="bar-fill fill-purple" style="width:75%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="label">竞赛难度</span>
+      <div class="bar"><div class="bar-fill fill-gold" style="width:90%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="label">保送难度</span>
+      <div class="bar"><div class="bar-fill fill-red" style="width:65%"></div></div>
+    </div>
+    <p style="font-size:0.85em;color:var(--text-muted);margin-top:12px;">注：保送难度定位为"综合压轴"，低于竞赛但覆盖面更广（七门）</p>
+  </div>
+</section>
+
+<!-- ==================== SECTION 09 ==================== -->
+<section id="s09">
+  <div class="section-title">
+    <div><span class="sec-num">第九章</span><h2>各学科培养策略</h2></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h4 class="minor-title">数学</h4>
+      <ul>
+        <li>属于<strong>童子功</strong>，小学阶段必须系统学习</li>
+        <li>初一即进入高联一试级别训练</li>
+        <li>高中必修体系分四期，每期15课时，共<strong>60课时</strong></li>
+        <li>数学是所有选拔的核心科目，AB卷重心所在</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="minor-title">物理</h4>
+      <ul>
+        <li>初一刚开课，可通过竞赛培优<strong>半道插入</strong></li>
+        <li>初中物理必修体系分四期</li>
+        <li>与数学并列为二加四选拔的两大核心科目</li>
+        <li>高中阶段建议至少跟两轮（校外一轮 + 校内一轮）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h4 class="minor-title">化学</h4>
+      <ul>
+        <li>初三才开课，初中仅两个学期内容</li>
+        <li>可找好老师<strong>快速完成</strong>一个学期的课程</li>
+        <li>难度上提升空间有限，不必过度投入</li>
+        <li>初中化学必修约20多个课时</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="minor-title">信息竞赛</h4>
+      <ul>
+        <li>与数学思维关联度高，但<strong>与高考科目不直接相关</strong></li>
+        <li>最大风险：综合成绩容易掉队、游戏瘾难控制</li>
+        <li>退赛后回转综合最不容易追上</li>
+        <li>每年省队约8~9人，淘汰率极高</li>
+      </ul>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h4 class="minor-title">英语</h4>
+      <ul>
+        <li><strong>唯一可以在小学阶段提前完成</strong>的学科</li>
+        <li>建议从小学一年级开始原版阅读（如小爱英语）</li>
+        <li>单词包（约2980元/年）可覆盖初中+高中全部词汇</li>
+        <li>每天15分钟背单词，一年时间解决70%以上英语问题</li>
+        <li>初中阶段背完高中单词，英语可稳定在<strong>140分以上</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="minor-title">语文</h4>
+      <ul>
+        <li>理科优生普遍的薄弱环节</li>
+        <li>可通过<strong>刷中考真题</strong>提升（300客观 + 300主观）</li>
+        <li>语文是有套路的：找题眼、字眼，出题逻辑有迹可循</li>
+        <li>目标：中考语文从110~120分冲至<strong>125~130分</strong></li>
+        <li>每周末线上2小时 + 寒假10天 + 暑假15~20天即可见效</li>
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-danger">
+    <strong>警示：</strong>信息竞赛学生退赛后，综合成绩最不容易恢复。所有竞赛退赛学生中，信息竞赛退赛者的语文和英语往往问题最大。务必在竞赛期间保持英语每日阅读和单词背诵。
+  </div>
+</section>
+
+<!-- ==================== SECTION 10 ==================== -->
+<section id="s10">
+  <div class="section-title">
+    <div><span class="sec-num">第十章</span><h2>高阶早培与初高衔接</h2></div>
+  </div>
+  <div class="card">
+    <p>高阶早培和初高衔接是与八本产生实质链接的<strong>核心手段</strong>，也是从竞赛/二加四上岸后最关键的后续动作。</p>
+  </div>
+  <h3 class="sub-title">10.1 高阶早培</h3>
+  <div class="card">
+    <ul>
+      <li><strong>必须使用巴蜀自编教材</strong>（初中版叫《曙光》，高中版叫《智库》）</li>
+      <li>按板块学习（代数 → 函数 → 后续板块），难度大于区中约<strong>20%</strong></li>
+      <li>数学分<strong>六期</strong>，约一年至一年半完成</li>
+      <li>物理分<strong>四期</strong></li>
+      <li>化学约<strong>20多个课时</strong></li>
+      <li>核心目的：为第一次月考后的选拔做准备</li>
+    </ul>
+  </div>
+  <div class="alert alert-purple">
+    <strong>核心策略：</strong>高阶早培 ≠ 外面机构快速翻书。必须找有坑校背景、使用巴蜀教材体系的小班精品教学。进度要跟校内初一初二同步，认认真真学，而非一个假期翻两期。
+  </div>
+  <h3 class="sub-title">10.2 初高衔接（强基版本）</h3>
+  <div class="card">
+    <p>二加四上岸或保送上岸后，<strong>必须规划初高衔接</strong>，原因如下：</p>
+    <ul>
+      <li>高中难度是初中的<strong>9~10倍</strong>，数学一个学期涉及200多个知识点，60~70%集中在高一</li>
+      <li>高中分科后第一次排名决定一清班/二清班归属</li>
+      <li>高一下学期期末考试决定<strong>年级前100名</strong>的定位</li>
+    </ul>
+  </div>
+  <h4 class="minor-title">强基版本课程结构（五三二阵型）</h4>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>板块</th><th>占比</th><th>内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>校内同步中档</strong></td><td>50%</td><td>高中必修体系的基础知识与中档题</td></tr>
+        <tr><td><strong>压轴</strong></td><td>30%</td><td>高中校内压轴题训练</td></tr>
+        <tr><td><strong>强基</strong></td><td>20%</td><td>强基板块内容（数学四期 + 物理四期）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert alert-gold">
+    <strong>关键提醒：</strong>高中至少要跟<strong>两轮</strong>强基课程（一轮校外 + 一轮校内），每轮4期 × 15课时 = 60课时。必须避开大班教学，选择能叫出孩子名字的小班精品老师。
+  </div>
+</section>
+
+<!-- ==================== SECTION 11 ==================== -->
+<section id="s11">
+  <div class="section-title">
+    <div><span class="sec-num">第十一章</span><h2>选课与机构选择建议</h2></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <h4 class="minor-title">推荐选择</h4>
+      <ul>
+        <li><strong>小班精品教学</strong>（10人左右），有坑校/校队背景</li>
+        <li>使用巴蜀体系自编教材</li>
+        <li>老师能密切跟踪学校培优节奏</li>
+        <li>有真题题库和多届选拔经验</li>
+        <li>价格略高但含金量有保障</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 class="minor-title">不推荐选择</h4>
+      <ul>
+        <li>大机构的二三十人大班（为B/C类生服务）</li>
+        <li>一个班三四十人、"拍屁股走人"式教学</li>
+        <li>以中考660~670分当优秀案例展示的机构</li>
+        <li>进度快但不扎实的翻书式培训</li>
+        <li>离目标学校太远、不了解该校选拔体系的机构</li>
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-info">
+    <strong>补充说明：</strong>优生的加餐应是"牛排级"的精品细料，而非大杂烩。靠近哪所学校就学哪所学校的体系和经验。如果目标是八本，就应该在八本附近找有巴蜀教研体系的培训机构。
+  </div>
+  <h3 class="sub-title">11.1 费用参考</h3>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>项目</th><th>费用估算</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>二加四数学</td><td>约2万+/年</td><td>60+课时，含竞赛和高中内容</td></tr>
+        <tr><td>二加四物理</td><td>约1万+/年</td><td>与数学同步推进</td></tr>
+        <tr><td>英语单词包</td><td>2980元/年</td><td>覆盖初中+高中全部词汇</td></tr>
+        <tr><td>英语原版阅读（小爱）</td><td>约7980元/三年</td><td>每天30分钟，培养语感</td></tr>
+        <tr><td>语文真题冲刺</td><td>数千至万元级</td><td>线上一对一 + 刷题系统</td></tr>
+        <tr><td>美术方向（三年）</td><td>约10万元</td><td>每年3~4万，可衔接清北美育</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== SECTION 12 ==================== -->
+<section id="s12">
+  <div class="section-title">
+    <div><span class="sec-num">第十二章</span><h2>各年级行动清单</h2></div>
+  </div>
+
+  <h3 class="sub-title">小三~小四</h3>
+  <div class="card">
+    <ol>
+      <li>以最快速度完成小奥基础学习（约一年时间）</li>
+      <li>英语启动原版阅读（小爱或同类产品），每天30分钟</li>
+      <li>评估是否适合信息竞赛方向</li>
+      <li>小四开始短暂刷题，规划一门竞赛方向</li>
+      <li>语文保持阅读积累</li>
+    </ol>
+  </div>
+
+  <h3 class="sub-title">小五~小六</h3>
+  <div class="card">
+    <ol>
+      <li>已上岸：立即进入<strong>高阶早培</strong>（巴蜀体系教材），数学和物理优先</li>
+      <li>未上岸：争取上岸机会，同时不放弃高阶早培</li>
+      <li>英语：开始背单词（单词包），每日15分钟</li>
+      <li>参加高联一试免费测试，判断竞赛适配度</li>
+      <li>校内语文和数学<strong>不低于95分</strong></li>
+      <li>美术方向：三年投入约10万，可走清北美育</li>
+    </ol>
+  </div>
+
+  <h3 class="sub-title">初一</h3>
+  <div class="card">
+    <ol>
+      <li>第一次月考后参加数学A/B卷选拔</li>
+      <li>入选竞赛培优后，物化生三科启动系统训练</li>
+      <li>数学和信息延续童子功训练</li>
+      <li>英语：初中阶段必须背完高中单词（每天15分钟）</li>
+      <li>同步进行高阶早培（巴蜀体系A卷内容）</li>
+      <li>若语文薄弱，启动中考真题刷题计划</li>
+    </ol>
+  </div>
+
+  <h3 class="sub-title">初二</h3>
+  <div class="card">
+    <ol>
+      <li>十月：参加物化生二次筛选</li>
+      <li><strong>寒假：冲刺学堂一班选拔</strong>（数学+物理AB卷各3小时）</li>
+      <li>二加四冲刺：数学60+课时 + 物理相应课时</li>
+      <li>若竞赛二加四未上岸，暑假冲刺综合二加四</li>
+      <li>高阶早培进入B卷阶段（竞赛方向 + 高中内容）</li>
+      <li>综合成绩密切关注，确保不低于A线</li>
+    </ol>
+  </div>
+
+  <h3 class="sub-title">初三</h3>
+  <div class="card">
+    <ol>
+      <li>三月：保送考试（七门科目）</li>
+      <li>已获死约的学生：重心转向<strong>初高衔接</strong>，不再纠缠班型</li>
+      <li>未上岸的学生：全力准备中考保送</li>
+      <li>中考后：进入估分群，争取降分约和套餐约</li>
+      <li>高中入学后：紧跟强基版本初高衔接（五三二阵型）</li>
+    </ol>
+  </div>
+
+  <h3 class="sub-title">高中阶段</h3>
+  <div class="card">
+    <ol>
+      <li>高一上学期期末 + 半期考试决定<strong>分科排名</strong></li>
+      <li>年级前100名进入一清班，前250名进入强基系列</li>
+      <li>强基课程至少跟两轮（校外 + 校内各一轮）</li>
+      <li>竞赛生高一结束前决定是否退赛，不要留恋</li>
+      <li>目标：C9/华五为主流，清北为冲刺方向</li>
+    </ol>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>保障信息：</strong>只要在五次衔接机会中抓住<strong>任何一次</strong>，都有可能进入最好的班型。即使成为竞赛"炮灰"，综合成绩依然优秀、学习能力突出、抗压能力强劲，学校不会让这样的孩子掉队。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="page-footer">
+  <p>本文档基于直播实录整理，信息仅供规划参考。具体政策、名额及考试安排请以各校官方通知为准。</p>
+  <p style="margin-top:6px;">整理日期：2026年5月</p>
+</footer>
+
+</div><!-- /main-wrap -->
+</body>
+</html>

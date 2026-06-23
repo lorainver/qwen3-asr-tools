@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陈老师直播-1120</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>陈老师直播-1120</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>果然，马上现场都要签，到最后的最后开的条件是啥子</li>
+                <li>第三的一个，他当时最后给的是竞赛班，跟到搞性情</li>
+                <li>还有其他很多类似的那种天牛，当然还有那种我们最后发现不是天牛的也很多</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>陌生人上上了车都直接走了，我回头我在问他，你不怕是人贩子。他说是啥子都是啥子你都不跟到起去愣是不怕是人贩子，。把娃儿子拉回本部，拉回谢家湾儿，当场都考，当场都考。</p>
+                <p>但我讲的是三年前的事情，我再说清楚当场就考。当时好像是考你竞赛，并且是拿你竞竞有点有点偏竞赛的题来我们来考没有考奥数，考的不是奥数。考的是初点儿，好像是直接拿初点儿的那种题来考，好像是哈。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>反正当时妈妈是妈妈回头跟我讲的，说考的是偏竞赛的，然后现场很多娃儿做七十多分儿。他娃儿做了，他还在跟我讲，他娃儿只考了六十几分儿。那些绝对是提前招培那些学都学过的，初练那些学过的，你娃儿啥子都没学着嘛。</p>
+                <p>考得好的有七，考得最好的才七十多分儿，你裸考六十多分儿咯。你还没得的娃儿是普通人呐，他都不是普通人了，他就等于说不是普通人了。果然，马上现场都要签，到最后的最后开的条件是啥子。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>你妈妈又跟我跟跟幺儿一起住，单间配套都没得其他同学来跟你来打机的。第三的一个，他当时最后给的是竞赛班，跟到搞性情。他进去了，进到进实验班之后，基本上跟我那边都失联了。</p>
+                <p>但是我还是有啥子，身边的一些牛娃家长听说过。都是认认识他们现在在没在搞竞赛不晓得，当时开的条件都是竞赛方。然后最那种顶班儿嘛，然后所有那种所有费用全免，学费也好，学杂费也好。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>其其他的那种东西，全棉，全部全棉，包干，包干那是给你讲的啥子。你要相信，有些娃儿真的都是我们拿玄学来说的话，他都是来报恩的，他都是来报恩的。对于我们大多数普娃而言我们还是要靠，更多家长们要多费点心，多用点心。</p>
+                <p>那种个人自然而然天生都爱学习，并且还学得好的我们是可遇不可求可遇不可求，。那是我说的，都是那种娃娃，包括还有类似的，还有其他很多。还有其他很多类似的那种天牛，当然还有那种我们最后发现不是天牛的也很多。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>但是那种真正的天牛，我们接触的很多，那确确实确确实实真天牛。那种我们都见过，有那东西存在，它不是瓜，是存在在龙门镇里头。我们是摆的，重庆人讲重庆人自己的故事不是给你找些龙门阵来摆的。</p>
+                <p>好，好，家人们，我确实还有点儿事情我得要走了。让我们后边一系列，不管是关于学校的那种讲座也好，还是关于英语规划留学赛道的那种了解也好。还是早拍的那种讲座也好，大家点开头像进粉丝群。</p>
+                <p>然后蝴蝶孩儿的家长，蝴蝶孩儿的家长直接扫右边紫色的粑粑，跟我们同步对接起来，。各位家长们，大家共勉，拜拜，拜拜，加油，加油拜拜，。真实的重庆人讲重庆人自己的升学故事，可以，因为我们直播间都打标题，。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

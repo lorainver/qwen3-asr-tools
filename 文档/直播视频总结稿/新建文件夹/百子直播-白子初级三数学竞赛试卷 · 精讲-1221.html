@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>白子初级三数学竞赛试卷精讲</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== 页面头部 ===== */
+.hero {
+  background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #b8860b 100%);
+  color: #fff;
+  padding: 56px 40px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+.hero h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.hero .subtitle {
+  font-size: 1rem;
+  opacity: 0.88;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-tags .tag {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.tag-purple {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.35);
+}
+
+.tag-gold {
+  background: var(--highlight);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+.tag-green {
+  background: #eaf5ed;
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.tag-red {
+  background: #fdf0ec;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.tag-blue {
+  background: #eaf2f8;
+  color: var(--info);
+  border: 1px solid var(--info);
+}
+
+/* ===== 目录 ===== */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: 32px 0;
+  position: relative;
+}
+
+.toc-label {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.78rem;
+  padding: 2px 14px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.toc h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.05rem;
+  color: var(--accent);
+  margin-bottom: 16px;
+  margin-top: 4px;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 32px;
+}
+
+.toc-grid a {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 5px 8px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.toc-grid a:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.toc-num {
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'Noto Serif SC', serif;
+  min-width: 28px;
+}
+
+/* ===== 章节标题 ===== */
+.section-heading {
+  border-left: 4px solid var(--accent);
+  padding-left: 18px;
+  margin: 48px 0 8px;
+}
+
+.section-heading .section-num {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.8rem;
+  color: var(--accent-light);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.section-heading h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+
+.card h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.08rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.card h4 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+  font-weight: 600;
+}
+
+/* ===== Alert 提示框 ===== */
+.alert {
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.alert-gold {
+  background: var(--highlight);
+  border-left: 4px solid var(--gold);
+  color: #6b5900;
+}
+
+.alert-success {
+  background: #eaf5ed;
+  border-left: 4px solid var(--success);
+  color: #1a4a2a;
+}
+
+.alert-danger {
+  background: #fdf0ec;
+  border-left: 4px solid var(--danger);
+  color: #6b1a00;
+}
+
+.alert-info {
+  background: #eaf2f8;
+  border-left: 4px solid var(--info);
+  color: #0e3a55;
+}
+
+.alert-purple {
+  background: var(--accent-bg);
+  border-left: 4px solid var(--accent);
+  color: #4a1a3d;
+}
+
+.alert strong {
+  font-weight: 700;
+}
+
+/* ===== 列表 ===== */
+ul, ol {
+  padding-left: 22px;
+  margin: 8px 0;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+li strong {
+  color: var(--accent);
+}
+
+/* ===== 难度条 ===== */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.diff-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-width: 56px;
+  text-align: right;
+}
+
+.diff-track {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.diff-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.diff-easy .diff-fill {
+  width: 25%;
+  background: linear-gradient(90deg, #2d6b3f, #4caf50);
+}
+.diff-medium .diff-fill {
+  width: 50%;
+  background: linear-gradient(90deg, #b8860b, #daa520);
+}
+.diff-hard .diff-fill {
+  width: 75%;
+  background: linear-gradient(90deg, #d35400, #e67e22);
+}
+.diff-vhard .diff-fill {
+  width: 95%;
+  background: linear-gradient(90deg, #8b2500, #c0392b);
+}
+
+/* ===== 两栏对比 ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+/* ===== 表格 ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.9rem;
+}
+
+thead {
+  background: var(--accent);
+  color: #fff;
+}
+
+th {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 500;
+}
+
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+/* ===== 流程时间线 ===== */
+.flow {
+  position: relative;
+  padding-left: 36px;
+  margin: 16px 0;
+}
+
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--accent);
+  opacity: 0.3;
+}
+
+.flow-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 7px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.flow-item h4 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.flow-item p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* ===== 数学公式块 ===== */
+.math-block {
+  background: #f8f6f3;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 12px 0;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  line-height: 2;
+  overflow-x: auto;
+}
+
+/* ===== 分割线 ===== */
+.divider {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 40px 0;
+}
+
+/* ===== 页脚 ===== */
+.footer {
+  text-align: center;
+  padding: 32px 0 48px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 700px) {
+  .hero {
+    padding: 40px 20px 36px;
+  }
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+  .container {
+    padding: 0 16px;
+  }
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+  .section-heading h2 {
+    font-size: 1.15rem;
+  }
+  .card {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 页面头部 ===== -->
+<header class="hero">
+  <div class="container">
+    <h1>白子初级三数学竞赛试卷 · 精讲</h1>
+    <div class="subtitle">涵盖第4–13题完整解析 · 填空题与解答题逐题精讲</div>
+    <div class="hero-tags">
+      <span class="tag tag-purple">三年级 / 四年级</span>
+      <span class="tag tag-gold">数论 · 几何 · 计数 · 逻辑</span>
+      <span class="tag tag-green">重视基础积累</span>
+      <span class="tag tag-red">共108分 · 建议目标66+</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ===== 目录 ===== -->
+<nav class="toc">
+  <span class="toc-label">目录导航</span>
+  <h2>内容索引</h2>
+  <div class="toc-grid">
+    <a href="#sec-overview"><span class="toc-num">总</span>试卷概览与得分策略</a>
+    <a href="#sec-4"><span class="toc-num">4</span>周期问题——星期推算</a>
+    <a href="#sec-5"><span class="toc-num">5</span>逻辑推理——忠臣验证</a>
+    <a href="#sec-6"><span class="toc-num">6</span>几何分割——六芒星面积</a>
+    <a href="#sec-8"><span class="toc-num">8</span>数论——幂的个位数字</a>
+    <a href="#sec-7"><span class="toc-num">7</span>计数——凸数统计</a>
+    <a href="#sec-9"><span class="toc-num">9</span>计算·整数列项与椅子数</a>
+    <a href="#sec-10"><span class="toc-num">10</span>数论——数字和与整除</a>
+    <a href="#sec-11"><span class="toc-num">11</span>几何——梯形面积比</a>
+    <a href="#sec-12"><span class="toc-num">12</span>计数——多面手安排问题</a>
+    <a href="#sec-13"><span class="toc-num">13</span>证明——全1数与质数</a>
+    <a href="#sec-philosophy"><span class="toc-num">结</span>教学理念与学习建议</a>
+  </div>
+</nav>
+
+<!-- ===== 总体概览 ===== -->
+<section id="sec-overview">
+<div class="section-heading">
+  <div class="section-num">总览</div>
+  <h2>试卷概览与得分策略</h2>
+</div>
+
+<div class="alert alert-gold">
+  <strong>核心结论：</strong>整份试卷中约66分的题目相对容易拿到——填空题中约5题（第1、4、5、6、8题），解答题中约3题（第9题第二小题、第11题、第12题）。若在真实测试中达到66分及以上，即可顺利进入白子体系。
+</div>
+
+<div class="card">
+  <h3>各题难度分布</h3>
+  <table>
+    <thead>
+      <tr><th>题号</th><th>题型</th><th>难度评价</th><th>关键知识点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>第4题</td><td>填空</td><td><span class="tag tag-green">较易</span></td><td>周期规律、星期推算</td></tr>
+      <tr><td>第5题</td><td>填空</td><td><span class="tag tag-green">较易</span></td><td>逻辑推理、枚举验证</td></tr>
+      <tr><td>第6题</td><td>填空</td><td><span class="tag tag-green">较易</span></td><td>正六边形分割、面积嵌套</td></tr>
+      <tr><td>第7题</td><td>填空</td><td><span class="tag tag-gold">中等</span></td><td>分类计数、加乘原理</td></tr>
+      <tr><td>第8题</td><td>填空</td><td><span class="tag tag-green">较易</span></td><td>个位数字周期规律</td></tr>
+      <tr><td>第9题-1</td><td>解答</td><td><span class="tag tag-gold">中等</span></td><td>整数列项、拆分构造</td></tr>
+      <tr><td>第9题-2</td><td>解答</td><td><span class="tag tag-green">较易</span></td><td>椅子数（叠码数）</td></tr>
+      <tr><td>第10题</td><td>解答</td><td><span class="tag tag-red">较难</span></td><td>数字和、整除与同余</td></tr>
+      <tr><td>第11题</td><td>解答</td><td><span class="tag tag-green">较易</span></td><td>梯形面积、份数法</td></tr>
+      <tr><td>第12题</td><td>解答</td><td><span class="tag tag-gold">中等</span></td><td>排列组合、多面手分类</td></tr>
+      <tr><td>第13题</td><td>解答</td><td><span class="tag tag-red">较难</span></td><td>数论证明、等价命题</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="alert alert-purple">
+  <strong>命题理念：</strong>白子试卷注重考察朴素的基础方法，尽量减少花哨技巧的应用。能做出来的同学，更多的是因为对底层基础知识（枚举法、加乘原理、基本计算规律）有扎实的积累，而非单纯依赖提前学过特定技巧。
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <h3>最高分参考</h3>
+    <p>本次测试最高分为 <strong>94–97分</strong>（满分108分）。80分以上即可视为超高分。</p>
+  </div>
+  <div class="card">
+    <h3>适用年级</h3>
+    <p>试卷面向<strong>三年级</strong>同学，四年级同学同样适合用来检测水平。五年级及以上做此卷检测意义相对较小。</p>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第4题 ===== -->
+<section id="sec-4">
+<div class="section-heading">
+  <div class="section-num">填空题 · 第4题</div>
+  <h2>周期问题——星期推算</h2>
+</div>
+
+<div class="diff-bar diff-easy">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-green" style="font-size:0.75rem;">较易</span>
+</div>
+
+<div class="card">
+  <h3>核心思路</h3>
+  <p>利用星期的7天周期性，通过<strong>除以7取余数</strong>进行推算。</p>
+</div>
+
+<div class="flow">
+  <div class="flow-item">
+    <h4>计算余数</h4>
+    <p>234 ÷ 7 = 33 余 3，即往后多推3天。</p>
+  </div>
+  <div class="flow-item">
+    <h4>确定答案范围</h4>
+    <p>从基准日"星期日"出发，推3天可得<strong>星期三</strong>。但需判断"算不算起始日"——两种计数方式分别得到<strong>星期日</strong>或<strong>星期一</strong>。</p>
+  </div>
+  <div class="flow-item">
+    <h4>结论</h4>
+    <p>填写空格时，填<strong>"日"</strong>或<strong>"一"</strong>即可。</p>
+  </div>
+</div>
+
+<div class="alert alert-info">
+  <strong>临界条件提示：</strong>对于"起始日算还是不算"这类边界问题，可以在小范围内<strong>举几个数验证</strong>。例如确认9月10日是星期五后，算9月20日——从11号开始数（10天）或从10号开始数（11天），结果一致即可验证规律。一般习惯是不计起始日，直接往后数。
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第5题 ===== -->
+<section id="sec-5">
+<div class="section-heading">
+  <div class="section-num">填空题 · 第5题</div>
+  <h2>逻辑推理——忠臣验证</h2>
+</div>
+
+<div class="diff-bar diff-easy">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-green" style="font-size:0.75rem;">较易</span>
+</div>
+
+<div class="card">
+  <h3>题意概要</h3>
+  <p>十人互相知道彼此是否忠诚。忠者说真话（回答真实忠心人数n），不忠者说假话（不能回答n）。根据所有人的回答结果，确定忠心者名单。</p>
+</div>
+
+<div class="card">
+  <h3>关键推理</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>建立等式条件</h4>
+      <p>若真有n人忠心，则<strong>n个人</strong>回答"n人"，且其他人不回答"n"。即：<strong>回答n的人数 = n</strong>。</p>
+    </div>
+    <div class="flow-item">
+      <h4>逐一枚举验证</h4>
+      <p>
+        <strong>n=1</strong>：回答"1人"的有2人 → 不等于1 → 不成立<br>
+        <strong>n=2</strong>：回答"2人"的恰好2人 → 等于2 → <span style="color:var(--success);font-weight:700;">成立</span><br>
+        <strong>n=3</strong>：回答"3人"的仅1人 → 不等于3 → 不成立<br>
+        <strong>n≥4</strong>：各类回答均仅1人，均不满足条件
+      </p>
+    </div>
+    <div class="flow-item">
+      <h4>最终答案</h4>
+      <p>忠于宋真宗的人员为<strong>陈林</strong>和<strong>周怀仁</strong>。</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第6题 ===== -->
+<section id="sec-6">
+<div class="section-heading">
+  <div class="section-num">填空题 · 第6题</div>
+  <h2>几何分割——六芒星面积</h2>
+</div>
+
+<div class="diff-bar diff-easy">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-green" style="font-size:0.75rem;">较易</span>
+</div>
+
+<div class="card">
+  <h3>题目背景</h3>
+  <p>正六边形A₁A₂A₃A₄A₅A₆面积为10，每条边向外作正三角形得到六芒星，再逐层向内嵌套六芒星结构。求最内层阴影部分面积。</p>
+</div>
+
+<div class="card">
+  <h3>正六边形分割基础知识</h3>
+  <div class="alert alert-info">
+    <strong>核心工具：</strong>正六边形常见分割方式——连接中心可分6个等边三角形；连接间隔顶点可分6个小三角形，每个占总面积的<strong>1/6</strong>。
+  </div>
+  <ul>
+    <li>连接A₂与A₆、A₂与A₄、A₄与A₆，再连接中心，可将正六边形分为<strong>6个等面积小三角形</strong></li>
+    <li>每个小三角形旁边的附加三角形（如S₁、S₂、S₃）与之面积相等，各占正六边形的<strong>1/18</strong></li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>分层计算</h3>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>第一层：求中等正六边形面积</h4>
+      <p>外围需去掉<strong>12块</strong>小三角形，每块占1/18，合计去掉 12/18 = 2/3。</p>
+      <div class="math-block">
+        中等正六边形面积 = 大正六边形 × (1 − 2/3) = 10 × 1/3 = 10/3
+      </div>
+    </div>
+    <div class="flow-item">
+      <h4>第二层：求阴影六芒星面积</h4>
+      <p>在中等正六边形内去掉6块空白小三角形（各占中等正六边形的1/18），去掉 6/18 = 1/3。</p>
+      <div class="math-block">
+        阴影面积 = (10/3) × (1 − 1/3) = (10/3) × (2/3) = <strong>20/9</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>最终答案：20/9</strong>
+  </div>
+</div>
+
+<div class="alert alert-purple">
+  <strong>学习建议：</strong>正六边形常见分割（分6块、分12块、分8块）需熟练掌握。类似地，正三角形和正方形的分割方式在小学阶段也很常见，需重点关注。
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第8题 ===== -->
+<section id="sec-8">
+<div class="section-heading">
+  <div class="section-num">填空题 · 第8题</div>
+  <h2>数论——幂的个位数字</h2>
+</div>
+
+<div class="diff-bar diff-easy">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-green" style="font-size:0.75rem;">较易</span>
+</div>
+
+<div class="card">
+  <h3>题目</h3>
+  <p>43<sup>43</sup> − 17<sup>17</sup> 的个位数字是多少？</p>
+</div>
+
+<div class="card">
+  <h3>核心原理</h3>
+  <div class="alert alert-gold">
+    <strong>关键认识：</strong>乘法运算中，个位数字<strong>只由个位数字决定</strong>。乘法只向前进位，前面的数位不影响个位。因此只需考察个位数字的幂运算。
+  </div>
+
+  <div class="two-col">
+    <div class="card" style="margin:0;">
+      <h4>3的幂——个位周期</h4>
+      <table>
+        <thead><tr><th>次方</th><th>值</th><th>个位</th></tr></thead>
+        <tbody>
+          <tr><td>3<sup>1</sup></td><td>3</td><td>3</td></tr>
+          <tr><td>3<sup>2</sup></td><td>9</td><td>9</td></tr>
+          <tr><td>3<sup>3</sup></td><td>27</td><td>7</td></tr>
+          <tr><td>3<sup>4</sup></td><td>81</td><td style="color:var(--accent);font-weight:700;">1</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;">周期为<strong>4</strong>：3→9→7→1→3→…</p>
+      <p>43 ÷ 4 = 10 余 <strong>3</strong>，对应周期第3位 → 个位为 <strong>7</strong></p>
+    </div>
+    <div class="card" style="margin:0;">
+      <h4>7的幂——个位周期</h4>
+      <table>
+        <thead><tr><th>次方</th><th>值</th><th>个位</th></tr></thead>
+        <tbody>
+          <tr><td>7<sup>1</sup></td><td>7</td><td>7</td></tr>
+          <tr><td>7<sup>2</sup></td><td>49</td><td>9</td></tr>
+          <tr><td>7<sup>3</sup></td><td>343</td><td>3</td></tr>
+          <tr><td>7<sup>4</sup></td><td>2401</td><td style="color:var(--accent);font-weight:700;">1</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;">周期为<strong>4</strong>：7→9→3→1→7→…</p>
+      <p>17 ÷ 4 = 4 余 <strong>1</strong>，对应周期第1位 → 个位为 <strong>7</strong></p>
+    </div>
+  </div>
+
+  <div class="math-block">
+    个位数字 = 7 − 7 = <strong>0</strong>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>最终答案：0</strong>
+  </div>
+</div>
+
+<div class="alert alert-info">
+  <strong>延伸认识：</strong>所有0–9的数字写成幂形式时，个位数字的周期最多为4（如6的个位永远是6，周期为1）。这一规律可通过自行列举加深理解。
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第7题 ===== -->
+<section id="sec-7">
+<div class="section-heading">
+  <div class="section-num">填空题 · 第7题</div>
+  <h2>计数——凸数统计</h2>
+</div>
+
+<div class="diff-bar diff-medium">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-gold" style="font-size:0.75rem;">中等</span>
+</div>
+
+<div class="card">
+  <h3>题目定义</h3>
+  <p>四位数中，百位数字最大，向两边（千位方向和个位方向）逐渐减小，称为"凸数"。例如：2<strong>3</strong>21、4<strong>8</strong>63、1<strong>9</strong>85。</p>
+</div>
+
+<div class="card">
+  <h3>解题方法：分类枚举 + 组合数</h3>
+  <p>百位数字最小为2（需向两边递减，0和1无法取），最大为9。按百位取值逐一分类：</p>
+
+  <table>
+    <thead>
+      <tr><th>百位</th><th>千位选择数</th><th>十位个位选法</th><th>本类总数</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2</td><td>C(1,1) = 1</td><td>C(2,2) = 1</td><td>1 × 1 = <strong>1</strong></td></tr>
+      <tr><td>3</td><td>C(2,1) = 2</td><td>C(3,2) = 3</td><td>2 × 3 = <strong>6</strong></td></tr>
+      <tr><td>4</td><td>C(3,1) = 3</td><td>C(4,2) = 6</td><td>3 × 6 = <strong>18</strong></td></tr>
+      <tr><td>5</td><td>C(4,1) = 4</td><td>C(5,2) = 10</td><td>4 × 10 = <strong>40</strong></td></tr>
+      <tr><td>6</td><td>C(5,1) = 5</td><td>C(6,2) = 15</td><td>5 × 15 = <strong>75</strong></td></tr>
+      <tr><td>7</td><td>C(6,1) = 6</td><td>C(7,2) = 21</td><td>6 × 21 = <strong>126</strong></td></tr>
+      <tr><td>8</td><td>C(7,1) = 7</td><td>C(8,2) = 28</td><td>7 × 28 = <strong>196</strong></td></tr>
+      <tr><td>9</td><td>C(8,1) = 8</td><td>C(9,2) = 36</td><td>8 × 36 = <strong>288</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="math-block">
+    总计 = 1 + 6 + 18 + 40 + 75 + 126 + 196 + 288 = <strong>750</strong>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>最终答案：750个</strong>
+  </div>
+</div>
+
+<div class="alert alert-purple">
+  <strong>方法论启示：</strong>此题是加乘原理的直接应用，单一思路重复执行8次即可。关键在于<strong>不要因为觉得"麻烦"就放弃基础方法</strong>去追求不存在的技巧捷径。数学学习的"路基"是枚举法、加乘原理等底层能力，而非表面的花哨技巧。
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第9题 ===== -->
+<section id="sec-9">
+<div class="section-heading">
+  <div class="section-num">解答题 · 第9题</div>
+  <h2>计算——整数列项与椅子数</h2>
+</div>
+
+<div class="card">
+  <h3>第一小题：整数列项</h3>
+  <p>计算：1×2×47 + 2×3×46 + 3×4×45 + … + 23×24×25</p>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>观察结构特征</h4>
+      <p>前两项为连续整数乘积（1×2, 2×3, …），第三项递减（47, 46, 45, …）。注意 47 + 3 = 50，46 + 4 = 50，45 + 5 = 50，<strong>和恒为50</strong>。</p>
+    </div>
+    <div class="flow-item">
+      <h4>拆分构造</h4>
+      <p>将47改写为(50−3)，46改写为(50−4)，利用乘法分配律拆分为两部分：</p>
+      <div class="math-block">
+        = 50 × (1×2 + 2×3 + … + 23×24) − (1×2×3 + 2×3×4 + … + 23×24×25)
+      </div>
+    </div>
+    <div class="flow-item">
+      <h4>整数列项求和</h4>
+      <p>两部分均为标准整数列项求和：</p>
+      <div class="math-block">
+        第一部分 = 23×24×25 × ⅓<br>
+        第二部分 = 23×24×25 × ¼
+      </div>
+    </div>
+    <div class="flow-item">
+      <h4>最终结果</h4>
+      <div class="math-block">
+        50 × (23×24×25/3) − (23×24×25/4) = <strong>140300</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>注意：</strong>硬算到此步若计算正确亦给满分。阅卷中发现部分同学思路正确但最终硬算出错，反映出计算基本功仍有欠缺。
+  </div>
+</div>
+
+<div class="card">
+  <h3>第二小题：椅子数（叠码数）</h3>
+  <p>计算：33336667 × 3678</p>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>发现规律</h4>
+      <p>33336667 × 3 = <strong>100010001</strong>（椅子数特征结构）</p>
+    </div>
+    <div class="flow-item">
+      <h4>构造拆分</h4>
+      <p>将原式改写为：(33336667 × 3) × (3678 ÷ 3) = 100010001 × 1226</p>
+    </div>
+    <div class="flow-item">
+      <h4>直接得出结果</h4>
+      <div class="math-block">
+        100010001 × 1226 = <strong>122612261226</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>第二小题比第一小题更容易完成。</strong>关键在于日常计算中对数字特征的敏感度——积累来源于自己运算过程中对规律的主动留意，而非被动听讲。
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第10题 ===== -->
+<section id="sec-10">
+<div class="section-heading">
+  <div class="section-num">解答题 · 第10题</div>
+  <h2>数论——数字和与整除</h2>
+</div>
+
+<div class="diff-bar diff-vhard">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-red" style="font-size:0.75rem;">较难</span>
+</div>
+
+<div class="card">
+  <h3>题目</h3>
+  <p>14个互不相同的正整数，和为1088，且<strong>每个数的各位数字之和都相等</strong>。求这14个数（从小到大排列）。</p>
+</div>
+
+<div class="card">
+  <h3>解题过程</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>第一步：进位损失原理</h4>
+      <p>加法运算中，<strong>每进一次位，数字和损失一个9</strong>（因为"10"写成进位的"1"，损失9）。设每个数的数字和为k，则14个数的总数字和为14k。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第二步：建立整除关系</h4>
+      <p>最终结果1088的数字和为 1+0+8+8 = 17。差值必须是9的倍数：</p>
+      <div class="math-block">
+        9 | (14k − 17)<br>
+        9 | (5k + 10)   ← 去掉9k，调整常数<br>
+        9 | 5(k + 2)    ← 提取公因数<br>
+        <strong>9 | (k + 2)</strong>  ← 9与5互质
+      </div>
+    </div>
+    <div class="flow-item">
+      <h4>第三步：确定k的可能值</h4>
+      <p>k + 2 是9的倍数，即 <strong>k ≡ 7 (mod 9)</strong>。可能值：k = 7, 16, 25, …</p>
+    </div>
+    <div class="flow-item">
+      <h4>第四步：验证k = 7</h4>
+      <p>列出数字和为7的最小14个数：</p>
+      <div class="math-block">
+        7, 16, 25, 34, 43, 52, 61, 70, 106, 115, 124, 133, 142, 151
+      </div>
+      <p>这14个数之和 = <strong>1079</strong>，与1088相差恰好 <strong>9</strong>。</p>
+      <p>将最后一个数151替换为160（数字和仍为7），总和恰好 = 1088。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第五步：排除其他情况</h4>
+      <p>k = 16时，最小的数为79，79 × 14 = 1106 > 1088，超出范围。k ≥ 16均不成立。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>最终答案（从小到大排列）：</strong>7, 16, 25, 34, 43, 52, 61, 70, 106, 115, 124, 133, 142, <strong>160</strong>
+  </div>
+</div>
+
+<div class="alert alert-danger">
+  <strong>难度说明：</strong>本题是对知识要求最高的题目。若对同余或整除完全没有了解，前半部分的分析将难以展开。本题难度甚至超过第13题（证明题）。
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第11题 ===== -->
+<section id="sec-11">
+<div class="section-heading">
+  <div class="section-num">解答题 · 第11题</div>
+  <h2>几何——梯形面积比</h2>
+</div>
+
+<div class="diff-bar diff-easy">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-green" style="font-size:0.75rem;">较易</span>
+</div>
+
+<div class="card">
+  <h3>题目</h3>
+  <p>梯形ABCD中，AD∥BC，AD = ¾BC。E在AD上使AE = 2ED，F在BC上使CF = 2BF。四边形ABFE面积为15平方米，求四边形CDEF面积。</p>
+</div>
+
+<div class="card">
+  <h3>份数法求解</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>设定份数</h4>
+      <p>设AD = 3份，则BC = 4份。由AE = 2ED得：AE = 2份，ED = 1份。由CF = 2BF得：BF = 4/3份，CF = 8/3份。</p>
+    </div>
+    <div class="flow-item">
+      <h4>利用高相同的性质</h4>
+      <p>两个梯形（ABFE与CDEF）<strong>高相同</strong>，面积之比等于（上底 + 下底）之比：</p>
+      <div class="math-block">
+        S<sub>CDEF</sub> / S<sub>ABFE</sub> = (ED + CF) / (AE + BF)<br>
+        = (1 + 8/3) / (2 + 4/3)<br>
+        = (11/3) / (10/3) = 11/10
+      </div>
+    </div>
+    <div class="flow-item">
+      <h4>计算最终面积</h4>
+      <div class="math-block">
+        S<sub>CDEF</sub> = 15 × 11/10 = <strong>33/2 = 16.5 平方米</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>最终答案：33/2 平方米</strong><br>
+    本题是全部解答题中最容易做满分的题目，满分人数最多。
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第12题 ===== -->
+<section id="sec-12">
+<div class="section-heading">
+  <div class="section-num">解答题 · 第12题</div>
+  <h2>计数——多面手安排问题</h2>
+</div>
+
+<div class="diff-bar diff-medium">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-gold" style="font-size:0.75rem;">中等</span>
+</div>
+
+<div class="card">
+  <h3>题目简化</h3>
+  <p>11人中安排：5人布置院子（任务A），3人布置大厅（任务B），3人斗地主（所有人都会，最后安排）。</p>
+  <table>
+    <thead><tr><th>人员类别</th><th>人数</th><th>能力</th></tr></thead>
+    <tbody>
+      <tr><td>仅会院子</td><td>6人</td><td>任务A</td></tr>
+      <tr><td>仅会大厅</td><td>3人</td><td>任务B</td></tr>
+      <tr><td><strong>多面手</strong>（都会）</td><td>2人</td><td>A和B均可</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h3>分类方法：按多面手参与院子的人数分类</h3>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>情形一：两人都布置院子</h4>
+      <p>院子还需3人 → 从6个院子专项中选3人：C(6,3) = 20</p>
+      <p>大厅3人 → 仅会大厅的3人全部参加：C(3,3) = 1</p>
+      <div class="math-block">20 × 1 = <strong>20种</strong></div>
+    </div>
+    <div class="flow-item">
+      <h4>情形二：选1人布置院子</h4>
+      <p>选谁？→ C(2,1) = 2种</p>
+      <p>院子还需4人 → C(6,4) = 15种</p>
+      <p>大厅3人 → 从会大厅的4人（3专项+1未选多面手）中选3人：C(4,3) = 4</p>
+      <div class="math-block">2 × 15 × 4 = <strong>120种</strong></div>
+    </div>
+    <div class="flow-item">
+      <h4>情形三：多面手均不布置院子</h4>
+      <p>院子5人 → C(6,5) = 6</p>
+      <p>大厅3人 → 从会大厅的5人（3专项+2多面手）中选3人：C(5,3) = 10</p>
+      <div class="math-block">6 × 10 = <strong>60种</strong></div>
+    </div>
+  </div>
+
+  <div class="math-block">
+    总计 = 20 + 120 + 60 = <strong>200种</strong>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>最终答案：200种</strong>
+  </div>
+</div>
+
+<div class="alert alert-purple">
+  <strong>多面手问题通用策略：</strong><br>
+  ① 特殊元素优先处理——先安排多面手的去向<br>
+  ② 按多面手"参与/不参与"或"干什么"分类，逐一计算后累加<br>
+  本题需要一定的排列组合基础，不太可能仅靠首次接触独立完成。
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 第13题 ===== -->
+<section id="sec-13">
+<div class="section-heading">
+  <div class="section-num">解答题 · 第13题</div>
+  <h2>证明——全1数与质数</h2>
+</div>
+
+<div class="diff-bar diff-vhard">
+  <span class="diff-label">难度</span>
+  <div class="diff-track"><div class="diff-fill"></div></div>
+  <span class="tag tag-red" style="font-size:0.75rem;">较难</span>
+</div>
+
+<div class="card">
+  <h3>命题</h3>
+  <p>若由n个1组成的数（即111…1）是质数，则n必然是质数。</p>
+</div>
+
+<div class="card">
+  <h3>证明方法：等价命题（逆否命题）</h3>
+  <div class="alert alert-info">
+    <strong>等价表述：</strong>若n不是质数，则n个1组成的数不是质数。证明原命题的逆否命题即可。
+  </div>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>情形一：n = 1</h4>
+      <p>1个1组成"1"，1不是质数（注意：1既不是质数也不是合数）。结论成立。</p>
+    </div>
+    <div class="flow-item">
+      <h4>情形二：n是合数</h4>
+      <p>设 n = x × y（x, y > 1），将n个1分成y组，每组x个1。</p>
+    </div>
+    <div class="flow-item">
+      <h4>构造分解</h4>
+      <p>n个1可表示为椅子数（叠码数）形式：</p>
+      <div class="math-block">
+        111…1（n个）= 111…1（x个） × 100…0100…01…00…01
+      </div>
+      <p>其中第一个因子（x个1组成的数）> 1，第二个因子（含y个1的椅子数结构）> 1。</p>
+    </div>
+    <div class="flow-item">
+      <h4>结论</h4>
+      <p>n个1组成的数可分解为两个大于1的整数之积，故为合数，不是质数。证明完毕。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>易错点：</strong>很多同学容易将"不是质数"等同于"是合数"，忽略了n = 1的情况。1既不是质数也不是合数，需要单独讨论。数学表达的严谨性在此体现。
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 教学理念 ===== -->
+<section id="sec-philosophy">
+<div class="section-heading">
+  <div class="section-num">结语</div>
+  <h2>教学理念与学习建议</h2>
+</div>
+
+<div class="alert alert-purple">
+  <strong>核心观点：数学是一个很看积累的学科。</strong>在达到纯竞赛领域（高联二试以上）之前，数学能力更多来自基础知识的叠加与积累，而非单纯的天赋。最优秀的学生通常兼具思考能力和积累习惯。
+</div>
+
+<div class="card">
+  <h3>三个关键理念</h3>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>一、基础方法优先于技巧</h4>
+      <p>以第7题为例，看似"麻烦"的分类枚举恰恰是唯一正确的路径。数学学习的"路基"是枚举法、加乘原理等底层能力；排列组合的各种技巧只是"路面上薄薄的一层"。背诵很多技巧只能解决与其"长得一样"的题，稍做变形就失效。</p>
+    </div>
+    <div class="flow-item">
+      <h4>二、日常积累至关重要</h4>
+      <p>以第9题第二小题（椅子数）为例，能否发现33336667 × 3 = 100010001，取决于日常计算中对数字规律的主动留意。这种积累不是别人讲出来的，而是自己在运算过程中对有规律的特征<strong>自行留有印象</strong>。正如"数学和背古诗一样需要积累"。</p>
+    </div>
+    <div class="flow-item">
+      <h4>三、从容执行比寻找捷径更重要</h4>
+      <p>很多同学做不出题，不是因为没学过相关知识，而是面对"稍显麻烦"的思路时，花时间去寻找不存在的技巧捷径，既浪费时间又没有结果。在考试有限时间内，<strong>准确执行基础方法</strong>才是得分关键。</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>试卷理解程度建议</h3>
+  <ul>
+    <li>听过讲解后能理解 <strong>70%以上</strong>，在当前阶段即为合适状态</li>
+    <li>不要求一次讲解就百分百掌握——尤其是对于三年级同学</li>
+    <li>一次考试存在偶然性，仅作为现阶段的考察方式，不必过度焦虑</li>
+    <li>低年级同学首次做此类试卷成绩不理想是正常的，后续提升空间很大</li>
+  </ul>
+</div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="footer">
+  <p>本内容基于白子初级三数学竞赛试卷直播讲解整理</p>
+  <p style="margin-top:4px;">关注白子公众号可获取各等级测试卷及完整解析</p>
+</footer>
+
+</div>
+</body>
+</html>

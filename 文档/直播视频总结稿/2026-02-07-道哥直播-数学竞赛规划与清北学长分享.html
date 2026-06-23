@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学竞赛金牌之路 — 赵佳运学习经历与竞赛规划全解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== Header ===== */
+.hero {
+  background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #a0522d 100%);
+  color: #fff;
+  padding: 64px 0 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.hero h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+}
+.hero .subtitle {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+.hero .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+.tag-purple { background: rgba(107,45,91,0.25); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+.tag-gold { background: rgba(184,134,11,0.25); color: #ffe0a0; border: 1px solid rgba(184,134,11,0.3); }
+
+/* ===== Nav ===== */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: -32px auto 40px;
+  position: relative;
+  z-index: 2;
+}
+.toc-label {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+.toc h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.05rem;
+  color: var(--accent);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 32px;
+}
+.toc-grid a {
+  display: block;
+  padding: 6px 0;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.92rem;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.2s;
+}
+.toc-grid a:hover {
+  color: var(--accent);
+}
+.toc-grid a span.num {
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-right: 6px;
+  font-size: 0.82rem;
+}
+
+/* ===== Section ===== */
+section {
+  margin-bottom: 48px;
+}
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent-bg);
+}
+.section-head .bar {
+  width: 4px;
+  min-height: 32px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.section-head h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+.section-head .sec-num {
+  font-size: 0.78rem;
+  color: var(--accent-light);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.12rem;
+  color: var(--accent);
+  margin: 28px 0 12px;
+  font-weight: 600;
+}
+h4 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: 20px 0 8px;
+  font-weight: 700;
+}
+
+p {
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+}
+li {
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+li strong {
+  color: var(--text-primary);
+}
+
+/* ===== Alert Boxes ===== */
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border-left: 4px solid;
+  font-size: 0.94rem;
+  line-height: 1.7;
+}
+.alert strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+.alert-gold { background: var(--highlight); border-color: var(--gold); }
+.alert-gold strong { color: var(--gold); }
+.alert-success { background: #eaf5ed; border-color: var(--success); }
+.alert-success strong { color: var(--success); }
+.alert-danger { background: #fdf0ec; border-color: var(--danger); }
+.alert-danger strong { color: var(--danger); }
+.alert-info { background: #eaf2f8; border-color: var(--info); }
+.alert-info strong { color: var(--info); }
+.alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+.alert-purple strong { color: var(--accent); }
+
+/* ===== Cards ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+.card-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* ===== Two Column ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+/* ===== Table ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.92rem;
+}
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 500;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+/* ===== Diff Bar ===== */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+}
+.diff-bar .label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+}
+.diff-bar .track {
+  flex: 1;
+  height: 10px;
+  background: var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.diff-bar .fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--accent-light), var(--gold));
+}
+
+/* ===== Flow Timeline ===== */
+.flow {
+  position: relative;
+  padding-left: 32px;
+  margin: 16px 0;
+}
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: var(--border);
+}
+.flow-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -27px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.flow-item h4 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+}
+.flow-item p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ===== Quote ===== */
+blockquote {
+  border-left: 3px solid var(--gold);
+  padding: 12px 20px;
+  margin: 16px 0;
+  background: #fdfaf3;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 700px) {
+  .hero h1 { font-size: 1.6rem; }
+  .hero { padding: 40px 0 32px; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+  .section-head h2 { font-size: 1.15rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Hero ===== -->
+<div class="hero">
+  <div class="container">
+    <h1>数学竞赛金牌之路</h1>
+    <p class="subtitle">赵佳运（2020年数竞金牌 · 北京大学数学科学学院）学习经历与竞赛规划全解析</p>
+    <div class="tags">
+      <span class="tag tag-purple">数学竞赛</span>
+      <span class="tag tag-purple">升学规划</span>
+      <span class="tag tag-gold">经验分享</span>
+      <span class="tag tag-gold">书单推荐</span>
+      <span class="tag tag-purple">平台校</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOC ===== -->
+<div class="container">
+<nav class="toc">
+  <span class="toc-label">目 录</span>
+  <h3>内容导航</h3>
+  <div class="toc-grid">
+    <a href="#s1"><span class="num">01</span>什么样的孩子适合学竞赛</a>
+    <a href="#s2"><span class="num">02</span>小学阶段：小奥学习经历</a>
+    <a href="#s3"><span class="num">03</span>小升初与平台校选择</a>
+    <a href="#s4"><span class="num">04</span>初中阶段：直升与竞赛起步</a>
+    <a href="#s5"><span class="num">05</span>高中阶段：数竞学习历程</a>
+    <a href="#s6"><span class="num">06</span>竞赛学习的关键策略</a>
+    <a href="#s7"><span class="num">07</span>天赋、努力与正循环</a>
+    <a href="#s8"><span class="num">08</span>家长角色与家庭教育</a>
+    <a href="#s9"><span class="num">09</span>学习资源与书单推荐</a>
+    <a href="#s10"><span class="num">10</span>常见问题答疑精选</a>
+  </div>
+</nav>
+
+<!-- ===== S1 ===== -->
+<section id="s1">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第一章</span>什么样的孩子适合学数学竞赛</h2>
+  </div>
+
+  <h3>学竞赛的动机：热爱与升学的交织</h3>
+  <p>赵佳运坦言，学习高中数学竞赛的动机介于<strong>热爱</strong>与<strong>升学</strong>之间。热爱来自于解题后的成就感——"这个题我做出来了，别人没有做出来"，而主要目的则是为了升学。</p>
+
+  <div class="alert alert-purple">
+    <strong>核心观点：两种适合竞赛的孩子</strong>
+    一类是天生特别热爱数学、愿意钻研的孩子；另一类是有能力搞定数学、能从中获得成就感、在比较中获得优势的孩子。两者都适合尝试竞赛学习。
+  </div>
+
+  <p>赵佳运从小学开始数学成绩就比较好，考试能考九十多分，比大部分同学都好。这种"成绩优势带来的正反馈"成为他持续投入的起点。</p>
+</section>
+
+<!-- ===== S2 ===== -->
+<section id="s2">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第二章</span>小学阶段：小奥学习的曲折经历</h2>
+  </div>
+
+  <h3>第一次接触小奥：三年级的挫折</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>三年级 · 初学奥数</h4>
+      <p>因数学成绩好，数学老师推荐学习奥数。但当时已有部分同学提前学了半年甚至一年，存在明显的先发优势。课堂上其他人能听懂、能理解的内容，他需要花费大量精力去消化。同期有先发优势的同学"狠狠打击了自信"，最终选择放弃。</p>
+    </div>
+    <div class="flow-item">
+      <h4>五六年级 · 重拾小奥</h4>
+      <p>面对小升初的压力（并非来自家长，而是自身的认知），重新开始学习奥数。学习过程依然困难——上课听不懂、题目做不出，甚至有同学已经拿到名校录取后不再来上课，而他直到较晚阶段仍未拿到很好的录取。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>关键教训：放弃的心理根源</strong>
+    当时连梅涅劳斯定理都听不懂，内心认为自己学不好，甚至"懒得去尝试仔细理解它"，导致在入门阶段就产生了畏惧心理。
+  </div>
+
+  <h3>回顾小奥：现在会如何学习？</h3>
+  <p>赵佳运认为，如果重新来过，最关键的两点是：</p>
+  <ul>
+    <li><strong>进度统一</strong>：最好从一开始，老师上课时所有同学的进度保持一致</li>
+    <li><strong>老师的亲和力</strong>：一个亲切、好的老师能提供更强的学习动力</li>
+  </ul>
+
+  <div class="alert alert-gold">
+    <strong>重要启发</strong>
+    孩子对学科本身的热爱在前期往往不够明显。孩子愿意学某个东西，往往是因为：家长的认可、老师的认可、学习素材或教材本身有趣。在早期，这些外部因素比天赋更为重要。
+  </div>
+</section>
+
+<!-- ===== S3 ===== -->
+<section id="s3">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第三章</span>小升初与平台校选择</h2>
+  </div>
+
+  <h3>微机派位的压力</h3>
+  <p>湖南长沙当时的小升初政策为<strong>微机派位</strong>（随机分配），以小学为圆心一定范围内选择初中。赵佳运所在小学周围有两所风评不佳的学校，约150名毕业生中，这两所学校的派位名额高达100多个——意味着有<strong>三分之二的概率</strong>进入环境较差的初中。</p>
+
+  <div class="alert alert-danger">
+    <strong>核心动力</strong>
+    正是这一"不可接受"的概率，成为赵佳运在五六年级硬啃小奥的核心驱动力。最终凭借小奥学习和综合成绩，成功通过自主招生进入了一所不错的学校（非最顶尖），实现了小升初的跨越。
+  </div>
+
+  <h3>小奥与后续学习的关系</h3>
+  <p>赵佳运认为，小奥虽然学得艰难，但<strong>启蒙了他的初中数学</strong>。小奥阶段拓展了思维，使得初中数学学习并不吃力，能一直保持靠前的数学成绩。小奥阶段还为直升考试中的难题提供了思路和方法基础。</p>
+
+  <div class="alert alert-info">
+    <strong>补充说明：小奥的核心任务</strong>
+    小奥本质上是为了完成小升初。只要小升初搞定，就可以接着往下走。如果想锻炼思维，直接去学初中、高中乃至高等数学更为高效，没有必要在小奥上反复纠缠。
+  </div>
+</section>
+
+<!-- ===== S4 ===== -->
+<section id="s4">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第四章</span>初中阶段：直升与竞赛起步</h2>
+  </div>
+
+  <h3>直升机制</h3>
+  <p>赵佳运所在的初中直升高中（长沙市一中）采用<strong>综合成绩</strong>模式：</p>
+  <ol>
+    <li>先根据平时成绩计算<strong>综合分</strong>（基础分/平时分）</li>
+    <li>再参加一场以<strong>初中数学为基础但大幅拓展</strong>的考试（含初联及竞赛类题目）</li>
+    <li>两项综合，决定直升名额</li>
+  </ol>
+
+  <div class="alert alert-purple">
+    <strong>核心观点：高中选拔的统一模式</strong>
+    中考不能考得太难，因此高中通过校内考试的难度区分（数学、物理为主），结合加权排名圈定候选人，再通过超出课内难度的测试（初联、竞赛内容）选拔最终人选。
+  </div>
+
+  <h3>初中竞赛的初步尝试</h3>
+  <p>赵佳运初中基本跟着学校学数学，没有专门学初联内容。当时有同学参加初联考试并进入复试，但他复试都未通过。然而，那些进入复试的同学后来大多回归高考，最终只有他一人坚持数学竞赛并取得成绩。</p>
+
+  <div class="alert alert-gold">
+    <strong>关键提醒</strong>
+    第一轮机会没抓住，第二轮没抓住，但只要确实有能力，总有一次机会会闪光。但不建议不做针对性准备就"硬着头皮去考直升"，因为随机性太大。
+  </div>
+
+  <h3>直升后的竞赛起步</h3>
+  <p>初三下学期，直升班开始接触数学竞赛。教练安排从<strong>几何</strong>入门，学习顺序为：</p>
+
+  <div class="card">
+    <div class="card-title">四大板块学习顺序（由易到难）</div>
+    <div class="two-col">
+      <div>
+        <div class="diff-bar">
+          <span class="label">几何</span>
+          <div class="track"><div class="fill" style="width:30%"></div></div>
+        </div>
+        <div class="diff-bar">
+          <span class="label">代数</span>
+          <div class="track"><div class="fill" style="width:55%"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="diff-bar">
+          <span class="label">数论</span>
+          <div class="track"><div class="fill" style="width:78%"></div></div>
+        </div>
+        <div class="diff-bar">
+          <span class="label">组合</span>
+          <div class="track"><div class="fill" style="width:100%"></div></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-top:8px;">难度递增，建议按此顺序建立正循环后再逐步攻克</p>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>不建议"倒爬珠峰"</strong>
+    除非孩子天赋极强且抗压能力极强，否则不建议先学最难的组合、数论。先学简单内容建立信心和正循环，才有可能最终啃下硬骨头。
+  </div>
+
+  <h3>寒假弯道超车</h3>
+  <p>初三暑假期间，赵佳运利用一个月的休息时间，偷偷到外面的机构上课，由一位北大金牌学长教授几何。等其他同学还在放暑假时，他已经"偷偷卷了一个月"，回来后做题明显进步，开始在考试中超过同学，进入了正向循环。</p>
+
+  <div class="alert alert-gold">
+    <strong>核心策略</strong>
+    "不怕同桌是学霸，就怕同桌放寒假。"真正的学霸在假期可能已经默默领先了很多步。利用假期时间建立先发优势，是进入正循环的关键。
+  </div>
+</section>
+
+<!-- ===== S5 ===== -->
+<section id="s5">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第五章</span>高中阶段：数竞学习历程</h2>
+  </div>
+
+  <h3>时间安排</h3>
+  <table>
+    <thead>
+      <tr><th>阶段</th><th>时间分配</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>高一</strong></td><td>白天文化课 + 晚自习冲刺竞赛</td><td>学校提前半年入学，开始学高中内容</td></tr>
+      <tr><td><strong>高二</strong></td><td>文化课逐渐减少</td><td>开始全面投入竞赛训练</td></tr>
+      <tr><td><strong>高二暑假~高三</strong></td><td>完全投入竞赛</td><td>学校在前一年半已完成高中三年文化课教学</td></tr>
+      <tr><td><strong>竞赛结束后</strong></td><td>回归文化课</td><td>高考成绩640分</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>补充说明：平台校的核心优势</strong>
+    平台校的文化课老师会服务于竞赛学习，提前安排文化课教学进度，为竞赛腾出时间，而非阻碍竞赛学习。
+  </div>
+
+  <h3>联赛到金牌的关键时刻</h3>
+  <p>联赛前一周模考成绩极差，心态崩盘。与父母发生争执后，产生"爱怎么地怎么地"的放空心态。结果在联赛二试中<strong>异常冷静</strong>，创下有史以来最冷静的考试状态，成功翻盘，最终进入省队并在CMO中获得<strong>2020年数学竞赛金牌</strong>。</p>
+
+  <div class="alert alert-purple">
+    <strong>关键策略：多次机会的保障</strong>
+    最保险的方式是高一、高二、高三三次考试都以"已基本学完"的状态参加，确保至少有一次与个人状态契合。连考三次都不顺，也只能认了，但最可惜的是只在高三考一次、前面两次没准备好。
+  </div>
+
+  <h3>学习过程中的低谷</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>低谷一：入门阶段卷不过同学</h4>
+      <p>刚开始学习时，几何入门困难（梅涅劳斯定理的阴影），且身边有直升班同学考得比自己好，自信心严重受挫。</p>
+    </div>
+    <div class="flow-item">
+      <h4>低谷二：常规课分流危机</h4>
+      <p>常规课考试成绩极差（年级一千多人中排四百多名），教练考虑将其踢出竞赛班。最终因几何成绩较好而被保留，此后为避免被踢出而更加努力学习。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>应对低谷的经验</strong>
+    建立正循环的关键是找办法在某个方面获得对比优势，树立自信。可以通过参加难度适中的考试、在特定模块上取得突破等方式实现。
+  </div>
+</section>
+
+<!-- ===== S6 ===== -->
+<section id="s6">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第六章</span>竞赛学习的关键策略</h2>
+  </div>
+
+  <h3>正循环的构建</h3>
+  <div class="card">
+    <div class="card-title">正循环的形成机制</div>
+    <ol>
+      <li><strong>建立先发优势</strong>：比别人提前学一个月，认真学的话，回来就能考得比别人好</li>
+      <li><strong>获得比较优势</strong>：考得比其他同学好的那一刻，正循环开始启动</li>
+      <li><strong>正反馈增强</strong>：自信 → 更用力学 → 学得更强 → 更自信</li>
+      <li><strong>持续强化</strong>：老师教得好 + 自己做题能解决 → 克服心魔 → 成就感 → 更强正反馈</li>
+    </ol>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>对家长的建议</strong>
+    在孩子兴趣和天赋尚不确定时，先帮他建立正循环——保证比同龄人有半个月到一个月的先发优势，在比较中获得自信或心理优势。如果建立了正循环后仍然落后，至少说明确实不适合；但如果从未建立正循环就直接放弃，非常可惜。
+  </div>
+
+  <h3>平台校的重要性</h3>
+  <p>赵佳运所在学校（长沙市一中）在竞赛学习上提供的支持包括：</p>
+  <ul>
+    <li><strong>筛选机制</strong>：文化课太差不要，竞赛太差也不要，保证"学有余力"</li>
+    <li><strong>竞赛环境</strong>：提供学竞赛的氛围和资源</li>
+    <li><strong>外培组织</strong>：统一组织外部培训，报名方便</li>
+    <li><strong>文化课提前完成</strong>：前一年半完成三年文化课教学</li>
+    <li><strong>教练团队</strong>：清北学长回来带教，有持续的竞赛传承</li>
+  </ul>
+
+  <h3>外培的定位</h3>
+  <p>赵佳运用了一个比喻：</p>
+  <blockquote>
+    学校教练带你入门、给你图纸；你自习是去搬砖、运材料。但只靠自习，你不知道怎么建房子。外培的顶尖名师给的是更高明的图纸——同样的材料，设计图越高明，未来能达到的高度就越高。
+  </blockquote>
+
+  <h3>竞赛费用参考</h3>
+  <table>
+    <thead>
+      <tr><th>类型</th><th>预估费用</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>有平台校支持</strong></td><td>20-30万</td><td>从小学到竞赛出成绩</td></tr>
+      <tr><td><strong>无平台校支持</strong></td><td>百万以上</td><td>需自行找老师、联系外培，且因竞赛基因问题可能效果不佳</td></tr>
+    </tbody>
+  </table>
+
+  <h3>自学能力的培养</h3>
+  <div class="alert alert-success">
+    <strong>自学的核心路径</strong>
+    <ul style="margin:4px 0 0 20px;">
+      <li>先从<strong>文本自学</strong>（看书）开始</li>
+      <li>看书不明白时，求助<strong>视频资料</strong>或找老师指点</li>
+      <li>仍搞不定，再考虑<strong>系统课程</strong>（老师带着走）</li>
+    </ul>
+    重要原则：自己先尝试建立体系，不要直接套用别人的体系。
+  </div>
+</section>
+
+<!-- ===== S7 ===== -->
+<section id="s7">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第七章</span>天赋、努力与正循环</h2>
+  </div>
+
+  <h3>天赋存在的客观事实</h3>
+  <p>赵佳运指出一个现象：小学学奥数的一批人，到初中消失了一半；初中留下来的，到高中又消失了一批。小学学得好不代表高中能学得好，因为数学像一座大厦，需要每一步的基础都打牢才能发力。</p>
+
+  <div class="alert alert-info">
+    <strong>关于天赋的判断</strong>
+    天赋当然存在（如13岁获国际第五名的刘哲）。如果是万里挑一的数学天赋，在学习过程中一定会被展现和发掘出来。各阶段的选拔机制（人大附八中早期项目、集团直升、分班考、竞赛班）很少会遗漏真正的顶尖人才。
+  </div>
+
+  <h3>智商测试的意义</h3>
+  <p>赵佳运高中时测的智商约140，主持人测的为136。但两人都认为<strong>智商测试意义不大</strong>：</p>
+  <ul>
+    <li>测出120但数学学得好、各种考试过关、老师讲的都能跟上——不会因为智商分数拒绝孩子继续学</li>
+    <li>测出160但厌恶数学、不喜欢竞赛——也不可能强迫孩子去打竞赛</li>
+    <li>重要的是孩子在学习过程中的<strong>实际表现</strong>，而非纸面数字</li>
+  </ul>
+
+  <h3>效率问题</h3>
+  <p>效率要分两个层面看：</p>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">能力层面</div>
+      <ul>
+        <li>学习环境如何整理</li>
+        <li>书籍如何摆放</li>
+        <li>是否具备时间规划能力</li>
+        <li>任务如何分步骤完成</li>
+        <li>这些都不是天然习得的技能</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">意愿层面</div>
+      <ul>
+        <li>发自内心的热爱</li>
+        <li>与他人的竞争动力</li>
+        <li>老师的鞭策</li>
+        <li>家长的肯定</li>
+        <li>正循环带来的持续激励</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>过程书写规范</h3>
+  <div class="alert alert-danger">
+    <strong>关键提醒</strong>
+    脑子越好的孩子，思维越跳步，过程一开始写得越烂。这需要教练逐题纠正：先写什么、再写什么、采分点在哪里。数竞按步骤给分，没有捷径和速成办法，只能反复训练。
+  </div>
+</section>
+
+<!-- ===== S8 ===== -->
+<section id="s8">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第八章</span>家长角色与家庭教育</h2>
+  </div>
+
+  <h3>赵佳运家庭的教育方式</h3>
+  <p>赵佳运的父母采取了<strong>相对放养</strong>的教育方式：</p>
+  <ul>
+    <li>学习上的事情让孩子放手去做，家长提供资源和支持</li>
+    <li>不会逼迫孩子去做特定的事情</li>
+    <li>当孩子有想法时，家长配合提供条件</li>
+  </ul>
+
+  <div class="alert alert-purple">
+    <strong>共性总结：优秀竞赛生家长的特质</strong>
+    在孩子自己有动力的前提下，家长应当：
+    <ul style="margin:4px 0 0 20px;">
+      <li>多提供<strong>信息和资源</strong>支持</li>
+      <li>少做<strong>决策和推动</strong></li>
+      <li>让孩子在成长过程中自主探索，培养独立的心智和抗压能力</li>
+    </ul>
+  </div>
+
+  <h3>心智成熟与抗压能力</h3>
+  <p>赵佳运认为，正是因为家长放养较多，他有更多自由探索的空间（看小说、漫画等），心智发展更为成熟。相反，如果家长从一开始就安排得极紧、替孩子做了太多决策，孩子在该承压的年纪没有锻炼出抗压能力，等到必须自己扛的时候反而扛不住。</p>
+
+  <h3>手机与游戏管理</h3>
+  <table>
+    <thead>
+      <tr><th>项目</th><th>实际情况</th><th>建议</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>手机</strong></td><td>大学之前没有独立使用的手机</td><td>高中前需有一定管制，但查资料等用途需要设备支持</td></tr>
+      <tr><td><strong>游戏</strong></td><td>放假有时间可以玩，但不能太久</td><td>优先选择买断制独立游戏，避免需要持续投入时间的氪金游戏</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-gold">
+    <strong>游戏选择原则</strong>
+    有些游戏设计目的就是让人上瘾。建议购买买断制的独立游戏——其盈利模式不依赖用户投入大量时间，不容易产生沉迷。
+  </div>
+</section>
+
+<!-- ===== S9 ===== -->
+<section id="s9">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第九章</span>学习资源与书单推荐</h2>
+  </div>
+
+  <h3>各阶段推荐书目</h3>
+  <div class="card">
+    <div class="card-title">小学阶段</div>
+    <ul>
+      <li><strong>启蒙类</strong>：《可怕的科学》系列、DK数学/物理/化学系列、华罗庚《数学小丛书》</li>
+      <li><strong>训练类</strong>：奥数导引、大白本</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">初中阶段</div>
+    <ul>
+      <li><strong>初联</strong>：小蓝本、奥数教程、新视野等</li>
+      <li><strong>课内衔接</strong>：初中数学课本</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">高中阶段</div>
+    <ul>
+      <li><strong>高联一试/二试</strong>：各板块专题教材</li>
+      <li><strong>进阶</strong>：根据板块选择相应书籍</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>书单获取方式</strong>
+    书单涵盖小学、初中、高中的启蒙、入门、进阶书籍，由四五十位金牌同学共同贡献。完整书单可通过添加小助理获取。
+  </div>
+
+  <h3>平台校名单</h3>
+  <p>整理标准：能够<strong>连续三到五年稳定产出省队成员</strong>的学校，即具有一定的竞赛基因。各省份各学科近几年考试成绩均已列出。</p>
+
+  <h3>高中选拔题目</h3>
+  <p>整理了浙江杭二、学军等知名高中的选拔题目及分班考试题，按不同知识点分类总结，可用于针对性训练。</p>
+
+  <h3>数理名师盘点</h3>
+  <p>基于金银牌和国集成员的真实上课经历，整理了数学、物理两科的名师推荐（非评价好坏，而是"学过这些老师的课，孩子们比较认可"）。每位老师各板块均有多个选择，需根据个人适配度尝试。</p>
+
+  <h3>直播回放资源</h3>
+  <p>近期三周分别邀请了生物金牌（李新良）、物理金牌、数学金牌（赵佳运）进行分享，三场直播回放均可获取。</p>
+</section>
+
+<!-- ===== S10 ===== -->
+<section id="s10">
+  <div class="section-head">
+    <div class="bar"></div>
+    <h2><span class="sec-num">第十章</span>常见问题答疑精选</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：已经直升，还需要学初联吗？</div>
+    <p>已搞定直升的情况下，没有很强的必要把初联学得多好。但建议<strong>过一遍</strong>，否则到了高中会遇到"别人都学过，你没学"的吃力状态。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：小奥学完了，距小升初还有两年，该怎么安排？</div>
+    <p>先学初联内容，不必一直刷小奥。等到<strong>考试前半年</strong>再回归小奥进行针对性训练，刷上熟练度即可。做题能力与熟练度紧密相关，半年足够恢复手感。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：初联是否需要每个模块都学透？</div>
+    <p>取决于时间。如果时间充裕（如六年级进入初联），可以学深一些，目的是未来衔接高联时压力更小。如果时间紧迫（如初三才学初联），则需缩短学程，压缩时间向高联过渡。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：没有高中代数基础，能学组合和数论吗？</div>
+    <p>理论上可以学，但因为难度很大，没有前面内容的铺垫，很容易"被打崩"从而放弃竞赛。建议按由易到难的顺序推进。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：课内数学要不要追求满分？</div>
+    <p>满分需要<strong>高强度的熟练度训练</strong>。九十五分以上（96-100来回跳）是正常水平。即便是成年人，限时完成一千道个位数加减法也很难保证全对，这就是熟练度的问题。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：小学奥数对初高中有关联性吗？</div>
+    <p>关联性不太大。小奥的很多技巧在初联、高联中并不常用。小奥锻炼的<strong>总结归纳能力</strong>在后续学习中可以迁移。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：新领军、中科大少年班、西交少年班有什么区别？</div>
+    <p>三个层次的学校：清北独一档、华五第二档、C9第三档。新领军数学本博八年不能转专业；中科大可任选专业；西交大专业选择宽容度也较高。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Q：学竞赛是专注一科还是多科涉猎？</div>
+    <p>如果追求金牌，建议<strong>一科一条道走到黑</strong>。精力越分散，结果可能越惨，很可能哪个都搞不定。如果只是追求省一级奖项，可以适当多涉猎。</p>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<div class="footer">
+  <p>内容整理自赵佳运（2020年数学竞赛金牌）直播分享</p>
+  <p>北京大学数学科学学院 · 长沙市一中</p>
+</div>
+
+</div><!-- container -->
+</body>
+</html>

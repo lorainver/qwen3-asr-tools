@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-12-21-道哥直播-普瑞白子数学竞赛试卷分析</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2025-12-21-道哥直播-普瑞白子数学竞赛试卷分析</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>因为这个试题在白子的公众号上应该公布了嘛</li>
+                <li>难度肯定是有的，难度肯定是有的，而且应该也不小，</li>
+                <li>普锐白子对应的考试年级，我们当时建议的应该是三年级及以下主体是三年级及以下</li>
+                <li>的话，但考试我们建议的年级是三年级以下</li>
+                <li>参加普瑞白子前期需要学的内容，这个涉及到的面还是比较广一些的</li>
+                <li>首先是计算方面，我们希望大家对于小学段的计算</li>
+                <li>都要有所接触，可以不用技巧性特别强，但是基本的计算，尤其是整数计算方面的话，需要要求的会高一些</li>
+                <li>进入到白子的公众号，往前去翻公众号发布的当时白子考试报名的推文</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、第一题</a></li>
+                <li><a href="#section2">二、第一题</a></li>
+                <li><a href="#section3">三、第二题</a></li>
+                <li><a href="#section4">四、第二题</a></li>
+                <li><a href="#section5">五、第二题</a></li>
+                <li><a href="#section6">六、第三题</a></li>
+                <li><a href="#section7">七、第三题</a></li>
+                <li><a href="#section8">八、第四题</a></li>
+                <li><a href="#section9">九、第四题</a></li>
+                <li><a href="#section10">十、第四题</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>第一题</h2>
+                <p>这个题目的话，整体来说的话，我们是觉得它应该是一个。偏送分的题，但是实际上的话，整体最终还是会出现，有挺多这个题目没有得分的同学。这个的话，其实整体来看的话，更多的就出于的是自己计算能力上的问题，或者说是，我们在学习的过程中可能出现了某个问题。</p>
+                <p>比较多的关注到各种各样的一些花式的技巧，没有太多关注于基础的东西。我们看到这个式子，一个分数的计算然后注意观察数字的话，左边的这个八乘上一百二十七，应该得到的结果右边的这个一千零一十六，所以也左边通分直接得到的。对它通分的话，则意味着，左边应该是一零一六分之。</p>
+                <p>一百二十七x，然后再加上一个八y，它应该等于。右边的这个一零一六分之一零一七这样一个形式的话，从而我们要处理的实际上一百二十七x，然后再加上一个八y，应该等于。一千零一十七这个式子，我们考虑找的是这个式子，它要求是正整数解。</p>
+                <p>那当然，有同学可能会提到一个问题，或者说是下去之后，有家长可能看这个试卷会想一个问题，这看起来是个不定方程，。那我孩子没有学过不定方程，这个东西怎么解决呢。那实际上我们要考虑一个东西是什么呢。</p>
+                <p>既然刚才我们已经提到一百二十七乘八是能够正好等于一千零一十六，那就意味着现在这个x的取值，它最大就只能取到多少了。这个x能取到的正整数最大是八的情况下，x它只只可能取到是就一到八这些数了。OK，的话，也说，我们可以首先考虑一百二十七x，它应该一定会比这个一零一七要小，那从而的话，x应该只能取。</p>
+                <p>一二，然后一直到八这几个数，接下来它其实是一个什么问题呢。没有任何的其他需要你去关注的一些花式的技巧，也不需要对于不定方程有任何的一个掌握，。当然这个验证过程中，如果你分析的稍微再多一点的话，也可以，咱们再发现一些东西。</p>
+            </section>
+            <section id="section2">
+                <h2>第一题</h2>
+            </section>
+            <section id="section3">
+                <h2>第二题</h2>
+            </section>
+            <section id="section4">
+                <h2>第二题</h2>
+                <p>看明白的题吧，或者对于三年级的小朋友来说的话，可能是一个不太容易看明白的题。首先呢，因为我们日常习惯的四边形它都是凸四边形的这种形式。题目要求是将两个四边形放在了同一个平面内，问它们重叠的部分最多有多少个区域。</p>
+                <p>我们想一下，如果说真的是两个对应的。凸四边形的话，我们随便画两个，一个凸四边形和另外一个凸四边形，无论你以一个什么形式摆放。就只有一块，就只有一块，因为这个凸四边形本身不会被分成两块的，不会被分割的，所以它公共部分就只能是在中间的这个部分出现，不会在其他地方有。</p>
+                <p>既然这个题目在问最多有多少块的时候，可能就得想一想，会不会图形不长这个样子。那这里面就会涉及到，可能确实会有部分同学对于四边形的认知，它就只包括凸四边形。那在这个问题里面，确实就没办法去得到这个题的分数了。</p>
+                <p>实际上我们去考虑的过程中，当只要能够接触过凸四边形， 这种形状的一个同学的话，应该理论上接下来就有机会去解决这个问题了。那显然不对的话，我们要考虑另外一种形式——凸四边形。其形状的话，一个飞镖型的一个结构例如是。</p>
+                <p>当然了，这个图里面，如果想要画的明显一些的话，我们尽可能把这个图要画的，这个飞镖也画的狭长一些。那这样的一个形状，那这样一个形状的话，如果说另外还有一个和它形状一样的东西，但是横过来，它就有可能中间会呈现出不同的这种相交的一个形式。例如是像我画的这个样子，按照这种形式来讲的话，它就相当于形成了，对应的应该是。</p>
+                <p>四块对应重叠的一个区域位置是第一块，然后第二块。第三块和第四块，我们可以看到的是什么呢。本质上来讲，它其实变成线条的相交是一样的角度，的话，如果说是你日常有观察过两个角是怎么相交的一个形式，那只要把对应角的这个线。</p>
+            </section>
+            <section id="section5">
+                <h2>第二题</h2>
+            </section>
+            <section id="section6">
+                <h2>第三题</h2>
+                <p>有可能得分，但是不一定想的，也不一定想的足够明白的这样的一个题目。或者说这是一个不太容易得分的题，。我们看，他说两个不同的正正整数m、n，要求了均为四位数，并且二者千位上的数字相同。</p>
+                <p>则m n的最大可能值，这个地方m n加小括号指的什么。m n的最大公因数它的最大可能值。此时我们要求出来的话，那就得想一想最大公因数。</p>
+                <p>辗转相除法，也说，我们考虑m、n的一个最大公因数。我们这块为了方便起见，设一个大小关系吧。如果说是我记为m是大于n的，时候我们应该能知道。</p>
+                <p>m和n的最大公因数，它相当于应该m减n。它和n的最大公因数按照辗转相除法可以得到这个，然后得到这个的话，那也就对应的它们的最大公因数肯定是它们俩的差的因数。那当两个数千位上数字相同的时候，一共就四位，那只可能在后面三位上不同。</p>
+                <p>这样的两个数做差，它最大最大能达到的数也不可能到多少呢。最大也只能在三位数的范围里面，所以这样一来的话，这个m减n我们就应该知道，它肯定是小于一千的，这是一个上限已经有了。然后在这个基础上的话， 对应的再考虑，那它尽量大能大到多少。</p>
+                <p>那一千以下的这些数，我们逐个去确定它的数位的话，影响最大最大的应该首先是百位。先考虑这个百位，如果尽量大，例如大到多少呢。如果说正好是九百的话，是很容易把这两个数想到的。</p>
+            </section>
+            <section id="section7">
+                <h2>第三题</h2>
+                <p>第三题是我觉得，填空题所有题目里面思考难度最高的一个问题。其他的问题的话，其实思考的难度都没有那么高。所以这个题这个题大家如果说是会有一些问题或者说是做的时候没有做出来，包括现在去想。</p>
+                <p>尤其是三年级同学现在去想会有一些小的问题，不太能想得明白。这个是有比较正常的，这个比较正常。</p>
+            </section>
+            <section id="section8">
+                <h2>第四题</h2>
+            </section>
+            <section id="section9">
+                <h2>第四题</h2>
+            </section>
+            <section id="section10">
+                <h2>第四题</h2>
+                <p>第四题他说，某年的一个教师节是星期五，请问次年的劳动节是星期几。这种日期的计算对于我们来说应该是一个手拿把掐的这种问题所以这个题的话，其实算是一个简单题了。首先，我们看一下教师节的一个日期。</p>
+                <p>应该对应到九月十号，然后劳动节的一个日期呢，五月一号。下一年的，所以我们要算的从上一年的九月十号到下一年的五月一号，一共有多少天。然后按照一个星期七天，我们就推一下，那看一下最终整个这个天数除以七的余数是多少，然后做一个累加就可以。</p>
+                <p>那算这个天数的话，其实还是比较好推。九月份的话已经到十号了，那后面的话应该还剩下的二十天。然后再下来，十月份一共也三十一天，然后十一月份小月应该是三十天，十二月份三十一天，然后再下来到次年的一月份。</p>
+                <p>应该是三十一天，然后二月份的时候会出现一点点问题，因为这一块它只是说某年，没有说到底哪一年。时候这一下它的下一年呢，有可能是什么。有可能是一个平年，也有可能是个闰年。</p>
+                <p>在二月的这个情况下的话，它可能是二十八天，也可能是二十九天，然后再下来到了三月的话，又是三十一天。四月份的话，应该是三十天，再加上再下一天五一，的话再加一就可以。那总的天数的话，对应的应该这个数这个数是多少。</p>
+                <p>有没有同学快速的能够算出这个结果。我们考虑下来按照一个星期一个星期去推了。那每一个星期的话，它应该正好占七天，。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

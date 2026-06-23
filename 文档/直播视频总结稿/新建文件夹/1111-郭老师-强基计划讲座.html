@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>强基计划报考全攻略</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 50%, #b8860b 100%);
+  padding: 56px 0 48px;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: -20%;
+  width: 140%; height: 200%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  position: relative;
+}
+.header .subtitle {
+  font-size: 1.05rem;
+  opacity: 0.9;
+  margin-bottom: 20px;
+  position: relative;
+}
+.header .tags {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+.header .tag {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  backdrop-filter: blur(4px);
+}
+
+/* Nav */
+.nav {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: -30px auto 40px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.nav-label {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 2px 12px;
+  border-radius: 3px;
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  letter-spacing: 0.08em;
+}
+.nav h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+.nav-grid a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-grid a:hover { color: var(--accent); }
+.nav-grid a .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Section */
+section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 32px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+}
+section h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-left: 16px;
+  border-left: 4px solid var(--accent);
+  margin-bottom: 8px;
+}
+section h2 .num {
+  font-size: 0.75rem;
+  color: var(--accent-light);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 2px;
+}
+section h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.05rem;
+  color: var(--accent);
+  margin: 24px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+section h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+}
+section p {
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+section ul, section ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+section li {
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+section strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Alert boxes */
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  border-left: 4px solid;
+}
+.alert-gold { background: var(--highlight); border-color: var(--gold); color: #6b5a00; }
+.alert-success { background: #eaf5ed; border-color: var(--success); color: #1a4a28; }
+.alert-danger { background: #fdf0ec; border-color: var(--danger); color: #6b1a00; }
+.alert-info { background: #eaf2f8; border-color: var(--info); color: #0e3a54; }
+.alert-purple { background: var(--accent-bg); border-color: var(--accent); color: #4a1a3d; }
+.alert strong { display: block; margin-bottom: 4px; }
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+.card-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+/* Two column */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 16px 0;
+}
+.two-col .card { margin: 0; }
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.9rem;
+}
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+tbody tr:hover { background: var(--accent-bg); }
+
+/* Diff bar */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+  font-size: 0.88rem;
+}
+.diff-bar .label {
+  min-width: 100px;
+  color: var(--text-muted);
+  text-align: right;
+  flex-shrink: 0;
+}
+.diff-bar .bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.diff-bar .bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+/* Flow timeline */
+.flow {
+  position: relative;
+  padding-left: 36px;
+  margin: 20px 0;
+}
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.flow-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--accent-bg);
+}
+.flow-item .flow-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.flow-item .flow-desc {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* Tag variants */
+.tag {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.tag-purple { background: var(--accent-bg); color: var(--accent); }
+.tag-gold { background: var(--highlight); color: var(--gold); }
+.tag-green { background: #eaf5ed; color: var(--success); }
+.tag-red { background: #fdf0ec; color: var(--danger); }
+.tag-blue { background: #eaf2f8; color: var(--info); }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .header { padding: 40px 16px 36px; }
+  .header h1 { font-size: 1.6rem; }
+  .container { padding: 0 12px; }
+  section { padding: 20px 16px; }
+  .nav-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .nav { margin: -20px 12px 28px; padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="container">
+    <h1>强基计划报考全攻略</h1>
+    <p class="subtitle">从平台操作到选校策略，从报名流程到材料准备——一份面向家长的完整指南</p>
+    <div class="tags">
+      <span class="tag">阳光高考平台</span>
+      <span class="tag">入围模式解析</span>
+      <span class="tag">报名流程实操</span>
+      <span class="tag">综合素质评价</span>
+      <span class="tag">自荐信写作</span>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="container">
+<nav class="nav">
+  <span class="nav-label">目录</span>
+  <h3>内容导航</h3>
+  <div class="nav-grid">
+    <a href="#sec1"><span class="num">1</span>强基计划操作平台与入口</a>
+    <a href="#sec2"><span class="num">2</span>学信网注册与账号准备</a>
+    <a href="#sec3"><span class="num">3</span>两大入围模式详解</a>
+    <a href="#sec4"><span class="num">4</span>综合成绩折算规则</a>
+    <a href="#sec5"><span class="num">5</span>重点高校招生简章解读</a>
+    <a href="#sec6"><span class="num">6</span>报名流程实操演示</a>
+    <a href="#sec7"><span class="num">7</span>培养方案与专业方向</a>
+    <a href="#sec8"><span class="num">8</span>综合素质评价材料准备</a>
+    <a href="#sec9"><span class="num">9</span>自荐信写作核心要点</a>
+    <a href="#sec10"><span class="num">10</span>研究性学习报告指导</a>
+    <a href="#sec11"><span class="num">11</span>选校策略与位次建议</a>
+    <a href="#sec12"><span class="num">12</span>常见问题与关键提醒</a>
+  </div>
+</nav>
+
+<!-- Section 1 -->
+<section id="sec1">
+  <h2><span class="num">第一章</span>强基计划操作平台与入口</h2>
+  
+  <div class="alert alert-purple">
+    <strong>核心提醒</strong>
+    强基计划所有操作均在<strong>阳光高考平台</strong>完成。百度搜索"阳光高考"，进入官网即可。
+  </div>
+
+  <h3>平台访问路径</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-title">百度搜索"阳光高考"</div>
+      <div class="flow-desc">进入阳光高考平台官方网站</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">点击"快速入口"中的"特殊类型招生信息服务平台"</div>
+      <div class="flow-desc">该入口位于首页侧边栏</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">选择"强基计划"</div>
+      <div class="flow-desc">页面内含在线考试系统、招生远程面试系统、综评、保送等多个入口</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">查看强基计划高校名单及招生简章</div>
+      <div class="flow-desc">标注蓝色部分的高校，代表招生简章已发布</div>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>信息说明</strong>
+    每所高校的具体招生计划数（如在某省招几人）仅在登录报名系统后才可查看，不在公开页面显示。
+  </div>
+</section>
+
+<!-- Section 2 -->
+<section id="sec2">
+  <h2><span class="num">第二章</span>学信网注册与账号准备</h2>
+
+  <div class="alert alert-gold">
+    <strong>前置条件</strong>
+    报名前必须完成学信网注册与实名认证，否则基本信息无法显示，无法进入后续报名流程。
+  </div>
+
+  <h3>注册步骤</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-title">下载学信网APP</div>
+      <div class="flow-desc">在应用商店搜索"学信网"并下载安装</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">点击右下角"我的" → "注册"</div>
+      <div class="flow-desc">如学校已统一注册，直接登录即可</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">输入孩子身份证号</div>
+      <div class="flow-desc">手机号可使用家长号码</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">完成人脸识别验证</div>
+      <div class="flow-desc">需孩子本人操作，验证成功后即注册完成</div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>重要提示</strong>
+    孩子信息（身份证号、人脸识别）必须由孩子本人完成。手机号可用家长的，但学生信息必须填孩子的，否则无法关联阳光高考平台。
+  </div>
+</section>
+
+<!-- Section 3 -->
+<section id="sec3">
+  <h2><span class="num">第三章</span>两大入围模式详解</h2>
+
+  <p>强基计划目前所有高校的入围方式归纳为<strong>两种模式</strong>，细节各有差异，但框架一致：</p>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span class="tag tag-purple">模式一</span> 高考成绩入围</div>
+      <ul>
+        <li>高考出成绩后，按分省计划的<strong>4~6倍</strong>确定入围名单</li>
+        <li>依据高考成绩从高到低排序</li>
+        <li>代表高校：<strong>中国农业大学、武汉大学、中山大学、华中科大、电子科大、西工大</strong></li>
+        <li>校考安排在<strong>7月1日—4日</strong>（高考出分后）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="tag tag-gold">模式二</span> 初试入围</div>
+      <ul>
+        <li>高考后、出分前组织<strong>初试（笔试）</strong></li>
+        <li>按初试成绩划定合格线，确定入围名单</li>
+        <li>初试难度<strong>高于高考、低于竞赛</strong></li>
+        <li>代表高校：<strong>东南大学、北航、人大、上海交大</strong></li>
+        <li>校考安排在<strong>6月20日左右</strong>（出分前）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>关键区分</strong>
+    模式二中，<strong>初试成绩不计入最终综合成绩</strong>，仅决定是否入围。最终录取仍只看高考成绩（85%）和校考成绩（15%）。
+  </div>
+
+  <h3>破格入围条件（部分高校）</h3>
+  <table>
+    <thead>
+      <tr><th>条件</th><th>适用情形</th><th>代表高校</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>高考数学≥145分</td><td>第一类考生（非竞赛生），且成绩进入分省计划5~6倍以内</td><td>中国农业大学、西工大、电子科大</td></tr>
+      <tr><td>高考数学/物理满分</td><td>成绩进入分省计划5~6倍以内</td><td>电子科大</td></tr>
+      <tr><td>五大学科竞赛国二以上</td><td>第二类考生（竞赛生）</td><td>武汉大学、中山大学等</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>注意</strong>
+    拿到省二、省三的考生仍属于<strong>第一类考生</strong>（非竞赛生），第二类考生要求五大学科竞赛<strong>国家二级以上</strong>。
+  </div>
+</section>
+
+<!-- Section 4 -->
+<section id="sec4">
+  <h2><span class="num">第四章</span>综合成绩折算规则</h2>
+
+  <div class="alert alert-purple">
+    <strong>统一规则</strong>
+    所有高校均采用<strong>高考成绩占85% + 校考成绩占15%</strong>的比例折算综合成绩。折算时须将两项成绩统一到同一满分基准。
+  </div>
+
+  <h3>折算公式</h3>
+  <div class="card">
+    <p><strong>方式一（校考成绩放大到高考满分）：</strong></p>
+    <p>综合成绩 = 高考成绩（不含加分）× 85% +（校考成绩 ÷ 校考满分 × 当地高考满分）× 15%</p>
+    <p><strong>方式二（高考成绩缩小到百分制）：</strong></p>
+    <p>综合成绩 =（高考成绩 ÷ 高考满分 × 100）× 85% +（校考成绩 ÷ 校考满分 × 100）× 15%</p>
+    <p style="color:var(--text-muted);font-size:0.88rem;">两种方式数学等价，最终结果一致。</p>
+  </div>
+
+  <h3>各高校校考构成</h3>
+  <table>
+    <thead>
+      <tr><th>高校</th><th>校考内容</th><th>满分</th><th>特殊说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>中国农业大学</td><td>笔试 + 面试 + 体测</td><td>笔试50分 + 面试50分</td><td>笔试考察生物、物理、化学基础</td></tr>
+      <tr><td>北京理工大学</td><td>笔试 + 面试 + 体测</td><td>100分</td><td>入围时高考成绩+数学×0.2加权</td></tr>
+      <tr><td>武汉大学</td><td>综合能力测试 + 体测</td><td>100分</td><td>仅面试，分专业进行</td></tr>
+      <tr><td>中山大学</td><td>笔试 + 面试 + 体测</td><td>100分</td><td>有单科满分破格入围通道</td></tr>
+      <tr><td>华中科大</td><td>专业测试 + 体测</td><td>100分</td><td>根据综合素质评价档案全面考核</td></tr>
+      <tr><td>北航</td><td>初试（笔试）→ 复试（面试）+ 体测</td><td>复试100分</td><td>初试不计分，仅决定入围</td></tr>
+      <tr><td>人大</td><td>初试（笔试）→ 复试（面试）</td><td>100分</td><td>初试占校考60%，复试占40%（一类）</td></tr>
+      <tr><td>电子科大</td><td>面试 + 体测</td><td>100分</td><td>综合素质评价档案为重要参考</td></tr>
+      <tr><td>西工大</td><td>面试 + 体测</td><td>100分</td><td>单科145分可破格入围</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Section 5 -->
+<section id="sec5">
+  <h2><span class="num">第五章</span>重点高校招生简章解读</h2>
+
+  <h3>5.1 中国农业大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>入围方式：</strong>高考成绩入围，按分省计划<strong>4倍</strong>确定校考名单</li>
+      <li><strong>破格入围：</strong>第一类考生高考数学≥145分且成绩在分省计划6倍以内</li>
+      <li><strong>校考时间：</strong>7月1日—2日</li>
+      <li><strong>笔试内容：</strong>生物、物理、化学等学科基础知识</li>
+      <li><strong>面试内容：</strong>思想品德、综合素质、学科潜质、创新能力、科研志向</li>
+      <li><strong>录取原则：</strong>从第一名录到招生计划人数（如招10人，40人入围中取前10名）</li>
+    </ul>
+  </div>
+
+  <h3>5.2 北京理工大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>招生方向：</strong>仅招物理类考生</li>
+      <li><strong>入围特色：</strong>高考成绩 + 数学单科成绩×0.2加权排序，数学好更容易入围</li>
+      <li><strong>招生专业：</strong>数学与应用数学、智能无人系统等</li>
+      <li><strong>报名限制：</strong>仅可填报<strong>1个专业志愿</strong>，不进行专业调剂</li>
+      <li><strong>体测标准：</strong>立定跳远达标2.05米（男生）；仰卧起坐达标25个/分钟（女生）——标准不高</li>
+    </ul>
+  </div>
+
+  <h3>5.3 武汉大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>招生专业：</strong>哲学、汉语言文学、历史学（历史类）；数学、物理、化学、生物、基础医学（物理类）</li>
+      <li><strong>报名时间：</strong>4月18日—5月7日</li>
+      <li><strong>入围方式：</strong>高考成绩入围，按分省计划<strong>5倍</strong>确定名单</li>
+      <li><strong>校考内容：</strong>综合能力测试（面试）+ 体育测试</li>
+      <li><strong>培养方案：</strong>小班制、首席教授制、"烛光导航工程"（知名教授一对一指导）</li>
+      <li><strong>数学专业特色：</strong>含基础数学和智能科学两套方案，后者依托人工智能学院，硕博阶段往工科方向发展</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>关键认知纠偏</strong>
+    强基计划<strong>不是降分机会</strong>。强基计划的目标是本硕博贯通培养，使学生在某一领域成为专家级人才。如果仅为降分而报，思路从一开始就错了。
+  </div>
+
+  <h3>5.4 中山大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>招生专业：</strong>汉语言文学、历史学、哲学、数学、物理、化学、生物、生态、基础医学、理论与应用力学、药学</li>
+      <li><strong>报名时间：</strong>4月21日—5月10日</li>
+      <li><strong>入围方式：</strong>高考成绩入围，分省计划<strong>5倍</strong>确定名单</li>
+      <li><strong>破格入围：</strong>单科满分（物理满分或数学140+）可破格</li>
+      <li><strong>录取参考：</strong>药学、化学、生物科学等专业收分相对较低，录取概率较高</li>
+    </ul>
+  </div>
+
+  <h3>5.5 华中科技大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>招生专业：</strong>数学、物理、化学、生物、基础医学（物理类）；汉语言文学、哲学（历史类）</li>
+      <li><strong>报名时间：</strong>4月21日起</li>
+      <li><strong>确认时间：</strong>高考结束后、出分前（约6月12日—20日），需下载诚信承诺书</li>
+      <li><strong>入围方式：</strong>高考成绩<strong>6倍</strong>入围</li>
+      <li><strong>校考时间：</strong>7月4日前</li>
+      <li><strong>培养特色：</strong>数学专业涵盖芯片与集成电路、人工智能、先进制造、新材料、航空航天等工科方向</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>重要发现</strong>
+    强基专业虽为理学，但多数高校的培养方案中，硕博阶段均会向<strong>工科好方向</strong>拓展（人工智能、芯片、航空航天、新材料等），并非只学基础学科。
+  </div>
+
+  <h3>5.6 北京航空航天大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>重大变化：</strong>取消破格录取（竞赛国二以上不再单独通道），所有考生统一通过初试筛选</li>
+      <li><strong>入围方式：</strong>初试笔试 → 按成绩排序，分省计划<strong>5倍</strong>确定复试名单</li>
+      <li><strong>复试内容：</strong>面试 + 体育测试（初试成绩仅参考，不计入最终成绩）</li>
+      <li><strong>招生专业：</strong>信息与计算科学（新增）、应用物理学、化学；所有方向均往航空航天方向培养</li>
+      <li><strong>培养模式：</strong>完全学分制与个性化培养</li>
+    </ul>
+  </div>
+
+  <h3>5.7 中国人民大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>新增变化：</strong>今年新增初试环节（往年无初试）</li>
+      <li><strong>初试时间：</strong>6月13日左右（高考后、出分前）</li>
+      <li><strong>初试内容：</strong>A组（物理类）考查数理知识；B组（历史类）考查文史哲知识积累，不限于高中课程范围</li>
+      <li><strong>历史类备考建议：</strong>可参考2020年之前清华、北大自主招生的语文试卷和考试内容</li>
+      <li><strong>成绩折算：</strong>第一类考生初试占校考60%，复试面试占40%；第二类考生复试面试占100%</li>
+    </ul>
+  </div>
+
+  <h3>5.8 电子科技大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>招生专业：</strong>信息与计算科学（数学方向）、数理基础科学（数学偏物理）、应用物理学</li>
+      <li><strong>报名时间：</strong>4月21日—5月10日</li>
+      <li><strong>入围方式：</strong>高考成绩入围，分省计划<strong>5倍</strong></li>
+      <li><strong>破格入围：</strong>数学或物理单科满分，且成绩进入分省计划5~6倍以内</li>
+      <li><strong>确认时间：</strong>6月12日—6月20日，需签订承诺书</li>
+      <li><strong>报名限制：</strong>仅可填报1个专业，不安排专业调剂</li>
+    </ul>
+  </div>
+
+  <h3>5.9 西北工业大学</h3>
+  <div class="card">
+    <ul>
+      <li><strong>招生专业：</strong>航空航天（收分最高）、数学、物理、化学等</li>
+      <li><strong>报名时间：</strong>4月21日—5月10日</li>
+      <li><strong>确认时间：</strong>6月10日—6月18日</li>
+      <li><strong>入围方式：</strong>高考成绩入围，正常按<strong>4倍</strong>入围；单科145分且在5倍以内可破格</li>
+      <li><strong>校考内容：</strong>仅面试（综合素质评价档案为面试观测点之一）</li>
+      <li><strong>特色班型：</strong>黄玉山班（本硕连读），高考约800名左右可录</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Section 6 -->
+<section id="sec6">
+  <h2><span class="num">第六章</span>报名流程实操演示</h2>
+
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-title">登录阳光高考平台 → 选择目标高校</div>
+      <div class="flow-desc">进入强基计划报名系统</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">点击"开始报名"</div>
+      <div class="flow-desc">进入报名信息填写界面</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">填写基本信息</div>
+      <div class="flow-desc">从学信网自动关联，需提前完成注册</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">填写紧急联系人</div>
+      <div class="flow-desc">可填写两位家长信息</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">查询招生计划</div>
+      <div class="flow-desc">查看目标专业在本省的招生人数</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">选择考生类别</div>
+      <div class="flow-desc">第一类（高考成绩优异）或第二类（学科竞赛获奖）</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">确认是否申请破格</div>
+      <div class="flow-desc">非竞赛生选择"不申请"</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">填报专业志愿</div>
+      <div class="flow-desc">注意各校限制不同：有的仅可报1个专业，有的可报多个</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">确认志愿 → 提交</div>
+      <div class="flow-desc">完成报名，整个流程约5—10分钟</div>
+    </div>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>关键规则</strong>
+    <ul style="margin-top:8px;">
+      <li>强基计划<strong>只能报1所高校</strong>，不可兼报</li>
+      <li>报名截止前可随时<strong>取消并更换</strong>其他高校</li>
+      <li>取消报名后才能报另一所，否则系统不允许</li>
+      <li>报名本身很简单，<strong>难在选校决策</strong></li>
+    </ul>
+  </div>
+
+  <h3>确认环节的重要性</h3>
+  <div class="alert alert-danger">
+    <strong>必须点确认</strong>
+    所有高校均设有<strong>"考生确认"</strong>环节，且确认时间均在<strong>高考出成绩之前</strong>（通常6月10日—20日）。不点确认 = 相当于没有报名，无法入围。部分高校还要求上传诚信承诺书。
+  </div>
+</section>
+
+<!-- Section 7 -->
+<section id="sec7">
+  <h2><span class="num">第七章</span>培养方案与专业方向</h2>
+
+  <div class="alert alert-purple">
+    <strong>核心原则</strong>
+    强基计划采用<strong>本研衔接</strong>培养模式，即本科→硕士→博士贯通培养（相当于本硕博连读），本科阶段夯实基础学科，硕博阶段可进行<strong>学科交叉培养</strong>。
+  </div>
+
+  <h3>培养模式共性特征</h3>
+  <ul>
+    <li><strong>单独编班、小班化教学</strong></li>
+    <li><strong>导师制</strong>：知名教授一对一指导</li>
+    <li><strong>阶段性考核与分流补入</strong>：考核不合格可转入普通班（实际极少发生）</li>
+    <li><strong>先理后工</strong>：本科走理学基础，硕博向工科方向拓展</li>
+    <li><strong>出国机会</strong>：有交换机会，但一般不允许出国留学</li>
+    <li><strong>不能转专业</strong>：退出强基计划后也不能转入其他专业</li>
+  </ul>
+
+  <h3>部分高校培养方案对照</h3>
+  <table>
+    <thead>
+      <tr><th>高校/专业</th><th>培养特色</th><th>硕博方向</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>北理工 · 数学</td><td>依托数学与统计学院 + 自动化学院两套方案</td><td>方案一：数学方向；方案二：智能科学 → 智能机器人</td></tr>
+      <tr><td>武大 · 数学</td><td>基础数学 + 智能科学两套方案</td><td>方案二依托人工智能学院，往工科方向</td></tr>
+      <tr><td>华中科大 · 数学</td><td>涵盖芯片、AI、先进制造、新材料、航空航天</td><td>科技与产业发展双向需求</td></tr>
+      <tr><td>华中科大 · 物理</td><td>基础科学研究导向</td><td>可交叉至工科应用</td></tr>
+      <tr><td>北航 · 各专业</td><td>完全学分制与个性化培养</td><td>所有方向均往航空航天培养</td></tr>
+      <tr><td>西工大 · 航空航天</td><td>黄玉山班（本硕连读）</td><td>航空航天核心方向</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-success">
+    <strong>选校必看</strong>
+    每所985高校的本科招生信息网均会详细公布强基计划各专业培养方案。选校时必须查阅，确认培养方向是否符合孩子意愿。
+  </div>
+</section>
+
+<!-- Section 8 -->
+<section id="sec8">
+  <h2><span class="num">第八章</span>综合素质评价材料准备</h2>
+
+  <p>综合素质评价档案在强基计划面试中具有重要参考价值，是家长能够帮助孩子提升竞争力的关键环节。</p>
+
+  <h3>档案获取与查看</h3>
+  <ul>
+    <li>以建立省级统一信息平台的省份为依托（如重庆）</li>
+    <li>学校老师通常会提前组织学生填写</li>
+    <li>如教师审核已通过需修改，需联系老师<strong>退回后</strong>方可编辑</li>
+  </ul>
+
+  <h3>平台截止时间</h3>
+  <div class="alert alert-gold">
+    <strong>时间参考（以当年为准）</strong>
+    强基学生的综合素质评价截止时间约为<strong>5月7日</strong>前后。时间充裕，无需过度焦虑，但务必在截止前完成。
+  </div>
+
+  <h3>两项核心材料</h3>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span class="tag tag-red">高优先级</span> 自我陈述</div>
+      <p>相当于面试时的"简历"，直接影响面试官的第一印象。详见<a href="#sec9" style="color:var(--accent);">第九章</a>。</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="tag tag-gold">必填项</span> 研究性学习活动</div>
+      <p>体现对目标学科的学术兴趣与探究能力。详见<a href="#sec10" style="color:var(--accent);">第十章</a>。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>绝对不能作假</strong>
+    综合素质评价材料可以适当突出亮点，但<strong>绝对不能作假</strong>。面试时面试官可能针对材料内容深入追问，一旦无法自圆其说，将严重扣分。
+  </div>
+</section>
+
+<!-- Section 9 -->
+<section id="sec9">
+  <h2><span class="num">第九章</span>自荐信写作核心要点</h2>
+
+  <div class="alert alert-purple">
+    <strong>核心逻辑</strong>
+    自荐信（自我陈述）约<strong>600字以内</strong>，必须在有限字数内说清三件事：<br>
+    ① 我为什么想学这个专业？<br>
+    ② 我为什么选择贵校？<br>
+    ③ 学了这个专业，我未来想成为什么样的人？
+  </div>
+
+  <h3>常见误区</h3>
+  <table>
+    <thead>
+      <tr><th>错误写法</th><th>正确方向</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>大篇幅描述高中经历和成绩</td><td>聚焦于专业热爱、学校认同和未来志向</td></tr>
+      <tr><td>堆砌各种奖项（非五大学科竞赛的奖项）</td><td>除五大学科竞赛奖项外，其他奖项<strong>基本无用</strong></td></tr>
+      <tr><td>写成"我的自传"</td><td>写成"我为什么选择你"——让面试官感受到诚意</td></tr>
+      <tr><td>千篇一律的模板</td><td>针对目标学校和专业量身定制</td></tr>
+    </tbody>
+  </table>
+
+  <h3>写作框架示例</h3>
+  <div class="card">
+    <ol>
+      <li><strong>开篇：</strong>阐述对目标专业的理解与热情（"我为什么要学这个专业"）</li>
+      <li><strong>中段：</strong>讲述自己与该学科的渊源、探索经历、感悟思考</li>
+      <li><strong>收尾：</strong>说明为什么选择该校（提前了解其课程设置、学术方向、师资等），表达成为该校学生的强烈意愿</li>
+    </ol>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>面试场景还原</strong>
+    面试老师翻阅学生材料时，若多数学生只写高中表现，而某位学生明确表达了对目标学校和专业的热爱与了解，该学生在<strong>印象分</strong>上将获得明显优势，可能获得更多提问机会，面试分也可能更高。
+  </div>
+</section>
+
+<!-- Section 10 -->
+<section id="sec10">
+  <h2><span class="num">第十章</span>研究性学习报告指导</h2>
+
+  <div class="alert alert-gold">
+    <strong>定位区分</strong>
+    研究性学习 ≠ 学术报告。目标是体现<strong>对学科的热爱与探究兴趣</strong>，而非展示研究生水平的科研成果。
+  </div>
+
+  <h3>写作原则</h3>
+  <ul>
+    <li><strong>不要搞复杂</strong>：过于复杂的内容，面试时容易被面试官追问到无法回答</li>
+    <li><strong>一定要有</strong>：没有研究性学习报告是重大缺失</li>
+    <li><strong>孩子自己做</strong>：家长不可代做，否则面试时说不清楚反而弄巧成拙</li>
+    <li><strong>能自圆其说</strong>：确保孩子对报告内容能清晰阐述</li>
+  </ul>
+
+  <h3>各学科选题参考</h3>
+  <table>
+    <thead>
+      <tr><th>学科方向</th><th>选题示例</th><th>要求</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>数学</td><td>杨辉三角的规律探究、数学思辨</td><td>简洁清晰即可</td></tr>
+      <tr><td>物理/化学/生物</td><td>如"不同浓度酒精的作用效果实验"</td><td>提出问题→查阅资料→得出结论</td></tr>
+      <tr><td>古文字</td><td>三个甲骨文字的探究性学习</td><td>附图片+个人感悟</td></tr>
+      <tr><td>历史/经文</td><td>四五个古代经文的探究性学习</td><td>说清自己的真实感受</td></tr>
+    </tbody>
+  </table>
+
+  <p>完成后将报告<strong>截图上传</strong>至综合素质评价平台即可。一般耗时<strong>1~2小时</strong>即可完成。找班主任签字确认。</p>
+</section>
+
+<!-- Section 11 -->
+<section id="sec11">
+  <h2><span class="num">第十一章</span>选校策略与位次建议</h2>
+
+  <div class="alert alert-purple">
+    <strong>选校核心逻辑</strong>
+    报强基一定要<strong>往上冲</strong>——选择比自己当前位次更高的学校。如果报与自己位次相当的学校，一旦高考发挥超常，确认环节在出分前，届时可能陷入"裸分够更好的学校但已确认强基"的困境。
+  </div>
+
+  <h3>位次参考对照表</h3>
+  <table>
+    <thead>
+      <tr><th>位次范围</th><th>可冲刺层次</th><th>推荐高校</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1000名以内</td><td>C9级别</td><td>清华、北大、复旦、上交、南大、浙大、中科大、哈工大、西安交大</td></tr>
+      <tr><td>1000—2000名</td><td>顶尖985</td><td>北航、北理工、电子科大、西工大、哈工大</td></tr>
+      <tr><td>2000—5000名</td><td>中上985</td><td>武大、华中科大、中山大学、厦大等</td></tr>
+      <tr><td>5000—8000名</td><td>中等985</td><td>川大、北师大、山东大学等</td></tr>
+      <tr><td>8000—10000名</td><td>985入门</td><td>部分985高校的低分专业</td></tr>
+    </tbody>
+  </table>
+
+  <h3>专业录取难度排序（以理工类为例）</h3>
+  <div class="diff-bar">
+    <span class="label">航空航天类</span>
+    <div class="bar-wrap"><div class="bar-fill" style="width:95%;background:linear-gradient(90deg,var(--danger),#c0392b);"></div></div>
+  </div>
+  <div class="diff-bar">
+    <span class="label">数学/物理类</span>
+    <div class="bar-wrap"><div class="bar-fill" style="width:75%;background:linear-gradient(90deg,var(--gold),#d4a017);"></div></div>
+  </div>
+  <div class="diff-bar">
+    <span class="label">化学/生物类</span>
+    <div class="bar-wrap"><div class="bar-fill" style="width:50%;background:linear-gradient(90deg,var(--success),#3d8b5e);"></div></div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>新增专业注意事项</strong>
+    新增专业不会因为是新增就更容易录取。家长不必参考去年有哪些专业来判断竞争程度。
+  </div>
+
+  <h3>强基适配位次总结</h3>
+  <ul>
+    <li><strong>位次在1000以内：</strong>适合冲击清北复交南浙等顶级名校强基</li>
+    <li><strong>位次在5000以内：</strong>适合报考较好的985强基，数学物理方向更有优势</li>
+    <li><strong>位次在8000~10000以内：</strong>所有位次在此范围内的考生均可考虑报考强基</li>
+  </ul>
+</section>
+
+<!-- Section 12 -->
+<section id="sec12">
+  <h2><span class="num">第十二章</span>常见问题与关键提醒</h2>
+
+  <h3>关于体测</h3>
+  <div class="card">
+    <p>体测<strong>一票否决</strong>（不合格不予录取），但标准并不高。以北京理工大学为例：</p>
+    <ul>
+      <li>男生立定跳远达标：<strong>2.05米</strong></li>
+      <li>女生一分钟仰卧起坐达标：<strong>25个</strong></li>
+    </ul>
+    <p style="color:var(--text-muted);">对正常高中生而言难度不大，无需过度担忧。</p>
+  </div>
+
+  <h3>关于入围与录取的概率</h3>
+  <div class="alert alert-danger">
+    <strong>陪跑概率客观存在</strong>
+    按4倍或5倍入围，意味着入围学生中约<strong>75%~80%最终不会被录取</strong>。强基每年在重庆总共录取约200~300人，竞争激烈。冲不上是正常结果，不必因此气馁。
+  </div>
+
+  <h3>关于信息获取渠道</h3>
+  <div class="alert alert-success">
+    <strong>最权威渠道</strong>
+    获取强基计划信息的最佳渠道是<strong>阳光高考平台</strong>及各高校本科招生信息网，不要轻信短视频平台的碎片化信息。
+  </div>
+
+  <h3>关于综合素质档案</h3>
+  <ul>
+    <li>档案在面试中<strong>作为参考材料</strong>，对面试分有约<strong>10%~20%</strong>的帮助</li>
+    <li>档案不是决定性因素，但会影响面试官的第一印象</li>
+    <li>所有高校面试均明确提到参考综合素质评价档案</li>
+  </ul>
+
+  <h3>报名时间窗口提醒</h3>
+  <table>
+    <thead>
+      <tr><th>环节</th><th>时间范围</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>报名</td><td>4月中下旬 — 5月上旬</td><td>各校略有差异，以系统显示为准</td></tr>
+      <tr><td>确认参加校考</td><td>6月10日 — 6月20日</td><td>高考后、出分前，必须操作</td></tr>
+      <tr><td>初试（部分高校）</td><td>6月13日—15日</td><td>出分前完成</td></tr>
+      <tr><td>复试/校考</td><td>6月20日—7月4日</td><td>初试模式校考较早；高考入围模式在7月初</td></tr>
+      <tr><td>录取</td><td>7月中下旬</td><td>按综合成绩从高到低录取</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <p>本指南基于2025年强基计划招生政策整理，具体信息以各高校最新招生简章及阳光高考平台发布为准。</p>
+  <p style="margin-top:4px;">如有疑问，请查阅阳光高考平台或咨询相关招生部门。</p>
+</div>
+
+</body>
+</html>

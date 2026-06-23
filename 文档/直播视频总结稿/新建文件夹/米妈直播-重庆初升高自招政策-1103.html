@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆初升高自招政策与备考要点解析</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3a0e5c;
+            --primary-light: #5a1e8c;
+            --primary-dark: #1e0635;
+            --accent: #d4a843;
+            --accent-light: #e8c56a;
+            --bg: #faf6f0;
+            --bg-card: #ffffff;
+            --text: #2c2c2c;
+            --text-muted: #6e6560;
+            --border: #e8dfd4;
+            --shadow: rgba(58, 14, 92, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.85;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 40%, var(--primary-light) 100%);
+            padding: 80px 40px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-label {
+            display: inline-block;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid rgba(212, 168, 67, 0.4);
+            padding: 4px 16px;
+            border-radius: 2px;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.1s forwards;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-sub {
+            font-size: 15px;
+            color: rgba(255,255,255,0.65);
+            font-weight: 300;
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.2s forwards;
+        }
+
+        /* Navigation / TOC */
+        .toc-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            overflow-x: auto;
+        }
+
+        .toc-bar::-webkit-scrollbar {
+            height: 0;
+        }
+
+        .toc-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+        }
+
+        .toc-inner a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 14px 16px;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s ease;
+        }
+
+        .toc-inner a:hover {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Main Content */
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 56px;
+            opacity: 0;
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.05s; }
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.15s; }
+        .section:nth-child(4) { animation-delay: 0.2s; }
+
+        .section-number {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 52px;
+            font-weight: 900;
+            color: rgba(58, 14, 92, 0.07);
+            line-height: 1;
+            margin-bottom: -12px;
+            user-select: none;
+        }
+
+        .section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        .section h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-top: 28px;
+            margin-bottom: 10px;
+            padding-left: 14px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .section p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 32px var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .tag {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        .card-body {
+            font-size: 14.5px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .card-body ul {
+            padding-left: 18px;
+            margin-top: 8px;
+        }
+
+        .card-body li {
+            margin-bottom: 4px;
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(58, 14, 92, 0.04), rgba(212, 168, 67, 0.06));
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .highlight-box .hl-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .highlight-box p, .highlight-box li {
+            font-size: 14.5px;
+            color: var(--text-muted);
+        }
+
+        /* List style */
+        .key-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+
+        .key-list li {
+            position: relative;
+            padding: 10px 16px 10px 36px;
+            margin-bottom: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14.5px;
+            transition: border-color 0.2s ease;
+        }
+
+        .key-list li:hover {
+            border-color: var(--accent);
+        }
+
+        .key-list li::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 2px;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .comparison-table thead th {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 13px;
+            letter-spacing: 0.03em;
+        }
+
+        .comparison-table thead th:first-child {
+            border-radius: 6px 0 0 0;
+        }
+
+        .comparison-table thead th:last-child {
+            border-radius: 0 6px 0 0;
+        }
+
+        .comparison-table tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .comparison-table tbody tr:nth-child(even) {
+            background: rgba(58, 14, 92, 0.02);
+        }
+
+        .comparison-table tbody tr:hover {
+            background: rgba(212, 168, 67, 0.06);
+        }
+
+        /* Summary strip */
+        .summary-strip {
+            display: flex;
+            gap: 16px;
+            margin: 24px 0;
+            flex-wrap: wrap;
+        }
+
+        .summary-item {
+            flex: 1;
+            min-width: 180px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .summary-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        .summary-item .num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+
+        .summary-item .num span {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-muted);
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .summary-item .label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Divider */
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary-light));
+            border-radius: 2px;
+            margin: 32px 0 24px;
+        }
+
+        /* Footer */
+        .footer-note {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 13px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .footer-note .footer-line {
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+            margin: 0 auto 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero {
+                padding: 60px 20px 40px;
+            }
+            .content {
+                padding: 24px 16px 60px;
+            }
+            .card {
+                padding: 18px;
+            }
+            .section h2 {
+                font-size: 20px;
+            }
+            .summary-strip {
+                gap: 10px;
+            }
+            .summary-item {
+                min-width: 140px;
+                padding: 14px;
+            }
+            .summary-item .num {
+                font-size: 26px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+    <div class="hero-inner">
+        <div class="hero-label">演讲记录整理 &middot; 结构化摘要</div>
+        <h1>重庆初升高自招政策<br>与<span>备考要点</span>全解析</h1>
+        <p class="hero-sub">涵盖四大金刚招生策略、套餐约机制、自招题型变化、学科考点分析及备考建议，基于近两年真题研究整理。</p>
+    </div>
+</header>
+
+<!-- TOC Navigation -->
+<nav class="toc-bar">
+    <div class="toc-inner">
+        <a href="#overview">总览</a>
+        <a href="#enrollment">招生格局</a>
+        <a href="#bashi">八中体系</a>
+        <a href="#others">其他金刚</a>
+        <a href="#exam-changes">自招变化</a>
+        <a href="#subjects">学科考点</a>
+        <a href="#materials">真题资料</a>
+        <a href="#planning">规划建议</a>
+    </div>
+</nav>
+
+<main class="content">
+
+    <!-- Section 1: Overview -->
+    <section class="section" id="overview">
+        <div class="section-number">01</div>
+        <h2>总览：核心信息速览</h2>
+        <p>本次内容围绕重庆初升高阶段的自主招生政策、四大金刚（巴蜀、一中、八中、南开/三中）的招生格局变化，以及自招考试的题型演变展开分析。以下为关键数据概览：</p>
+
+        <div class="summary-strip">
+            <div class="summary-item">
+                <div class="num">4 <span>所</span></div>
+                <div class="label">核心学校（四大金刚）</div>
+            </div>
+            <div class="summary-item">
+                <div class="num">5%</div>
+                <div class="label">联招线以上自招名额占比</div>
+            </div>
+            <div class="summary-item">
+                <div class="num">38 <span>套</span></div>
+                <div class="label">近两年收集的真题卷</div>
+            </div>
+            <div class="summary-item">
+                <div class="num">70+ <span>场</span></div>
+                <div class="label">年度比武活动场次</div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="hl-title">核心结论</div>
+            <p>新高考改革带动新中考题型变化，进而驱动四大金刚自招考试的命题方向发生根本转变。数学出现引圆问题、多选题型；物理强调力学整体法与隔离法；语文考查高考级别的诗词鉴赏。家长需关注政策表象背后的学校实际操作逻辑。</p>
+        </div>
+    </section>
+
+    <!-- Section 2: Enrollment Landscape -->
+    <section class="section" id="enrollment">
+        <div class="section-number">02</div>
+        <h2>招生格局：自招名额与套餐约机制</h2>
+
+        <h3>自招名额充裕的学校类型</h3>
+        <p>以下几类学校自招名额相对充裕，初升高阶段值得重点关注：</p>
+
+        <ul class="key-list">
+            <li><strong>红八（巴蜀本部）：</strong>自招名额为四大金刚中最多，约为其余三校的三倍，所有招生均为自招名额，不参加联招考试。</li>
+            <li><strong>南渝、两江八中、两江巴蜀：</strong>均无联招代码，以自招为主，招生名额较同等水平学校更为充裕。</li>
+            <li><strong>区内集团校含普高名额的学校：</strong>区重点或龙珠校集团旗下拥有普通高中学籍的学校，可通过套餐约实现"兜底"。</li>
+            <li><strong>一中系：</strong>内签约六百余人，但正式"死约"仅一百至一百五十余份，大部分为套餐约，由天星桥中学等分校托底。</li>
+        </ul>
+
+        <h3>套餐约机制详解</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">套餐约的本质</div>
+                <div class="card-body">
+                    <p>学生签约时同时绑定本部与分校（或集团校）的录取条件。达到约定分数线则进入本部对应班型，未达到则自动分流至绑定学校。</p>
+                    <ul>
+                        <li><strong>巴蜀体系：</strong>八本签套餐约 → 达黄花园线可获实验班 / 超线十分获清北班 → 未上线则无条件进入两江巴蜀清北班</li>
+                        <li><strong>一中体系：</strong>签一双/一际套餐约 → 未达线则学籍落至天星桥中学，由天星托底</li>
+                        <li><strong>朝阳体系：</strong>朝阳有自有普高托底，可给出三十分降分签约</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">普高托底的关键作用</div>
+                <div class="card-body">
+                    <p>联招线以下仍可填报志愿。部分区重点学校名下有普通高中，学籍挂靠普高但实际在区重点就读，形成"低分兜底"机制。这一模式正成为各校破解5%自招名额限制的核心策略。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Bashi System -->
+    <section class="section" id="bashi">
+        <div class="section-number">03</div>
+        <h2>八中体系：布局分析与困境</h2>
+
+        <h3>当前格局</h3>
+        <ul class="key-list">
+            <li><strong>红八高中：</strong>仅招六个班（其中两个班为2+4直升），名额极为有限，红八本校学生竞争激烈，外部学生基本无法进入。</li>
+            <li><strong>科学城八中：</strong>定位为原艺术高中，中考录取仅630余分。与红八高中分差达55至60分，导致套餐约吸引力不足。</li>
+            <li><strong>两江八中：</strong>高中刚办第二届，尚在起步阶段。</li>
+            <li><strong>张八（张家花园八中）：</strong>今年起高中停办，师资将转移至两江巴蜀高中。未来将转型为单办初中。</li>
+        </ul>
+
+        <h3>核心困境</h3>
+        <div class="highlight-box">
+            <div class="hl-title">八中高中断档问题</div>
+            <p>八中体系长期"初中强、高中弱"，高中仅沙巴渝巴双本部，下接断档。相比一中系（一实、一际均为高完中）、三中系（南渝等均为高完中），八中的高中梯队布局明显不足。红八高中分差过大导致套餐约缺乏吸引力，牛娃及家长普遍不愿签约。</p>
+        </div>
+
+        <h3>两江巴蜀的崛起</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">双本部定位 <span class="tag">重点</span></div>
+                <div class="card-body">
+                    <p>两江巴蜀被定位为"双本部"，享有巴蜀系最高级别扶持。两江新区投入重金建设，巴蜀方面需派师资入驻。今年起由八本协助联合招生，全部为自招名额。张八高中停办后，原有师资将下沉至两江巴蜀高中。作为全新校区，家长对其"一张白纸"充满期待。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">育才北部的被低估</div>
+                <div class="card-body">
+                    <p>育才的"没落"实质是招生策略调整，而非教学质量下降。其清北班师资实力扎实，含金量远超多数龙珠分校，属于严重被低估的学校。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Other Schools -->
+    <section class="section" id="others">
+        <div class="section-number">04</div>
+        <h2>其他学校体系对比</h2>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>体系</th>
+                    <th>高中布局</th>
+                    <th>套餐约特点</th>
+                    <th>综合评价</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>一中系</strong></td>
+                    <td>一实、一际均为高完中，高中布局完善</td>
+                    <td>死约仅100-150份，大部分为套餐约，由天星桥中学托底，分差可接受</td>
+                    <td>文科（语文）偏难；翻墙考题难度高；校内教研相对温和</td>
+                </tr>
+                <tr>
+                    <td><strong>三中系</strong></td>
+                    <td>南渝、两江等均为高完中</td>
+                    <td>分校与本部差距十几分，家长接受度高</td>
+                    <td>分校体系成熟，兜底机制完善</td>
+                </tr>
+                <tr>
+                    <td><strong>巴蜀系</strong></td>
+                    <td>本部强，两江巴蜀新起</td>
+                    <td>八本自招名额最多（三倍于他校），套餐约绑定两江巴蜀清北班</td>
+                    <td>教研实力最强，校内培优体系最完善，题型难度最高</td>
+                </tr>
+                <tr>
+                    <td><strong>八中系</strong></td>
+                    <td>高中断档严重，仅沙巴渝巴双本部</td>
+                    <td>科学城八中分差过大，套餐约吸引力不足</td>
+                    <td>初中体系极强，理科培优扎实，但高中出口压力大</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Section 5: Exam Changes -->
+    <section class="section" id="exam-changes">
+        <div class="section-number">05</div>
+        <h2>自招比武题型变化</h2>
+
+        <h3>变化的根本驱动</h3>
+        <div class="highlight-box">
+            <div class="hl-title">新高考 → 新中考 → 自招命题连锁反应</div>
+            <p>重庆是最早实施新高考的地区之一。新高考的题型变革（如多选题）向中考传导，四大金刚的自招命题随之调整。自招考试本质上是学校选拔竞赛苗子和拔尖学生的工具，题型设计直接对接高联二试和高中衔接能力。</p>
+        </div>
+
+        <h3>数学题型三大变化</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">填空题尾部 <span class="tag">变化一</span></div>
+                <div class="card-body">
+                    <p><strong>旧：</strong>翻折几何 + 不定方程<br>
+                    <strong>新：</strong>圆与几何问题 + 阅读材料题</p>
+                    <p>原因：新中考加大材料阅读和计算题比重。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">选择题尾部 <span class="tag">变化二</span></div>
+                <div class="card-body">
+                    <p><strong>旧：</strong>不等式、组合、反比例函数<br>
+                    <strong>新：</strong>翻折几何 + 代数多选题</p>
+                    <p>原因：新高考已出现多选题型，自招率先引入。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">压轴题核心转变 <span class="tag">变化三 · 最关键</span></div>
+                <div class="card-body">
+                    <p><strong>函数压轴：</strong>由特殊三四边形 → 角度的存在性问题<br>
+                    <strong>几何压轴：</strong>由线与线的关系 → <strong>线与圆的关系（引圆问题）</strong></p>
+                    <p>引圆问题要求学生通过作辅助圆解题，这是初二培优及竞赛体系才涉及的内容，校内普通教学不涵盖。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="hl-title">引圆问题的本质</div>
+            <p>巴蜀和八中的自招几何题之所以"超级难"，核心在于引入了引圆问题（线圆关系），这属于高联二试的竞赛考点。能在自招中做出此类题目的学生，可直接签约竞赛班。巴蜀、八中体系内的培优学生在初二即接触此类题型，而多数龙珠校和非四大金刚体系的学生完全未涉及。</p>
+        </div>
+    </section>
+
+    <!-- Section 6: Subject Analysis -->
+    <section class="section" id="subjects">
+        <div class="section-number">06</div>
+        <h2>学科考点深度分析</h2>
+
+        <h3>数学</h3>
+        <ul class="key-list">
+            <li>引圆问题是四大金刚（尤其巴蜀、八中）的核心拉分点，需初二及以上水平</li>
+            <li>多选题型已出现在自招卷中，中考尚无，自招先行</li>
+            <li>培优生初二即可应对大部分题型；竞赛生初一即可尝试</li>
+            <li>中考最后一题最后一问：可用高中三角恒等变换（两角和差公式）快速求解，但未超前学的学生基本无法完成</li>
+        </ul>
+
+        <h3>物理</h3>
+        <ul class="key-list">
+            <li><strong>核心考点：力学整体法与隔离法</strong>——中考不考，但自招（尤其巴蜀、八中）必考</li>
+            <li>自招比武中，力学比电学更重要，因其直接对接高中物理体系</li>
+            <li>初中电学属于独立模块，高中物理的电学本质仍是力学</li>
+            <li>非八中、巴蜀体系的学生普遍未接触整体法和隔离法，属于明显劣势</li>
+            <li>初二力学板块是自招备考的关键节点</li>
+        </ul>
+
+        <h3>英语</h3>
+        <ul class="key-list">
+            <li>考查首字母填空和翻译题，题型接近上海新中考</li>
+            <li>阅读难度与四大金刚校内水平持平或略高</li>
+            <li>四大金刚学生应对相对从容，非四大学生可能感到吃力</li>
+        </ul>
+
+        <h3>语文</h3>
+        <ul class="key-list">
+            <li><strong>诗词鉴赏</strong>——属于高考考点，中考不考，但四大金刚自招必考，体现高中衔接导向</li>
+            <li><strong>文言文</strong>——由高一教师出题，仅考实词翻译，难度显著高于初中水平</li>
+            <li>已有八中学生反映考一中时语文（文言文和诗词鉴赏）最具不确定性</li>
+            <li>非四大体系学生须提前熟悉此类题型，否则无从下手</li>
+        </ul>
+
+        <div class="highlight-box">
+            <div class="hl-title">核心启示：培优体系决定竞争力</div>
+            <p>自招卷并非"高中内容"，而是四大金刚校内培优体系的延伸。八中、巴蜀的培优教研远超普通龙珠校数个层级。未进入培优体系或非四大金刚体系的学生，在自招中面对引圆问题、力学整体法与隔离法、诗词鉴赏等考点时，将面临系统性劣势。自招中五到十分的分差即构成分水岭。</p>
+        </div>
+    </section>
+
+    <!-- Section 7: Materials -->
+    <section class="section" id="materials">
+        <div class="section-number">07</div>
+        <h2>真题资料体系</h2>
+
+        <h3>初升高自招真题卷</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">资料概况</div>
+                <div class="card-body">
+                    <ul>
+                        <li>共收录<strong>38套</strong>近两年真题卷，以四大金刚为主</li>
+                        <li>数学19套，物理14套，另含英语、语文</li>
+                        <li>完整解析（解析篇幅大于题目本身），两册共计700余页</li>
+                        <li>按星级标注难度（三星 = 巴蜀/八中系难度）</li>
+                        <li>所有题目均为学生回忆版，来源为校内比武的复试真题</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">真题获取难度说明</div>
+                <div class="card-body">
+                    <p>四大金刚90%的比武活动在校内进行，外部机构极难获取原卷。资料来源于会员参加比武后的回忆整理及广泛人脉资源，具有高度稀缺性。配套由专业教研团队（涛成团队）提供解析与答疑支持。</p>
+                </div>
+            </div>
+        </div>
+
+        <h3>小升初真题卷</h3>
+        <ul class="key-list">
+            <li>收录约<strong>300套</strong>真题卷，每周动态更新</li>
+            <li>小升初90%在校外考试，真题获取相对容易</li>
+            <li>附六套分级评测卷（二星至五星），用于定位学校层次</li>
+            <li>手写版答案解析，按板块分类标注（数论、计算、几何、行程等）</li>
+            <li>配套视频讲解及每周公益分析课</li>
+        </ul>
+
+        <h3>真题卷使用建议</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>学生类型</th>
+                    <th>使用方式</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>初三优生（校内得分率90%+）</td>
+                    <td>以见题型为主，无需大量刷题</td>
+                    <td>快速了解考点和题型即可</td>
+                </tr>
+                <tr>
+                    <td>初三（得分率90%以下）</td>
+                    <td>需系统刷题，由高难度向低难度递减</td>
+                    <td>三星难则转二星，二星难则做龙珠卷</td>
+                </tr>
+                <tr>
+                    <td>非四大金刚体系学生</td>
+                    <td>必买，用于了解真实题型</td>
+                    <td>尤其需关注引圆问题、力学整体法与隔离法等</td>
+                </tr>
+                <tr>
+                    <td>区县/非联招区学生</td>
+                    <td>必买，用于辨别真伪和见题型</td>
+                    <td>避免被伪题误导，建立正确难度认知</td>
+                </tr>
+                <tr>
+                    <td>初二培优生（寒假备考）</td>
+                    <td>四大金刚卷可用于过渡难度</td>
+                    <td>培优生初二即可做大部分题型</td>
+                </tr>
+                <tr>
+                    <td>竞赛生</td>
+                    <td>初一即可尝试</td>
+                    <td>竞赛体系提前覆盖相关知识点</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Section 8: Planning -->
+    <section class="section" id="planning">
+        <div class="section-number">08</div>
+        <h2>升学规划建议</h2>
+
+        <h3>关键时间节点决策</h3>
+        <ul class="key-list">
+            <li><strong>初二阶段：</strong>核心分水岭。需确定走内迁保送、翻墙自招、指标到校、艺体生还是国际方向。力学和引圆问题的知识储备在此阶段奠定。</li>
+            <li><strong>初三上学期：</strong>参加比武见题型，明确目标学校层次，避免盲目报考造成打击。</li>
+            <li><strong>寒假期间：</strong>初二学生翻墙考/转学考的关键窗口，培优生可利用此阶段突破。</li>
+            <li><strong>志愿填报期：</strong>注意学校套路（如指标到校表格），所有关键决策需专业人士把关。</li>
+        </ul>
+
+        <h3>不同路径的策略</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">八中/巴蜀体系路径</div>
+                <div class="card-body">
+                    <p>理科培优扎实，自招竞争力强，初升高可拿高分。选择此体系需家长和孩子具备"越强则强"的抗压能力。高中出口需提前规划——红八高中名额极其有限，需同步考虑两江巴蜀、科学城八中等备选。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">国际方向路径</div>
+                <div class="card-body">
+                    <p>最佳转入时间为初二升初三。需对孩子的就业方向、大学专业、综合能力进行全面评估后决策。理科优势在国际方向同样显著。建议在初升高时即权衡利弊，获取多所学校奖学金后综合选择。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">区县/非联招区路径</div>
+                <div class="card-body">
+                    <p>信息差是最大障碍。需通过转学考进入四大金刚或龙珠体系，再参加翻墙考争取自招名额。建议尽早接触真题，了解真实难度，避免被机构伪题误导。</p>
+                </div>
+            </div>
+        </div>
+
+        <h3>核心原则</h3>
+        <div class="highlight-box">
+            <div class="hl-title">避免信息差，理解政策表象背后的真实逻辑</div>
+            <p>四大金刚均为套餐约，但不同体系的套餐约吸引力差异巨大——核心在于分校与本部分差是否在可接受范围内。自招题型变化的根本原因是新高考改革的传导效应，而非简单的"考高中内容"。掌握这些底层逻辑，才能做出精准的升学决策。</p>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer-note">
+    <div class="footer-line"></div>
+    <p>本文档基于演讲录音整理，已去除冗余口语、重复强调及寒暄内容，保留核心信息并按逻辑结构化。</p>
+    <p style="margin-top:6px; color: var(--accent);">整理时间：2025年 &middot; 内容仅供参考，请以官方最新政策为准</p>
+</footer>
+
+</body>
+</html>

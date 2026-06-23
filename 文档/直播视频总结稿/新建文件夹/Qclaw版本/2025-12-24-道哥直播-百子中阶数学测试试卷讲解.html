@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-12-24-道哥直播-百子中阶数学测试试卷讲解</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2025-12-24-道哥直播-百子中阶数学测试试卷讲解</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>我出的题应该是，我个人感觉是在这么多优秀的老师里边相对简单的，等会儿咱们看一看就知道了</li>
+                <li>然后，如果有广州线下的家长要注意一下，咱们线上的试卷跟</li>
+                <li>线下的试卷它是不完全一样的，它是不完全一样的，它有些题是做了一些改变，这个到时候看到的时候可以注意一下，</li>
+                <li>选拔咱们适合上中阶的孩子，所以说咱们中阶四个板块，几何、代数、数论、组合，咱们出的都有</li>
+                <li>比较特殊的是这个代数的方面，因为代数的方面相当于它在四个板块里需要的进度是最快的</li>
+                <li>基本上要求你初联的几何，但是肯定比初联的几何要稍微难一点，</li>
+                <li>孩子们把所有的题都做出来，因为毕竟考试时间只有一百二十分钟</li>
+                <li>那事实情况是，很多同学最后看这个分数线你能够发现，只要你</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、第一题</a></li>
+                <li><a href="#section2">二、第一题</a></li>
+                <li><a href="#section3">三、第一题</a></li>
+                <li><a href="#section4">四、第一题</a></li>
+                <li><a href="#section5">五、第一题</a></li>
+                <li><a href="#section6">六、第二题</a></li>
+                <li><a href="#section7">七、第二题</a></li>
+                <li><a href="#section8">八、第二题</a></li>
+                <li><a href="#section9">九、第二题</a></li>
+                <li><a href="#section10">十、第三题</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>第一题</h2>
+            </section>
+            <section id="section2">
+                <h2>第一题</h2>
+                <p>第一题，当时去供这道题的时候，初步的想法是搞一个简单的这个三角函数的单调递增，。考察一个单调性，然后呢，你如果学的比较进度比较深的话。那这种单增的题，你可以直接去求导。</p>
+                <p>那导函数应该是首先出来一个两倍的欧米伽，。然后cosine二欧米伽x加六分之派。那你求过导之后，你的一个严格单增的一道题，就变成了你只需要看这个函数在什么时候是大于零，什么时候是小于零的就可以了，。</p>
+                <p>把原函数的单调性转化成导函数的正负性的一个关系，。所以你只需要看这个导数它是正的还是负的就可以了。前面求过导的这个函数，它在三分之派到二分之派上，它必须都是大于等于零的。</p>
+                <p>因为你前面乘上了一个两倍的欧米伽，。比方说，我们先讨论欧米伽小于零的情况。那你的cosine二倍的欧米伽x加六分之派，。</p>
+                <p>它在三分之派到二分之派上也要是小于零的。那你去用你三角函数的知识，比方说你去结合你的。在什么时候哪个段里是正的，哪个段里是负的。</p>
+                <p>那事实上，在三分之派到二分之派上，你的二欧米伽x加六分之派，它的一个区间最小是在二分之派的时候取到。加上六分之派，那它只要在一个负的区间里就可以了，。我们知道，cosx在二分之派加二k派到二分之三派加二k派这个区间里是负的，。</p>
+            </section>
+            <section id="section3">
+                <h2>第一题</h2>
+            </section>
+            <section id="section4">
+                <h2>第一题</h2>
+                <p>第一题其实你去求个导，然后去根据三角函数的一个正负性去解一个不等式就可以了。它主要错误的地方，就可能会出错的地方，一般来说是计算量比较大，或者说分类讨论讨论错了这都有可能。一般来说，孩子出错的地方就这么几个。</p>
+            </section>
+            <section id="section5">
+                <h2>第一题</h2>
+            </section>
+            <section id="section6">
+                <h2>第二题</h2>
+            </section>
+            <section id="section7">
+                <h2>第二题</h2>
+            </section>
+            <section id="section8">
+                <h2>第二题</h2>
+                <p>第二题也是一式里边的，相当于不等式的题，。咱们电子版的试卷可以去公众号里边看可以去公众号里边。好，好，那咱们来看一下这道题应该怎么去做。</p>
+                <p>它告诉你a加b加c的和是三，也说它们和是固定的。然后呢，他问你后面这一长串的一个最大值，。最开始的想法我能够把这个其中一个圆给消掉就可以了。</p>
+                <p>其中一个圆给消掉的话，那最好消掉的是这个C呀。好，那咱们第一个想法去把这个c给消掉。因为这个c它是没有平方项的，它只有一次项，。</p>
+                <p>只有两个一次项，所以说你可以直接去代入，c等于三减a减b。代入c等于三减a减b，然后呢，你去看这个式子变成了什么。A和B都没有变，然后只有C变成了三减A减B，。</p>
+                <p>再加一个三a，那最后这个式子长成一个什么样呢。负的三a方减去一个三b方减去一个六ab，然后加十二a加十五b，再加一个三a。那你最后会发现，你刚好可以把它写成一个和a、b相关的式子，和a加b相关的式子，。</p>
+                <p>它是负三倍的a加b的平方，再加上一个十五倍的a加b。它是这样的，所以说你把a加b看成一个整体就可以了，。你把c消掉之后，相当于我们这个a加b加c等于三的条件就不再存在了。</p>
+            </section>
+            <section id="section9">
+                <h2>第二题</h2>
+                <p>第二题去考察的一个孩子的一个能否去消元的一个思想，。那你能把三个变量的式子利用你的条件转化成两个变量的式子。那转化之后，你就会发现它更加简单了，。</p>
+                <p>它只需要用二次函数的思想就可以解决了。好，那这是代数上的一个消元的思想。</p>
+            </section>
+            <section id="section10">
+                <h2>第三题</h2>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

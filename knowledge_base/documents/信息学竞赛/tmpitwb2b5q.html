@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆4升5零基础GESP C++全套1-8级完整培训课程规划</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        main: '#1976D2',
+                        accent: '#FF7043',
+                        lightBg: '#F0F7FF',
+                        darkText: '#263238',
+                        level1: '#42A5F5',
+                        level2: '#66BB6A',
+                        level3: '#FFCA28',
+                        level4: '#FF7043',
+                        level5: '#AB47BC',
+                        level6: '#EC407A',
+                        level7: '#26A69A',
+                        level8: '#3949AB'
+                    },
+                    fontFamily: {
+                        yahei: ['Microsoft YaHei', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+            .card-hover { transition: all 0.3s ease; }
+            .card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+            .scroll-bar-hide::-webkit-scrollbar { height: 6px; }
+            .scroll-bar-hide::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: "Microsoft YaHei", sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-darkText">
+    <!-- 固定导航栏 -->
+    <header class="fixed w-full top-0 left-0 bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+            <a href="#top" class="flex items-center gap-2 text-main text-xl md:text-2xl font-bold">
+                <i class="fa-solid fa-code"></i>
+                <span>GESP C++全套1-8级课程规划</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-5 text-gray-600 text-sm">
+                <a href="#rule" class="hover:text-main transition-colors">统一标准</a>
+                <a href="#level1" class="hover:text-main transition-colors">GESP1</a>
+                <a href="#level2" class="hover:text-main transition-colors">GESP2</a>
+                <a href="#level3" class="hover:text-main transition-colors">GESP3</a>
+                <a href="#level4" class="hover:text-main transition-colors">GESP4</a>
+                <a href="#level5" class="hover:text-main transition-colors">GESP5</a>
+                <a href="#level6" class="hover:text-main transition-colors">GESP6</a>
+                <a href="#level7" class="hover:text-main transition-colors">GESP7</a>
+                <a href="#level8" class="hover:text-main transition-colors">GESP8</a>
+                <a href="#study-plan" class="hover:text-main transition-colors">全年学习路线</a>
+                <a href="#resource" class="hover:text-main transition-colors">配套资源</a>
+            </nav>
+            <button class="md:hidden text-gray-700 text-xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main id="top" class="container mx-auto px-4 pt-28 pb-16">
+        <!-- 首页横幅 -->
+        <section class="bg-gradient-to-r from-main to-blue-400 rounded-2xl p-6 md:p-10 text-white my-8 text-shadow">
+            <div class="md:flex items-center gap-8">
+                <div class="md:w-3/4">
+                    <h1 class="text-[clamp(1.7rem,4vw,2.6rem)] font-bold leading-tight">
+                        重庆4升5零基础 · GESP C++ 1-8级完整培训计划
+                    </h1>
+                    <p class="mt-5 text-lg opacity-95 leading-relaxed">
+                        适配本地培训机构标准班型｜单级10-12节课，每节2小时<br>
+                        全程纯C++、拒绝Scratch、先纸笔推演算法再上机实操<br>
+                        完整路线：GESP1~8逐级通关，最终冲刺初一CSP-J入门组
+                    </p>
+                    <div class="mt-7 flex flex-wrap gap-3">
+                        <span class="bg-white/25 px-4 py-1.5 rounded-full text-sm"><i class="fa-solid fa-check mr-1"></i>单级10-12课时</span>
+                        <span class="bg-white/25 px-4 py-1.5 rounded-full text-sm"><i class="fa-solid fa-check mr-1"></i>每节课2小时标准化闭环教学</span>
+                        <span class="bg-white/25 px-4 py-1.5 rounded-full text-sm"><i class="fa-solid fa-check mr-1"></i>真题例题分层作业</span>
+                        <span class="bg-white/25 px-4 py-1.5 rounded-full text-sm"><i class="fa-solid fa-check mr-1"></i>衔接CSP-J竞赛</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 一、统一课程标准说明 -->
+        <section id="rule" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">一、课程统一标准与教学准则</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-main mb-2"><i class="fa-solid fa-user-check mr-2"></i>适用人群</h3>
+                    <p class="text-gray-700">重庆小学四年级升五年级零基础小学生，周末半天固定学习，长期目标逐级通关GESP1~8，六年级结束具备初一参加CSP-J入门组竞赛能力。</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-main mb-2"><i class="fa-solid fa-clock mr-2"></i>课时统一规格</h3>
+                    <ul class="text-gray-700 space-y-1">
+                        <li>1. 单节课时长：2小时（120分钟）</li>
+                        <li>2. 各级课时分配：GESP1/3/5/7为12节；GESP2/4/6/8为11节</li>
+                        <li>3. 课堂固定闭环流程：知识点讲授40min + 随堂例题实操60min + 作业讲评+答疑20min</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-main mb-2"><i class="fa-solid fa-book-open mr-2"></i>统一教学准则</h3>
+                    <ul class="text-gray-700 space-y-2">
+                        <li class="flex gap-2"><i class="fa-solid fa-circle-check text-green-500 mt-1"></i>全程纯C++教学，不使用Scratch图形化编程</li>
+                        <li class="flex gap-2"><i class="fa-solid fa-circle-check text-green-500 mt-1"></i>低等级优先纸笔推演算法逻辑，随等级提升逐步增加上机实操占比</li>
+                        <li class="flex gap-2"><i class="fa-solid fa-circle-check text-green-500 mt-1"></i>所有随堂例题、课后作业全部匹配对应等级历年GESP真题风格与难度</li>
+                        <li class="flex gap-2"><i class="fa-solid fa-circle-check text-green-500 mt-1"></i>作业分层设计：基础巩固题+进阶拔高题，适配小学生分层学习能力</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-main mb-2"><i class="fa-solid fa-sitemap mr-2"></i>完整学习路线</h3>
+                    <p class="text-gray-700">GESP1（12节）→ GESP2（11节）→ GESP3（12节）→ GESP4（11节）→ GESP5（12节）→ GESP6（11节）→ GESP7（12节）→ GESP8（11节）</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP1 12节 已完成方案 -->
+        <section id="level1" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level1 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level1">二、GESP 1级 完整课程（共12节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">掌握编程环境、顺序/分支/循环基础语法、变量、数组、简单枚举递推，完整覆盖GESP一级全部考点，零基础入门，能独立完成基础输入输出、简单逻辑编程题。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level1 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">C++入门与顺序结构</td>
+                                <td class="border border-gray-200 p-3">计算机基础、Dev-C++、cout/cin、程序基础结构</td>
+                                <td class="border border-gray-200 p-3">输入两数求乘积</td>
+                                <td class="border border-gray-200 p-3">三角形面积、三位数拆分各位</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">变量、数据类型与运算符</td>
+                                <td class="border border-gray-200 p-3">int/double/char/bool、算术/关系/逻辑运算符优先级</td>
+                                <td class="border border-gray-200 p-3">三位数各位求和</td>
+                                <td class="border border-gray-200 p-3">华氏转摄氏、三数求最大值</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">分支结构（上）if if-else</td>
+                                <td class="border border-gray-200 p-3">条件判断、关系运算、单双分支</td>
+                                <td class="border border-gray-200 p-3">判断数字奇偶</td>
+                                <td class="border border-gray-200 p-3">字符分类、闰年判断</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">分支结构（下）多分支、嵌套</td>
+                                <td class="border border-gray-200 p-3">if-else if-else、分支嵌套、逻辑运算符组合条件</td>
+                                <td class="border border-gray-200 p-3">成绩等级ABCDE判定</td>
+                                <td class="border border-gray-200 p-3">三数排序、直角三角形判定</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">循环结构（上）for循环</td>
+                                <td class="border border-gray-200 p-3">for三要素、break/continue、简单循环求和</td>
+                                <td class="border border-gray-200 p-3">1~100偶数求和</td>
+                                <td class="border border-gray-200 p-3">阶乘、1~n奇数求和</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">循环结构（下）while do-while、循环嵌套</td>
+                                <td class="border border-gray-200 p-3">三种循环对比、嵌套循环打印图案</td>
+                                <td class="border border-gray-200 p-3">打印直角星型三角</td>
+                                <td class="border border-gray-200 p-3">素数判断、水仙花数枚举</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">一维数组基础应用</td>
+                                <td class="border border-gray-200 p-3">数组定义、遍历、最值、求和、线性查找</td>
+                                <td class="border border-gray-200 p-3">5名学生成绩总分平均分</td>
+                                <td class="border border-gray-200 p-3">数组极值、数组逆序输出</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">字符数组与字符串基础</td>
+                                <td class="border border-gray-200 p-3">\0结束符、字符遍历、数字字符转换</td>
+                                <td class="border border-gray-200 p-3">手动计算字符串长度</td>
+                                <td class="border border-gray-200 p-3">大小写转换、统计数字字符个数</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">枚举、递推基础算法</td>
+                                <td class="border border-gray-200 p-3">枚举边界、递推初始条件、斐波那契</td>
+                                <td class="border border-gray-200 p-3">百钱百鸡简化版</td>
+                                <td class="border border-gray-200 p-3">斐波那契第20项、水仙花数枚举</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">GESP一级程序阅读专项（上）</td>
+                                <td class="border border-gray-200 p-3">变量跟踪、循环/数组代码推演</td>
+                                <td class="border border-gray-200 p-3">2023一级数组阅读真题</td>
+                                <td class="border border-gray-200 p-3">3道历年阅读真题手工推演</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">GESP一级编程大题专项（下）</td>
+                                <td class="border border-gray-200 p-3">题目拆分、分步编码、子任务得分</td>
+                                <td class="border border-gray-200 p-3">历年一级完整编程压轴题</td>
+                                <td class="border border-gray-200 p-3">3套完整编程真题独立完成</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">12</td>
+                                <td class="border border-gray-200 p-3">一级全真模拟+考前冲刺答疑</td>
+                                <td class="border border-gray-200 p-3">全考点复盘、考场时间分配、易错点汇总</td>
+                                <td class="border border-gray-200 p-3">完整一级限时模拟试卷</td>
+                                <td class="border border-gray-200 p-3">错题整理+知识点思维导图复盘</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP2 -->
+        <section id="level2" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level2 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level2">三、GESP 2级 完整课程（共11节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">巩固一级基础，深化多层循环、二维数组、完整字符串操作；掌握冒泡排序、进阶枚举递推；可独立完成中等复杂度模拟、计数类编程题，全覆盖GESP2考纲。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level2 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">一级复盘+多层循环基础</td>
+                                <td class="border border-gray-200 p-3">单层循环复盘、双重循环、行列图案打印</td>
+                                <td class="border border-gray-200 p-3">5*5星矩阵、倒三角</td>
+                                <td class="border border-gray-200 p-3">等腰星型、数字三角</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">字符数组与字符串深度遍历</td>
+                                <td class="border border-gray-200 p-3">逐字符遍历、大小写转换、字符分类统计</td>
+                                <td class="border border-gray-200 p-3">英文全部小写转大写</td>
+                                <td class="border border-gray-200 p-3">统计字母数字、剔除数字字符</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">一维数组进阶：查找、最值、区间统计</td>
+                                <td class="border border-gray-200 p-3">批量输入、线性查找、极值、区间求和</td>
+                                <td class="border border-gray-200 p-3">10个成绩求最高最低平均分</td>
+                                <td class="border border-gray-200 p-3">查找下标、删除数组指定元素</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">进阶枚举算法优化</td>
+                                <td class="border border-gray-200 p-3">枚举边界、无效循环裁剪、条件筛选</td>
+                                <td class="border border-gray-200 p-3">百钱百鸡、100以内完全平方数</td>
+                                <td class="border border-gray-200 p-3">1~100素数、三位数水仙花数</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">递推算法进阶模型</td>
+                                <td class="border border-gray-200 p-3">递推初始条件、递推式、楼梯/兔子模型</td>
+                                <td class="border border-gray-200 p-3">斐波那契前20项、楼梯走法</td>
+                                <td class="border border-gray-200 p-3">递推累加、兔子繁殖完整求解</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">循环分支综合模拟应用题</td>
+                                <td class="border border-gray-200 p-3">多条件嵌套、分段计费、批量统计</td>
+                                <td class="border border-gray-200 p-3">阶梯水费、成绩分段评级</td>
+                                <td class="border border-gray-200 p-3">出租车计费、多重满减判断</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">二维数组定义、遍历与矩阵运算</td>
+                                <td class="border border-gray-200 p-3">行列遍历、矩阵求和、矩阵转置基础</td>
+                                <td class="border border-gray-200 p-3">3*3矩阵行列求和</td>
+                                <td class="border border-gray-200 p-3">单位矩阵、简单矩阵转置</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">冒泡排序完整手写实现</td>
+                                <td class="border border-gray-200 p-3">相邻交换、内层循环缩减、升序降序</td>
+                                <td class="border border-gray-200 p-3">8个数字冒泡升序</td>
+                                <td class="border border-gray-200 p-3">成绩降序、排序去重</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">GESP2程序阅读专项训练</td>
+                                <td class="border border-gray-200 p-3">多层循环、二维数组代码手工推演</td>
+                                <td class="border border-gray-200 p-3">3道二级历年阅读真题拆解</td>
+                                <td class="border border-gray-200 p-3">4道阅读真题独立推演写答案</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">GESP2编程大题综合突破</td>
+                                <td class="border border-gray-200 p-3">数组+枚举+二维数组混合大题拆分编码</td>
+                                <td class="border border-gray-200 p-3">2道二级历年压轴编程题</td>
+                                <td class="border border-gray-200 p-3">3套完整二级编程真题</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">二级全真模拟测试+错题复盘冲刺</td>
+                                <td class="border border-gray-200 p-3">全级知识点梳理、语法逻辑错误汇总</td>
+                                <td class="border border-gray-200 p-3">完整二级限时模拟试卷精讲</td>
+                                <td class="border border-gray-200 p-3">错题本整理、薄弱模块专项刷题</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP3 -->
+        <section id="level3" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level3 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level3">四、GESP 3级 完整课程（共12节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">掌握自定义函数、递归入门、string字符串、三种基础排序；进制转换、位运算全套考点；模块化编程思维成型，完整覆盖GESP3全部考点。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level3 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">自定义基础函数 有参无参</td>
+                                <td class="border border-gray-200 p-3">函数定义声明、形参实参、return返回值</td>
+                                <td class="border border-gray-200 p-3">封装求最大值、素数判断函数</td>
+                                <td class="border border-gray-200 p-3">阶乘函数、水仙花判断函数</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">局部/全局变量、函数作用域</td>
+                                <td class="border border-gray-200 p-3">变量生命周期、同名变量覆盖、参数传递规则</td>
+                                <td class="border border-gray-200 p-3">全局局部变量冲突演示</td>
+                                <td class="border border-gray-200 p-3">交换数字函数、多函数数组统计</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">递归基础：简单递归调用推演</td>
+                                <td class="border border-gray-200 p-3">递归终止条件、递推转递归、纸笔模拟调用栈</td>
+                                <td class="border border-gray-200 p-3">递归阶乘、递归斐波那契</td>
+                                <td class="border border-gray-200 p-3">递归打印1~n、递归累加求和</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">C++ string标准字符串类全套操作</td>
+                                <td class="border border-gray-200 p-3">length substr find replace、字符串读写</td>
+                                <td class="border border-gray-200 p-3">截取子串、查找指定字符位置</td>
+                                <td class="border border-gray-200 p-3">字符串拼接替换、统计单词数量</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">选择/插入/计数三种基础排序</td>
+                                <td class="border border-gray-200 p-3">排序原理、代码模板、适用数据场景对比</td>
+                                <td class="border border-gray-200 p-3">数组三种排序升序实现</td>
+                                <td class="border border-gray-200 p-3">选择排序成绩、计数统计频次</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">十进制与二/八/十六进制互转</td>
+                                <td class="border border-gray-200 p-3">除基取余、按权展开、进制转换完整逻辑</td>
+                                <td class="border border-gray-200 p-3">十进制转二进制字符串</td>
+                                <td class="border border-gray-200 p-3">十转八、十六进制转十进制</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">位运算全套基础 & 逻辑运算综合</td>
+                                <td class="border border-gray-200 p-3">& | ^ ~ << >>、位运算简化计算</td>
+                                <td class="border border-gray-200 p-3">位运算判断奇偶、快速乘除2</td>
+                                <td class="border border-gray-200 p-3">提取二进制末位、无中间变量交换数字</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">多函数+数组模块化综合应用题</td>
+                                <td class="border border-gray-200 p-3">数组作函数参数、任务分函数拆分</td>
+                                <td class="border border-gray-200 p-3">成绩录入排序统计模块化系统</td>
+                                <td class="border border-gray-200 p-3">完整学生信息批量处理综合题</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">GESP3程序阅读专项（递归/进制/函数）</td>
+                                <td class="border border-gray-200 p-3">多层递归手工推演、进制转换代码跟踪</td>
+                                <td class="border border-gray-200 p-3">4道三级历年阅读真题精讲</td>
+                                <td class="border border-gray-200 p-3">5道阅读真题独立推演输出结果</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">三级枚举递推计数压轴大题训练</td>
+                                <td class="border border-gray-200 p-3">多层枚举优化、复杂递推计数模板</td>
+                                <td class="border border-gray-200 p-3">2道三级历年计数压轴真题</td>
+                                <td class="border border-gray-200 p-3">3套完整三级编程大题独立编码</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">进制/位运算/递归薄弱点专项补漏</td>
+                                <td class="border border-gray-200 p-3">高频失分模块同类题型集中强化</td>
+                                <td class="border border-gray-200 p-3">错题同类题型集中刷题订正</td>
+                                <td class="border border-gray-200 p-3">薄弱模块专项习题10道</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">12</td>
+                                <td class="border border-gray-200 p-3">三级全真模拟考试+考前答疑冲刺</td>
+                                <td class="border border-gray-200 p-3">全考点复盘、函数递归进制易错点汇总</td>
+                                <td class="border border-gray-200 p-3">完整三级限时模拟卷逐题精讲</td>
+                                <td class="border border-gray-200 p-3">错题整理、知识点思维导图梳理</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP4 -->
+        <section id="level4" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level4 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level4">五、GESP 4级 完整课程（共11节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">掌握结构体、vector动态数组、二分查找、基础贪心；多组输入输出、高精度加减；模块化复合编程，全覆盖GESP4全部考点。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level4 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">结构体struct复合数据类型</td>
+                                <td class="border border-gray-200 p-3">结构体定义、结构体数组、多属性数据存储</td>
+                                <td class="border border-gray-200 p-3">学生姓名分数结构体数组排序</td>
+                                <td class="border border-gray-200 p-3">图书信息结构体录入、按成绩排序</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">STL vector动态数组基础</td>
+                                <td class="border border-gray-200 p-3">push_back pop_back size、动态增删遍历</td>
+                                <td class="border border-gray-200 p-3">动态录入数字增删排序</td>
+                                <td class="border border-gray-200 p-3">vector存储成绩、vector去重</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">二分查找有序序列</td>
+                                <td class="border border-gray-200 p-3">左右边界mid、终止条件、查找左右边界</td>
+                                <td class="border border-gray-200 p-3">有序数组二分查找指定数字</td>
+                                <td class="border border-gray-200 p-3">二分查找目标、数字左右边界查找</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">贪心算法入门基础模型</td>
+                                <td class="border border-gray-200 p-3">局部最优全局最优、钱币、区间选点</td>
+                                <td class="border border-gray-200 p-3">最少纸币凑金额、区间选点</td>
+                                <td class="border border-gray-200 p-3">活动安排、最大不重叠区间选择</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">多组输入输出 while(cin)标准写法</td>
+                                <td class="border border-gray-200 p-3">无固定组数循环读取、多组独立计算</td>
+                                <td class="border border-gray-200 p-3">多组数字分别求最大最小值</td>
+                                <td class="border border-gray-200 p-3">多组进制转换、多组成绩统计</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">高精度整数加法、减法</td>
+                                <td class="border border-gray-200 p-3">数组存大数、逐位进位借位、正负区分</td>
+                                <td class="border border-gray-200 p-3">百位数大数加减实现</td>
+                                <td class="border border-gray-200 p-3">高精度加法、带正负高精度减法</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">递归进阶：分治、复杂递归拆分</td>
+                                <td class="border border-gray-200 p-3">分治思想、递归优化、多层递归推演</td>
+                                <td class="border border-gray-200 p-3">整数拆分、递归阶乘优化</td>
+                                <td class="border border-gray-200 p-3">递归逆序数字、分治枚举组合</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">GESP4程序阅读专项（结构体/二分/贪心）</td>
+                                <td class="border border-gray-200 p-3">结构体数组推演、二分代码流程跟踪</td>
+                                <td class="border border-gray-200 p-3">4道四级历年阅读真题拆解</td>
+                                <td class="border border-gray-200 p-3">5道阅读真题独立推演输出答案</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">四级综合编程大题专项训练</td>
+                                <td class="border border-gray-200 p-3">结构体+vector+二分贪心复合大题拆分编码</td>
+                                <td class="border border-gray-200 p-3">2道四级历年压轴编程真题</td>
+                                <td class="border border-gray-200 p-3">3套完整四级编程真题独立编码</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">高频易错点专项强化训练</td>
+                                <td class="border border-gray-200 p-3">二分边界、高精度进位、结构体赋值、递归死循环</td>
+                                <td class="border border-gray-200 p-3">同类易错题集中刷题订正</td>
+                                <td class="border border-gray-200 p-3">整理全套易错点错题本</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">四级全真模拟测试+全套复盘冲刺</td>
+                                <td class="border border-gray-200 p-3">全考点复盘、二分贪心高精度易错汇总</td>
+                                <td class="border border-gray-200 p-3">完整四级限时模拟卷逐题精讲</td>
+                                <td class="border border-gray-200 p-3">错题复盘、梳理四级完整知识框架</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP5 -->
+        <section id="level5" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level5 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level5">六、GESP 5级 完整课程（共12节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">掌握栈、队列、指针链表、欧几里得GCD、筛法素数、DFS深度搜索、高精度乘法；数论基础成型，衔接CSP-J初赛数学模块。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level5 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">STL stack栈容器 后进先出模型</td>
+                                <td class="border border-gray-200 p-3">push pop top empty、括号匹配、逆序</td>
+                                <td class="border border-gray-200 p-3">括号合法匹配判断</td>
+                                <td class="border border-gray-200 p-3">栈逆序字符串、表达式括号校验</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">STL queue队列 先进先出模型</td>
+                                <td class="border border-gray-200 p-3">push pop front back、排队模拟</td>
+                                <td class="border border-gray-200 p-3">购票排队模拟</td>
+                                <td class="border border-gray-200 p-3">批量队列数据统计处理</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">指针基础、单链表插入删除</td>
+                                <td class="border border-gray-200 p-3">地址取值、链表节点、遍历增删节点</td>
+                                <td class="border border-gray-200 p-3">链表存储数字遍历输出</td>
+                                <td class="border border-gray-200 p-3">尾部插入节点、删除指定值节点</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">欧几里得GCD、最小公倍数LCM</td>
+                                <td class="border border-gray-200 p-3">辗转相除、分数约分、多数字连续求gcd</td>
+                                <td class="border border-gray-200 p-3">两数GCD LCM求解</td>
+                                <td class="border border-gray-200 p-3">多数字连续GCD、分数约分计算</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">埃氏筛、线性筛批量求素数</td>
+                                <td class="border border-gray-200 p-3">标记数组、筛法优化、快速批量素数</td>
+                                <td class="border border-gray-200 p-3">输出1~1000全部素数</td>
+                                <td class="border border-gray-200 p-3">埃氏筛完整实现、线性筛优化版本</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">DFS深度优先搜索 回溯基础</td>
+                                <td class="border border-gray-200 p-3">标记数组、恢复现场、迷宫、组合枚举</td>
+                                <td class="border border-gray-200 p-3">简单迷宫单通路查找</td>
+                                <td class="border border-gray-200 p-3">迷宫路径、数字组合回溯枚举</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">高精度乘法完整实现</td>
+                                <td class="border border-gray-200 p-3">大数逐位相乘、进位处理、倒置输出</td>
+                                <td class="border border-gray-200 p-3">超大整数相乘
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">高精度乘法完整实现</td>
+                                <td class="border border-gray-200 p-3">大数逐位相乘、进位处理、倒置输出</td>
+                                <td class="border border-gray-200 p-3">超大整数相乘</td>
+                                <td class="border border-gray-200 p-3">多组高精度乘法测试</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">组合计数基础 加法乘法原理</td>
+                                <td class="border border-gray-200 p-3">分步分类、简单排列、无重复组合</td>
+                                <td class="border border-gray-200 p-3">衣物搭配组合计数</td>
+                                <td class="border border-gray-200 p-3">有限条件排列组合计算</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">GESP5程序阅读专项（栈/队列/DFS/筛法）</td>
+                                <td class="border border-gray-200 p-3">搜索、线性容器、数论代码手工推演</td>
+                                <td class="border border-gray-200 p-3">4道五级历年阅读真题</td>
+                                <td class="border border-gray-200 p-3">5道阅读真题独立推演</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">GESP5综合压轴大题训练</td>
+                                <td class="border border-gray-200 p-3">DFS、筛法、高精度混合大题分步编码</td>
+                                <td class="border border-gray-200 p-3">2道五级压轴编程真题</td>
+                                <td class="border border-gray-200 p-3">3套完整五级编程真题</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">数论模块薄弱点专项补漏（GCD/筛法/计数）</td>
+                                <td class="border border-gray-200 p-3">数论高频错题集中强化、模板梳理</td>
+                                <td class="border border-gray-200 p-3">同类错题集中刷题订正</td>
+                                <td class="border border-gray-200 p-3">数论专项习题12道</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">12</td>
+                                <td class="border border-gray-200 p-3">五级全真模拟测评+考前冲刺答疑</td>
+                                <td class="border border-gray-200 p-3">全套栈/队列/DFS/数论体系复盘</td>
+                                <td class="border border-gray-200 p-3">完整五级限时模考卷逐题精讲</td>
+                                <td class="border border-gray-200 p-3">错题复盘、数论模板整理背诵</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP6 -->
+        <section id="level6" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level6 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level6">七、GESP 6级 完整课程（共11节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">掌握BFS广度优先搜索、二分答案、快速幂、01/完全/多重背包DP、STL set/map，完整覆盖GESP6算法核心，达到CSP-J复赛入门水平。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level6 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">BFS广度优先搜索 最短路径</td>
+                                <td class="border border-gray-200 p-3">队列存状态、距离标记、网格最短通路、多起点扩散</td>
+                                <td class="border border-gray-200 p-3">迷宫最短路径求解</td>
+                                <td class="border border-gray-200 p-3">二维网格BFS、多起点扩散题目</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">二分答案通用算法模板</td>
+                                <td class="border border-gray-200 p-3">check判定函数、区间收缩、最大化/最小化答案</td>
+                                <td class="border border-gray-200 p-3">数组分割最小最大值</td>
+                                <td class="border border-gray-200 p-3">二分最小满足条件值、复杂判定二分</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">快速幂取模、逆序对基础统计</td>
+                                <td class="border border-gray-200 p-3">二分快速幂、模运算性质、简单逆序对计数</td>
+                                <td class="border border-gray-200 p-3">a^b mod m快速计算</td>
+                                <td class="border border-gray-200 p-3">快速幂标准模板、数组逆序对统计</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">DP入门：01背包标准模型</td>
+                                <td class="border border-gray-200 p-3">dp数组定义、选/不选状态转移、容量限制</td>
+                                <td class="border border-gray-200 p-3">固定容量背包求最大价值</td>
+                                <td class="border border-gray-200 p-3">01背包完整模板、计数类背包</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">完全背包、多重背包简化版</td>
+                                <td class="border border-gray-200 p-3">无限物品转移、有限物品拆分转移差异</td>
+                                <td class="border border-gray-200 p-3">钱币凑最少张数</td>
+                                <td class="border border-gray-200 p-3">完全背包、多重背包分别实现</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">STL set有序去重、map键值映射</td>
+                                <td class="border border-gray-200 p-3">自动排序去重、键值查询、迭代器基础遍历</td>
+                                <td class="border border-gray-200 p-3">统计数字出现频次、自动去重排序</td>
+                                <td class="border border-gray-200 p-3">map频次统计、set有序查询题目</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">复杂贪心综合题型（区间覆盖、任务调度）</td>
+                                <td class="border border-gray-200 p-3">自定义cmp排序、多条件贪心策略</td>
+                                <td class="border border-gray-200 p-3">最少点覆盖全部区间、最大不重叠活动</td>
+                                <td class="border border-gray-200 p-3">区间类贪心综合大题训练</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">GESP6程序阅读专项（BFS/DP/二分答案）</td>
+                                <td class="border border-gray-200 p-3">搜索、动态规划、二分代码手工推演</td>
+                                <td class="border border-gray-200 p-3">4道六级历年阅读真题拆解</td>
+                                <td class="border border-gray-200 p-3">5道阅读真题独立推演输出结果</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">GESP6综合算法大题专项</td>
+                                <td class="border border-gray-200 p-3">DP+BFS+二分+map混合考点大题完整编码</td>
+                                <td class="border border-gray-200 p-3">2道六级历年压轴编程真题</td>
+                                <td class="border border-gray-200 p-3">3套完整六级编程真题独立完成</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">算法模板整理与易错点强化</td>
+                                <td class="border border-gray-200 p-3">DP、BFS、二分答案、快速幂通用模板背诵、同类错题订正</td>
+                                <td class="border border-gray-200 p-3">四大算法模板默写训练</td>
+                                <td class="border border-gray-200 p-3">整理全套六级标准算法模板</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">六级全真模拟考试+全套考点复盘冲刺</td>
+                                <td class="border border-gray-200 p-3">全级算法体系梳理，衔接GESP7图论数据结构</td>
+                                <td class="border border-gray-200 p-3">完整六级限时模考卷逐题精讲</td>
+                                <td class="border border-gray-200 p-3">错题复盘，梳理CSP-J衔接知识点清单</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP7 -->
+        <section id="level7" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level7 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level7">八、GESP 7级 完整课程（共12节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">掌握树、二叉树、优先队列堆、并查集、图遍历、Floyd/Dijkstra最短路、Kruskal最小生成树；覆盖GESP7全部图论数据结构，对标CSP-J复赛核心数据结构考点。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level7 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">树基础概念、邻接表静态存储</td>
+                                <td class="border border-gray-200 p-3">根/叶子、父子节点、邻接表建树、深度统计</td>
+                                <td class="border border-gray-200 p-3">建树遍历，统计节点深度</td>
+                                <td class="border border-gray-200 p-3">基础建树遍历、统计每层节点数量</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">二叉树前/中/后序递归遍历</td>
+                                <td class="border border-gray-200 p-3">三种遍历顺序、根据遍历序列还原二叉树基础</td>
+                                <td class="border border-gray-200 p-3">给定序列输出三种遍历结果</td>
+                                <td class="border border-gray-200 p-3">三种遍历递归代码完整手写实现</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">优先队列 priority_queue 堆结构</td>
+                                <td class="border border-gray-200 p-3">大根堆、小根堆、维护前K大数字、堆排序思想</td>
+                                <td class="border border-gray-200 p-3">动态维护数组前3大数字</td>
+                                <td class="border border-gray-200 p-3">堆实现数字从小到大输出</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">并查集DSU：集合合并、连通查询、路径压缩</td>
+                                <td class="border border-gray-200 p-3">父数组、find查找、union合并、连通块计数</td>
+                                <td class="border border-gray-200 p-3">岛屿连通块数量统计</td>
+                                <td class="border border-gray-200 p-3">朋友连通关系、多组岛屿计数</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">无向图邻接表、DFS图遍历、连通分量</td>
+                                <td class="border border-gray-200 p-3">边存储、访问标记、统计整张图连通块</td>
+                                <td class="border border-gray-200 p-3">一张图求连通分量总数</td>
+                                <td class="border border-gray-200 p-3">多组图连通块计数题目</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">Floyd多源最短路 邻接矩阵</td>
+                                <td class="border border-gray-200 p-3">三重循环松弛、任意两点最短距离计算</td>
+                                <td class="border border-gray-200 p-3">小镇交通最短距离求解</td>
+                                <td class="border border-gray-200 p-3">Floyd模板完整实现</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">Dijkstra单源最短路（堆优化）</td>
+                                <td class="border border-gray-200 p-3">无负权图、堆优化减少松弛、起点到所有点距离</td>
+                                <td class="border border-gray-200 p-3">起点到全部节点最短路径</td>
+                                <td class="border border-gray-200 p-3">堆优化Dijkstra完整代码模板</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">Kruskal最小生成树（结合并查集）</td>
+                                <td class="border border-gray-200 p-3">边排序、判连通、选最小边构建生成树</td>
+                                <td class="border border-gray-200 p-3">城市修路最小总造价</td>
+                                <td class="border border-gray-200 p-3">Kruskal最小生成树标准模板</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">GESP7程序阅读专项（树/并查集/最短路）</td>
+                                <td class="border border-gray-200 p-3">图论、二叉树、堆复杂代码手工推演</td>
+                                <td class="border border-gray-200 p-3">4道七级历年阅读真题精讲</td>
+                                <td class="border border-gray-200 p-3">5道七级阅读真题独立推演</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">图论综合大题专项训练</td>
+                                <td class="border border-gray-200 p-3">并查集+最短路+树遍历混合压轴题完整编码</td>
+                                <td class="border border-gray-200 p-3">2道GESP7压轴编程真题</td>
+                                <td class="border border-gray-200 p-3">3套完整七级编程大题独立完成</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">图论数据结构易错点专项补漏</td>
+                                <td class="border border-gray-200 p-3">并查集路径压缩、堆大小根颠倒、遍历标记遗漏高频错题集中训练</td>
+                                <td class="border border-gray-200 p-3">同类图论错题集中订正</td>
+                                <td class="border border-gray-200 p-3">图论专项习题12道强化</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">12</td>
+                                <td class="border border-gray-200 p-3">七级全真模拟测评+考前冲刺</td>
+                                <td class="border border-gray-200 p-3">全套树/堆/并查集/最短路知识体系梳理，衔接GESP8高阶数学与进阶DP</td>
+                                <td class="border border-gray-200 p-3">完整七级限时模考卷逐题精讲</td>
+                                <td class="border border-gray-200 p-3">错题整理，梳理图论全套模板库</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- GESP8 -->
+        <section id="level8" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-level8 rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-level8">九、GESP 8级 完整课程（共11节课，2h/节）</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-lg font-semibold mb-3">课程总目标</h3>
+                <p class="text-gray-700 mb-6">覆盖高阶组合数学、区间DP/计数DP、拓扑排序、SPFA负权最短路、离散化分治、记忆化搜索；吃透GESP8全部考点，达到CSP-J复赛稳定二等奖水平，完美衔接初一CSP-J参赛。</p>
+                <div class="overflow-x-auto scroll-bar-hide">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-level8 text-white">
+                                <th class="border border-gray-200 p-3 text-left w-16">课时</th>
+                                <th class="border border-gray-200 p-3 text-left">课程主题</th>
+                                <th class="border border-gray-200 p-3 text-left">核心知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">随堂例题</th>
+                                <th class="border border-gray-200 p-3 text-left">课后作业</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">1</td>
+                                <td class="border border-gray-200 p-3">高阶组合数学：排列组合、杨辉三角、隔板法、组合数取模</td>
+                                <td class="border border-gray-200 p-3">加法乘法原理、组合递推、模意义计算、小球盒子分配模型</td>
+                                <td class="border border-gray-200 p-3">网格路径计数、隔板分配问题</td>
+                                <td class="border border-gray-200 p-3">隔板法、杨辉三角组合数综合计算题</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">2</td>
+                                <td class="border border-gray-200 p-3">拓扑排序、有向图判环</td>
+                                <td class="border border-gray-200 p-3">入度数组、队列拓扑流程、检测图中环路</td>
+                                <td class="border border-gray-200 p-3">课程先后顺序拓扑排序</td>
+                                <td class="border border-gray-200 p-3">拓扑排序完整模板，拓展判环题目</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">3</td>
+                                <td class="border border-gray-200 p-3">SPFA最短路（支持负权边+负环判断）</td>
+                                <td class="border border-gray-200 p-3">队列松弛、负环标记、Dijkstra/Floyd/SPFA适用场景区分</td>
+                                <td class="border border-gray-200 p-3">含负权路段最短路径求解</td>
+                                <td class="border border-gray-200 p-3">SPFA完整模板+负环检测代码</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">4</td>
+                                <td class="border border-gray-200 p-3">离散化、分治算法基础</td>
+                                <td class="border border-gray-200 p-3">大数据坐标压缩、区间分治二分统计、值域缩小技巧</td>
+                                <td class="border border-gray-200 p-3">坐标离散化区间频次统计</td>
+                                <td class="border border-gray-200 p-3">离散化+二分综合大题训练</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">5</td>
+                                <td class="border border-gray-200 p-3">动态规划进阶：区间DP、LIS最长上升子序列</td>
+                                <td class="border border-gray-200 p-3">区间状态转移、石子合并模型、LIS二分优化</td>
+                                <td class="border border-gray-200 p-3">石子合并最小代价、LIS求解</td>
+                                <td class="border border-gray-200 p-3">区间DP两套标准模板练习</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">6</td>
+                                <td class="border border-gray-200 p-3">多维DP、计数DP（带限制路径取模）</td>
+                                <td class="border border-gray-200 p-3">二维dp存储状态、障碍路径计数、方案数模运算</td>
+                                <td class="border border-gray-200 p-3">带障碍物网格路径计数</td>
+                                <td class="border border-gray-200 p-3">多维计数DP综合题型训练</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">7</td>
+                                <td class="border border-gray-200 p-3">综合搜索优化：剪枝、记忆化DFS</td>
+                                <td class="border border-gray-200 p-3">记忆化存储DP状态、可行性剪枝、上下界优化减少递归次数</td>
+                                <td class="border border-gray-200 p-3">复杂组合枚举记忆化优化</td>
+                                <td class="border border-gray-200 p-3">记忆化DFS完整代码实现</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">8</td>
+                                <td class="border border-gray-200 p-3">GESP8程序阅读专项（组合数学/拓扑/高阶DP）</td>
+                                <td class="border border-gray-200 p-3">高难度图论、组合计数、动态规划代码手工推演</td>
+                                <td class="border border-gray-200 p-3">4道八级历年阅读真题拆解精讲</td>
+                                <td class="border border-gray-200 p-3">5道八级阅读真题独立推演输出结果</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">9</td>
+                                <td class="border border-gray-200 p-3">GESP8全套综合压轴大题集训</td>
+                                <td class="border border-gray-200 p-3">组合数学+图论+高阶DP混合复杂大题，对标CSP-J复赛难度</td>
+                                <td class="border border-gray-200 p-3">2道历年GESP8压轴编程真题完整编码</td>
+                                <td class="border border-gray-200 p-3">3套完整八级编程真题独立完成</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">10</td>
+                                <td class="border border-gray-200 p-3">全套GESP1~8级知识点总梳理+通用模板汇总</td>
+                                <td class="border border-gray-200 p-3">数论、搜索、DP、图论、STL全套竞赛模板整理，建立个人模板库</td>
+                                <td class="border border-gray-200 p-3">分模块模板默写巩固训练</td>
+                                <td class="border border-gray-200 p-3">背诵全部竞赛标准模板，完整默写复盘</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">11</td>
+                                <td class="border border-gray-200 p-3">八级全真高难度模拟测试+CSP-J衔接规划</td>
+                                <td class="border border-gray-200 p-3">完整GESP8限时模考查漏补缺；同步规划四升五至初一完整CSP-J参赛时间线</td>
+                                <td class="border border-gray-200 p-3">完整八级高难度模拟卷逐题精讲</td>
+                                <td class="border border-gray-200 p-3">整理全阶段错题，制作小升初CSP-J预习方案</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 全年学习路线规划 -->
+        <section id="study-plan" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">十、适配重庆4升5学生 · 全年分阶段学习路线</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover space-y-4 text-gray-700">
+                <div class="flex gap-3">
+                    <div class="text-main font-bold w-40">四升五暑假</div>
+                    <div>完成GESP1（12节）、GESP2（11节），搭建完整C++基础语法体系</div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-main font-bold w-40">五年级上学期（周末）</div>
+                    <div>GESP3（12节）、GESP4（11节），掌握基础排序、函数、递归、STL入门、贪心二分</div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-main font-bold w-40">五年级下学期（周末）</div>
+                    <div>GESP5（12节）、GESP6（11节），深度掌握搜索、数论、基础DP、容器进阶</div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-main font-bold w-40">五升六暑假</div>
+                    <div>GESP7（12节）完整图论、树、最短路、最小生成树全套数据结构</div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-main font-bold w-40">六年级全年周末</div>
+                    <div>GESP8（11节）高阶组合数学、区间DP、拓扑、SPFA、记忆化搜索；穿插CSP-J初赛专项集训</div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-main font-bold w-40">小升初暑假</div>
+                    <div>CSP-J复赛十连测、算法专题集训，全真竞赛模拟训练</div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-main font-bold w-40">初一上学期</div>
+                    <div>CSP-J考前全套冲刺模考，正式参加CSP-J入门组认证竞赛</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 配套教学资源 -->
+        <section id="resource" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">十一、全等级统一配套教学资源</h2>
+            </div>
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <ul class="space-y-3 text-gray-700">
+                    <li class="flex gap-3 items-start">
+                        <i class="fa-solid fa-book text-main text-xl mt-1"></i>
+                        <div>
+                            <span class="font-medium">配套教材</span>
+                            <p>《信息学奥赛一本通》、《GESP C++分级精讲精练》，全覆盖1~8级考纲，例题作业均匹配历年GESP真题</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <i class="fa-solid fa-laptop-code text-main text-xl mt-1"></i>
+                        <div>
+                            <span class="font-medium">编程软件环境</span>
+                            <p>Dev-C++ 5.11（GESP、CSP官方统一指定上机环境，课堂、家庭训练统一环境）</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <i class="fa-solid fa-globe text-main text-xl mt-1"></i>
+                        <div>
+                            <span class="font-medium">在线评测练习平台</span>
+                            <p>洛谷、ACGO OJ，内置GESP分等级真题分模块题库，自动判题、错题收录、数据评测</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <i class="fa-solid fa-file-pdf text-main text-xl mt-1"></i>
+                        <div>
+                            <span class="font-medium">纸质训练资料</span>
+                            <p>近5年GESP1~8级完整真题集、CSP-J初赛复赛历年真题汇编、各等级专项错题训练单</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mt-6 p-4 bg-lightBg rounded-lg border-l-4 border-main">
+                    <p class="font-semibold text-main mb-2">统一贯彻教学原则</p>
+                    <ul class="space-y-1 text-gray-700">
+                        <li>1. 全程纯C++代码教学，完全不引入Scratch图形化编程</li>
+                        <li>2. 低等级优先纸笔推演算法流程，随等级提升逐步增加上机实操占比</li>
+                        <li>3. 全部随堂例题、课后作业严格匹配对应等级官方真题难度、出题风格</li>
+                        <li>4. 作业分层设计：基础巩固题 + 进阶拔高题，适配小学生分层学习能力</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部版权栏 -->
+    <footer class="bg-darkText text-white py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-xl font-semibold mb-3">重庆4升5零基础GESP C++全套1-8级培训规划</h3>
+            <p class="text-gray-400 mb-4">适配本地培训机构标准班型 | 直通CSP-J入门组竞赛</p>
+            <p class="text-gray-500 text-sm">适用学员：重庆小学四年级升五年级零基础学生</p>
+            <div class="border-t border-gray-700 w-4/5 mx-auto mt-6 pt-6">
+                <p class="text-gray-500 text-xs">Copyright © 2026 重庆中小学GESP编程学习规划 版权所有</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

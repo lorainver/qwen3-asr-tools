@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>质心物理-物理讲座-1119</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>质心物理-物理讲座-1119</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>那么原则上建议咱们是选择和学校包括国家也都在推荐说要选择和物理相关的这样一个专业</li>
+                <li>当然还是那句话，看政策，目前的政策来看呢，有学过竞赛经验的肯定是有优势的，因为像一些非常好的院校，它的强基计划招生的时候吧，它的校测其实</li>
+                <li>面面对相应的考试所以这个是我个人觉得竞赛它的优，竞赛它能带给我们的优势</li>
+                <li>可能会有一些出入当然也有可能有一些较大的调整，所以还是那句话，如果说咱们孩子年纪比较小， 例如，刚五六年级或者是刚初一、初二之类的，那咱们就可以先关注着政策的走向，先了解着有这么一回事儿别等到说高二了，或者说高一的时候</li>
+                <li>那我个人建议呢，其实如果咱们直播间的家长朋友咱家长朋友们也可以把孩子的年级打到评论区，然后这样我也可以有侧重点的去说一下</li>
+                <li>个人比较建议咱可以先让孩子以省一为目标</li>
+                <li>包括我们制定学习规划的时候或者是刷题的时候的要求咱们都对标省一的这个来</li>
+                <li>我们在学这个知识点的时候，比如物理，咱学了这个知识点假如省一需要会这么多的</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>这个学科为主，咱们家长朋友呢有什么问题就直接在右边去沟通就可以了。在每年的决赛中如果说咱们的孩子可以考到前五十名的话，那么是可以保送到清北。是可以保送到清华、北大这两个学校的，理论上来说呢，专业不限，但是呢，近两年开始提倡选择和我们所学的知，我们。</p>
+                <p>和我们所选择的这个竞赛有关的专业，例如，如果咱们孩子通过物理竞赛。那么原则上建议咱们是选择和学校包括国家也都在推荐说要选择和物理相关的这样一个专业。那有的家长可能会觉得说，那如果说这清北好像听起来。</p>
+                <p>它其实不是这样的，因为竞赛在各阶段的奖项呢都有一定的作用。当然了，国内的比赛比完之后呢，我们如果成绩足够优秀的话，也是可以代表国家去参加国际的。竞赛，例如像亚洲的奥林匹克竞赛和国际奥林匹克竞赛这个都是，这个都是。</p>
+                <p>这个都都是比比国比比我们CPHO国内的这个竞赛更加专业的。这样一个国际的舞台当然难度肯定也是会更大的。那么我们先看国内的竞赛，国内的赛段呢，它分为家长朋友们能看到我的PPT吧，国内的赛段它分为。</p>
+                <p>预赛呢，一般来说，它一家长朋友们可以把它理解成是一个市级的这样一个比赛。那相对来讲呢，它的奖项其实就没有太大的含金量因为我们。孩子如果想，咱们说上大学的话，肯定是考虑的是高考嘛，。</p>
+                <p>对高考的加成，说实话可以说忽略不计而比较有含金量的是我们的复赛和决赛。复赛呢， 理解成相当于省级的比赛，那么它决定了我们会获得，如果在复赛中成绩优秀那它决定了我们会获得省一、省二、省三这种奖项，然后在省一中还会选出。在省一中呢，会取前几十名的这个名额进入省队，那代表孩子所在的省份去参加决赛。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>在知识上大体需要学什么，大家心里是需要有数的。OK，然后那在这儿还对，还得再提醒一下家长朋友们，咱们在自学的时候，但是如果跟着我们的课去学习的话，这些我们都是帮助同学们设计好的，就比如先学哪个知识，再学哪个知识。如果说同学们是自学自学的话呢，在知识的检测上，或者是我们去收集学习资料的时候，大家一定要注意。</p>
+                <p>如果说我们只是以物理竞赛为目的在自学，你去学高中物理知识。不要去找什么高考的那种知识讲解，或者是高考的题目总结，他们的考查方式、考查的这个侧重点。都是不一样的，咱学了高中物理知识，不代表你高考卷子、高考物理卷子就学拿它去检测这个没有意义，这个就相当于是拿自行车来。</p>
+                <p>这个拿自行车的质检标准去衡量一个机动车，他们两个其实是两回事儿。所以呢，这是我们在自学的时候如何去进行自我检测，然后呢，除了知识的准备之外呢，那根据我这么多年的， 这个和同学们呀、家长们的接触下来我发现其实心理上我们也是要有一定的准备的。那大家要做好，要细致，要严谨，要有求知欲，什么意思。</p>
+                <p>我们一个一个说，有求知欲的话呢，指的我们孩子要。例如，老师讲了这道题第一步这样去做，第二步这样去做。那我希，我其实是非常希望我的同学们可以提出问题，说，老师，为什么这一步要这样去做。</p>
+                <p>或者说这类我讲过的这类题目，它都可以用某一种方法来去做。也说，需要同学们有一个被主动的思考过程，不是一个被动的说，因为我说了什么，所以就什么什么什么。在现在这个社会进程发展来看呢，其实有主动思考的能力也是非常关键的。</p>
+                <p>其实这个不仅是在竞赛的学习过程中，包括以后人生的。命题上也是一个非常，也是一个非常重要，或者说一个，我觉得会。很极大的提升幸福程度的一个特性吧，所以这是第一个求知，然后第二个呢，要细致，因为物理。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>预赛呢，他他得到的这个奖项，对于咱们升学，对于咱们之后高三升大学来说，没有任何作用。但是呢，它也是咱们通过这个通过去通过这个奖项，你能够去参加复赛。相当于是你只有过了预赛才能去参加复赛，一个复赛的一个入场券吧。</p>
+                <p>然后复赛的一个时间节点是在每年九月的第三周的周六，每年九月第三周的周六。这个时间的话，它和预赛的时间只有两周，只有两周的时间。这个，这个 那么你需要在高一之前就要把咱们前置的一些内容去学完，前置的内容包括什么。</p>
+                <p>初中竞赛物理，高中课内物理，然后如果说你想拿一个比较好的奖项，那你肯定是要学到竞赛一轮的物理。最少是要学到竞赛一轮的物理，所以说你在这个高中高一之前最少是需要学这学这个三轮到四轮的一个课程。三轮到四轮的一个课程，然后咱们按照这个顺序往前推的话，一般来说也这个。</p>
+                <p>这个复赛他拿到的一个奖项叫做省一、省二和省三。省一、省二和省三，他的一个人数，他不是说只有一个人，他省一可能有一百多人，省二两百多人，省三三百多人，可能更多。他不是说只有一个人，拿到这个省一，一个人拿到省二，一个人拿到一个人拿到省三。</p>
+                <p>然后省一、省二和省三，基本上的话，省二以上。就能够去覆盖到咱们在高三的时候参加的一个计划，叫做强基计划，一个政策叫做强基计划，初三的。这个这个省二以上就能够去覆盖到大部分学校的强基计划。</p>
+                <p>大部分学校的强基计划，也说，如果说你在这个复赛拿到了这个省二以上，那你在高三这一年，最少你是去报名强基计划，你是有一个。只要你课内成绩不差的情况下，你是有一个类似于保底的一个一个选择。用处，然后呢，省一，省一的话，它的用处就比省二要大很多了。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>一个进度，一个章节，一个章节，咱们是按照模块儿，一个模块儿一个大章节，一个模块儿一个大章节，这样来说呢，你这中间的一个学习是没有什么的，没有断层的。没有断层的这边简单的给大家去介绍了一下，像基础轮之前的一些书单，然后再往后的话，竞赛一轮、竞赛二轮和这个竞赛三轮了。竞赛一轮的话，竞赛一轮，也正式进入到了这个打比赛的一个阶段。</p>
+                <p>成书的话，它的一个难度是在这几套书里面是比较高的，比较高的。在这几套书里面是比较高的，但是也没有高到很高的一个程度，它的一个。右边这套叫黑白皮，黑白皮的话，它这个白皮是题库，然后黑皮的话是一个知识点。</p>
+                <p>小绿本儿的话，它的一个特点它的知识点的覆盖性、覆盖范围会比较广一些。然后会有一些同学在刷完成熟之后不知道刷什么。其实刷完成熟之后，可以刷右下角这套，叫做新大纲，新大纲。</p>
+                <p>这五套书的话，其实是可以做一个，它不用不用全部都学不用全部都学，做一个五选二或者五选三，五选二或者五选三，像乘数的话，基本上是必背的，然后。这是竞赛一轮，学完竞赛一轮的话，在弱省，你可能大概能能到一个省一。在强省的话，是一个省二进省一的一个，进省一的一个层次吧，差不多。</p>
+                <p>所以说，他肯定是不能确切的告诉你我学完这个阶段，你只要把这个阶段东西都学会，你就能去拿到一个什么奖。在强省的它这个波动性是比较大的，然后竞赛一轮之后呢，是竞赛二轮。竞赛二轮的书单的话，像这个精编漫谈，竞赛二轮的话，其实对于咱们直播间的家长来说呢，可能它的一个。</p>
+                <p>目前的一个不是很能用到，不是很能用到，因为大部分的家长的话，肯定还是这个。在学竞赛的初期，像这个高中之前吧，高中之前学竞赛的初期，所以说这个二轮的书单就给大家简单的过一下， 精编漫谈题选，把这个名字给大家说一下， 然后这套叫做《更高更妙的物理》，它也叫高，要也也叫什么的，也叫高妙。二百道物理学难题，然后是这个国培，国培，国培的话是这个郑有润老爷子，他把他当时是作为这个国家集训队的教练。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>初试不不大筛，基本上就直接过了，而且来说呢。直接基本上入围了，入围之后呢，你再去考虑这个面试、复试这种的，因为因为什么呢。稍微大于高考的，你也是需要学到一些竞赛的东西的。</p>
+                <p>像你学到一个省二的一个难度，基本上是能够去覆盖到这个强基计划综合评价，是都能够覆盖到的。像这种政策性的东西，基本上是比较难的，你都需要额外去学一些东西。你如果说，你到时候再学，和你现在学，那肯定是现在学比较好。</p>
+                <p>学完竞赛一轮就差不多，学完竞赛一轮就差不多。竞赛一准的话，成书、小绿本、黑白皮、新大纲这几套书。学到竞赛一周就差不多，然后高中课内的话，尽量的往前学。</p>
+                <p>但是高一你准备这个强基计划也不错，高一准备强基计划也不错。是这样的，大部分的，这种直接准备强基计划的同学，我不为不为竞赛，我不为竞赛，我要走强基计划。他们的一个学习规划来说呢，从高一开始准备强基计划。</p>
+                <p>从高一开始准备强基计划，他不是说我到高二了我冲一年学一年这个东西，或者我到高三最后一年了我再学，不是的，他是高一这一年就开始准备。高三这一年，因为高三这一年，你这个中考你这个高考肯定要稳定住的。你要稳定住你的高考水平，你就没有时间去顾虑这个强基计划的这些东西。</p>
+                <p>因为你学前期计划的话，首先是基础学科嘛，数学、物理这种，你肯定不是说只考你一门，考你个物理，你肯定还要考数学的。略微档次会，稍微低一些，因为强基计划它是什么呢。强基计划全是九八五院校，并且来说呢，强基计划是什么。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

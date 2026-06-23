@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>物理竞赛金牌李新良：从高一起步到北大物院的学习经验分享</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --surface: #ffffff;
+      --accent: #6b2d5b;
+      --accent-light: #8e4585;
+      --accent-bg: #f5eef3;
+      --gold: #b8860b;
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #7a7570;
+      --border: #e2ddd6;
+      --highlight: #fff3cd;
+      --success: #2d6b3f;
+      --danger: #8b2500;
+      --info: #1a5276;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* ===== Page Header ===== */
+    .header {
+      background: linear-gradient(135deg, #6b2d5b 0%, #4a1942 40%, #2d0f2a 100%);
+      color: #fff;
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(184,134,11,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(142,69,133,0.2) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .header h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .header .subtitle {
+      font-size: 1rem;
+      font-weight: 300;
+      opacity: 0.85;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .header .tags {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .tag-purple {
+      background: rgba(255,255,255,0.2);
+      color: #f0d4ec;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .tag-gold {
+      background: rgba(184,134,11,0.25);
+      color: #f5d98a;
+      border: 1px solid rgba(184,134,11,0.3);
+    }
+    .tag-info {
+      background: rgba(26,82,118,0.3);
+      color: #a8d4f0;
+      border: 1px solid rgba(26,82,118,0.25);
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== Nav / TOC ===== */
+    .toc-wrapper {
+      margin: 40px auto;
+      max-width: 960px;
+      padding: 0 20px;
+    }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      position: relative;
+    }
+    .toc-label {
+      position: absolute;
+      top: -12px;
+      left: 24px;
+      background: var(--accent);
+      color: #fff;
+      padding: 3px 16px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+    .toc h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+    }
+    .toc a {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      padding: 6px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .toc a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent-bg);
+    }
+    .toc-num {
+      font-family: 'Noto Serif SC', serif;
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.85rem;
+      min-width: 28px;
+    }
+
+    /* ===== Section ===== */
+    section {
+      margin: 40px auto;
+      max-width: 960px;
+      padding: 0 20px;
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-bar {
+      width: 4px;
+      min-height: 40px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .section-header .section-num {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 0.78rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .section-header h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    /* ===== Card ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card h3 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.05rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .card p, .card li {
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    /* ===== Alert Boxes ===== */
+    .alert {
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+    .alert-gold {
+      background: var(--highlight);
+      border-left: 4px solid var(--gold);
+      color: #665200;
+    }
+    .alert-success {
+      background: #eaf5ed;
+      border-left: 4px solid var(--success);
+      color: #1a4a2a;
+    }
+    .alert-danger {
+      background: #fdf0ec;
+      border-left: 4px solid var(--danger);
+      color: #6b1c00;
+    }
+    .alert-info {
+      background: #eaf2f8;
+      border-left: 4px solid var(--info);
+      color: #0e3a56;
+    }
+    .alert-purple {
+      background: var(--accent-bg);
+      border-left: 4px solid var(--accent);
+      color: #4a1a3e;
+    }
+
+    /* ===== Two Column ===== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    /* ===== Lists ===== */
+    .content-list {
+      list-style: none;
+      padding: 0;
+    }
+    .content-list li {
+      padding: 8px 0 8px 20px;
+      position: relative;
+      color: var(--text-secondary);
+    }
+    .content-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 16px;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .content-list.gold li::before {
+      background: var(--gold);
+    }
+
+    /* ===== Flow Timeline ===== */
+    .flow {
+      position: relative;
+      padding-left: 36px;
+      margin: 20px 0;
+    }
+    .flow::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .flow-item {
+      position: relative;
+      padding-bottom: 28px;
+    }
+    .flow-item:last-child {
+      padding-bottom: 0;
+    }
+    .flow-dot {
+      position: absolute;
+      left: -36px;
+      top: 4px;
+      width: 22px;
+      height: 22px;
+      background: var(--surface);
+      border: 3px solid var(--accent);
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .flow-item.active .flow-dot {
+      background: var(--accent);
+    }
+    .flow-title {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .flow-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    /* ===== Difficulty Bar ===== */
+    .diff-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+    }
+    .diff-label {
+      min-width: 80px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .diff-track {
+      flex: 1;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .diff-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .diff-fill.purple {
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    }
+    .diff-fill.gold {
+      background: linear-gradient(90deg, #b8860b, #d4a832);
+    }
+    .diff-fill.green {
+      background: linear-gradient(90deg, #2d6b3f, #4a9e62);
+    }
+
+    /* ===== Table ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+    thead th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+    thead th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+    tbody td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    tbody tr:hover {
+      background: var(--accent-bg);
+    }
+
+    /* ===== Inline Tags ===== */
+    .inline-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      vertical-align: middle;
+    }
+    .inline-tag-purple {
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+    .inline-tag-gold {
+      background: #fef3cd;
+      color: #8a6300;
+    }
+    .inline-tag-green {
+      background: #eaf5ed;
+      color: var(--success);
+    }
+    .inline-tag-red {
+      background: #fdf0ec;
+      color: var(--danger);
+    }
+    .inline-tag-blue {
+      background: #eaf2f8;
+      color: var(--info);
+    }
+
+    /* ===== Quote ===== */
+    .quote-block {
+      border-left: 3px solid var(--gold);
+      padding: 12px 20px;
+      margin: 16px 0;
+      background: #fefdfb;
+      font-style: italic;
+      color: var(--text-secondary);
+      font-size: 0.93rem;
+    }
+    .quote-block cite {
+      display: block;
+      margin-top: 8px;
+      font-style: normal;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== Strong ===== */
+    strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 700px) {
+      .header h1 {
+        font-size: 1.4rem;
+      }
+      .header {
+        padding: 40px 16px 36px;
+      }
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+      .container, section, .toc-wrapper {
+        padding: 0 14px;
+      }
+      .card {
+        padding: 18px;
+      }
+      .section-header h2 {
+        font-size: 1.15rem;
+      }
+      table {
+        font-size: 0.82rem;
+      }
+      thead th, tbody td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <h1>物理竞赛金牌李新良</h1>
+    <div class="subtitle">从高一起步到北大物院 —— 学习经历、竞赛方法与升学路径全景分享</div>
+    <div class="tags">
+      <span class="tag tag-purple">第40届全国物理竞赛金牌</span>
+      <span class="tag tag-gold">北京大学物理学院大二</span>
+      <span class="tag tag-info">河北衡水中学</span>
+    </div>
+  </div>
+
+  <!-- ===== TOC ===== -->
+  <div class="toc-wrapper">
+    <div class="toc">
+      <div class="toc-label">目 录</div>
+      <h2>内容导航</h2>
+      <div class="toc-grid">
+        <a href="#ch1"><span class="toc-num">01</span>个人背景与兴趣起源</a>
+        <a href="#ch2"><span class="toc-num">02</span>各阶段学习经历回顾</a>
+        <a href="#ch3"><span class="toc-num">03</span>高中竞赛冲刺：脱产与时间管理</a>
+        <a href="#ch4"><span class="toc-num">04</span>竞赛成绩与决赛复盘</a>
+        <a href="#ch5"><span class="toc-num">05</span>普物学习体系与推荐资源</a>
+        <a href="#ch6"><span class="toc-num">06</span>刷题策略与教辅推荐</a>
+        <a href="#ch7"><span class="toc-num">07</span>高考回归与强基录取</a>
+        <a href="#ch8"><span class="toc-num">08</span>卓越计划与攀登计划解析</a>
+        <a href="#ch9"><span class="toc-num">09</span>北大物院培养方案与专业分流</a>
+        <a href="#ch10"><span class="toc-num">10</span>平台校选择与信息收集</a>
+        <a href="#ch11"><span class="toc-num">11</span>家长角色与心理支持</a>
+        <a href="#ch12"><span class="toc-num">12</span>关于天赋、努力与运气</a>
+        <a href="#ch13"><span class="toc-num">13</span>高频问题答疑精选</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 1 ===== -->
+  <section id="ch1">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 01</div>
+        <h2>个人背景与兴趣起源</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>人物简介</h3>
+      <p><strong>李新良</strong>，第40届全国中学生物理竞赛金牌获得者，现就读于北京大学物理学院大二。高中就读于河北衡水中学，通过<strong>强基计划</strong>进入北大物理学院。</p>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心观点：</strong>阅读物理学史是发现物理兴趣的有效途径。李新良在初二（2020年）疫情期间观看了一段物理学发展史视频，从古希腊到牛顿力学、麦克斯韦电磁学，再到近代物理与现代物理，由此对物理学产生浓厚兴趣，最终走上物理竞赛之路。
+    </div>
+
+    <div class="quote-block">
+      "从最古老的时期到牛顿发展的力学，再到麦克斯韦的电磁学、近代物理，当时我就觉得物理学非常神奇。"
+      <cite>—— 李新良</cite>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>延伸参考：</strong>这一路径与北大柳斌教授的建议不谋而合——如果在前期不确定是否喜欢某个学科，可以先阅读该学科的数学史/物理学史来激发兴趣。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 2 ===== -->
+  <section id="ch2">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 02</div>
+        <h2>各阶段学习经历回顾</h2>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-title">小学阶段：正常节奏，未做超前学习</div>
+        <div class="flow-desc">
+          按照课内进度正常学习，没有参加早培或超前学习。小学课业压力小，课余时间以玩耍为主。
+          <br><strong>启示：</strong>小学阶段的"轻松"意味着压力被后置，高中阶段需要付出更大代价来弥补。
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-title">初中阶段：备战中考，初步接触物理竞赛</div>
+        <div class="flow-desc">
+          在石家庄就读初中。初二时有同学开始接触物理竞赛，李新良通过网站自学了微积分基础，但未系统投入竞赛学习。主要精力集中于中考备考。
+        </div>
+      </div>
+
+      <div class="flow-item active">
+        <div class="flow-dot"></div>
+        <div class="flow-title">高一阶段：高考优先，竞赛起步艰难</div>
+        <div class="flow-desc">
+          进入衡水中学。由于初中几乎未接触竞赛，高一需要同时兼顾高考和竞赛。李新良将主要时间放在高考上，<strong>竞赛成绩非常差</strong>。高考排名在学校前100名左右，属于较为稳定可进清北的名次。
+        </div>
+      </div>
+
+      <div class="flow-item active">
+        <div class="flow-dot"></div>
+        <div class="flow-title">高二阶段：全面转向竞赛，极限时间压缩</div>
+        <div class="flow-desc">
+          高二开始大幅削减高考学习时间，仅保留基础知识和基本解题方法，将绝大部分时间投入竞赛。到高二下学期后期基本处于半脱产状态，每天从早到晚进行竞赛训练，<strong>有时一天考三场，每天做题九小时</strong>。高考排名从高一的前100名下滑至约1000名。
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-title">高三阶段：竞赛冲刺 + 高考回归</div>
+        <div class="flow-desc">
+          10月左右回归高考学习（因卓越计划考试中断两个月），最终从1月到6月用约五个月时间将高考分数从630分提升至675分。主要通过寒假集中补强化学和生物。
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>警示：</strong>李新良坦言高一的时间规划不够合理——将主要时间放在高考上导致竞赛进展极慢。这一教训表明：如果决定走竞赛路线，需要尽早做出明确的时间分配决策，避免两头不到岸。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 3 ===== -->
+  <section id="ch3">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 03</div>
+        <h2>高中竞赛冲刺：脱产与时间管理</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>日常作息</h3>
+      <p>衡水中学管理严格。李新良高中期间每天约<strong>6:00起床、22:30睡觉</strong>，除吃饭睡觉外几乎全部时间用于学习。高二下学期进入竞赛冲刺后，<strong>基本一整天都在进行竞赛训练</strong>。</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>脱产模式</h3>
+        <ul class="content-list">
+          <li>高二下学期后期开始基本脱产</li>
+          <li>衡水中学一般在高二第一学期结束时完成课内知识讲授</li>
+          <li>脱产后不再完成课内作业，仅听课抓重点</li>
+          <li>完全脱产时间约一年</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>脱产的前提条件</h3>
+        <ul class="content-list">
+          <li><strong>知识已学完</strong>：高中课内内容已系统学过</li>
+          <li>脱产主要损失的是"刷熟练度"的时间</li>
+          <li>竞赛生的刷题能力强，后续补回相对容易</li>
+          <li>若前期未学过课内内容就脱产，压力和风险会极大</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>重要提醒：</strong>脱产选择因人而异。如果目标是在竞赛中出成绩，脱产几乎不可避免。但脱产的前提是：课内知识已经学过，只是需要后续补刷熟练度。若属于"后培型"（前期未学过课内内容），脱产风险极大，高三回归时会面临巨大压力。
+    </div>
+
+    <div class="alert alert-success">
+      <strong>正面结论：</strong>选择脱产后不要患得患失。李新良高二高考排名跌至约1000名时，并未给自己太大心理压力，因为他清楚高三还有一年时间可以弥补——事实上，五个月时间足够将成绩恢复到675分的水平。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 4 ===== -->
+  <section id="ch4">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 04</div>
+        <h2>竞赛成绩与决赛复盘</h2>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>第39届（高二）</h3>
+        <ul class="content-list">
+          <li>获得<strong>省一等奖</strong></li>
+          <li>当年因疫情使用备用卷，题目较怪，多数人表现不佳</li>
+          <li>李新良因过程分较高获得省一</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>第40届（高三）</h3>
+        <ul class="content-list">
+          <li>复赛题较简单，顺利进入<strong>省队</strong></li>
+          <li>决赛题也较简单，最终获得<strong>全国金牌</strong></li>
+          <li>强基计划进入北大物理学院</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>决定竞赛成绩的三个要素：</strong>
+      <br>1. <strong>天赋</strong>——初始学习效率，确实存在天赋超长的个体；
+      <br>2. <strong>努力</strong>——所有能进入清华北大的竞赛生都在某个方面极为努力；
+      <br>3. <strong>运气</strong>——单场考试的临场发挥至关重要。身边有同学八个题做出七个、一个题未做导致零分，最终差一点进省队。
+    </div>
+
+    <div class="alert alert-info">
+      <strong>关于第41、42届难度变化：</strong>第40届复决赛均较简单，但第41、42届突然变得非常难。根据物理学会秘书长陈小林教授的判断，近两年命题方向偏难，接下来的趋势是<strong>回归正统</strong>。核心备考建议：夯实普通物理基础，时间允许可涉猎四大力学。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 5 ===== -->
+  <section id="ch5">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 05</div>
+        <h2>普物学习体系与推荐资源</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>普通物理五大板块</h3>
+      <p>物理竞赛中的普通物理（普物）包含以下五个板块，不含声学：</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+        <span class="inline-tag inline-tag-purple">力学</span>
+        <span class="inline-tag inline-tag-gold">电磁学</span>
+        <span class="inline-tag inline-tag-green">热学</span>
+        <span class="inline-tag inline-tag-blue">光学</span>
+        <span class="inline-tag inline-tag-red">近代物理</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>推荐教师</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>教师</th>
+            <th>覆盖范围</th>
+            <th>特点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>苏国珍</strong>教授</td>
+            <td>力学、电磁学、热学、光学、近代物理、四大力学</td>
+            <td>覆盖范围最广，PPT精心制作，自编高质量习题</td>
+          </tr>
+          <tr>
+            <td><strong>叶邦角</strong>教授</td>
+            <td>电磁学为主</td>
+            <td>电磁学领域专精</td>
+          </tr>
+          <tr>
+            <td><strong>孔令建</strong>老师</td>
+            <td>机构刷题班讲题</td>
+            <td>讲题水平高，但机构题目需自行斟酌是否适合</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>选师原则：</strong>选择教师的核心标准是<strong>契合度</strong>，而非名气。顶尖学生推荐的老师不一定适合自己。建议先通过公开课平台（如MOOC、B站）体验不同老师的授课风格，再决定跟谁学。老师讲课风格有快有慢、有难有易，需根据自身水平衡量。
+    </div>
+
+    <div class="card">
+      <h3>推荐书籍</h3>
+      <ul class="content-list gold">
+        <li><strong>入门启蒙：</strong>赵凯华《新概念物理》系列</li>
+        <li><strong>力学专项：</strong>舒幼生《力学》及课后习题</li>
+        <li><strong>电磁学专项：</strong>经典电磁学教材（多版本对照阅读效果更佳）</li>
+        <li><strong>热学/光学/近代：</strong>各版本普物教材均值得参考，不同教授的阐述角度有差异，综合阅读可加深理解</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>学习方式建议：</strong>听课与自学结合。听课学得快但不一定能完全听懂；读书框架更系统，但需要较强的专注力和自主理解能力。对于绝大部分同学而言，某些高阶课程初听时难以完全理解，需要课下强化训练。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 6 ===== -->
+  <section id="ch6">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 06</div>
+        <h2>刷题策略与教辅推荐</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>李新良精刷的五本书</h3>
+      <p>由于时间紧张，李新良并未做完市面上所有热门教辅，而是精选五本完整精刷（部分刷两遍），之后大量做机构题：</p>
+      <table>
+        <thead>
+          <tr>
+            <th>书名</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>程力</strong>（程守洙《力学》）</td><td>完整刷一遍</td></tr>
+          <tr><td><strong>程电</strong>（程守洙《电磁学》）</td><td>完整刷一遍</td></tr>
+          <tr><td><strong>难题集萃</strong></td><td>完整刷一遍</td></tr>
+          <tr><td><strong>国培</strong></td><td>完整刷一遍</td></tr>
+          <tr><td><strong>题选</strong></td><td>完整刷一遍</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px; color: var(--text-muted); font-size:0.85rem;">注：黑白皮、小绿皮、姜思喜系列、高妙等书籍李新良本人未做过，此处不做评价。</p>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>刷题方法论：</strong>做完上述五本书后，高二上学期后期开始大量做机构题，一直持续到复赛前。机构题由学校教练统一收集提供，不一定需要到特定机构上课才能获得。
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心原则：</strong>例题优先于习题。例题是"经典中的经典"，质量高于普通习题，且附有答案，应优先吃透。无论学习任何学科，啃例题都是最高效的方法。
+    </div>
+
+    <div class="card">
+      <h3>微积分学习方式</h3>
+      <p>微积分并非单独学习，而是在物理竞赛训练过程中<strong>边做边练</strong>。微积分是贯穿物竞始终的数学工具，没有必要专门上微积分专项提升课程——做题量够了，自然就练上来了。物理竞赛中的数学主要作为工具使用，不会在数学思路上设卡，部分较难的数学运算还会给出提示。
+    </p>
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 7 ===== -->
+  <section id="ch7">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 07</div>
+        <h2>高考回归与强基录取</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>回归高考的关键节点</h3>
+      <div class="flow">
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-title">高三10月左右：回归高考</div>
+          <div class="flow-desc">竞赛结束后回到高考学习，此时高考课落较多，模考成绩约630分（河北省排名靠后）。</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-title">11月：因卓越计划中断</div>
+          <div class="flow-desc">回家备战卓越计划考试约两个月，未能通过。</div>
+        </div>
+        <div class="flow-item active">
+          <div class="flow-dot"></div>
+          <div class="flow-title">1月—6月：全力冲刺高考（约5个月）</div>
+          <div class="flow-desc">寒假集中补强化学和生物（原始分曾低至60多分），采取"课后习题→教辅→查漏补缺"三步法。语文英语靠积累未专门学习。最终高考成绩<strong>675分</strong>。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>关键认知：</strong>物理竞赛与高考物理的思维方式有本质差别。李新良回归高考后，物理模考多次仅60多分。竞赛中学到的是完善的物理体系，而高中教材中的部分内容可能是不完善的，甚至与竞赛体系相矛盾。需要学会在两套体系间切换。
+    </div>
+
+    <div class="alert alert-success">
+      <strong>录取结果：</strong>通过<strong>强基计划</strong>进入北京大学物理学院。河北省当年统招线约685分，李新良以675分通过强基破格录取。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 8 ===== -->
+  <section id="ch8">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 08</div>
+        <h2>卓越计划与攀登计划解析</h2>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card" style="border-top: 3px solid var(--accent);">
+        <h3>卓越计划（清华）</h3>
+        <ul class="content-list">
+          <li>面向清华，本科阶段培养方案与其他学生<strong>不同</strong></li>
+          <li>不能简单视为招生手段，而是一套<strong>独立的培养方案</strong></li>
+          <li>本科期间不能转专业</li>
+          <li>卓越学生通常更集中于物理领域</li>
+          <li>可选专门的卓越班课程（强制要求），另有专属讲座等资源</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top: 3px solid var(--gold);">
+        <h3>攀登计划（清华）</h3>
+        <ul class="content-list">
+          <li>面向清华，提供交叉学科、联合培养等机会</li>
+          <li>体现清华工科优势特色</li>
+          <li>可转专业（在攀登计划对应专业范围内）</li>
+          <li>培养方向更偏交叉与应用</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>卓越计划选拔流程</h3>
+      <ol class="content-list" style="list-style-type: decimal; padding-left: 20px;">
+        <li><strong>报名筛选</strong>：通过/不通过（今年统一合并，取消跳级机制）</li>
+        <li><strong>笔试</strong>：含现学现考环节，从高阶物理内容中抽取知识现场教学后立即考试</li>
+        <li><strong>面试</strong></li>
+        <li><strong>入营</strong>：若进入营训，时间更长</li>
+      </ol>
+      <p style="margin-top:12px;">整个选拔战线约一个月。笔试阶段大家实力相近，<strong>真正的卡点在于现学现考部分</strong>。</p>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>备考建议：</strong>现学现考的设计初衷就是"不想让你提前准备"，押题概率极低。建议：①夯实微积分基础；②精刷普物题保持手感；③时间允许可翻阅四大力学作为科普性了解。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 9 ===== -->
+  <section id="ch9">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 09</div>
+        <h2>北大物院培养方案与专业分流</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>不同入学途径在北大物院的区别</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>入学途径</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>国际金牌保送</strong></td><td>需等到高三毕业才能正式入学；可挑专业</td></tr>
+          <tr><td><strong>卓越/攀登</strong></td><td>培养方案与其他学生不同；本科期间转专业受限</td></tr>
+          <tr><td><strong>强基计划</strong></td><td>可视为一种录取手段；本科期间不能转专业（可在强基类专业内调）</td></tr>
+          <tr><td><strong>裸分高考</strong></td><td>考什么专业即读什么专业</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>核心认知：</strong>强基也好，英才也好，更多是<strong>录取的手段</strong>。进入学校后，无论以何种方式入学，都是同一个学院的学生，在学习上没有本质区别。昨天北大数院柳斌教授也明确表示：别管是国籍保送、英才、强基还是裸分进来的，进来之后都是数院人。更多区别体现在保研路径上。
+    </div>
+
+    <div class="card">
+      <h3>物院毕业去向</h3>
+      <ul class="content-list">
+        <li>保研方向主要集中在：<strong>凝聚态、量子、光学</strong>三大方向</li>
+        <li>毕业后择业方向广泛，不限于物理本行——可转向芯片、电器等应用领域</li>
+        <li>基础学科强基更多是入学方式，后续发展可自由选择方向</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>强基保研：</strong>理论上强基学生有保研名额，学校不设障碍，但需要找到接收导师。成绩稳定在前50%基本没有问题。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 10 ===== -->
+  <section id="ch10">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 10</div>
+        <h2>平台校选择与信息收集</h2>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>关键任务：</strong>在孩子上高中之前，<strong>必须尽最大努力将其送入竞赛平台校</strong>。这是整个竞赛规划中最关键的决策之一。
+    </div>
+
+    <div class="card">
+      <h3>平台校的核心优势</h3>
+      <ul class="content-list">
+        <li><strong>完备的教练体系</strong>：有经验丰富的教练提供规划指导和心理支持</li>
+        <li><strong>同伴效应</strong>：身边有同样方向的同学（李新良在衡中高三仍有四五十人坚持物理竞赛），避免孤立无援</li>
+        <li><strong>资源获取</strong>：机构题、培训信息等由教练统一收集，无需家长自行奔波</li>
+        <li><strong>心理支撑</strong>：教练每年都会遇到大量濒临崩溃的学生，有丰富的应对经验</li>
+      </ul>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>平台校</h3>
+        <p>长期稳定产出竞赛成绩的学校，底子扎实。如衡水中学、石家庄二中、历城二中等。即使某些年份成绩有所波动，培养体系仍在。</p>
+      </div>
+      <div class="card">
+        <h3>黑马校</h3>
+        <p>近年来在竞赛上投入越来越多、成绩逐步提升的学校。能否转变为平台校，取决于成绩能否持续、校方是否持续支持、教练团队能否保持稳定。</p>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>非平台校的应对策略：</strong>如果没有平台校的资源，家长需要主动补位——①了解整体学习过程和升学规则（卓越、集训队、保送、强基等）；②自行寻找优秀教师和机构资源。相关学校名单和教师推荐已整理在社群中。
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 11 ===== -->
+  <section id="ch11">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 11</div>
+        <h2>家长角色与心理支持</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>家长的最大支持</h3>
+      <p>李新良认为，家长提供的最大支持包括两个方面：</p>
+      <ul class="content-list">
+        <li><strong>经济支持</strong>：提供外出培训的费用（竞赛总花费约数万元）</li>
+        <li><strong>情绪价值</strong>：不过多施压，允许孩子在压力大时有倾诉和安慰的出口</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>最忌讳的做法：</strong>看到孩子竞赛导致高考成绩退步就产生焦虑，并将焦虑传递给孩子。这会严重打击竞赛生的信心和状态。竞赛成绩波动是正常的，家长需要有足够的定力。
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>家长核心职责：</strong>
+      <br>1. <strong>减压或至少不加压</strong>：做到不打扰，在需要时好好沟通
+      <br>2. <strong>收集信息</strong>：了解卓越、攀登、强基、保送等规则，帮助孩子做出最优决策
+      <br>3. <strong>保持原则性问题的沟通</strong>：在孩子自律的前提下给予空间，但出现原则性问题时及时介入
+    </div>
+
+    <div class="quote-block">
+      "不要替孩子觉得累。很多时候孩子喊累只是情绪发泄，发泄完该干嘛干嘛。"
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 12 ===== -->
+  <section id="ch12">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 12</div>
+        <h2>关于天赋、努力与运气</h2>
+      </div>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>核心定义——"初始效率"：</strong>天赋的本质是<strong>初始效率</strong>，即在没有经过任何训练时的学习效率。但通过训练掌握更好的学习方法、提升专注度和学习效率后，初始效率的差距可以被大幅缩小。
+    </div>
+
+    <div class="card">
+      <h3>关于"顿悟时刻"</h3>
+      <p>学习过程中存在"顿悟时刻"——在长时间看似没有进展的积累后，突然在某一阶段实现突破。李新良的顿悟时刻出现在<strong>一轮复习开始时</strong>，成绩有了明显提高并逐步稳定。</p>
+      <p style="margin-top:8px;">因此，当孩子愿意学习、能够坚持学习时，不必过度担忧所谓的智商和天赋。</p>
+    </div>
+
+    <div class="alert alert-success">
+      <strong>结论：</strong>李新良自评"不是特别聪明的学生"，一开始学得很慢，是到后面才逐渐悟出方法。竞赛带来的最宝贵的收获不仅是升学机会，更是<strong>自学能力、学习能力和抗压能力</strong>——这些是终身受益的能力。
+    </div>
+
+    <div class="card">
+      <h3>低谷期的应对</h3>
+      <ul class="content-list">
+        <li>低谷主要表现为<strong>自我怀疑</strong>——怀疑自己是否适合学物理</li>
+        <li>这种自我怀疑是暂时性的，做题过程中的痛苦也是阶段性的</li>
+        <li>应对方式：与教练沟通（教练每年见过大量类似案例）、与家长和同学交流</li>
+        <li>核心是<strong>保证心态和精神状态不崩溃</strong>，在高压下心理出问题后果严重</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== CHAPTER 13 ===== -->
+  <section id="ch13">
+    <div class="section-header">
+      <div class="section-bar"></div>
+      <div>
+        <div class="section-num">Chapter 13</div>
+        <h2>高频问题答疑精选</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>竞赛起步时间</h3>
+      <p>李新良高一才正式起步，最终拿到金牌——<strong>来得及，但代价是高中压力极大</strong>。建议在高中之前起步（如初一、初二），可以大幅降低后期压力。但只要在高中之前开始，时间都来得及，关键在于能否承受相应的压力。</p>
+    </div>
+
+    <div class="card">
+      <h3>学习节奏：快与慢</h3>
+      <p>学习速度取决于学生自身的接受程度。学得顺利可以加快，学得吃力则需要慢慢啃。进度因人而异，一千个小时是否够用取决于学习效率和理解深度，无法一概而论。</p>
+    </div>
+
+    <div class="card">
+      <h3>数理双修</h3>
+      <p>不建议同时并行学习数学竞赛和物理竞赛。只有两种情况可以考虑：①孩子精力充沛且学习效率极高（"大天才"）；②目标不是两边都拿大奖，而是综合提高考少年班（如中科大少年班、西交大少年班）的概率。</p>
+    </div>
+
+    <div class="card">
+      <h3>物理竞赛与高中物理的关系</h3>
+      <p>普物与高中物理<strong>没有直接关联</strong>。竞赛物理的体系与高中物理不同，甚至存在矛盾。学竞赛前一般先把高中物理过一遍，但竞赛中学到的是更完善的体系。</p>
+    </div>
+
+    <div class="card">
+      <h3>竞赛经历的核心价值</h3>
+      <ul class="content-list">
+        <li>提供升学方式（直接红利）</li>
+        <li>提升<strong>自学能力</strong>——竞赛中绝大部分内容靠自学</li>
+        <li>提升<strong>抗压能力</strong>——应对未来挫折的心理资本</li>
+        <li>增加升学路径的多样性——竞赛、卓越、强基、裸分等多条路并行，降低单一考试的风险</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>竞赛花费参考：</strong>李新良竞赛总花费约数万元（因时间短、学校支持多）。不同地区、不同学校的资源差异较大，平台校能提供的支持越多，个人需要承担的费用越少。
+    </div>
+
+    <div class="alert alert-info">
+      <strong>关于实验考试：</strong>进省队需要实验成绩，第41届起全国统一考实验题。
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <p>本文档基于"道哥聊学习"直播回放整理 · 嘉宾：李新良（第40届全国中学生物理竞赛金牌）</p>
+    <p style="margin-top:4px;">整理时间：2025年 · 内容仅供参考，请结合个人实际情况判断</p>
+  </div>
+
+</body>
+</html>

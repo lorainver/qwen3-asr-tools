@@ -2023,11 +2023,27 @@
                 const loader = document.getElementById(loaderId);
                 if (loader) loader.remove();
 
-                // 添加 AI 回复
+                // 添加 AI 回复（Markdown + KaTeX 渲染）
                 const sourcesHtml = data.sources && data.sources.length
                     ? `<div class="kb-chat-sources">📎 参考来源：${data.sources.map(s => escapeHtml(s.filename)).join('、')}</div>`
                     : '';
-                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">🤖 AI：</span>${escapeHtml(data.answer || data.message || '无回复')}${sourcesHtml}</div>`;
+                const answerHtml = renderMarkdown(data.answer || data.message || '无回复');
+                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">🤖 AI：</span><div class="markdown-content">${answerHtml}</div>${sourcesHtml}</div>`;
+                
+                // 触发 Mermaid 图表渲染
+                setTimeout(() => {
+                    if (window.mermaid) {
+                        box.querySelectorAll('.mermaid-container[data-mermaid-code]').forEach(container => {
+                            const code = decodeURIComponent(container.dataset.mermaidCode);
+                            const id = container.id;
+                            mermaid.render('mermaid-svg-' + id, code).then(({ svg }) => {
+                                container.innerHTML = svg;
+                            }).catch(err => {
+                                container.innerHTML = `<pre style="color: #f43f5e;">Mermaid 渲染失败: ${err.message}</pre>`;
+                            });
+                        });
+                    }
+                }, 50);
             } catch (err) {
                 const loader = document.getElementById(loaderId);
                 if (loader) loader.remove();

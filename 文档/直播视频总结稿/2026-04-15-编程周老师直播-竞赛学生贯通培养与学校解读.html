@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>育才信竞贯通式培养与签约要点全解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --accent: #6b2d5b;
+    --accent-light: #8e4585;
+    --accent-bg: #f5eef3;
+    --gold: #b8860b;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #7a7570;
+    --border: #e2ddd6;
+    --highlight: #fff3cd;
+    --success: #2d6b3f;
+    --danger: #8b2500;
+    --info: #1a5276;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Noto Serif SC', serif;
+    line-height: 1.4;
+  }
+
+  /* ── Page Header ── */
+  .hero {
+    background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #a85d7a 70%, #b8860b 100%);
+    padding: 64px 40px 56px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.6;
+  }
+  .hero-inner {
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .hero .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .hero .tag {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .hero .subtitle {
+    font-size: 17px;
+    opacity: 0.88;
+    font-weight: 300;
+    max-width: 640px;
+  }
+
+  /* ── Container ── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── Nav / TOC ── */
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 36px;
+    margin: 40px auto;
+    max-width: 960px;
+    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .toc-card::before {
+    content: '目录';
+    position: absolute;
+    top: -1px;
+    left: 24px;
+    background: var(--accent);
+    color: #fff;
+    padding: 4px 16px;
+    border-radius: 0 0 8px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 40px;
+    margin-top: 8px;
+  }
+  .toc-grid a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 8px 0;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 15px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .toc-grid a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent-bg);
+  }
+  .toc-grid a .toc-num {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 14px;
+    min-width: 24px;
+  }
+
+  /* ── Sections ── */
+  section.chapter {
+    margin: 48px auto;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header .num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    color: var(--accent-light);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    min-width: 24px;
+  }
+  .section-header .bar {
+    width: 4px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  h3 {
+    font-size: 19px;
+    color: var(--text-primary);
+    margin: 28px 0 14px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent-bg);
+    font-weight: 600;
+  }
+  h4 {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin: 20px 0 10px;
+    font-weight: 600;
+  }
+
+  p {
+    margin-bottom: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* ── Alert Boxes ── */
+  .alert {
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-size: 15px;
+    line-height: 1.7;
+    border-left: 4px solid;
+  }
+  .alert strong { display: block; margin-bottom: 4px; }
+  .alert-gold    { background: var(--highlight); border-color: var(--gold); }
+  .alert-gold strong { color: var(--gold); }
+  .alert-success { background: #eaf5ed; border-color: var(--success); }
+  .alert-success strong { color: var(--success); }
+  .alert-danger  { background: #fdf0ec; border-color: var(--danger); }
+  .alert-danger strong { color: var(--danger); }
+  .alert-info    { background: #eaf2f8; border-color: var(--info); }
+  .alert-info strong { color: var(--info); }
+  .alert-purple  { background: var(--accent-bg); border-color: var(--accent); }
+  .alert-purple strong { color: var(--accent); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+
+  /* ── Two Column ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 16px 0;
+  }
+
+  /* ── Lists ── */
+  ul, ol {
+    padding-left: 24px;
+    margin: 10px 0 16px;
+    color: var(--text-secondary);
+  }
+  li {
+    margin-bottom: 8px;
+    line-height: 1.75;
+  }
+  li strong {
+    color: var(--text-primary);
+  }
+
+  /* ── Table ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 500;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; }
+  tbody td {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  tbody tr { transition: background 0.15s; }
+  tbody tr:hover { background: var(--accent-bg); }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .tag-purple { background: var(--accent-bg); color: var(--accent); }
+  .tag-gold   { background: var(--highlight); color: var(--gold); }
+  .tag-green  { background: #eaf5ed; color: var(--success); }
+  .tag-red    { background: #fdf0ec; color: var(--danger); }
+  .tag-blue   { background: #eaf2f8; color: var(--info); }
+
+  /* ── Diff Bar ── */
+  .diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  .diff-bar .label {
+    min-width: 100px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .diff-bar .track {
+    flex: 1;
+    height: 10px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .diff-bar .fill {
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    transition: width 0.6s ease;
+  }
+  .diff-bar .value {
+    min-width: 40px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  /* ── Flow / Timeline ── */
+  .flow {
+    position: relative;
+    padding-left: 36px;
+    margin: 20px 0 24px;
+  }
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--border);
+  }
+  .flow-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .flow-item::before {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 3px solid var(--bg);
+  }
+  .flow-item .flow-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .flow-item .flow-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .hero { padding: 40px 20px 36px; }
+    .hero h1 { font-size: 26px; }
+    .hero .subtitle { font-size: 15px; }
+    .toc-grid { grid-template-columns: 1fr; gap: 0; }
+    .two-col { grid-template-columns: 1fr; }
+    .section-header h2 { font-size: 20px; }
+    .container { padding: 0 16px; }
+    .toc-card { padding: 28px 20px; margin: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="tag-bar">
+      <span class="tag">育才信竞</span>
+      <span class="tag">贯通式培养</span>
+      <span class="tag">签约策略</span>
+      <span class="tag">思维题训练</span>
+    </div>
+    <h1>育才信竞贯通式培养与签约要点全解析</h1>
+    <p class="subtitle">基于直播内容整理，涵盖贯通式培养机制、育才信竞基础信息、签约考核标准、思维题训练体系及入校策略</p>
+  </div>
+</header>
+
+<!-- ══════════ TOC ══════════ -->
+<nav class="toc-card">
+  <div class="toc-grid">
+    <a href="#ch1"><span class="toc-num">01</span>案例分析：签约机会的争取与启示</a>
+    <a href="#ch2"><span class="toc-num">02</span>贯通式培养机制深度解析</a>
+    <a href="#ch3"><span class="toc-num">03</span>育才信竞基础信息</a>
+    <a href="#ch4"><span class="toc-num">04</span>育才签约三大考核维度</a>
+    <a href="#ch5"><span class="toc-num">05</span>思维题训练体系（八课时大纲）</a>
+    <a href="#ch6"><span class="toc-num">06</span>入校途径与策略建议</a>
+    <a href="#ch7"><span class="toc-num">07</span>编程升学的核心价值</a>
+    <a href="#ch8"><span class="toc-num">08</span>常见问题与家长须知</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ══════════ CH1 ══════════ -->
+<section class="chapter" id="ch1">
+  <div class="section-header">
+    <span class="num">01</span>
+    <div class="bar"></div>
+    <h2>案例分析：签约机会的争取与启示</h2>
+  </div>
+
+  <h3>案例背景</h3>
+  <p>一名六年级学生在育才跟训过程中状态持续不稳定，面临被取消签约资格的处境。该生具备以下特征：</p>
+  <ul>
+    <li><strong>起步较晚：</strong>六年级才开始学习编程</li>
+    <li><strong>短期突破：</strong>三个月左右取得四级九十几分的成绩</li>
+    <li><strong>资质优秀：</strong>属于六小班学生，整体资质不错</li>
+    <li><strong>状态波动：</strong>近期成绩有所下滑，不够稳定</li>
+  </ul>
+
+  <h3>问题根源分析</h3>
+  <div class="alert alert-gold">
+    <strong>核心问题：家庭意见不统一</strong>
+    父亲希望孩子高中后再做规划，孩子本人想走竞赛路线，母亲支持孩子走竞赛。三方意见不一致，导致孩子无法全力以赴，状态持续下滑。
+  </div>
+
+  <h3>干预措施与结果</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-title">与学校老师沟通</div>
+      <div class="flow-desc">将学生情况完整、详尽地反馈给学校教练，提供全面的学习数据和分析。</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">争取留校查看</div>
+      <div class="flow-desc">距五月签约还有数周时间，成功争取到"留校查看"处理，避免了直接开除学籍。</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">约谈做思想工作</div>
+      <div class="flow-desc">将学生叫到学校进行思想工作，状态有所改善，但非长久之计。</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">与家长沟通</div>
+      <div class="flow-desc">告知家长已争取到两三次额外考察机会，要求学生务必珍惜。</div>
+    </div>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心启示</strong>
+    有机构跟进学生的跟训情况，可以与学校进行有效交流，争取到更多的考察机会。自行备考的学生在出现危机时缺乏有效的沟通渠道。
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════ CH2 ══════════ -->
+<section class="chapter" id="ch2">
+  <div class="section-header">
+    <span class="num">02</span>
+    <div class="bar"></div>
+    <h2>贯通式培养机制深度解析</h2>
+  </div>
+
+  <h3>什么是贯通式培养</h3>
+  <p>贯通式培养是重庆各竞赛学校（包括巴蜀、一中、育才等）采用的共同培养机制。其核心特征：</p>
+  <div class="card">
+    <ul>
+      <li><strong>打破学段界限：</strong>打破小升初、中考的界限，学生从小学阶段招入后，一路贯通至高中</li>
+      <li><strong>师资直通：</strong>直接使用高中师资衔接小学班级，而非简单增加一门竞赛课</li>
+      <li><strong>全程保障：</strong>由学校高中部与初中部联合贯通培养，学生即为高中本部的预备生源</li>
+    </ul>
+  </div>
+
+  <h3>贯通式培养的核心优势</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>文化课与竞赛兼顾</h4>
+      <p>基本能保证学生既能学习竞赛课程，又能保持文化课优秀。进入该体系后，家长无需再额外投入大量金钱和精力。</p>
+    </div>
+    <div class="card">
+      <h4>全员保送高中</h4>
+      <p>初中阶段的竞赛选手，除非自己主动放弃或表现极差，一般全员保送高中。学生在初中阶段基本完成高中学业。</p>
+    </div>
+  </div>
+
+  <h3>与普通"超前学习"的区别</h3>
+  <div class="alert alert-info">
+    <strong>贯通式培养 ≠ 简单的超前学习</strong>
+    除课程内容超前外，还包括：① 师资的系统衔接（高中师资直接授课初中班级）；② 竞赛停课期间安排文化课老师进行一对一补缺；③ 学校提供全方位的综合保障体系。
+  </div>
+
+  <h3>竞赛出路</h3>
+  <p>依托贯通式培养机制，学生在综合冲击高校之外，还拥有多条路径：</p>
+  <ul>
+    <li><strong>竞赛保送：</strong>通过竞赛成绩直接获得保送资格</li>
+    <li><strong>竞赛加分：</strong>获得高考加分政策</li>
+    <li><strong>强基计划：</strong>以竞赛背景参加强基计划选拔</li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════ CH3 ══════════ -->
+<section class="chapter" id="ch3">
+  <div class="section-header">
+    <span class="num">03</span>
+    <div class="bar"></div>
+    <h2>育才信竞基础信息</h2>
+  </div>
+
+  <h3>主教练：周祖松老师</h3>
+  <div class="card">
+    <ul>
+      <li><strong>资质：</strong>NOI 金牌教练（由中国计算机学会评定，非自封）</li>
+      <li><strong>全国金牌教练数量：</strong>重庆共五人，周祖松老师为其中之一</li>
+      <li><strong>资源优势：</strong>曾担任中国计算机学会副理事长，可直接向清华、北大推荐学生</li>
+      <li><strong>退休计划：</strong>至少还有十年执教时间</li>
+      <li><strong>个人工作室：</strong>"猪猪松"个人工作室</li>
+      <li><strong>背景：</strong>从湖南来到重庆，为人朴实，不善言辞，专注教学</li>
+    </ul>
+  </div>
+
+  <h3>班级设置与规模</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>每届招生规模</h4>
+      <p>小班制，每届约 <strong>33-35 人</strong>。</p>
+    </div>
+    <div class="card">
+      <h4>签约与留存</h4>
+      <p>实际签约量约 <strong>80-90 人</strong>（约三倍），因约三分之二学生会被金刚校挖走。</p>
+    </div>
+  </div>
+
+  <h3>育才信竞的独特优势</h3>
+  <div class="alert alert-success">
+    <strong>核心优势：不看文化课成绩，不考奥数</strong>
+    育才信竞仅考核编程水平，适合单科信竞拔尖但文化课薄弱的学生。其筛选机制藏在跟训题目中——题目为数学思维类编程题，能有效区分学生的真实能力。
+  </div>
+
+  <h3>全托机制</h3>
+  <p>育才的全托班设置非常灵活：</p>
+  <ul>
+    <li>四年级、五年级、六年级均可全托</li>
+    <li>一旦全托，学生全天候学习初中课程，锁定生源，无法再去其他学校</li>
+    <li>全托是育才吸引和锁定优质生源的重要方式</li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════ CH4 ══════════ -->
+<section class="chapter" id="ch4">
+  <div class="section-header">
+    <span class="num">04</span>
+    <div class="bar"></div>
+    <h2>育才签约三大考核维度</h2>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心结论：育才签约综合评估三方面</strong>
+    考试成绩 + 补题能力 + 课堂习惯，三者缺一不可。哪怕编程水平极高，若学习习惯差（如上课打游戏），同样面临淘汰。
+  </div>
+
+  <h3>维度一：每周考试成绩</h3>
+  <div class="card">
+    <ul>
+      <li>跟训模式：<strong>一周考试、一周评讲</strong>（不讲知识点，知识点需在校外提前掌握）</li>
+      <li>与南开的对比：南开每周都考试并评讲，节奏更快，补题压力更大；育才给一周思考时间，补题压力相对较小</li>
+      <li>成绩要求：一个周期内稳定在 <strong>400 分以上</strong>，且浮动不能过大</li>
+      <li>最佳签约时间：<strong>四年级下学期</strong></li>
+    </ul>
+  </div>
+
+  <h3>维度二：补题能力</h3>
+  <div class="card">
+    <ul>
+      <li>育才的 OJ（在线评测系统）<strong>不对外开放</strong>，学生无法在课外自行刷题</li>
+      <li>补题流程：第一周考试 → 第二周老师评讲 → 当周补题完成</li>
+      <li><strong>关键建议：</strong>考试时遇到不会的题目，用笔记本记录题目和思路，回来后先独立思考，待评讲后对照完成补题</li>
+      <li>补题成绩会直接影响最终考试成绩和签约评估</li>
+    </ul>
+  </div>
+
+  <h3>维度三：课堂习惯</h3>
+  <div class="alert alert-danger">
+    <strong>警示：被淘汰最多的不是因为成绩，而是课堂习惯</strong>
+    上课开小差、翻网页、打游戏等行为是不可容忍的。上学期南开跟训中有学生因上课打游戏直接被淘汰。机构为进校跟训学生统一发放书包，便于学校识别。
+  </div>
+
+  <h3>三维度综合评估逻辑</h3>
+  <div class="card">
+    <p>三者形成闭环：</p>
+    <ul>
+      <li><strong>补题认真</strong> → 证明学习主动性强</li>
+      <li><strong>上课认真</strong> → 证明学习习惯好</li>
+      <li><strong>成绩稳步上升</strong> → 证明学习能力稳定</li>
+    </ul>
+    <p>三者兼备的学生，学习任何学科都不会差。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════ CH5 ══════════ -->
+<section class="chapter" id="ch5">
+  <div class="section-header">
+    <span class="num">05</span>
+    <div class="bar"></div>
+    <h2>思维题训练体系（八课时大纲）</h2>
+  </div>
+
+  <h3>训练背景</h3>
+  <p>育才跟训题型为<strong>数学思维类编程题</strong>（用编程方法解决数学问题），与日常算法训练完全不同。若未经过专项训练，学生在跟训初期极有可能被淘汰。育才的规则是：<strong>可以考不进，但绝不能被淘汰</strong>——被淘汰后基本没有第二次机会。</p>
+
+  <h3>八课时训练大纲</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:70px">课次</th>
+          <th>训练方向</th>
+          <th>核心内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>第一课</strong></td>
+          <td>简单逻辑推理</td>
+          <td>训练分析问题的全面性，建立逻辑分析基础</td>
+        </tr>
+        <tr>
+          <td><strong>第二课</strong></td>
+          <td>复杂逻辑推理</td>
+          <td>进阶推理训练，培养面对复杂问题的系统分析能力</td>
+        </tr>
+        <tr>
+          <td><strong>第三课</strong></td>
+          <td>简单数学建模（代数思维）</td>
+          <td>用数学方法解编程题，倒向推理训练</td>
+        </tr>
+        <tr>
+          <td><strong>第四课</strong></td>
+          <td>复杂数学建模</td>
+          <td>复杂情境下的数学建模与优化</td>
+        </tr>
+        <tr>
+          <td><strong>第五课</strong></td>
+          <td>减少循环的优化处理</td>
+          <td>针对暴力解法的优化训练，降低时间复杂度</td>
+        </tr>
+        <tr>
+          <td><strong>第六课</strong></td>
+          <td>消除分支的优化处理</td>
+          <td>消除冗余分支，提升代码效率</td>
+        </tr>
+        <tr>
+          <td><strong>第七课</strong></td>
+          <td>其他数学方法</td>
+          <td>补充性数学技巧训练</td>
+        </tr>
+        <tr>
+          <td><strong>第八课</strong></td>
+          <td>综合训练</td>
+          <td>全部方向的综合应用与实战模拟</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>核心训练目标</strong>
+    教会学生遇到思维类题型时的归纳、分析、总结方法。育才签约考核的核心就是学生的归纳分析总结能力。
+  </div>
+
+  <h3>自学替代方案</h3>
+  <p>若机构无法提供专项思维训练，可采用以下方式：</p>
+  <ul>
+    <li><strong>刷 ABC 题库：</strong>每周六晚上的日本思维赛（AtCoder），题型与育才思维题高度相似</li>
+    <li><strong>使用机构 OJ：</strong>机构自有 Super OJ 上设有南开、八中、育才的思维题库</li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════ CH6 ══════════ -->
+<section class="chapter" id="ch6">
+  <div class="section-header">
+    <span class="num">06</span>
+    <div class="bar"></div>
+    <h2>入校途径与策略建议</h2>
+  </div>
+
+  <h3>两种入校途径对比</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>机构内推</h4>
+      <ul>
+        <li>机构将学生学习情况详细反馈给学校</li>
+        <li>学校对机构推举的学生更放心</li>
+        <li><strong>通过率高：</strong>推 10 人可进 8-9 人</li>
+        <li>分数要求相对较低（200 分以上可进）</li>
+      </ul>
+      <span class="tag tag-green">推荐优先</span>
+    </div>
+    <div class="card">
+      <h4>个人自考</h4>
+      <ul>
+        <li>学生信息学校完全不了解</li>
+        <li>只能用更高分数卡掉不合适的考生</li>
+        <li>通过率低：每场仅几人通过</li>
+        <li>分数要求高（300 分以上才能进）</li>
+      </ul>
+      <span class="tag tag-red">难度较大</span>
+    </div>
+  </div>
+
+  <h3>备考时间线建议</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-title">建议四年级左右开始备考</div>
+      <div class="flow-desc">思维题需要一定的数学思维基础，四年级左右是合适的启动时间。</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">寒假前：广泛考察</div>
+      <div class="flow-desc">上学期不急于签约，建议先走访各金刚校（巴蜀、一中、南开等），充分了解后综合评估。</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">寒假后：定向推训</div>
+      <div class="flow-desc">将学生训练至相对成熟的阶段（约三个月），再送出去考核，避免在不成熟时浪费考察机会。</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">四年级下学期：最佳签约窗口</div>
+      <div class="flow-desc">育才签约的最佳时间在下学期，签约后即可进入全托体系。</div>
+    </div>
+  </div>
+
+  <h3>思维不够时的"算法硬解"策略</h3>
+  <div class="alert alert-info">
+    <strong>应急方案：用算法能力弥补思维短板</strong>
+    若学生在思维题方面有所欠缺，可通过扎实掌握以下四个算法，用算法硬解思维题：二分查找、贪心算法、搜索算法、递推/递归。育才也认可这种解法。
+  </div>
+
+  <h3>关键时间节点</h3>
+  <div class="card">
+    <ul>
+      <li><strong>三月二十九日：</strong>育才高年级考核（个人自考渠道，分数线较高，300 分以下基本无法通过）</li>
+      <li><strong>四月底：</strong>南开将出一批结果，淘汰一批跟不走的学生，签约一批跟得走的学生，中间段继续跟训后进入下一波选拔</li>
+      <li><strong>五月份：</strong>签约确定</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════ CH7 ══════════ -->
+<section class="chapter" id="ch7">
+  <div class="section-header">
+    <span class="num">07</span>
+    <div class="bar"></div>
+    <h2>编程升学的核心价值</h2>
+  </div>
+
+  <h3>平台搭建与内驱力激发</h3>
+  <p>通过编程升学的最大优势在于：</p>
+  <div class="card">
+    <ol>
+      <li><strong>提供深度体验机会：</strong>学生通过编程进入学校后，参加军训等体验活动，对目标学校形成深刻的认知和强烈的就读意愿</li>
+      <li><strong>激发内驱力：</strong>当学生有了明确意愿后，自驱力被带动，从被动学习转为主动学习</li>
+      <li><strong>提升学习习惯与能力：</strong>主动学习状态下，学习习惯和学习能力均得到进一步提升</li>
+    </ol>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心理念</strong>
+    编程升学不是在培养刷题的学生，而是将对编程有梦想、有理想的学生带入到适合他们的平台。
+  </div>
+
+  <h3>竞赛培养的本质</h3>
+  <ul>
+    <li>竞赛培养的目标不仅是成绩，更是在整个训练过程中<strong>激发学生的学习能力</strong></li>
+    <li>学生的理想和意愿不是天生的，需要<strong>引导、正向反馈以及老师和家长的认可</strong></li>
+    <li>对于热爱编程的学生而言，竞赛学习不会觉得辛苦；真正辛苦的是被迫做自己不愿意做的事</li>
+  </ul>
+
+  <h3>重庆竞赛环境</h3>
+  <p>重庆竞赛之所以"卷"、分数线高，核心原因在于重庆搞竞赛的学校基本都提供贯通式培养机制，形成了系统化的竞赛生态。</p>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════ CH8 ══════════ -->
+<section class="chapter" id="ch8">
+  <div class="section-header">
+    <span class="num">08</span>
+    <div class="bar"></div>
+    <h2>常见问题与家长须知</h2>
+  </div>
+
+  <h3>Q1：被淘汰后还有机会吗？</h3>
+  <div class="alert alert-danger">
+    <strong>基本没有第二次机会</strong>
+    除非学生能实现"飞跃性进步"，改掉之前被淘汰的毛病，且需要机构做大量协调工作。极少数情况下可争取，但概率极低。
+  </div>
+
+  <h3>Q2：签约后不参加全托可以吗？</h3>
+  <p>理论上可以不参加全托，但一旦进入全托班，学生全天候学习初中课程，基本上没有时间再去其他学校。育才的全托机制本身就是锁定生源的重要方式。</p>
+
+  <h3>Q3：外地学生如何入渝？</h3>
+  <p>重庆落户成本较低，可在偏远区域购房落户。但核心要素是<strong>学生本人足够优秀</strong>，竞赛赛道将来可能逐步取消地域限制，实现"竞赛以下众生平等"。</p>
+
+  <h3>Q4：南开图灵班是否为最好选择？</h3>
+  <p>图灵班是南开信竞小学阶段的称呼，现统称为"秋班"，已是最优班型。图灵班的最好归宿是南渝 H 冲赛。</p>
+
+  <h3>Q5：题解写作的重要性</h3>
+  <div class="alert alert-success">
+    <strong>写题解是进步最快的方式</strong>
+    建议每周至少写一道题的题解，坚持半年即可实现质的飞跃。题解需要完整呈现思路，虽然耗时较长，但对理解深度和表达能力的提升效果显著。
+  </div>
+
+  <h3>家长行为建议</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>应避免的行为</h4>
+      <ul>
+        <li>遇到困难时首先想到放弃</li>
+        <li>认为裸考就能轻松过级</li>
+        <li>在孩子面前表现出消极态度</li>
+        <li>在不同学校之间反复犹豫、频繁摇摆</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>应倡导的行为</h4>
+      <ul>
+        <li>正确看待竞赛，不过分误解也不过分神话</li>
+        <li>给予学生正向反馈和持续鼓励</li>
+        <li>尊重机构的教学安排和建议</li>
+        <li>保持耐心，给学生足够的成长时间</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div><!-- .container -->
+
+<footer class="footer">
+  <p>内容整理自直播记录 ｜ 仅供教育规划参考 ｜ 具体政策以学校官方发布为准</p>
+</footer>
+
+</body>
+</html>

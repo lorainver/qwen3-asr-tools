@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-12-28-编程周老师直播-AI时代小学升学规划与科技特长生</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2025-12-28-编程周老师直播-AI时代小学升学规划与科技特长生</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>其实今天晚上的讲座对于低年级或者三年级到六年级小孩家长极其重要，你们一定要认真听，极其重要，特别是时代</li>
+                <li>现在时代变化太快了，人工智能其实超越了超越了我们的所有人想的一个认知</li>
+                <li>我儿子读大四，需要注意的是，中位数是一百，中位数一百，就基本上你找不到有低于一百万的</li>
+                <li>你们掌握那些人工智能和编程的能力是非常之重要的</li>
+                <li>然后而且不划算，对学生要求又很高，它不像小升初是硬需求，所以出于那种考虑</li>
+                <li>所以说，所以说，我今天给你们做宣讲，我也是你们说老师么子，然后关键是</li>
+                <li>它能够自己迭代，它是一些算法，它是一些数理知识，所以其实我们需要学有用的，其实是</li>
+                <li>算法很多核心的算法，你们包括升学，为啥子国家保送清华北大</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>如果是升学，或者说是，或者说是你目前来讲哈，对对就业有直接性的作用哈，没得。三年级以上，三年级到六年级起步都是比较好的，。有来，我先看下你们有问题，一两句能回答的我都回答你们了，然后。</p>
+                <p>我待会儿在内容中会详细的去给你们阐述，让你们清楚的知道，如果娃儿要迎合AI时代，包括你们去走升学，包括性情是哪回事儿，哪些娃儿适合，然后啷个学，。我直接给大家讲，这样子，你们要我讲普通话还是讲重庆话。如果想普通话，我讲的打一哈；讲重庆话的打二。</p>
+                <p>好，那我都说重庆话，我都说重庆话哈，我都说重庆话。其实今天晚上的讲座对于低年级或者三年级到六年级小孩家长极其重要，你们一定要认真听，极其重要，特别是时代。我会给你们讲明白，因为我很少去讲那些东西，因为因为我说老实么正，因为因为。</p>
+                <p>或者说出身高那更多的人可能他他的受众群体还更广一些，所以我讲不多。你们难，因为要去讲我要给你们准备PPT准备这样那样哈，所以说我都很少讲。现在时代变化太快了，人工智能其实超越了超越了我们的所有人想的一个认知。</p>
+                <p>你们炒股都晓得，其实所有的，包括科技股，应当是大爆发。现在全世界，我跟你们说，经济哈，你第四次工业革命。所以，包括我，因为后面跟你们讲，包括你们，如果你们在我们那儿说，二晓得，我们AI很快，我们的AI for教育就说对教育那块。</p>
+                <p>像我们五六年级的家长在我们那儿刷题的都晓得了，我们已经大量使用人工智能。将来人工智能会渗透不光是教育、医疗，你的家居。还有整个你的生活会非常之疯狂，所以现在头部的科技公司都压过压压住人工智能。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>原来那些娃儿哈，你们拿一等奖都不得了了，一等二等都不得了了哈。你们有三个组第一个组是普及组，初中组，所以你们其实现在虽然是小学生，虽然说你们打不到那比赛，但是。你们要学的其实是普一作，三年级以下的娃儿不去不去整，不去学，为啥子。</p>
+                <p>你数学数论，你数学都懂不到，你加减乘除都没哈生长，你不去搞你学不懂。我跟大家延展哈，因为我难得给你们讲一会儿，所以说我我尽量给你们讲透，免得有些你们不催我哈，我讲啰嗦点儿。我我给你们讲嘛，包括你们二天有有没有学生想去当医生的。</p>
+                <p>他是从医的博士，从医，然后把本硕都在在从医读的，然后博士也在从医读的，优秀得不得了。但是呢，我给你举个例子，另外一个娃娃，另外一个娃娃呀，他都是读的北大，然后他是原来说的生物竞赛。然后他就在北大，然后他也是直播，他也是学的临床医学。</p>
+                <p>凡是在清北或者顶级名校搞那种综合性大学，不管你是学医学，还是说生物学，还是学材料学。他们全部都在搞的课题，最热门的课题都是人工智能。他要交叉性学科，但是从医，因为他不是综合性大学，那些娃儿又小的时候又没得编程基础的，所以我现在姐姐女儿，她都只能去学。</p>
+                <p>纯粹的那种临床医学，但是我可以那么说，你去看一流的高校，那些学生全部是用于人工智能加上人工智能加上本专业在学习。一流的名校，所以这样子的话，那些娃儿他将来科研能力，还有跟随这个时代能力会强得很。点儿都不包括找工作，你看我们幺儿，因为原来是通过那块儿找就业的。</p>
+                <p>你去就业，像我们像我们本科生，基本上那些博士搞不定的，硕士搞不定的，基本上拿给他们，他们能干，因为他们小学开始在整。像我们幺儿，他虽然是本科生，为啥是我敢他放弃北大的考研。因为，因为我们搞东西，从五六年级开始搞，也嘛搞到现在大四了。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>也是新学竞赛的，或者C C E哈，太多太多哈，好，我不跟大家讲了哈。能教的只有几种人，哈，我帮儿跟你们说哈儿，教学。全重庆市，包括西马在内，不超过三家机构能这样教你们真真正正的一个算法。</p>
+                <p>只有几种人，第一个是学校的金牌教练，学校的带技能的教练。但是学校的教练呢，现在不但敢出来，原来重庆几个核心的教练都在我这儿上课，但是现在管得很严，在职老师管得很严，我们不敢用他。他也不敢那样出来，所以我跟你们说老实话，的。</p>
+                <p>他们本来像摇班儿、屠宁班儿那些娃儿，本来工资高得不得了，他们没得么兴趣来带的，很多人。他所以说那块儿的市场上也很少，所以说外面为啥是很多人教不了。另外一个都说是，还有本土的那种机构里面的很少，像我们那边为啥子能交。</p>
+                <p>你们晓得，原来我那儿都是学校的金牌教练来上课，所以我们整个课程体系全部都是。四大金刚的某一所，你不晓得，新月竞赛非常强的，没有说全部搭建的，包括题库都都是的课件。最先合伙的时候，学校的两个老师留在我们这儿来了，所以他们一直在领资领资，担任教学骨干。</p>
+                <p>他们在西坝那边，有些是合伙人，所以有些是我们的合伙人。所，所以他的工资就很高，在我们那儿基本上是六七十万，哈。所以说，还加上有股份分红，所以说这块儿我们就很强。</p>
+                <p>但是我们也只是一两个老师，所以不适宜规模化，开不到很多。比赛前我们会有集训，我们会有集训，所以西班牙面的师资你们可以理解为哈，你们都晓得，本来吴老师原来。是我们的合伙人吴老师，原来学校某个学校招的教练然后，然后留下来了。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>到时候，比如我们的一些学员，我们转过去走中，我们转过去就行了。你们、你们、你们现在先在沙马上，那起要在沙马上，。可以上线上，就我们直播也是允许的，偶尔可以那种哈。</p>
+                <p>你反正不存在哈，你们跑哈嘛，跑哈寒假，跑哈到时候也可以把数学课哈转过来，。如果你们想冲竞赛班儿嘞，或者想弄兴趣嘞，那就可以用。拓展哈思维，另外一个都是对他长久的发展还是有用。</p>
+                <p>我觉得你趁现在现在没有你如果有时间，所以，但是我觉得你们如果读的是很普通学校，你都不学很普通的学校的娃儿可能学不走，。第一期语言，第二期就语言和结构进阶，第三期算法，第四期算法，他说的基本上说差不多了，然后后面会有集训。比如暑假，我们会搞一些集训，都是比赛集训大概什个样子。</p>
+                <p>不不，正常的课四期，然后加上集训，可能有五期、六期那样子哈，会开集训班儿，。我们不会拖你们进度，不会慢慢的这样的学好多年哈，一年多点儿，一年多点儿哈，亲们。你开玩笑，你考就两天嘛，说你你肯定告哈呀，可以学哈，然后亲们，我先直播做到那点儿哈，亲们。</p>
+                <p>你们到那儿过来玩儿上完了，我们会测评，然后到时候我们会跟你们聊一下。老师也会跟你们聊一下娃儿的表现，各个情况，。哦，姜老师，你开通个回放，他们没听到的可以看回放哈。</p>
+                <p>我先我先结束直播哈，到时候你们团了，我们会联系你们，你们把电话嘛和年级把它弄好的行了哈。三年级到六年级的娃娃六年级的我们要求是考上七龙珠的，然后三年级、四年级。都是这样子哈，好，我们今天直播就到此为止哈，谢谢亲们，谢谢亲们哈，我先把它结束了，拜拜。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>算法很多核心的算法，你们包括升学，为啥子国家保送清华北大。那你们很多人学的是Scratch图形编程，我给大家讲，当然你们学Python，Python跟人工智能有关系。但是，你们要学的、升学的，只能学信号，包括国家看重的。</p>
+                <p>我跟大家说一下算法，你们把“算法”那两个字打在公上面哈。我要反复地给你们强调算法，你们把“算法”两个字打在公上面。我跟你们讲，为啥子外面的很多机构教不了你们。</p>
+                <p>我给你们举个例子，算法跟语言，还有包括啥子Scratch机器人儿啥子区别，。然后把你的那种想法通过编程来实现，所以很多人忽悠你，让你学编程。等于说，很多机构会偷换概念，他把算法等同于编程，然后再把编程等同于语言，喊你去学Scratch、Python、C加加。</p>
+                <p>叫语言，那么计算机也有语言，都是你要让它懂到你的话，它叫语言。因为我说的重庆话，他说的英语，另外一个说的普通话，你能够来筛选我们三个人谁更优秀，谁有能力，能不能。你不可能因为我说重庆话，你都觉得我没得本事的。</p>
+                <p>因为我们看待一个人去选拔他，最重要是他的思想，你通过语言，你表达出来，你传递的逻辑，你的想法，特别是解决问题的能力。他数学都学不好，逻辑能力下象棋像逻辑能力不行，。你不得行，所以真真正正的人才，不是去学一门儿谁家家。</p>
+                <p>也更不可不是说是学语，学个啥子石鼓器，或者拍绳，或者说抓夹板儿，。外面的那种培训班，十多次课，一个月都会把语言给你教会。数学、物理、化学、生物、信息，五大学科竞赛，懂了没有。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

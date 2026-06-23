@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>编程升学规划指南 — 七龙珠学校选拔全流程解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --accent: #6b2d5b;
+    --accent-light: #8e4585;
+    --accent-bg: #f5eef3;
+    --gold: #b8860b;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #7a7570;
+    --border: #e2ddd6;
+    --highlight: #fff3cd;
+    --success-bg: #eaf5ed;
+    --success-border: #2d6b3f;
+    --danger-bg: #fdf0ec;
+    --danger-border: #8b2500;
+    --info-bg: #eaf2f8;
+    --info-border: #1a5276;
+    --purple-bg: #f5eef3;
+    --purple-border: #6b2d5b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Page Header ===== */
+  .page-header {
+    background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #a85d7a 100%);
+    color: #fff;
+    padding: 64px 24px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(184,134,11,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .page-header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .page-header .subtitle {
+    font-size: 1.05rem;
+    opacity: 0.85;
+    font-weight: 300;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+    line-height: 1.7;
+  }
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .tag {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .tag-purple { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+  .tag-gold { background: rgba(184,134,11,0.25); color: #ffd88a; border: 1px solid rgba(184,134,11,0.4); }
+
+  /* ===== Navigation / TOC ===== */
+  .toc-section {
+    padding: 48px 0 32px;
+  }
+  .toc-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+  .toc-card:hover {
+    border-color: var(--accent-light);
+    box-shadow: 0 2px 12px rgba(107,45,91,0.08);
+  }
+  .toc-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 32px;
+  }
+  .toc-label {
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .toc-label small {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  /* ===== Chapter Heading ===== */
+  .chapter {
+    padding: 40px 0 24px;
+  }
+  .chapter-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .chapter-header .accent-bar {
+    width: 4px;
+    min-height: 40px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .chapter-header .text {
+    flex: 1;
+  }
+  .chapter-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.78rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .chapter-header h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  /* ===== Alert Boxes ===== */
+  .alert {
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    border-left: 4px solid;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+  .alert strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+  }
+  .alert-gold { background: var(--highlight); border-color: var(--gold); }
+  .alert-gold strong { color: var(--gold); }
+  .alert-success { background: var(--success-bg); border-color: var(--success-border); }
+  .alert-success strong { color: var(--success-border); }
+  .alert-danger { background: var(--danger-bg); border-color: var(--danger-border); }
+  .alert-danger strong { color: var(--danger-border); }
+  .alert-info { background: var(--info-bg); border-color: var(--info-border); }
+  .alert-info strong { color: var(--info-border); }
+  .alert-purple { background: var(--purple-bg); border-color: var(--purple-border); }
+  .alert-purple strong { color: var(--purple-border); }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+  .card h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  /* ===== Two Column ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  /* ===== Lists ===== */
+  ul, ol {
+    padding-left: 22px;
+    margin: 12px 0;
+  }
+  li {
+    margin-bottom: 8px;
+    line-height: 1.75;
+  }
+  li strong {
+    color: var(--accent);
+  }
+
+  /* ===== Tables ===== */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--accent-bg); }
+
+  /* ===== Diff Bar ===== */
+  .diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 10px 0;
+  }
+  .diff-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    min-width: 80px;
+    text-align: right;
+  }
+  .diff-track {
+    flex: 1;
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .diff-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+  }
+  .diff-fill-low { background: linear-gradient(90deg, #a8d8a8, #2d6b3f); width: 40%; }
+  .diff-fill-mid { background: linear-gradient(90deg, #b8860b, #d4a017); width: 65%; }
+  .diff-fill-high { background: linear-gradient(90deg, #8e4585, #6b2d5b); width: 85%; }
+  .diff-fill-max { background: linear-gradient(90deg, #8b2500, #c0392b); width: 98%; }
+
+  /* ===== Flow / Timeline ===== */
+  .flow {
+    position: relative;
+    padding-left: 36px;
+    margin: 24px 0;
+  }
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--border);
+  }
+  .flow-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .flow-item:last-child { margin-bottom: 0; }
+  .flow-dot {
+    position: absolute;
+    left: -36px;
+    top: 6px;
+    width: 22px;
+    height: 22px;
+    background: var(--surface);
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+    z-index: 1;
+  }
+  .flow-item-title {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .flow-item-desc {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  /* ===== Prose ===== */
+  p {
+    margin-bottom: 14px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+  p strong { color: var(--text-primary); }
+
+  h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 28px 0 12px;
+    font-weight: 600;
+  }
+
+  /* ===== Footer ===== */
+  .page-footer {
+    margin-top: 48px;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.8;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 700px) {
+    .page-header { padding: 40px 16px 36px; }
+    .page-header h1 { font-size: 1.6rem; }
+    .page-header .subtitle { font-size: 0.92rem; }
+    .container { padding: 0 16px; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .chapter-header h2 { font-size: 1.25rem; }
+    table { font-size: 0.82rem; }
+    thead th, tbody td { padding: 10px 12px; }
+    .diff-label { min-width: 60px; font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<header class="page-header">
+  <div class="container">
+    <h1>编程升学规划指南</h1>
+    <p class="subtitle">重庆七龙珠学校科技特长选拔全流程解析 — 选拔机制、考察重点、训练路径与升学策略</p>
+    <div class="tag-bar">
+      <span class="tag tag-purple">信息学竞赛</span>
+      <span class="tag tag-purple">小升初规划</span>
+      <span class="tag tag-gold">七龙珠</span>
+      <span class="tag tag-gold">科技特长</span>
+      <span class="tag tag-purple">跟训签约</span>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== TOC ==================== -->
+<section class="toc-section">
+  <div class="container">
+    <div class="toc-title">目录导航</div>
+    <nav class="toc-grid">
+      <a href="#ch1" class="toc-card">
+        <span class="toc-num">01</span>
+        <span class="toc-label">背景与现状<small>文化课升学困境与编程赛道机遇</small></span>
+      </a>
+      <a href="#ch2" class="toc-card">
+        <span class="toc-num">02</span>
+        <span class="toc-label">各校选拔流程<small>一中·南开·育才·八系等校差异</small></span>
+      </a>
+      <a href="#ch3" class="toc-card">
+        <span class="toc-num">03</span>
+        <span class="toc-label">优势与劣势分析<small>编程升学的双面性</small></span>
+      </a>
+      <a href="#ch4" class="toc-card">
+        <span class="toc-num">04</span>
+        <span class="toc-label">各校考察偏好<small>思维·算法·综合的差异化要求</small></span>
+      </a>
+      <a href="#ch5" class="toc-card">
+        <span class="toc-num">05</span>
+        <span class="toc-label">训练路径与工具<small>考级·ABC赛·思维专项</small></span>
+      </a>
+      <a href="#ch6" class="toc-card">
+        <span class="toc-num">06</span>
+        <span class="toc-label">时间规划与年级建议<small>起步节点·冲刺窗口·关键节奏</small></span>
+      </a>
+      <a href="#ch7" class="toc-card">
+        <span class="toc-num">07</span>
+        <span class="toc-label">竞赛班体系解析<small>三系梯队建设与秋班机制</small></span>
+      </a>
+      <a href="#ch8" class="toc-card">
+        <span class="toc-num">08</span>
+        <span class="toc-label">区县学生通道<small>跨区机会·思维测试·推优标准</small></span>
+      </a>
+    </nav>
+  </div>
+</section>
+
+<!-- ==================== CH1 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 01</span>
+        <h2>背景与现状：文化课升学困境与编程赛道机遇</h2>
+      </div>
+    </div>
+
+    <p>当前重庆小升初阶段，纯文化课考核的升学通道日益收窄。严格执行小升初政策的区域内，区内几乎无公开考试机会，且跨区招生受到学籍政策的严格限制（"人籍分离"不被允许）。在此背景下，<strong>编程（信息学竞赛）赛道成为一条重要的升学路径</strong>，为学生提供了大量学校选拔机会。</p>
+
+    <div class="alert alert-info">
+      <strong>关键事实</strong>
+      文化课考试机会稀少，且竞争极其激烈。大部分学习数学奥数的学生无法进入七龙珠本部的选拔范围。而编程五级以上水平的学生，可以获得各校的考核机会，基本覆盖七龙珠全部学校。
+    </div>
+
+    <p>2024年六年级升学曾出现风波：部分学校仅上报了竞赛班和半竞赛班的名单，文化课考入的学生在学籍方面出现了各类问题。这一政策变动进一步凸显了走竞赛体系（含编程竞赛）在学籍合规方面的优势。</p>
+
+    <div class="alert alert-purple">
+      <strong>核心结论</strong>
+      编程赛道的核心价值在于：让学生获得大量名校考核机会，且走竞赛班路径在学籍政策上更为安全。当前是编程升学的政策利好期。
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CH2 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 02</span>
+        <h2>各校选拔流程：一中·南开·育才·八系的差异化机制</h2>
+      </div>
+    </div>
+
+    <p>重庆七龙珠各校在编程特长生的选拔流程上存在显著差异。以下按学校逐一分解其核心流程：</p>
+
+    <div class="card">
+      <h3>一中（一系）</h3>
+      <ul>
+        <li><strong>目标班型：</strong>本部竞赛班（前班），其他班型不在编程赛道的覆盖范围</li>
+        <li><strong>考核科目：</strong>编程 + 数学，两科成绩即可在一轮考核中锁定班型</li>
+        <li><strong>策略建议：</strong>压缩校内时间，集中精力准备编程与数学两科</li>
+        <li><strong>选拔流程：</strong>考试后直接签约，<strong>无跟训环节</strong>（相对于其他学校流程更简洁）</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>南开（三系）</h3>
+      <ul>
+        <li><strong>核心考察：</strong>数学底层思维能力（与小奥刷题关联不大，侧重逻辑能力检测）</li>
+        <li><strong>编程要求：</strong>建议六级以上水平，且需具备较高的实际应用能力</li>
+        <li><strong>流程：</strong>数学思维测评 + 编程考核/跟训 → 签约</li>
+        <li><strong>建议路径：</strong>小奥可提前学习初联内容，对南开考核更有帮助</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>育才</h3>
+      <ul>
+        <li><strong>最大特点：</strong>不进行专门的文化课考试，<strong>单考编程</strong></li>
+        <li><strong>考核依据：</strong>根据编程跟训表现进行签约</li>
+        <li><strong>签约特点：</strong>跟训周期较其他学校更长，签约时间较晚</li>
+        <li><strong>注意：</strong>进入育才竞赛体系后，竞赛和文化课均需校外预习</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>八系</h3>
+      <ul>
+        <li><strong>考核特点：</strong>跟训 + 文化课 + 现学现考，考察最为全面</li>
+        <li><strong>文化课难点：</strong>限学限考环节（现场学习、现场考试），对即时理解能力要求极高</li>
+        <li><strong>优势：</strong>编程水平高的学生因长期训练即时理解能力，对该环节适应性更强</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>重要提醒</strong>
+      育才、西附、一外均已增加跟训环节（此前一外和西附并无此环节）。除一中外，其余学校均包含跟训阶段。跟训不仅考察学生能力，也会评估家庭配合度。
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">Step 1 — 编程考试/考核</div>
+        <div class="flow-item-desc">各校考试内容不同（详见第四章），部分学校在编程考核前或后附带数学思维测评</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">Step 2 — 跟训阶段</div>
+        <div class="flow-item-desc">进入学校体系进行一段时间的跟班学习，考察学生学习习惯、综合表现以及家庭沟通配合度</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">Step 3 — 综合评估与签约</div>
+        <div class="flow-item-desc">学校根据编程能力、文化课表现（如有）、跟训反馈综合评估后签约，确定班型</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">Step 4 — 班型分配</div>
+        <div class="flow-item-desc">根据综合排名分配至本部竞赛班（秋班）或分校竞赛班</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CH3 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 03</span>
+        <h2>优势与劣势分析：编程升学的双面性</h2>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card" style="border-left: 4px solid var(--success-border);">
+        <h3 style="color: var(--success-border);">核心优势</h3>
+        <ul>
+          <li><strong>考试机会丰富</strong> — 五级以上学生基本可以"挨个考一遍"七龙珠学校，不缺考试机会</li>
+          <li><strong>降低文化课压力</strong> — 以一中为例，仅需编程+数学两科即可在一轮考核中定班型，远比纯文化课流程简便</li>
+          <li><strong>跨区入学通道</strong> — 编程竞赛路径可以在一定程度上规避跨区购房等限制</li>
+          <li><strong>学籍合规</strong> — 走竞赛班体系不存在"人籍分离"的政策风险</li>
+          <li><strong>长远价值</strong> — 编程基础对后续学习AI智能体、大模型等前沿领域有显著助益</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--danger-border);">
+        <h3 style="color: var(--danger-border);">主要劣势</h3>
+        <ul>
+          <li><strong>学习习惯门槛</strong> — 能力再强，学习习惯不佳即会被跟训环节淘汰，无签约机会</li>
+          <li><strong>家长配合度要求</strong> — 跟训环节实际上也在面试家长，"麻烦的家长"可能直接导致学生被剔除</li>
+          <li><strong>文化课基础仍需</strong> — 多数学校仍包含数学思维/文化课考核，不能完全放弃文化课</li>
+          <li><strong>编程要求高</strong> — 不同学校对编程级别和思维能力有明确要求，门槛不低</li>
+          <li><strong>跟训淘汰风险</strong> — 即使能力达标、受邀跟训，仍可能在跟训期间因综合表现不佳被淘汰</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>关键警示</strong>
+      跟训环节会因"家长太麻烦"而淘汰学生。有案例显示：孩子能力评分5分，但家长被判定为负分，最终被剔除。家长需保持通情达理的沟通态度。
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CH4 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 04</span>
+        <h2>各校考察偏好：思维·算法·综合的差异化要求</h2>
+      </div>
+    </div>
+
+    <p>不同学校在编程选拔中的考察方向有显著差异，家长需针对性备考，而非仅凭考级级别判断竞争力。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>学校/体系</th>
+            <th>考察侧重</th>
+            <th>核心内容</th>
+            <th>文化课考试</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>一中（一系）</strong></td>
+            <td>算法模板</td>
+            <td>偏向算法类考题（具体题型不宜公开）</td>
+            <td>有（数学）</td>
+          </tr>
+          <tr>
+            <td><strong>南开（三系）</strong></td>
+            <td>数学底层思维</td>
+            <td>逻辑推理能力测评，与小奥刷题关联不大</td>
+            <td>有（数学思维测评）</td>
+          </tr>
+          <tr>
+            <td><strong>八系</strong></td>
+            <td>思维体综合训练</td>
+            <td>地推、二分、贪心（限享策略与优化能力）</td>
+            <td>有（含现学现考）</td>
+          </tr>
+          <tr>
+            <td><strong>育才</strong></td>
+            <td>纯思维题</td>
+            <td>不涉及算法模板，侧重思维灵活性</td>
+            <td>无（仅考编程）</td>
+          </tr>
+          <tr>
+            <td><strong>一外/西附</strong></td>
+            <td>算法 + 跟训</td>
+            <td>算法水平要求较高，建议普及组学完</td>
+            <td>有</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>备考要点</strong>
+      不可仅凭"考过几级"判断是否达标。各校考察内容差异大，需根据目标学校做专项准备。例如：三系/八系需重点训练思维板块（地推、二分、贪心），一系需强化算法模板，育才需打磨纯思维解题能力。
+    </div>
+
+    <h3>鲁巴与两江一外的特殊机制</h3>
+    <p><strong>鲁巴</strong>（原鲁巴）：只要编程考级达到五级，即通知参加文化课考试，不再单独设置编程考核环节。</p>
+    <p><strong>两江一外</strong>：同样在五级以上后通知考文化课，流程相对简化。</p>
+  </div>
+</section>
+
+<!-- ==================== CH5 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 05</span>
+        <h2>训练路径与工具：考级·ABC赛·思维专项</h2>
+      </div>
+    </div>
+
+    <h3>一、思维训练专项课程</h3>
+    <p>针对三系/八系的考察偏好，部分培训机构提供专门的<strong>思维板块专项训练课程</strong>。该课程定位为<strong>方法课</strong>（非知识点课），核心内容包括：</p>
+    <ul>
+      <li>教授如何撰写题解与总结</li>
+      <li>训练手推样例的能力</li>
+      <li>运用数学方法解决算法性问题</li>
+      <li>限时策略与优化思维训练</li>
+    </ul>
+
+    <h3>二、ABC竞赛（AtCoder）</h3>
+    <p>ABC（AtCoder Beginner Contest）是日本算法赛事，是训练思维能力的重要平台。</p>
+
+    <div class="card">
+      <h3>ABC训练关键信息</h3>
+      <ul>
+        <li><strong>参赛时间：</strong>每周六晚上</li>
+        <li><strong>起步建议：</strong>编程考级达到四级即可开始ABC训练</li>
+        <li><strong>推优Rating标准：</strong>综合评估后建议Rating达到<strong>1000</strong>以上可获得推优机会（原定1200标准偏高）</li>
+        <li><strong>题解获取：</strong>机构提供专用翻译工具（非AI翻译，含人工审核），并发布当周ABC题解</li>
+        <li><strong>补题要求：</strong>若只能完成部分题目（如仅做3题），必须通过题解补题，且最好有老师讲解思路</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-success">
+      <strong>训练铁律</strong>
+      不补题、不写总结，永远不会进步。补题是提升的必要环节，不能只满足于做出的部分。
+    </div>
+
+    <h3>三、考级水平参考</h3>
+
+    <div class="diff-bar">
+      <span class="diff-label">四级</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-low"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="diff-label">五级</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-mid"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="diff-label">六级+</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-high"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="diff-label">七~八级</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-max"></div></div>
+    </div>
+
+    <ul style="margin-top: 16px;">
+      <li><strong>四级：</strong>可开始ABC训练，初步获得部分学校关注</li>
+      <li><strong>五级：</strong>获得大量学校考核机会，部分学校（鲁巴、两江一外）达此级别即进入文化课选拔流程</li>
+      <li><strong>六级：</strong>建议完成普及组全部内容，算法水平较为稳当</li>
+      <li><strong>七~八级：</strong>属于顶尖水平，适用于南开等高门槛学校的选拔</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== CH6 ==================== -->
+<section class="chapter" id="ch6">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 06</span>
+        <h2>时间规划与年级建议：起步节点·冲刺窗口·关键节奏</h2>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">一年级下册 — 最佳启蒙时间</div>
+        <div class="flow-item-desc">时间最充裕，可进行兴趣培养与基础启蒙。若有条件，幼儿园阶段即可接触编程启蒙。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">四年级 — 最晚入门节点</div>
+        <div class="flow-item-desc">最晚不超过四年级进入系统学习，五年级为极限底线。低于此时间窗口，小升初阶段时间将不够充裕。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">四年级 — 开始ABC训练</div>
+        <div class="flow-item-desc">编程考级达四级后，即可启动每周ABC竞赛训练。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">五年级寒假 — 机会窗口开启</div>
+        <div class="flow-item-desc">五年级下册和六年级上册是上岸的集中时间段。五年级寒假开始，考试机会明显增多。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">六年级七八月份 — 秋班统一考核</div>
+        <div class="flow-item-desc">三系本部秋班在六年级七八月份进行统一考核（数学+编程），即使已获花班资格的学生也需参加。</div>
+      </div>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>策略建议</strong>
+      若五年级已获得学校offer，可考虑将小学下午课程停掉，集中时间备战竞赛班。时间是最稀缺的资源，需合理分配。
+    </div>
+
+    <div class="alert alert-info">
+      <strong>关于起始时间的补充</strong>
+      有学生三年级下即开始参加学校选拔（因一年级即开始系统学习），二年级下通过算法课储备进入C++学习。关键是学习起点早、家长配合度高、执行力强。
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CH7 ==================== -->
+<section class="chapter" id="ch7">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 07</span>
+        <h2>竞赛班体系解析：三系梯队建设与秋班机制</h2>
+      </div>
+    </div>
+
+    <p>以南开（三系）为例，其竞赛班体系具有清晰的梯队结构，是理解编程升学路径的重要参考。</p>
+
+    <h3>三系竞赛班体量（单届）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>班型</th>
+            <th>所在校区</th>
+            <th>人数</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>秋班</strong></td>
+            <td>南开本部</td>
+            <td>约30人</td>
+            <td>最顶尖班型，需通过六年级统一考核</td>
+          </tr>
+          <tr>
+            <td><strong>南渝竞赛班</strong></td>
+            <td>南渝分校</td>
+            <td>40~50人</td>
+            <td>信竞行政班，含新进生及综合表现优秀学生</td>
+          </tr>
+          <tr>
+            <td><strong>融侨竞赛班</strong></td>
+            <td>融侨分校</td>
+            <td>40~50人</td>
+            <td>信竞行政班</td>
+          </tr>
+          <tr>
+            <td><strong>两江两开竞赛班</strong></td>
+            <td>两江校区</td>
+            <td>建设中</td>
+            <td>体系正在建设当中</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>秋班选拔机制</h3>
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">选拔对象</div>
+        <div class="flow-item-desc">所有分校竞赛生均有机会参加，六年级通过最终考核后进入本部秋班</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">考核科目</div>
+        <div class="flow-item-desc">数学（初联难度） + 编程。秋班学生大部分为"术性双修"（编程+数学均强）</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">编程排名要求</div>
+        <div class="flow-item-desc">需在整个三系编程排名中进入前列（如秋班30人规模，需排名前30）</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">未入选者去向</div>
+        <div class="flow-item-desc">未进入秋班的学生回到学籍所在地的分校竞赛班</div>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>关键数据</strong>
+      三系整个体系（含所有分校）竞赛生总量预估约120~150人。但重庆主城区真正达到金刚校收生标准的学生不足50人。因此学校设有"内招"机制——文化课上岸的学生再参加编程零基础培训，补充进入竞赛班。
+    </div>
+
+    <div class="alert alert-info">
+      <strong>现实情况</strong>
+      目前三系大部分竞赛班学生并非通过编程直接入学，而是文化课上岸后转学编程。这是因为达标生源体量无法满足招生需求。
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CH8 ==================== -->
+<section class="chapter" id="ch8">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 08</span>
+        <h2>区县学生通道：跨区机会·思维测试·推优标准</h2>
+      </div>
+    </div>
+
+    <p>区县学生在编程升学中有其特殊通道和评估标准。七龙珠本部学校（金刚校）普遍对区县学生持欢迎态度，但跨区有明确的政策门槛。</p>
+
+    <h3>区县学生的评估流程</h3>
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">第一步：思维卷测试</div>
+        <div class="flow-item-desc">通过内测思维卷评估底层数学思维能力，非考察编程水平本身。区县学生即使编程资源有限，若思维能力突出仍有机会。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">第二步：达标判定</div>
+        <div class="flow-item-desc">思维卷得分需达到<strong>70分以上</strong>，方可获得推荐资格。低于70分则不建议走此通道。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">第三步：编程水平评估</div>
+        <div class="flow-item-desc">在思维卷达标的基础上，评估编程水平和发展潜力。原始但天赋好的学生受学校欢迎。</div>
+      </div>
+    </div>
+
+    <h3>区县学生的特殊考量</h3>
+    <ul>
+      <li><strong>优势：</strong>区县学生多处于"原始状态"，未经历主城区小奥式的过度开发，部分学校偏好这类"原始牛娃"</li>
+      <li><strong>跨区限制：</strong>主城跨区需做出"实质性贡献"，教委政策管控严格</li>
+      <li><strong>编程水平要求：</strong>需达到一定竞赛层次方可跨区，建议至少通过CSP-J（普及组）一等以上</li>
+      <li><strong>备选方案：</strong>若六年级升初一时CSP-J能获普及组一等奖，可获得一次"翻墙"（跨区）考核机会</li>
+    </ul>
+
+    <div class="alert alert-gold">
+      <strong>推优参考标准（初步）</strong>
+      AtCoder Rating 达到 1000 以上 + 思维卷 70 分以上 → 可获得推荐资格。最终以实际评估为准。
+    </div>
+
+    <h3>适用学校</h3>
+    <p>区县学生除金刚校本部外，还可关注以下学校的科技特长招收：</p>
+    <ul>
+      <li><strong>两江一外</strong> — 有科技特长招生</li>
+      <li><strong>杨家坪中学</strong> — 有科技特长通道</li>
+      <li><strong>十一中</strong> — 有相关招收</li>
+    </ul>
+    <p>但需注意：这些学校的培养体系与七龙珠本部完全不同，家长需提前了解清楚。</p>
+  </div>
+</section>
+
+<!-- ==================== SUMMARY SECTION ==================== -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Summary</span>
+        <h2>总结：核心要点速览</h2>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>建议的数学与编程配比</h3>
+        <p>推荐<strong>编程与数学五五开</strong>。若时间不足，可压缩校内课程时间。单科路线需编程达到七八级水平。数学学习对编程至关重要，但不必过度依赖小奥刷题，可提前接触初联内容。</p>
+      </div>
+      <div class="card">
+        <h3>编程水平的实际价值</h3>
+        <p>编程五级是关键门槛——达到此级别即可获得七龙珠各校的大量考核机会。但级别高仅是入场券，<strong>思维能力和学习习惯</strong>才是最终决定签约的核心因素。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>核心建议清单</h3>
+      <ol>
+        <li><strong>起步时间：</strong>一年级下册启蒙，最晚不超过四年级进入系统学习</li>
+        <li><strong>考级目标：</strong>至少达到五级，争取六级以上（普及组学完）</li>
+        <li><strong>思维训练：</strong>机构思维专项课程或ABC竞赛（Rating目标1000+），每周坚持</li>
+        <li><strong>补题习惯：</strong>必须补题、必须写总结，这是进步的必要条件</li>
+        <li><strong>目标学校：</strong>提前了解各校考察偏好，做针对性备考</li>
+        <li><strong>学习习惯：</strong>从现在起严格要求，这是跟训环节的生存线</li>
+        <li><strong>家长角色：</strong>保持配合、通情达理，不在跟训阶段给学校添麻烦</li>
+        <li><strong>升学策略：</strong>做三手准备——编程升学 + 文化课保底 + 其他学校备选</li>
+      </ol>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>长远视角</strong>
+      编程学习的价值不仅限于小升初。当前AI与大模型领域快速发展，具备编程基础的学生在后续学习中具有显著优势。编程是一项面向未来的核心能力。
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="page-footer">
+  <div class="container">
+    <p>本文档基于直播内容整理，信息以分享时的口径为准，具体政策与学校安排请以官方最新通知为准。</p>
+    <p>整理时间：2025年 &nbsp;|&nbsp; 内容来源：周老师直播答疑</p>
+  </div>
+</footer>
+
+</body>
+</html>

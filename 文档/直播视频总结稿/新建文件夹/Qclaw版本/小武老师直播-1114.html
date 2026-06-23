@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小武老师直播-1114</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>小武老师直播-1114</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>年级想学编程的同学，我的建议我的建议</li>
+                <li>那其实有两个，第一个呢，三年级让让咱们孩子去学一下浅奥</li>
+                <li>如果住十一晚的话，大概交个一两千块钱吧，应该交一两千块钱</li>
+                <li>北京的话，反正在希尔顿酒店，然后上海的话，应该也是在一个酒店里</li>
+                <li>链接它是你们学了，你们学了一号链接之后，可以参加一次等级考试嘛</li>
+                <li>那么参加一次等级考试，考前的几次冲刺课你们就不用拍了</li>
+                <li>学到二级了，我觉得你应该现在该学数学了</li>
+                <li>学到二级了，但是也想参加一级的考试</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>我们集训的话，深圳的话是在是在一个大学里面的学术交流中心里，深圳集训的地方就在这里。其实，在深圳也是在大学内部的一个国际学术交流中心，其实也是一个会议酒店。在深圳的话是在大学，北京的话在希尔顿酒店了。</p>
+                <p>那其实有两个，第一个呢，三年级让让咱们孩子去学一下浅奥。学一下奥数，我觉得这个是可能，我比较推荐的。现在就想学一下的话，你就你就省点钱，学一下我们四号链接三百多块钱课，我觉得就完全够了。</p>
+                <p>我是觉得完全够了，因为这样的话你能省很多钱，然后节省了很多时间。因为我们四号链接三万多块钱，就完全可以让孩子学一年了。对，大概有一百多节课，对，所以其实这我说你们在咱们在少儿编程上面就尽量是少花钱。</p>
+                <p>多尝试，在竞赛上面呢，找到好的竞赛，然后找到孩子的兴趣。对，所以一到三年级同学，你看，我说为什么我们是一个竞赛机构，是因为三号链接，我接近可以让你免费学。你少儿编程嘛，你可以免费学，可以，对，所以，我们我们四号链接，如果你是四年级你拍了一号链接，我把四号链接额外送给你都可以。</p>
+                <p>对，但是如果你是家里有一个小朋友呢，那你就这样，那你那你啥，那你拍个四号链接让孩子接触，因为这四号链接还是比较好玩、比较有趣的。因为四号链接呢，例如你让小朋友去画一个多边形。他既要了解编程的流流程控制，又要了解几何知识，。</p>
+                <p>例如做一个游戏做个动画，因为这种它属于项目制的教学模式。它是一个孩子表达自我想象力和创造力的工具，你把当做一个这样的平台就好了，。说考级，你想考可以考；，就打白名单竞赛，你想打也可以。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>对，高中阶段打数学竞赛报名人就有八万多人，高中阶段报名新奥赛同学现在只有七千多个。只有七千多个，基本上你在高中的提高组不考零分，你就有资格去打联赛了。但是今年二四年高中阶段打数学竞赛的八万多人，对，所以整个新奥赛目前现在只有数学竞赛，连十分之一都不到。</p>
+                <p>学新奥，小学阶段学新奥的同学，可能连这个学奥数的五十分之一都不到。很多家长是没听过的因为学新奥它是有一个天然有几个门槛的，它不像学数学奥数一样。第一个门槛学新奥的第一个门槛是需要一台电脑。</p>
+                <p>需要首先需要一台电脑，大家不要觉得一台电脑好像没啥事儿，但是确实对于很多，很多家庭来讲，一台电脑也要好几千块钱。第二呢，它需要好的竞赛教练，但是好的竞赛教练呢又很稀缺，基本上在一线城市会多一些，对，所以这你发现。全中国新奥赛，浙江、广东、江苏的同学是水平最高的，那这些地方经济水平也是最高的，。</p>
+                <p>就就其实我们平常的课也是为了去打CSP的呀。寒暑假来的话，我们寒假在北京、深圳、上海有集训。新奥赛最好的学校，而且他在上高中的时候呢，要求入门组的一等奖就可以有走他的科技特长生。</p>
+                <p>对，但是贵阳一中获奖的人数也是全贵州最多的。好好学吧，我觉得贵州现在学的人也慢慢也越来越多了，对，但是它整体上的分数确实没那么高，。所以，像去年整个贵州只有七十二个一等奖，我们有多少个一等奖。</p>
+                <p>我们有两百一十四个一等奖，这是我们县校赛一等奖的证书。意味着我们一个机构的一等奖超过很多省一个省的一等奖。你们可以，就大家想嘛，你你说老师我在贵州的一家线下机构学，你就说你贵州线下机构你教出了几个一等奖。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>一号链接呢，我们是一周一次课，一次课两个小时。上课时间呢是星期六晚上的七点到九点这个时间段。对，所以你把一号链接拍下之后，你确认一下能不能上我的班。</p>
+                <p>你就上对，四号链接不是直播，四号链接你要直播课上下来一百多节课，你不得花一两万嘛。对，所以四号链接三九九主要还是以视频课为主，会有老师批改作业，会有老师答疑。对，但是我们的私家家课程是直播课，是直播课。</p>
+                <p>主要是C加加，主要是有难度主要是以因为需要老师带着他们去写代码、做题所以这个一号链接是我们大概四个月的课程，你把一号。林学完之后，正好我们带着大家去三月份打一次比赛。给大家说一下，我们可达这六七年的时间搞竞赛的一些。</p>
+                <p>经历因为主要是很多家长对整个的竞赛和少儿编程也分不清楚。但是你大概能够感受出来，哪些机构是真正搞竞赛的，哪些机构是搞少儿编程的，你就主要去看一下这些成绩就好了。对，就如果一个机构里面主要的精力是在搞Square拍。</p>
+                <p>GOC机器人，那他就没有精力，全部精力在新奥赛上面。我们现在所有的老师吧，基本上都是所有的课程都是为了新奥赛来去服务的，都是为了竞赛去服务的。你看，我们从二零一七年时候就开始搞ACM相关的一些东西。</p>
+                <p>因为小武老师自己呢，也是这个机构的创立，因为我我算是一个科技特长受益者吧。小武老师自己，清华大学电子信息，北京大学计算专业，一百六十万科技奖励的获得者，这个是。这张证书是奖励个人，是一百六十万现金，这是奖励给我个人，因为我之前就一直在搞技术，搞算法。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>提高组零分的同学大概占比在百分之二十五以上，就超过四分之一的同学是考零分的。对，第一次能考个两百多还是非常棒的还是还是非常棒的。两百二的话，我不知道在哪个省份，应该强省，应该是二等奖水平吧。</p>
+                <p>后面的题他是没学过似的，因为后面第四道题的话，用到了动态规划了。我估计他应该是学到我们Level三的水平吧。寒假或者暑假有机会可以来来我们线下集训，也可以这样跟高水平的同学可以多交流一下。</p>
+                <p>一分，如果说是六年级马上小升初了，学两期Python，接下来要怎么学。你说你把两期学 Python 的时间用来学 C 加加多好呀，。所以现在如果你是六年级马上小升初的话，特别好。</p>
+                <p>你现在立刻把 Python 停掉，要开始学 C 加加。我觉得这是第一个，因为你马上小升初了嘛，因为你小升初，明年刚上初一就可以打比赛，因为明年刚好孩子能满十二周岁，明年比赛还有一年，你还你还是小升初的同学。所以你的时间还是比其他同学要多一些的，因为你六月份考完试之后，一直到九月、十月打比赛。</p>
+                <p>这段时间其实可以好好训练的，对我觉得小升初应该没啥太大问题吧，因为小升初不就近入学嘛。对，所以如果你想有机会说上了初中要去调一下班级的，或者说看有没有初中有校队的，现在这个阶段肯定是好好学自家的。你现在要学C加加，对，所以所以现在知道也不晚，现在知道也来得及。</p>
+                <p>其实我觉得最好的时间节点应该在五六年级会比较合适。对初一的同学呢，也来得及，但是呢，初一的同学你就少了一次比赛。六年级我觉得最最大的好处按照现有的规则的话。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>对，如果你是四到七年级或者四到八年级，还是零基础的。你学小鲁老师一号链接学四加加，你要想参加集训的话，你可以参加一下我们深圳或者北京的线下集训。我们提高组同学的水平还是比较高的，提高组的同学比较多，跟高水平同学可以互相交流一下。</p>
+                <p>对，你可以，你可以，你可以拍一下三号链接吧，拍了三号链接跟我们的客服老师对接一下。对，目前还有早鸟价对，如果你在北京呢，就参加我们北京的就好了，。对，整体来说会少一些，但但是也越来越多的同学学了。</p>
+                <p>对以前可能好多家长不知道，对这个呢，可能有一些偏见吧，。四号链接，四号链接，你一周学个一到两节都可以。那有的孩子比多愿意多花时间的，可能就一两年。</p>
+                <p>我觉得三年之内能找到S组的同学都是很棒的，都是不错的。因为你毕竟要把这些东西都学完，你入门组的都需要一两年，提高组的还需要一两年。四号，四号链接山山山海项目，四号链接，你我觉得你至少能学个一两年吧，反正一百二十八节课嘛，就看你的时间。</p>
+                <p>因为因为并不是孩子可能都都把每一节课都学完嘛，。学过一年的话，小唐哥，你可以拍三号十块八链接做一下测试。在我们这儿学过C加，没有在我们这个学过，在其他机构学过C加加的家长。</p>
+                <p>你们给孩子先拍个三号十块八链接，跟我们老师对接一下。我们先给孩子做一下测试，做完测试之后，你是看上我们的常规课还是上集训。做完测试之后，我们就知道孩子的水平在哪个阶段。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

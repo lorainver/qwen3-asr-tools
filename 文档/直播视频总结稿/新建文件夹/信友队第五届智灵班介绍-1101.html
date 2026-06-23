@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第五届知音班选拔线下攻略</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --success-bg: #eaf5ed;
+  --danger: #8b2500;
+  --danger-bg: #fdf0ec;
+  --info: #1a5276;
+  --info-bg: #eaf2f8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #1a5276 0%, #6b2d5b 50%, #b8860b 100%);
+  color: #fff;
+  padding: 56px 32px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.page-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.page-header .subtitle {
+  font-size: 1.05em;
+  opacity: 0.9;
+  font-weight: 300;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header-tags {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.82em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.tag-purple { background: rgba(107,45,91,0.35); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+.tag-gold { background: rgba(184,134,11,0.35); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+.tag-blue { background: rgba(26,82,118,0.4); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nav-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: 32px auto;
+  max-width: 960px;
+  position: relative;
+}
+
+.nav-label {
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.72em;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.06em;
+}
+
+.nav-card h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1em;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+
+.nav-grid a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.92em;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.nav-grid a:hover { color: var(--accent); }
+
+.nav-grid a .num {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85em;
+  min-width: 20px;
+}
+
+section {
+  margin: 40px auto;
+  max-width: 960px;
+  padding: 0 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-title .s-num {
+  font-size: 0.72em;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section-title h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.45em;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.15em;
+  color: var(--accent);
+  margin: 24px 0 12px;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+}
+
+p { margin-bottom: 12px; }
+
+ul, ol { padding-left: 22px; margin-bottom: 14px; }
+li { margin-bottom: 6px; color: var(--text-secondary); }
+li strong { color: var(--text-primary); }
+
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 18px 0;
+  border-left: 4px solid;
+  font-size: 0.93em;
+}
+
+.alert-gold { background: var(--highlight); border-left-color: var(--gold); }
+.alert-gold strong { color: var(--gold); }
+.alert-success { background: var(--success-bg); border-left-color: var(--success); }
+.alert-success strong { color: var(--success); }
+.alert-danger { background: var(--danger-bg); border-left-color: var(--danger); }
+.alert-danger strong { color: var(--danger); }
+.alert-info { background: var(--info-bg); border-left-color: var(--info); }
+.alert-info strong { color: var(--info); }
+.alert-purple { background: var(--accent-bg); border-left-color: var(--accent); }
+.alert-purple strong { color: var(--accent); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 16px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.92em;
+}
+
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
+}
+
+tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+tbody tr:hover { background: var(--accent-bg); }
+
+.flow {
+  position: relative;
+  padding-left: 32px;
+  margin: 20px 0;
+}
+
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+
+.flow-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+
+.flow-item.gold::before { background: var(--gold); }
+.flow-item.danger::before { background: var(--danger); }
+.flow-item.info::before { background: var(--info); }
+
+.flow-item h4 {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 1em;
+}
+
+.flow-item p {
+  margin: 0;
+  font-size: 0.92em;
+  color: var(--text-secondary);
+}
+
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.diff-bar .label {
+  font-size: 0.82em;
+  color: var(--text-muted);
+  min-width: 100px;
+  text-align: right;
+}
+
+.diff-bar .bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.diff-bar .bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent));
+}
+
+.diff-bar .bar-fill.gold { background: linear-gradient(90deg, #daa520, var(--gold)); }
+.diff-bar .bar-fill.danger { background: linear-gradient(90deg, #c0392b, var(--danger)); }
+.diff-bar .bar-fill.info { background: linear-gradient(90deg, #2980b9, var(--info)); }
+.diff-bar .bar-fill.success { background: linear-gradient(90deg, #27ae60, var(--success)); }
+
+.diff-bar .value {
+  font-size: 0.82em;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 40px;
+}
+
+.accent { color: var(--accent); font-weight: 600; }
+.gold { color: var(--gold); font-weight: 600; }
+.green { color: var(--success); font-weight: 600; }
+.red { color: var(--danger); font-weight: 600; }
+.blue { color: var(--info); font-weight: 600; }
+
+.timeline-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 16px 0;
+}
+
+.timeline-box h4 {
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.step-list {
+  list-style: none;
+  padding: 0;
+}
+
+.step-list li {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+  align-items: baseline;
+}
+
+.step-list li:last-child { border-bottom: none; }
+
+.step-list .step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.72em;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.quote-box {
+  border-left: 4px solid var(--gold);
+  padding: 16px 20px;
+  background: var(--accent-bg);
+  border-radius: 0 8px 8px 0;
+  margin: 16px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+  font-size: 0.93em;
+}
+
+.quote-box .author {
+  display: block;
+  text-align: right;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+@media (max-width: 700px) {
+  .page-header { padding: 40px 20px 36px; }
+  .page-header h1 { font-size: 1.6em; }
+  .container, section { padding: 0 16px; }
+  .nav-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .section-title h2 { font-size: 1.2em; }
+  table { font-size: 0.82em; }
+  thead th, tbody td { padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<header class="page-header">
+  <h1>第五届知音班选拔线下攻略</h1>
+  <p class="subtitle">信友队官方直播 · 笔试面试流程 · 交通路线 · 培养体系 · 学员经验</p>
+  <div class="header-tags">
+    <span class="tag tag-purple">信友队</span>
+    <span class="tag tag-gold">知音班公益项目</span>
+    <span class="tag tag-blue">杭州线下选拔</span>
+    <span class="tag tag-purple">10月3日—4日</span>
+  </div>
+</header>
+
+<!-- ==================== NAV ==================== -->
+<div class="container">
+  <nav class="nav-card">
+    <span class="nav-label">目录导航</span>
+    <h3>内容总览</h3>
+    <div class="nav-grid">
+      <a href="#ch1"><span class="num">01</span> 信友队与知音班概览</a>
+      <a href="#ch2"><span class="num">02</span> 第五届选拔时间线与数据</a>
+      <a href="#ch3"><span class="num">03</span> 笔试与面试详解</a>
+      <a href="#ch4"><span class="num">04</span> 考前准备清单</a>
+      <a href="#ch5"><span class="num">05</span> 两个校区交通攻略</a>
+      <a href="#ch6"><span class="num">06</span> 公益讲座安排</a>
+      <a href="#ch7"><span class="num">07</span> 知音班培养模式与课程体系</a>
+      <a href="#ch8"><span class="num">08</span> 师资团队与历届成绩</a>
+      <a href="#ch9"><span class="num">09</span> 国庆CSP复赛冲刺营</a>
+      <a href="#ch10"><span class="num">10</span> 杭州旅游与住宿攻略</a>
+      <a href="#ch11"><span class="num">11</span> 学员经验分享：周康阳</a>
+      <a href="#ch12"><span class="num">12</span> 家长如何支持孩子信奥学习</a>
+      <a href="#ch13"><span class="num">13</span> 直播间常见问题汇总</a>
+      <a href="#ch14"><span class="num">14</span> 课程产品信息</a>
+    </div>
+  </nav>
+</div>
+
+<!-- ==================== CH1 ==================== -->
+<section id="ch1">
+  <div class="section-title">
+    <span class="s-num">Chapter 01</span>
+    <h2>信友队与知音班概览</h2>
+  </div>
+
+  <h3>信友队简介</h3>
+  <p>信友队是由<strong>徐先友老师</strong>创建的信息学竞赛团队，至今已有二十年历程。核心成绩包括：</p>
+  <div class="card">
+    <ul>
+      <li><strong>7次</strong> IOI 世界冠军</li>
+      <li><strong>6枚</strong> IOI 国际金牌</li>
+      <li><strong>4枚</strong> ISIJ 国际金牌</li>
+      <li>亚太地区国际金牌</li>
+    </ul>
+  </div>
+
+  <h3>知音班定位</h3>
+  <p>知音班是一项<strong>公益项目</strong>，面向<strong>四年级到初二</strong>的学生，旨在选拔数理思维方面展现出优秀潜质的孩子，提供以下支持：</p>
+  <div class="alert alert-purple">
+    <strong>培养模式：</strong>优质资源 + 全链路支持 + 不设置成长速度限制 + 全贯通培养。选拔出<strong>25名免费培养名额</strong>，免费培养一年。
+  </div>
+
+  <h3>知音班历届回顾</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>届次</th>
+        <th>选拔时间</th>
+        <th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>第一届</td><td>2024年3月</td><td>首期知音班选拔</td></tr>
+      <tr><td>第二届</td><td>2024年6月</td><td>—</td></tr>
+      <tr><td>第三届</td><td>2024年10月</td><td>—</td></tr>
+      <tr><td>第四届</td><td>2025年4月</td><td>—</td></tr>
+      <tr><td><strong>第五届</strong></td><td><strong>2025年10月</strong></td><td><strong>当前届，后续选拔次数可能减少</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-gold">
+    <strong>重要提示：</strong>知音班后续选拔次数可能会越来越少。每一届均有<strong>25名免费学生名额</strong>。
+  </div>
+</section>
+
+<!-- ==================== CH2 ==================== -->
+<section id="ch2">
+  <div class="section-title">
+    <span class="s-num">Chapter 02</span>
+    <h2>第五届选拔时间线与数据</h2>
+  </div>
+
+  <h3>选拔流程时间线</h3>
+  <div class="flow">
+    <div class="flow-item info">
+      <h4>报名阶段（9月12日起）</h4>
+      <p>官网报名，面向四年级至初二学生。官网报名人数约<strong>一千多人</strong>。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第一轮：线上笔试（9月12日 18:00—20:00）</h4>
+      <p>腾讯会议形式，开启摄像头监考。总分<strong>150分</strong>。考察数理思维，不考编程。</p>
+    </div>
+    <div class="flow-item">
+      <h4>结果公布（约一周后）</h4>
+      <p>公布划线结果（A/B/C/D等级），确认是否参加线下并下载准考证。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>确认通道关闭（9月28日 18:00）</h4>
+      <p>确认通道已关闭。忘记确认的家长可联系销售老师补生成准考证。</p>
+    </div>
+    <div class="flow-item danger">
+      <h4>第二轮：线下笔试（10月3日）</h4>
+      <p>纸质试卷，纸质答题。总分<strong>120分</strong>。两个校区、两场次。当晚通知面试入围结果。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第二轮：线下面试（10月4日 8:30—15:30）</h4>
+      <p>统一在<strong>未来科技城校区</strong>进行，一对一面试，每人约15—20分钟。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>第二轮面试沟通（约10个工作日内）</h4>
+      <p>针对不确定的小朋友，可能进行第二轮面试沟通。</p>
+    </div>
+    <div class="flow-item">
+      <h4>公布最终名单（约10月19日）</h4>
+      <p>公布25名免费培养名单。</p>
+    </div>
+  </div>
+
+  <h3>选拔人数漏斗</h3>
+  <div class="card">
+    <div class="diff-bar">
+      <span class="label">官网报名</span>
+      <div class="bar-track"><div class="bar-fill info" style="width:100%"></div></div>
+      <span class="value">1000+</span>
+    </div>
+    <div class="diff-bar">
+      <span class="label">线下笔试</span>
+      <div class="bar-track"><div class="bar-fill" style="width:30%"></div></div>
+      <span class="value">~300</span>
+    </div>
+    <div class="diff-bar">
+      <span class="label">入围面试</span>
+      <div class="bar-track"><div class="bar-fill gold" style="width:15%"></div></div>
+      <span class="value">~100+</span>
+    </div>
+    <div class="diff-bar">
+      <span class="label">最终录取</span>
+      <div class="bar-track"><div class="bar-fill danger" style="width:2.5%"></div></div>
+      <span class="value">25</span>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>利好信息：</strong>本届因考场座位限制，线下笔试名额<strong>仅约300个</strong>（往届约500人），分母大幅缩小，入围面试和最终录取的概率显著提升。
+  </div>
+</section>
+
+<!-- ==================== CH3 ==================== -->
+<section id="ch3">
+  <div class="section-title">
+    <span class="s-num">Chapter 03</span>
+    <h2>笔试与面试详解</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 style="margin-top:0">线下笔试</h3>
+      <ul>
+        <li><strong>时间：</strong>10月3日</li>
+        <li><strong>形式：</strong>纸质试卷、纸质答题，<strong>不需要电脑</strong></li>
+        <li><strong>场次：</strong>上午场 9:30—11:30；下午场 12:00—14:00</li>
+        <li><strong>总分：</strong>120分（线上为150分）</li>
+        <li><strong>内容：</strong>选择题与填空题，主要考察<strong>数理思维</strong>，不考编程</li>
+        <li><strong>监考：</strong>每间教室配监考老师，无法作弊</li>
+        <li><strong>注意：</strong>不能提前交卷，需坐满两小时</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">线下面试</h3>
+      <ul>
+        <li><strong>时间：</strong>10月4日 8:30—15:30</li>
+        <li><strong>地点：</strong>统一在<strong>未来科技城校区</strong></li>
+        <li><strong>形式：</strong>一对一面试，有面试官现场出题</li>
+        <li><strong>时长：</strong>每人约<strong>15—20分钟</strong></li>
+        <li><strong>内容：</strong>考察现场应变能力、表达能力、思维能力和反应能力</li>
+        <li><strong>流程：</strong>面试官展示题目 → 学生限时解答 → 讲解思路</li>
+        <li><strong>录制：</strong>全程录制，便于教练团队后续复核打分</li>
+        <li><strong>考场：</strong>上午安排约14个一对一考场</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>评分机制：</strong>线上第一轮成绩（A/B/C/D等级）<strong>不作为</strong>最终参考。最终结果综合考虑<strong>线下笔试成绩 + 线下面试表现</strong>，两者权重相当。即使笔试分数不高，面试表现出色也有较大机会。
+  </div>
+
+  <h3>A/B/C/D等级说明</h3>
+  <ul>
+    <li>线上笔试结果按分数线段划分为A、B、C、D四个档次</li>
+    <li><strong>该等级不带入线下环节</strong>，不影响线下入围和最终结果</li>
+    <li>只要进入线下笔试，所有人机会平等</li>
+  </ul>
+
+  <h3>低年级加成</h3>
+  <p>考试及面试环节会<strong>综合考虑孩子的年级</strong>。低年级学生（如四年级、五年级）享有一定程度的<strong>加成分</strong>，以弥补与高年级学生在知识储备上的差距。具体加成分数由知音班教练团队专业评估。</p>
+</section>
+
+<!-- ==================== CH4 ==================== -->
+<section id="ch4">
+  <div class="section-title">
+    <span class="s-num">Chapter 04</span>
+    <h2>考前准备清单</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h4 style="margin-top:0">必带物品</h4>
+      <ul>
+        <li><strong>准考证</strong>（打印件）</li>
+        <li><strong>身份证</strong>（考官核验身份用）</li>
+        <li><strong>文具：</strong>2B铅笔、橡皮、黑色签字笔、尺规等</li>
+        <li>答题纸由考场提供</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">生活用品</h4>
+      <ul>
+        <li>水壶</li>
+        <li>纸巾</li>
+        <li><strong>雨伞</strong>（杭州十月天气多变）</li>
+        <li><strong>薄外套</strong>（空调教室可能较冷）</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>时间建议</h3>
+  <ul>
+    <li><strong>建议10月2日</strong>提前到达杭州，熟悉考场、路线及周边环境</li>
+    <li>若10月3日才到，需在<strong>9:00前</strong>到达考场（提前半小时入场）</li>
+    <li>出行预留时间比导航预估<strong>提前40—60分钟</strong>出发，应对国庆拥堵</li>
+  </ul>
+
+  <h3>心理调适</h3>
+  <ul>
+    <li>与孩子进行轻松愉快的交流，给予鼓励</li>
+    <li>不要给孩子太大压力</li>
+    <li>保证充足睡眠</li>
+    <li>考试结束后不要追问考得怎样，先给孩子一个拥抱，带他吃喜欢的东西</li>
+  </ul>
+</section>
+
+<!-- ==================== CH5 ==================== -->
+<section id="ch5">
+  <div class="section-title">
+    <span class="s-num">Chapter 05</span>
+    <h2>两个校区交通攻略</h2>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>关键提醒：</strong>笔试在<strong>两个校区</strong>进行（准考证上注明），面试<strong>统一在未来科技城校区</strong>。两个校区地址务必提前了解。
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 style="margin-top:0">东部软件园 · 西湖校区</h3>
+      <p><strong>地址：</strong>浙江杭州市西湖区文三路东部软件园创新大厦A102</p>
+      <p><strong>用途：</strong>10月3日笔试（上午场+下午场）</p>
+      <h4>地铁到达（推荐）</h4>
+      <ul>
+        <li><strong>杭州东站：</strong>19号线直达沈塘桥站（约3—4站）→ E口出 → 右转直走 → 看到麦当劳 → 右转 → 浙商银行前方入口 → 创新大厦</li>
+        <li><strong>萧山机场：</strong>19号线直达沈塘桥站，同上路线</li>
+        <li><strong>杭州南站：</strong>5号线至滨康路 → 转1号线至西湖文化广场 → 转19号线至沈塘桥</li>
+      </ul>
+      <h4>自驾</h4>
+      <p>导航至"东部软件园东门"，进入后第一个路口左转即到创新大厦。有停车场，<strong>需收费</strong>。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">未来科技城校区</h3>
+      <p><strong>地址：</strong>余杭塘路与聚诚路交叉口，富力新线公园7幢（永福地铁站A口）</p>
+      <p><strong>用途：</strong>10月3日上午笔试 + <strong>10月4日全天面试</strong></p>
+      <h4>地铁到达（推荐）</h4>
+      <ul>
+        <li><strong>杭州东站：</strong>1号线至打铁关 → 站内换乘5号线 → 永福站A口出 → 右转看到"水煮活鱼"招牌 → 左转直走约100—200米 → 到达校区</li>
+        <li><strong>杭州南站：</strong>5号线直达永福站A口，同上路线</li>
+      </ul>
+      <h4>自驾</h4>
+      <p>导航至"信友队未来科技城校区"，有停车场。</p>
+    </div>
+  </div>
+
+  <h3>东软校区 → 未来科技城校区（面试日转场）</h3>
+  <div class="card">
+    <ul>
+      <li>从沈塘桥站坐<strong>19号线</strong>至创景路站（约6站）</li>
+      <li>站内换乘<strong>5号线</strong>至永福站（约3站）</li>
+      <li>A口出，到达未来科技城校区</li>
+      <li>全程含步行约<strong>40分钟</strong></li>
+    </ul>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>出行建议：</strong>国庆期间优先选择<strong>地铁出行</strong>，打车费用较高且易堵车。杭州地铁四通八达，基本可直达两个校区。
+  </div>
+
+  <h3>工作人员指引</h3>
+  <p>考试当天（10月3日），会有身穿<strong>印有信友队logo的T恤</strong>（蓝色/黑色/白色）的工作人员在现场引导。遇到问题可直接询问。</p>
+</section>
+
+<!-- ==================== CH6 ==================== -->
+<section id="ch6">
+  <div class="section-title">
+    <span class="s-num">Chapter 06</span>
+    <h2>公益讲座安排</h2>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>强烈建议至少一位家长参加。</strong>讲座是了解知音班培养理念、课程特色、未来规划的绝佳机会，且包含<strong>彩蛋环节</strong>。
+  </div>
+
+  <div class="card">
+    <h4>讲座信息</h4>
+    <ul>
+      <li><strong>时间：</strong>10月3日 下午<strong>14:30</strong>开始</li>
+      <li><strong>地点：</strong>东部软件园附近的<strong>杭州文华锦澜大酒店6楼报告厅</strong>（距东软校区约800米）</li>
+      <li><strong>参与方式：</strong>无需预约，直接到场参加</li>
+      <li><strong>受众：</strong>仅面向参加第二轮线下笔试的家长和学生</li>
+      <li><strong>线上不同步</strong></li>
+    </ul>
+  </div>
+
+  <h3>讲座流程</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>主持人开场</h4>
+    </div>
+    <div class="flow-item gold">
+      <h4>宣讲致辞 —— 徐先友老师</h4>
+      <p>知音班拔尖人才项目发起人，信友队及XCamp联合创始人。将讲解知音班培养理念与后续规划。</p>
+    </div>
+    <div class="flow-item">
+      <h4>知音班后续培养计划 —— 徐源老师</h4>
+      <p>知音班项目负责人，信友队及XCamp联合创始人。</p>
+    </div>
+    <div class="flow-item info">
+      <h4>NY2024金牌面对面 —— 陈诺</h4>
+      <p>现就读于<strong>清华大学</strong>。NY2024金牌获得者，知音班导师。将与学弟学妹面对面交流。</p>
+    </div>
+    <div class="flow-item">
+      <h4>课程体系与培养理念 —— 王颖老师</h4>
+      <p>信友队教学总监，知音班教练。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>彩蛋环节</h4>
+      <p>具体内容未提前公布，值得期待。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CH7 ==================== -->
+<section id="ch7">
+  <div class="section-title">
+    <span class="s-num">Chapter 07</span>
+    <h2>知音班培养模式与课程体系</h2>
+  </div>
+
+  <h3>培养模式</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>维度</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>培养周期</strong></td>
+        <td>免费培养<strong>一年</strong>，贯通式培养</td>
+      </tr>
+      <tr>
+        <td><strong>平时安排</strong></td>
+        <td>周末安排<strong>一天半</strong>课程（周六全天 + 周日半天，或周六半天 + 周日全天）</td>
+      </tr>
+      <tr>
+        <td><strong>日常作息</strong></td>
+        <td>周一至周五白天在学校学习文化课，晚上自行安排训练</td>
+      </tr>
+      <tr>
+        <td><strong>每日辅导</strong></td>
+        <td>每天安排网上辅导答疑，建立三方小群（老师+家长+学生）</td>
+      </tr>
+      <tr>
+        <td><strong>寒暑假</strong></td>
+        <td>来到杭州信友队线下参加集训，有金牌选手授课</td>
+      </tr>
+      <tr>
+        <td><strong>个性化</strong></td>
+        <td>教练根据学生情况制定个性化学习规划</td>
+      </tr>
+      <tr>
+        <td><strong>课程录播</strong></td>
+        <td>直播课通过腾讯会议录制，上传至官网供课后回放</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>课程体系</h3>
+  <p>知音班主要针对<strong>C++</strong>方向，涵盖从零基础到高水平的全链路课程：</p>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>零基础语法</h4>
+      <p>适合零基础入门学生</p>
+    </div>
+    <div class="flow-item">
+      <h4>语法入门 → 进阶</h4>
+    </div>
+    <div class="flow-item">
+      <h4>基础算法一、二、三</h4>
+    </div>
+    <div class="flow-item">
+      <h4>普及 → 提高</h4>
+    </div>
+    <div class="flow-item gold">
+      <h4>省选 → 国家集训队</h4>
+      <p>根据学生学习速度灵活推进，不设成长速度上限</p>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>贯通式培养：</strong>针对选拔出的优秀孩子，按照其学习速度快速推进。常规课每次2小时、一期12次课；知音班学生进度更快、更密集。
+  </div>
+
+  <h3>周末课程安排</h3>
+  <p>从早上<strong>8:30</strong>到晚上<strong>20:30</strong>，包含上课、专题训练和综合训练。</p>
+</section>
+
+<!-- ==================== CH8 ==================== -->
+<section id="ch8">
+  <div class="section-title">
+    <span class="s-num">Chapter 08</span>
+    <h2>师资团队与历届成绩</h2>
+  </div>
+
+  <h3>教学教研团队</h3>
+  <div class="card">
+    <ul>
+      <li><strong>IOI 金牌选手</strong></li>
+      <li><strong>INOI 金银牌选手</strong></li>
+      <li><strong>ACM-ICPC 金牌选手</strong></li>
+      <li><strong>NOI 钻石教练、金牌教练</strong></li>
+    </ul>
+  </div>
+
+  <h3>知音班导师</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4 style="margin-top:0">导师</h4>
+      <ul>
+        <li><strong>周康阳</strong>（IOI 2024 中国队第一名，现就读清华）</li>
+        <li><strong>周航瑞</strong></li>
+        <li>后续导师持续增加</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">高段教练</h4>
+      <ul>
+        <li>夏天瑞、陈诺</li>
+        <li>张明炫、孔启浩</li>
+        <li>孙培轩、周正东</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>往届成绩（2024年CSP）</h3>
+  <div class="alert alert-success">
+    <strong>第一届（2024年3月选拔）和第二届（2024年6月选拔）</strong>学生在2024年9—10月CSP竞赛中取得了优异成绩。2025年CSP成绩公布后，预计成绩数量将<strong>大幅度提升</strong>。
+  </div>
+
+  <h3>知音班经费来源</h3>
+  <p>知音班为公益项目。经费来源包括：</p>
+  <ul>
+    <li>本届（第五届）赞助方：<strong>猿编程</strong></li>
+    <li>往届赞助方包括：<strong>恒生电子、腾讯</strong>等大企业</li>
+    <li>若无赞助，由<strong>信友队自行承担</strong></li>
+  </ul>
+  <p>知音班的愿景是<strong>为国家科技复兴选拔和输送人才</strong>。</p>
+</section>
+
+<!-- ==================== CH9 ==================== -->
+<section id="ch9">
+  <div class="section-title">
+    <span class="s-num">Chapter 09</span>
+    <h2>国庆CSP复赛冲刺营</h2>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>时间：</strong>9月30日报到 → 10月7日下午17:00结课。复赛考试时间：<strong>11月1日（周六）</strong>。CSP每年仅考一次，机会珍贵。
+  </div>
+
+  <h3>营地信息</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4 style="margin-top:0">营地地点</h4>
+      <ul>
+        <li><strong>星诺酒店滨江店</strong>（滨江区）</li>
+        <li>全封闭式营地</li>
+        <li>住宿：六人间，独立卫生间、洗漱台</li>
+        <li>餐饮：三餐一点，两荤两素，每天安排水果牛奶</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">课程安排</h4>
+      <ul>
+        <li><strong>上午 8:30—12:00：</strong>全真模考（断网、纸质试卷）</li>
+        <li><strong>下午 13:30—17:00：</strong>讲题 + 专题精讲</li>
+        <li><strong>晚上 18:30—20:30：</strong>补题 + 答疑</li>
+        <li>全天有老师在，随时答疑</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>班型与价格</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>班型</th>
+        <th>形式</th>
+        <th>价格</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>线下冲刺班（普及/提高）</td>
+        <td>全封闭集训</td>
+        <td>原价5600元，福利价<strong>4800元</strong></td>
+      </tr>
+      <tr>
+        <td>线上直播班</td>
+        <td>直播课形式</td>
+        <td>价格低于线下</td>
+      </tr>
+      <tr>
+        <td>录播课</td>
+        <td>复赛开始后可选</td>
+        <td>价格更优惠</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>知音班选拔衔接：</strong>参加国庆复赛冲刺营且同时进入知音班线下笔试的学生，<strong>在滨江营地也安排了考场</strong>（10月3日上午9:30—11:30），无需往返两个校区。
+  </div>
+
+  <h3>教学模式：考评讲练补</h3>
+  <p>信友队徐老师二十余年研究总结的教学精华——<strong>模考 → 讲评 → 专题 → 补题 → 答疑</strong>，形成学习闭环，当天内容当天解决。该模式"一直有模仿，从未被超越"。</p>
+
+  <h3>专题精讲内容</h3>
+  <ul>
+    <li>暴力拿分策略</li>
+    <li>二分精讲</li>
+    <li>拆分技巧</li>
+    <li>动态规划（DP）思考方法</li>
+    <li>搜索应对策略优化方法</li>
+    <li>其他高频考点专题</li>
+  </ul>
+
+  <h3>入营携带清单</h3>
+  <p>笔记本、U盘、行李箱、换洗衣物、毛巾等。所有物品需<strong>写上孩子姓名</strong>（尤其衣物，营地有洗衣机和烘干机，防止无人认领）。贴身衣物需自行清洗。</p>
+
+  <h3>家长了解孩子动态</h3>
+  <ul>
+    <li>建立三方小群（主讲老师 + 助教 + 班主任 + 代班老师 + 生活老师）</li>
+    <li>班主任每日发布孩子动态（生活、饮食、学习反馈）</li>
+    <li>每日模考成绩反馈</li>
+    <li>学生单人照片反馈</li>
+  </ul>
+</section>
+
+<!-- ==================== CH10 ==================== -->
+<section id="ch10">
+  <div class="section-title">
+    <span class="s-num">Chapter 10</span>
+    <h2>杭州旅游与住宿攻略</h2>
+  </div>
+
+  <h3>周边景点推荐</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4 style="margin-top:0">未来科技城周边</h4>
+      <ul>
+        <li><strong>西溪国家湿地公园</strong>（打车10—15分钟）：与西湖齐名，适合乘船、漫步</li>
+        <li><strong>浙江科技馆 + 自然博物馆</strong>（地铁30分钟至西湖文化广场）：免费，需提前预约</li>
+        <li><strong>梦想小镇</strong>：未来科技城核心区</li>
+        <li><strong>阿里巴巴园区</strong>：科技地标</li>
+        <li><strong>富力新线公园</strong>：校区旁的公园商场</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">东部软件园（西湖校区）周边</h4>
+      <ul>
+        <li><strong>西湖风景名胜区</strong>：必游景点，可租电瓶车或自行车浏览苏堤、雷峰塔</li>
+        <li><strong>京杭大运河历史街区</strong>（拱宸桥东）：桥西历史街区、小河直街</li>
+        <li><strong>中国伞博物馆、中国刀剪剑博物馆</strong>：免费</li>
+        <li><strong>武林夜市</strong>：必逛美食街</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>必吃美食</h3>
+  <div class="card">
+    <ul>
+      <li><strong>西湖醋鱼、东坡肉、龙井虾仁、宋嫂鱼羹</strong>：大众点评必吃榜</li>
+      <li><strong>杭州片儿川</strong>：推荐小狗面馆</li>
+      <li><strong>高性价比连锁餐厅：</strong>外婆家、新白鹿、绿茶、墨绿（本地人常去，性价比高）</li>
+      <li><strong>注意避开：</strong>杭州酒家、楼外楼（价格偏高，针对外地游客）</li>
+    </ul>
+  </div>
+
+  <h3>住宿推荐</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>酒店</th>
+        <th>位置</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>轻居酒店</strong></td>
+        <td>东软校区旁（约100米）</td>
+        <td>去年新建，报信友队名可享优惠价（约500—600元，国庆对外价700+）</td>
+      </tr>
+      <tr>
+        <td><strong>全季酒店</strong></td>
+        <td>东软校区对面马路</td>
+        <td>品质较好，国庆价格约700—800元</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-gold">
+    <strong>建议：</strong>国庆为旅游旺季，<strong>尽早预订酒店</strong>，避免涨价。住在西湖区（东软校区附近）较为便利，去哪都方便。
+  </div>
+
+  <h3>杭州天气提醒</h3>
+  <ul>
+    <li>十月初杭州约<strong>30多度</strong>，短袖即可，但空调房内偏冷，建议备薄外套</li>
+    <li>杭州天气多变，<strong>随时可能下雨</strong>，务必带伞</li>
+  </ul>
+</section>
+
+<!-- ==================== CH11 ==================== -->
+<section id="ch11">
+  <div class="section-title">
+    <span class="s-num">Chapter 11</span>
+    <h2>学员经验分享：周康阳</h2>
+  </div>
+
+  <p>以下内容整理自周康阳在WCT大会上的经验分享。周康阳以<strong>第一名</strong>身份入选IOI 2024国家队，获IOI 2024冠军。</p>
+
+  <h3>竞赛成绩一览</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>阶段</th>
+        <th>主要成绩</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>初二</strong></td>
+        <td>CSP入门组、提高组一等奖；NOI冬令营及APIO 2021金牌；ISIJ A组满分冠军</td>
+      </tr>
+      <tr>
+        <td><strong>初三</strong></td>
+        <td>Codeforces 打上LGM；以第一名入选浙江省省队（非正式成员）；NOI夏令营第一名（超正式选手金牌线）</td>
+      </tr>
+      <tr>
+        <td><strong>高一</strong></td>
+        <td>CF总排名进入前十；APIO冠军</td>
+      </tr>
+      <tr>
+        <td><strong>高二</strong></td>
+        <td>CF总排名曾达第一（现第六名）；<strong>IOI 2024国家队选拔第一名</strong></td>
+      </tr>
+      <tr>
+        <td><strong>高三</strong></td>
+        <td><strong>IOI 2024冠军</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>学习经历</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>五六年级（2018年暑假）</h4>
+      <p>刚接触信奥，学习C++语言和基础算法。</p>
+    </div>
+    <div class="flow-item">
+      <h4>初一</h4>
+      <p>进入文渊初中部，加入信奥队。王家红老师负责基础阶段，组织大量题目和相互讲解。同时进行自学。</p>
+    </div>
+    <div class="flow-item">
+      <h4>初二</h4>
+      <p>开始深入学习提高组、省选方面知识。徐老师负责，组织大量模拟赛，邀请现役选手（优秀学长）讲解。同时使用Codeforces、AtCoder、洛谷等平台训练。</p>
+    </div>
+    <div class="flow-item">
+      <h4>初三</h4>
+      <p>继续深入学习，难度提升。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>高一</h4>
+      <p>NOIP发挥不佳（全省第18名）。随后徐老师带领外出集训——北京十一学校、中山纪念中学、华师一附中。集训中收获知识、独立生活能力和开阔视野。省选中翻盘进入浙江省A队。</p>
+    </div>
+    <div class="flow-item">
+      <h4>高二—高三</h4>
+      <p>持续训练，最终以国家队第一名入选IOI 2024并获得冠军。</p>
+    </div>
+  </div>
+
+  <h3>周康阳的信奥学习建议</h3>
+  <div class="card">
+    <ol>
+      <li><strong>良好的数学基础：</strong>数学基础好则逻辑推理能力更强，在信息学中有优势</li>
+      <li><strong>足够的兴趣：</strong>只有兴趣才能让人专注于这件事，专注才能取得好成绩</li>
+      <li><strong>跟随专业机构系统化训练：</strong>在信友队中，周围同学各有所长（做题量大、构造题强、出题能力强），互相促进成长</li>
+      <li><strong>重视每一场模拟赛及赛后补题：</strong>重视每一堂课</li>
+      <li><strong>核心竞争力是独立思考能力：</strong>尝试难题、挑战自我，不待在舒适圈。遇到不会的题要自己思考解法，形成自己的理解</li>
+      <li><strong>自学能力很重要：</strong>信奥学习中很大程度上需要自学</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ==================== CH12 ==================== -->
+<section id="ch12">
+  <div class="section-title">
+    <span class="s-num">Chapter 12</span>
+    <h2>家长如何支持孩子信奥学习</h2>
+  </div>
+
+  <p>以下内容整理自<strong>徐源老师</strong>（信友队及XCamp联合创始人）在WCT大会上的分享。徐源毕业于杭州学军中学，信奥保送生，曾在谷歌加州总部从事八年大数据研发，后在硅谷带学生八年，接触过上千位家长。</p>
+
+  <h3>信奥学习的三大考验维度</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>维度一：知识体系的体系化搭建</h4>
+      <p>算法和数据结构（含编程基础）的知识体系搭建。关键在于<strong>真正理解算法背后的机制</strong>，而非背题、记忆。将知识从点连成线，线连成面，最终形成具体形状。</p>
+    </div>
+    <div class="flow-item">
+      <h4>维度二：思维和能力的培养</h4>
+      <p>随着知识体系推进，进入大量训练阶段（模考段）。孩子能否经得起雕琢和训练，本身也是天赋的一部分——不仅是聪明，更是<strong>能否坚持好习惯</strong>。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>维度三：持久的耐力和毅力</h4>
+      <p>所有中后期的孩子都有很强的热爱。热爱之外，还需要培养<strong>持久的耐力和毅力</strong>。</p>
+    </div>
+  </div>
+
+  <h3>分享的核心主题</h3>
+  <div class="card">
+    <p>徐源老师的分享主要覆盖三部分内容：</p>
+    <ol>
+      <li><strong>家长在孩子青少年学习过程中的整体地位</strong></li>
+      <li><strong>家长可以用哪些实操性措施支持孩子的信奥学习</strong></li>
+      <li><strong>案例分析：</strong>不同类型孩子的家庭，父母的做法与孩子的发展</li>
+    </ol>
+    <p style="font-size:0.9em;color:var(--text-muted);margin-top:8px;">注：具体实操措施和案例分析的详细内容在直播后续环节展开，此处为框架性概要。</p>
+  </div>
+
+  <h3>徐源的背景</h3>
+  <ul>
+    <li>信友队及XCamp联合创始人</li>
+    <li>谷歌加州总部八年大数据基础架构研发</li>
+    <li>毕业于杭州学军中学，信奥保送生</li>
+    <li>2017年开始带学生，至今约八年</li>
+    <li>直接带的学生获<strong>欧洲女子奥林匹克金牌（世界第七名）</strong></li>
+    <li>XCamp学生获IOI金牌（世界第三名），多名学生进入MIT、伯克利、哈佛、斯坦福</li>
+  </ul>
+</section>
+
+<!-- ==================== CH13 ==================== -->
+<section id="ch13">
+  <div class="section-title">
+    <span class="s-num">Chapter 13</span>
+    <h2>直播间常见问题汇总</h2>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：知音班考什么内容？考编程吗？</h4>
+    <p>主要考察<strong>数理思维</strong>，不考编程。笔试有选择题和填空题；面试为现场出题，考察表达能力、思维能力和反应能力。面试会有题目让孩子限时解答并讲解思路。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：低年级会吃亏吗？</h4>
+    <p>不会。考试和进面环节会综合考虑孩子的年级，低年级学生享有<strong>加成分</strong>。具体分数由知音班教练团队专业评估。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：笔试和面试哪个权重大？</h4>
+    <p>两者权重<strong>差不多</strong>。最终结果综合参考线下笔试成绩和面试表现。线上第一轮成绩不作为参考。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：知音班一年之后怎么安排？</h4>
+    <p>免费培养一年后，会为孩子做一个详细的信奥板块规划。具体情况将在10月3日公益讲座中由徐老师、徐源老师详细说明。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：没有选上的孩子可以自费学习吗？</h4>
+    <p>针对25名免费名额之后的优秀孩子，会有<strong>额外安排</strong>。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：面试是多人小组还是单独面试？</h4>
+    <p>从上届开始改为<strong>一对一面试</strong>。之前采用多人小组抢答形式，部分内向的孩子全程没有回答机会，体验不好。改为一对一后需安排更多老师和考场。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：知音班平时课有线上班吗？</h4>
+    <p>线上线下同步。省外不方便来线下的学生可通过<strong>腾讯会议</strong>线上上课。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：往期录取小学生和初中生比例哪个高？</h4>
+    <p>差不多。小学生和初中生整体都比较优秀，没有专门统计过比例。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：推荐名额是什么？</h4>
+    <p>知音班往期家长可推荐<strong>两个名额</strong>直接进入线下笔试和面试，免去第一轮线上考试。第五届知音班仍保留此推荐机制。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：不参加线上考试能来线下吗？</h4>
+    <p>不能。必须通过第一轮线上笔试并达到分数线，才能进入第二轮线下环节。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：准考证忘了点确认怎么办？</h4>
+    <p>如已进入"下载准考证"步骤，说明已点过确认（系统锁定座位后才生成准考证）。若确实忘记确认，可联系销售老师，后台可补生成准考证。</p>
+  </div>
+</section>
+
+<!-- ==================== CH14 ==================== -->
+<section id="ch14">
+  <div class="section-title">
+    <span class="s-num">Chapter 14</span>
+    <h2>课程产品信息</h2>
+  </div>
+
+  <h3>试听课（直播间福利）</h3>
+  <div class="card">
+    <h4 style="margin-top:0">信友队视频试听课</h4>
+    <ul>
+      <li><strong>价格：</strong>9.9元</li>
+      <li><strong>时长：</strong>1小时</li>
+      <li><strong>可选课程：</strong>AI应用通识课（二年级）/ Python课程（三年级）/ C++课程（四年级以上），三选一</li>
+      <li><strong>包含：</strong>免费测评 + 长期学习规划</li>
+      <li><strong>时间：</strong>无限制，随时预约</li>
+      <li><strong>售后：</strong>七天无理由退款</li>
+    </ul>
+  </div>
+
+  <h3>AI / Python / C++ 课程区别</h3>
+  <div class="card">
+    <ul>
+      <li><strong>AI课程：</strong>人工智能通识课，趣味性启蒙课程，适合二年级小朋友</li>
+      <li><strong>Python课程：</strong>可参与人工智能相关项目</li>
+      <li><strong>C++课程：</strong>信息学竞赛官方指定编程语言，面向四年级以上，目标走信奥方向</li>
+    </ul>
+  </div>
+
+  <h3>项目课（国庆期间）</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4 style="margin-top:0">极速矿工</h4>
+      <ul>
+        <li>有一定C++基础</li>
+        <li>项目制编程课：创造一款属于自己的游戏</li>
+        <li>需C++基础</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">炫光击球</h4>
+      <ul>
+        <li>使用Python语言</li>
+        <li>有无基础均可参加</li>
+        <li>经典游戏项目，通过写代码创造游戏，发散创造力</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>项目课定位：</strong>编程学习中不仅学技巧，更要学会"创作"。如同学唱歌要学谱曲一样，项目课让孩子独立完成一个完整的编程项目。适合国庆来杭州参加知音班选拔的孩子，家长可利用孩子上课时间游览杭州。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer style="text-align:center;padding:40px 24px;color:var(--text-muted);font-size:0.82em;border-top:1px solid var(--border);margin-top:48px;">
+  <p>本文档整理自信友队第五届知音班选拔官方直播内容，仅供参考。</p>
+  <p>具体安排请以信友队官方通知为准。</p>
+</footer>
+
+</body>
+</html>

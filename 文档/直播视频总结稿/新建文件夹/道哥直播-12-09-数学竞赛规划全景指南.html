@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学竞赛规划全景指南</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --accent: #6b2d5b;
+    --accent-light: #8e4585;
+    --accent-bg: #f5eef3;
+    --gold: #b8860b;
+    --gold-light: #d4a843;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #7a7570;
+    --border: #e2ddd6;
+    --highlight: #fff3cd;
+    --success: #2d6b3f;
+    --danger: #8b2500;
+    --info: #1a5276;
+  }
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Page Header ===== */
+  .page-header {
+    background: linear-gradient(135deg, #4a1942 0%, #6b2d5b 40%, #8e4585 100%);
+    color: #fff;
+    padding: 64px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(184,134,11,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: rgba(184,134,11,0.3);
+    color: var(--gold-light);
+    padding: 4px 14px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .page-header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .header-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.75);
+    font-weight: 300;
+    max-width: 640px;
+    line-height: 1.7;
+  }
+
+  .header-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .header-tags .tag {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  /* ===== Tag ===== */
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 3px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+
+  .tag-purple { background: var(--accent-bg); color: var(--accent); }
+  .tag-gold { background: var(--highlight); color: var(--gold); }
+  .tag-green { background: #eaf5ed; color: var(--success); }
+  .tag-red { background: #fdf0ec; color: var(--danger); }
+  .tag-blue { background: #eaf2f8; color: var(--info); }
+
+  /* ===== Main Content ===== */
+  .main-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ===== TOC ===== */
+  .toc-section {
+    margin: -28px auto 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+  }
+
+  .toc-label {
+    position: absolute;
+    top: -12px;
+    left: 28px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 3px 14px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 32px;
+    margin-top: 8px;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ede8;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .toc-item:last-child { border-bottom: none; }
+  .toc-item:hover { color: var(--accent); }
+
+  .toc-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 24px;
+  }
+
+  .toc-text {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  /* ===== Section ===== */
+  .doc-section {
+    margin-bottom: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-line {
+    width: 4px;
+    min-height: 40px;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .section-num {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--accent-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ===== Card ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .card h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .card p, .card li {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+
+  .card ul, .card ol {
+    padding-left: 20px;
+    margin-bottom: 12px;
+  }
+
+  .card li { margin-bottom: 6px; }
+  .card li:last-child { margin-bottom: 0; }
+
+  /* ===== Alert Boxes ===== */
+  .alert {
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    border-left: 4px solid;
+  }
+
+  .alert-gold { background: var(--highlight); border-color: var(--gold); }
+  .alert-gold strong { color: var(--gold); }
+
+  .alert-success { background: #eaf5ed; border-color: var(--success); }
+  .alert-success strong { color: var(--success); }
+
+  .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+  .alert-danger strong { color: var(--danger); }
+
+  .alert-info { background: #eaf2f8; border-color: var(--info); }
+  .alert-info strong { color: var(--info); }
+
+  .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+  .alert-purple strong { color: var(--accent); }
+
+  .alert ul {
+    padding-left: 18px;
+    margin: 8px 0 0;
+  }
+
+  .alert li { margin-bottom: 4px; }
+
+  /* ===== Two Column ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* ===== Diff Bar ===== */
+  .diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    margin-bottom: 8px;
+  }
+
+  .diff-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .diff-track {
+    flex: 1;
+    height: 8px;
+    background: #f0ede8;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .diff-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .diff-fill.high { background: linear-gradient(90deg, var(--accent), #a855a0); }
+  .diff-fill.mid { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+  .diff-fill.low { background: linear-gradient(90deg, var(--success), #5aad6e); }
+
+  /* ===== Table ===== */
+  .table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  thead {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  thead th {
+    padding: 14px 16px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0ede8;
+    color: var(--text-secondary);
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover {
+    background: var(--accent-bg);
+  }
+
+  /* ===== Flow / Timeline ===== */
+  .flow {
+    position: relative;
+    padding-left: 32px;
+    margin: 16px 0 24px;
+  }
+
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--accent-bg);
+    border-radius: 1px;
+  }
+
+  .flow-item {
+    position: relative;
+    padding: 12px 0 20px;
+  }
+
+  .flow-item::before {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 18px;
+    width: 12px;
+    height: 12px;
+    background: var(--surface);
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+  }
+
+  .flow-item h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .flow-item p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  /* ===== Highlight ===== */
+  .highlight-word {
+    background: var(--highlight);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  /* ===== Strong ===== */
+  strong {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* ===== Paragraph ===== */
+  .content-p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    margin-bottom: 14px;
+  }
+
+  /* ===== Divider ===== */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 48px 0;
+  }
+
+  /* ===== Footer ===== */
+  .page-footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 700px) {
+    .page-header { padding: 40px 20px 36px; }
+    .page-header h1 { font-size: 1.7rem; }
+    .header-sub { font-size: 0.92rem; }
+    .main-content { padding: 0 16px 60px; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .toc-card { padding: 24px 18px; }
+    .two-col { grid-template-columns: 1fr; }
+    .section-title { font-size: 1.25rem; }
+    .card { padding: 18px; }
+    .diff-label { min-width: 60px; font-size: 0.72rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-tag">数学竞赛 · 全阶段规划</div>
+    <h1>数学竞赛规划全景指南</h1>
+    <p class="header-sub">从小学到高中的竞赛路径规划、教练选择、强弱省策略及升学红利的完整解析</p>
+    <div class="header-tags">
+      <span class="tag tag-gold">小奥 · 初联 · 高联</span>
+      <span class="tag tag-gold">教练选择</span>
+      <span class="tag tag-gold">强弱省策略</span>
+      <span class="tag tag-gold">升学红利</span>
+      <span class="tag tag-gold">强基破格</span>
+    </div>
+  </div>
+</header>
+
+<!-- ========== TOC ========== -->
+<div class="main-content">
+  <nav class="toc-section">
+    <div class="toc-card">
+      <div class="toc-label">目 录</div>
+      <div class="toc-grid">
+        <a href="#sec1" class="toc-item"><span class="toc-num">01</span><span class="toc-text">小奥阶段：目标定位与学习路径</span></a>
+        <a href="#sec2" class="toc-item"><span class="toc-num">02</span><span class="toc-text">初联阶段：台阶跨越与自主招生</span></a>
+        <a href="#sec3" class="toc-item"><span class="toc-num">03</span><span class="toc-text">竞赛分野：一试二试与路径选择</span></a>
+        <a href="#sec4" class="toc-item"><span class="toc-num">04</span><span class="toc-text">教练与机构选择策略</span></a>
+        <a href="#sec5" class="toc-item"><span class="toc-num">05</span><span class="toc-text">强省与弱省的差异化规划</span></a>
+        <a href="#sec6" class="toc-item"><span class="toc-num">06</span><span class="toc-text">奖项升学红利全解析</span></a>
+        <a href="#sec7" class="toc-item"><span class="toc-num">07</span><span class="toc-text">特殊路径：新领军 · 英才 · 卓越 · 攀登</span></a>
+        <a href="#sec8" class="toc-item"><span class="toc-num">08</span><span class="toc-text">强基破格的降分逻辑与实操</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== SECTION 1 ========== -->
+  <section class="doc-section" id="sec1">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 01</div>
+        <h2 class="section-title">小奥阶段：目标定位与学习路径</h2>
+        <div class="section-subtitle">学过小奥与未来能否拿金牌或进入清北没有必然关系</div>
+      </div>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心观点：</strong>小奥学得好坏，从兴趣角度讲不是特别重要。小奥本身更多是一些技巧层面的东西。从小有天赋的孩子在小奥上面往往表现比较好，但小奥成绩一般的孩子如果能维持住对数学的兴趣，后续同样有可能拿到好的成绩。
+    </div>
+
+    <div class="card">
+      <h3>一、小奥的核心目标</h3>
+      <p class="content-p">学小奥最直接的目的，是在当地有升学机会时能够抓住。具体分为两种情况：</p>
+
+      <h4>情况一：当地存在升学选拔机会</h4>
+      <p class="content-p">以阳光政策出台前为例，当年小升初有明确的独立考试且考小奥。现在虽有摇号政策，但各地仍存在择校机会，表现为：</p>
+      <ul>
+        <li><strong>点招（DZ）：</strong>直接打电话或发短信通知考试</li>
+        <li><strong>神秘考/密考（SMK）：</strong>不对外公开的选拔性考试</li>
+        <li>信息主要通过<strong>各地集训队</strong>或<strong>小奥顶尖班型</strong>传递</li>
+      </ul>
+
+      <div class="alert alert-gold">
+        <strong>关键建议：</strong>学小奥最好在当地进入第一梯队的班型或集训队（如 club、俱乐部、兴趣小组等），以便获取优质升学信息。小奥阶段的核心策略即：<strong>进当地最好的机构、最好的班</strong>。
+      </div>
+
+      <h4>情况二：当地无此类升学机会</h4>
+      <p class="content-p">若当地没有集训队或点招机会，学小奥的核心目的即为<strong>培养兴趣</strong>。</p>
+    </div>
+
+    <div class="card">
+      <h3>二、核心判断标准</h3>
+      <ul>
+        <li>小学内容对80%的孩子来说是简单的，意味着<strong>没有区分度</strong>——不同能力的孩子在同一张试卷上可能都拿满分</li>
+        <li>学校为了拔尖，只能考更难的内容（小奥），这是小奥能带来升学机会的根本原因</li>
+        <li>小奥阶段的规划原则：<strong>有升学机会则奔升学，无升学机会则培养兴趣</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== SECTION 2 ========== -->
+  <section class="doc-section" id="sec2">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 02</div>
+        <h2 class="section-title">初联阶段：台阶跨越与自主招生</h2>
+        <div class="section-subtitle">初联已无全国性比赛，但作为学习内容仍至关重要</div>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>背景说明：</strong>"初联"一词已从原来的全国性比赛名称，变为特指的一部分学习内容，不再有初联赛事。
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>不走竞赛路线</h3>
+        <p class="content-p">若未来不打算走数学竞赛一路拿金银牌，则：</p>
+        <ul>
+          <li><strong>数论、组合</strong>没有必要花大量时间——仅在竞赛中有用，高考用不到</li>
+          <li><strong>几何、代数</strong>及其他初联基础内容仍有必要学习</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>走竞赛路线</h3>
+        <p class="content-p">初联是所有尖子生共同的基础路径。无论是否坚定走竞赛，小初阶段理科尖子生的路径没有太大区别。</p>
+        <ul>
+          <li>初联是竞赛训练的初步体验</li>
+          <li>在初联结束后产生是否继续搞竞赛的判断</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>为什么必须学初联？——两大原因</h3>
+
+      <div class="flow">
+        <div class="flow-item">
+          <h4>原因一：初中到高中的台阶作用</h4>
+          <p>当前初中学习内容与高中课内内容之间跨度很大，许多孩子初中表现不错，一上高中就跟不上。初联（非数论组合部分）正是连接两者的<strong>台阶</strong>。</p>
+        </div>
+        <div class="flow-item">
+          <h4>原因二：应对自主招生</h4>
+          <p>小升初的口子卡得越来越严，但<strong>初升高自主招生的口子放得越来越大</strong>。各头部学生都在准备自招，争取进入四校或四校分校等平台校。这是当前最重要的升学通道。</p>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <strong>重要判断：</strong>中考题目简单、没有区分度，导致头部学生大量堆积。中考拿到极高分不靠天赋，靠的是<strong>不出差错的熟练度</strong>，需要大量刷中考题。而真正有竞赛潜力的学生不可能停下手来花半年刷中考题，因此高中通过<strong>自招</strong>选拔顶尖生源。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>初联学习资源</h3>
+      <ul>
+        <li><strong>推荐老师：</strong>陈祖维、卢鼎、陈泽彤</li>
+        <li><strong>校内教练：</strong>班昌、一中好等老师（部分会出来带课或提供资料）</li>
+        <li><strong>检测标准：</strong>小蓝本（能刷完七成已很不错）、当地杯赛</li>
+        <li><strong>学习方式：</strong>初联完全可以自学，也可跟线上/线下课程或校内教练</li>
+        <li>弱省资源不足时应<strong>多用线上资源</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== SECTION 3 ========== -->
+  <section class="doc-section" id="sec3">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 03</div>
+        <h2 class="section-title">竞赛分野：一试、二试与路径选择</h2>
+        <div class="section-subtitle">初联完成后产生竞赛与非竞赛的分野</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>高联一试 vs 高中课内</h3>
+      <p class="content-p">初联之后有两个选择：学高中课内，或学高联一试。两者<strong>核心考察的知识内容完全一致</strong>，不会考超纲知识，但对做题技法要求更高。高联一试题型为<strong>8道填空 + 3道解答</strong>，与高考训练方向不同。</p>
+
+      <div class="two-col">
+        <div class="alert alert-info">
+          <strong>路径A：先校内后一试</strong><br>
+          适合低年级学生（如五六年级、初一开始学高中内容），需要高中校内知识做基础垫底。
+        </div>
+        <div class="alert alert-purple">
+          <strong>路径B：直接上一试</strong><br>
+          适合能力较强、教练认可的学生。学完一试后，高考唯一缺的是应试技巧训练。两条路无好坏之分，取决于孩子实力。
+        </div>
+      </div>
+
+      <div class="alert alert-gold">
+        <strong>关键提醒：</strong>高联一试和二试<strong>没有太大的关联性</strong>，可以并行学习。学好二试不解决一试的问题，反之亦然。很多学生在初联后直接跟上二试的几何板块。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>高联二试——竞赛真正的开始</h3>
+      <p class="content-p">二试的<strong>四大板块</strong>（代数、几何、数论、组合）才是竞赛核心。不走竞赛路线的学生，二试中的数论和组合学完后在高考中几乎无用。</p>
+
+      <div class="alert alert-danger">
+        <strong>现实情况：</strong>绝大多数学校的数学老师自己也做不出来二试的题。二试阶段才是<strong>真正需要挑老师</strong>的时候——前面阶段更多挑的是师生契合度，到了二试阶段需要真正有竞赛实力的教练。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>不同年级的节奏建议</h3>
+      <ul>
+        <li>必须<strong>有自己的节奏</strong>，不要被别人的进度裹挟</li>
+        <li>六年级未学小奥：现在就进初联，赶下一轮早班车</li>
+        <li>初一学初联不晚，目标仍为适应高中内容和通过自招</li>
+        <li>最终目标：高三能上一所好大学</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== SECTION 4 ========== -->
+  <section class="doc-section" id="sec4">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 04</div>
+        <h2 class="section-title">教练与机构选择策略</h2>
+        <div class="section-subtitle">各阶段、各板块的教练推荐与选择逻辑</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>选择逻辑总则</h3>
+      <ul>
+        <li>小奥、初联、一试阶段：<strong>主要挑师生契合度</strong>——孩子能否跟上、能否听懂</li>
+        <li>二试阶段：需要<strong>真正有竞赛实力的教练</strong></li>
+        <li>外培老师并非固定挂在某一机构，而是<strong>到处串课</strong>，记住老师名字比记住机构更重要</li>
+        <li>这些老师往往有自己的正职（大学教授等），假期到各地开短期课做点拨</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>初联与高联一试老师</h3>
+      <ul>
+        <li><strong>陈祖维</strong> — 初联与高联一试讲解优秀</li>
+        <li><strong>苏玉坚</strong> — 初联与高联一试讲解优秀</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>高联二试——按板块分类</h3>
+
+      <h4>代数板块</h4>
+      <ul>
+        <li><strong>王永喜</strong> — 非常出名的代数老师，原山大附中（山西大学附属中学）核心教练</li>
+        <li><strong>巩固</strong> — 代数方向突出</li>
+        <li><strong>杨运新</strong> — 代数与几何兼长</li>
+      </ul>
+
+      <h4>几何板块</h4>
+      <ul>
+        <li><strong>顾东华</strong> — 几何讲解优秀</li>
+        <li><strong>李先莹</strong> — 曾离开竞赛领域（从事游戏行业），后回归</li>
+        <li><strong>杨运新</strong> — 几何方向突出</li>
+        <li><strong>曹学渊</strong> — 几何方向</li>
+        <li><strong>叶中豪</strong> — 几何方向</li>
+      </ul>
+
+      <h4>数论与组合板块</h4>
+      <ul>
+        <li><strong>傅云浩</strong> — 数论组合均强，MO金牌出身，直击痛点但可能节奏偏快</li>
+        <li><strong>于洪斌</strong> — 数论讲授优秀（目前在江苏）</li>
+        <li><strong>周晓东</strong>、<strong>杨全辉</strong>、<strong>季春刚</strong> — 经典数论方向名师</li>
+        <li><strong>邹璟</strong> — 数论组合综合</li>
+        <li><strong>陈晓敏</strong> — 组合方向，曾从事计算机领域，现于半圆俱乐部开课</li>
+        <li><strong>任寒</strong> — 组合方向</li>
+      </ul>
+
+      <h4>综合型名师</h4>
+      <ul>
+        <li><strong>王斌</strong> — 从高等数学角度讲解竞赛题，讲清题目渊源</li>
+        <li><strong>田开斌</strong> — 非常全面的老师，讲解细致</li>
+        <li><strong>罗伟</strong>、<strong>邹锦</strong>、<strong>张思慧</strong> — 各有专长</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>平台校内的核心教练</h3>
+      <p class="content-p">平台校之所以成为平台校，核心在于其校内有顶尖教练领衔。以下是部分代表性平台校教练：</p>
+      <ul>
+        <li><strong>冯志刚</strong> — 上海中学</li>
+        <li><strong>朱华伟</strong> — 深圳中学</li>
+        <li><strong>张端阳</strong> — 人大附中</li>
+      </ul>
+      <div class="alert alert-info">
+        <strong>说明：</strong>平台校保底有一位该级别或次半个级别的老师压轴。如果本校教练能力有限，可通过外培补充，但规划型教练需要学校自身拥有。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>教练的两大类型</h3>
+      <div class="two-col">
+        <div>
+          <h4>规划型教练</h4>
+          <ul>
+            <li>对孩子的调控能力强</li>
+            <li>心态把握好、学习定位精准</li>
+            <li>可能讲题能力一般</li>
+            <li>学校最渴望此类教练</li>
+          </ul>
+        </div>
+        <div>
+          <h4>授课型教练</h4>
+          <ul>
+            <li>板块讲解能力极强</li>
+            <li>心理疏导能力可能不足</li>
+            <li>可外培解决</li>
+            <li>需要与规划型教练搭配</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== SECTION 5 ========== -->
+  <section class="doc-section" id="sec5">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 05</div>
+        <h2 class="section-title">强省与弱省的差异化规划</h2>
+        <div class="section-subtitle">核心竞争力差异决定规划路径不同</div>
+      </div>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心逻辑：</strong>当你知道强省为什么强、弱省为什么弱，就可以想办法补上短板，争取更多机会。
+    </div>
+
+    <!-- Strong Province -->
+    <div class="card">
+      <h3>一、强省的核心竞争力</h3>
+      <p class="content-p">强省的核心竞争力在于<strong>强校</strong>，具体体现在三个方面：</p>
+
+      <div class="flow">
+        <div class="flow-item">
+          <h4>1. 政策支持</h4>
+          <p>部分地区在小升初后可直接锁定高中（六年一贯、2+4等），跳过中考。中考刷分虽然不直接帮助竞赛拿奖或高考，但能帮助锁定好高中——这被称为<strong>"过程量"</strong>。有政策支持则可省去此处时间投入。</p>
+        </div>
+        <div class="flow-item">
+          <h4>2. 选拔培养体系</h4>
+          <p>好的学校能建立起完整的选拔与培养体系。典型如<strong>湖北</strong>，搭建了一套竞赛人才培养的流水线，从识别苗子到系统培养一气呵成。体系的关键不仅是教练个人能力，还包括学校能否将教练与生源有效衔接。湖南近年的问题在于优秀教练流失严重，且竞赛培养体系与学校体系融合度不足。</p>
+        </div>
+        <div class="flow-item">
+          <h4>3. 同伴效应</h4>
+          <p>平台校的另一珍贵资源是<strong>同伴</strong>。如同开车时旁边有一辆同速或略快的车，你能判断自己的快慢、被带动出更好的成绩。全校仅一人搞竞赛的孤独状态，不利于长期发展。同伴之间互相讨论、竞争、追赶，是平台校不可替代的价值。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>平台校的定义：</strong>不是出过竞赛生的学校就是平台校，而是<strong>能稳定产出竞赛生的学校</strong>才是平台校。部分黑马校的成绩可能靠个别家长或学生个人推动，而非学校体系。
+    </div>
+
+    <!-- Weak Province -->
+    <div class="card">
+      <h3>二、弱省的核心缺陷与应对</h3>
+      <p class="content-p">弱省主要缺少两样东西：</p>
+
+      <div class="two-col">
+        <div>
+          <h4>缺陷一：信息不足</h4>
+          <ul>
+            <li>好教练在哪里</li>
+            <li>好老师是谁</li>
+            <li>整体规划思路</li>
+          </ul>
+          <p class="content-p" style="margin-top:10px;"><strong>解决方案：</strong>互联网时代，信息可通过家长抱团获取。加入社群互通有无，了解当地情况，寻找同路人。家长要主动解决信息问题。</p>
+        </div>
+        <div>
+          <h4>缺陷二：缺少同伴</h4>
+          <ul>
+            <li>同学可通过外培认识</li>
+            <li>外培的核心价值不仅是听课</li>
+            <li>还在于获取优质题目和交流机会</li>
+          </ul>
+          <p class="content-p" style="margin-top:10px;"><strong>解决方案：</strong>出去外培交流，不能闭门造车。外培时可以是冲着题目质量去，也可以是冲着与同水平学生交流去。</p>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <strong>弱省家长的核心行动：</strong>第一，解决信息问题（社群、网络、教练推荐）；第二，解决资源问题（外培经费投入，弥补平台校资源的缺失）；第三，解决同伴问题（社群交流、外培结识同水平学生）。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>三、平台校与黑马校参考</h3>
+      <p class="content-p">以下是直播中确认的平台校/重点校（不完全列表）：</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>省份/城市</th><th>平台校</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>北京</td><td>人大附中、十一学校等</td></tr>
+            <tr><td>上海</td><td>上海中学</td></tr>
+            <tr><td>深圳</td><td>深圳中学</td></tr>
+            <tr><td>湖南</td><td>雅礼中学、长郡中学、师大附中、文郡</td></tr>
+            <tr><td>浙江</td><td>学军中学</td></tr>
+            <tr><td>江苏</td><td>苏州中学等</td></tr>
+            <tr><td>天津</td><td>南开中学</td></tr>
+            <tr><td>辽宁</td><td>东北育才、大连二十四中</td></tr>
+            <tr><td>陕西</td><td>铁一中</td></tr>
+            <tr><td>广东</td><td>广东实验</td></tr>
+            <tr><td>山西</td><td>山大附中（弱省中的中间水平）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== SECTION 6 ========== -->
+  <section class="doc-section" id="sec6">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 06</div>
+        <h2 class="section-title">奖项升学红利全解析</h2>
+        <div class="section-subtitle">不同奖项在各阶段的利用方式</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>五大学科竞赛的含金量排序</h3>
+      <p class="content-p">在清北眼中，五大学科竞赛（数、理、化、生、信息）的含金量并非一致：</p>
+      <div class="diff-bar">
+        <span class="diff-label">数 · 理</span>
+        <div class="diff-track"><div class="diff-fill high" style="width: 95%"></div></div>
+        <span class="tag tag-purple">第一梯队</span>
+      </div>
+      <div class="diff-bar">
+        <span class="diff-label">信息学</span>
+        <div class="diff-track"><div class="diff-fill mid" style="width: 75%"></div></div>
+        <span class="tag tag-gold">第二梯队</span>
+      </div>
+      <div class="diff-bar">
+        <span class="diff-label">化 · 生</span>
+        <div class="diff-track"><div class="diff-fill low" style="width: 55%"></div></div>
+        <span class="tag tag-green">第三梯队</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>国集（国家集训队）</h3>
+      <div class="alert alert-success">
+        <strong>结果：</strong>直接保送。从近年情况看，<strong>依旧没有限制国集的专业选择</strong>。国集去清北是双向需求——清北也迫切需要国集学生。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>省一的升学价值</h3>
+      <ul>
+        <li><strong>综合评价招生：</strong>省一在综评中有较大帮助，具体要看所在省份是否有综评招生</li>
+        <li><strong>强基计划：</strong>省一在部分强基项目中有一定辅助作用</li>
+        <li>省一<strong>不能直接降高考分</strong>，能否获得优惠取决于当地具体政策和高校安排</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>偏科生与竞赛的关系</h3>
+      <div class="alert alert-purple">
+        <strong>核心判断：</strong>偏科严重的孩子<strong>一定要尝试竞赛</strong>。如果特别聪明的偏科生走竞赛，几乎是他能够实现院校跃迁的最大概率的机会。竞赛给了偏科生一个机会：<strong>单靠一个长板就能上清华北大</strong>。
+      </div>
+      <p class="content-p">原因在于：高考招生中，部里划定分数线，到线即录。但大学培养想要的是单科特别强的人，而非全科平均的人。同样考到630分，一个靠数学150分，一个靠数学100分，数学院院长显然更想要前者。这个<strong>选择空间掌握在学校手里</strong>。</p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== SECTION 7 ========== -->
+  <section class="doc-section" id="sec7">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 07</div>
+        <h2 class="section-title">特殊路径：新领军 · 英才 · 卓越 · 攀登</h2>
+        <div class="section-subtitle">针对数理顶尖学生的保送或降分录取通道</div>
+      </div>
+    </div>
+
+    <!-- Math Special Paths -->
+    <div class="card">
+      <h3>数学方向三大特殊路径</h3>
+      <p class="content-p">如果金牌未进国集，以下三条路径仍可实现<strong>本质上等同于保送</strong>的效果：</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>项目</th><th>招生方</th><th>年级要求</th><th>录取方式</th><th>核心特点</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>新领军（丘班）</strong></td>
+              <td>清华</td>
+              <td>初三至高三</td>
+              <td>直接保送，无需高考</td>
+              <td>侧重大学数学提前学习，选拔数学潜力突出者</td>
+            </tr>
+            <tr>
+              <td><strong>清华英才班</strong></td>
+              <td>清华</td>
+              <td>高二及以下</td>
+              <td>降一本线录取</td>
+              <td>在求真书院，有机会做自动化、人工智能联合培养</td>
+            </tr>
+            <tr>
+              <td><strong>北大英才班</strong></td>
+              <td>北大</td>
+              <td>高二及以下</td>
+              <td>降一本线录取</td>
+              <td>招约100人（清华约30人），更看奖牌含金量</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-gold">
+        <strong>英才班核心考核方式——"现学现考"：</strong>往年先上三天课（内容涉及大三大四甚至研究生阶段数学，刻意避开基础内容以防止押题），然后进行两次笔试和一次面试，考的都是过去三天学的内容。面试也是讲题，而非传统聊天式面试。培训属于"聊胜于无"，核心考察的是当场对数学的感知和表现能力。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>新领军的学习路径建议</h3>
+      <ul>
+        <li>新领军初审并非必须奥赛奖项——有市级一等奖即可通过初审</li>
+        <li>但<strong>不建议早早直接奔着新领军学大学数学</strong>：若未录取，额外学的内容对数竞和高考帮助不大</li>
+        <li>推荐路线：先走<strong>数竞路子</strong>，将二试学完后扎实训练，再拓展大学内容</li>
+        <li>竞赛奖越高，新领军过审概率越大</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>清华北大英才班对比</h3>
+      <div class="two-col">
+        <div>
+          <h4>清华英才班</h4>
+          <ul>
+            <li>招生约<strong>30人</strong></li>
+            <li>初审更看重综合能力（如丘成桐科学奖等）</li>
+            <li>在求真书院，与自动化、AI有联合培养</li>
+          </ul>
+        </div>
+        <div>
+          <h4>北大英才班</h4>
+          <ul>
+            <li>招生约<strong>100人</strong></li>
+            <li>更看重奖牌（2024年前首条要求即金牌，近年放宽但金牌仍优先）</li>
+            <li>银牌也可报名</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <strong>最适合走英才的人群排序：</strong>①CMO金牌 > ②女奥金牌（往年可免笔试直通面试）> ③CMO银牌 + 数学天赋突出 > ④从未打过数竞但声称有数学潜力的人（几率极低，缺乏证明手段）。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>物理方向：卓越与攀登</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>项目</th><th>录取方式</th><th>考核特点</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>卓越</strong></td>
+              <td>直接保送</td>
+              <td>物理方向现学现考，除数学、物理外还考语文、英语（底线要求），数学物理一起积分</td>
+            </tr>
+            <tr>
+              <td><strong>攀登</strong></td>
+              <td>降一本线录取</td>
+              <td>与卓越类似，公告通常晚于卓越约一周</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="content-p">清华与北大在物理方向的关系类似数学：清华卓越对应北大某一路径。清北两家基本是"你怎么办我也跟进"，不会有特别大差别。</p>
+    </div>
+
+    <div class="card">
+      <h3>女奥说明</h3>
+      <ul>
+        <li>女奥不在五大学科竞赛体系内，是专门面向女生举办的数学竞赛</li>
+        <li>整体难度比CMO略低</li>
+        <li>女奥前10名左右可保送进邱成桐领军计划</li>
+        <li>女奥前12名左右可直接保送进CMO</li>
+        <li>女奥金牌在英才班申请中有一定优势</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== SECTION 8 ========== -->
+  <section class="doc-section" id="sec8">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <div>
+        <div class="section-num">Part 08</div>
+        <h2 class="section-title">强基破格的降分逻辑与实操</h2>
+        <div class="section-subtitle">银牌及以上可走强基破格通道，极限降分可达63分</div>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>前提条件：</strong>破格的底线是<strong>银牌</strong>，CMO铜牌不能走强基破格。
+    </div>
+
+    <div class="card">
+      <h3>一、破格录取规则详解</h3>
+      <p class="content-p">破格生的具体高考分数线是所有学校的核心机密——只要不透明，学校就有操作空间。</p>
+
+      <div class="flow">
+        <div class="flow-item">
+          <h4>规则一：高考分数须在一本线/特控线以上</h4>
+          <p>这是底线要求。</p>
+        </div>
+        <div class="flow-item">
+          <h4>规则二（往年）：破格生综合成绩不低于本省非破格生的最低综合成绩</h4>
+          <p>例如：非破格生最低综合成绩88分，其中高考折算76分 + 校测折算12分（满分15分）。破格生综合成绩也需达到88分，但校测可拿满分15分，因此高考只需折成73分，<strong>差值3分高考分 ≈ 折算出约24分高考分</strong>。</p>
+        </div>
+        <div class="flow-item">
+          <h4>规则三（2025年新规）：降幅进一步扩大</h4>
+          <p>今年清华全国招的最低破格生比强基生又低了3分综合分，折下来又降了约24分高考分。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>二、降分空间计算</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>降分来源</th><th>原规则</th><th>2025年新规</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>强基生相比普通批</td>
+              <td>约10~15分</td>
+              <td>约10~15分</td>
+            </tr>
+            <tr>
+              <td>破格生相比强基生</td>
+              <td>约24分</td>
+              <td>约24分 + 额外24分</td>
+            </tr>
+            <tr>
+              <td><strong>破格生总降分</strong></td>
+              <td><strong>约39分</strong></td>
+              <td><strong>极限约63分</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-gold">
+        <strong>要点：</strong>强基校测一般会给破格生<strong>满分</strong>（面试），笔试和面试考数学、物理、化学三科。清北不会对外公布具体降分到哪个省份哪个人，只要不透明，学校就有"捞人"空间。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>三、降分操作的典型案例</h3>
+      <p class="content-p"><strong>山东大学操作示例：</strong>承诺金牌学生在强基时报化学专业（分数线较低），录取后<strong>转专业到数学</strong>（分数线高出近50分）。本质是通过低分专业入口，帮助金牌学生进入更高门槛的专业。</p>
+      <ul>
+        <li>近两年各学校已基本开放强基类专业互转</li>
+        <li>学校不会主动撕毁此类承诺——从自主招生时代至今，几乎没有见过学校主动违约的情况</li>
+        <li>这是高校在招生规则框架内为获取优质生源的合理操作</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>四、各奖项对应的升学路径汇总</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>奖项</th><th>主要升学路径</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>国集</strong></td>
+              <td>保送清北，不限专业</td>
+            </tr>
+            <tr>
+              <td><strong>金牌</strong></td>
+              <td>清华新领军/英才班、北大英才班、强基破格</td>
+            </tr>
+            <tr>
+              <td><strong>银牌</strong></td>
+              <td>强基破格（综合评价招生中也可能有特殊政策，如上交、复旦等）</td>
+            </tr>
+            <tr>
+              <td><strong>省一</strong></td>
+              <td>综合评价招生（部分省份）、强基计划辅助</td>
+            </tr>
+            <tr>
+              <td><strong>省二</strong></td>
+              <td>综合评价招生（视省份和学校而定）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="page-footer">
+    <p>本文整理自数学竞赛规划直播讲座 · 内容仅供参考，具体政策以各校官方发布为准</p>
+  </footer>
+</div>
+
+</body>
+</html>

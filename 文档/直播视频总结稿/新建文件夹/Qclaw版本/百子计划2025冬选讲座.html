@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百子计划2025冬选讲座</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>百子计划2025冬选讲座</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>我们稍等一下，然后把直播间调整一下</li>
+                <li>喂，声音小，家长把手机音量调一调，应该是可以的，可以的</li>
+                <li>因为之前我们已经做过一次体系发布，然后呢，整个内容的话，稍有调整但变化并不是很大</li>
+                <li>那这是我们之前就现在放的，这是我们这次讲座的一个照片儿应该是上一次讲座</li>
+                <li>我们这次的发布会呢，是核心做一个遴选的介绍嘛，</li>
+                <li>我们这次呀，跟之说之前的考试不太一样</li>
+                <li>好的，那在过完题之后呢，那肯定我们需要有一个组队的过程了，</li>
+                <li>那大家在看报名的时候其实应该也声音特别小嘛，还小这个声音</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、第三题</a></li>
+                <li><a href="#section2">二、第四题</a></li>
+                <li><a href="#section3">三、第四题</a></li>
+                <li><a href="#section4">四、第三题</a></li>
+                <li><a href="#section5">五、第三题</a></li>
+                <li><a href="#section6">六、第一题</a></li>
+                <li><a href="#section7">七、第三题</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>第三题</h2>
+                <p>第三题我把题做一个详细的一个拆解我写了。两页儿这个纸张大小哈，我写了两页儿。那拆解的核心呢，并不是说写个解析就东西没有意义。</p>
+                <p>针对老师的教研，老师以什么样的方式去讲课。那当很多人第一次看到这个稿，第一感觉的怎么这么庞大呢。但其实有没有种可能，这个过程不是一下子出现的，它其实是一步一步来的，。</p>
+                <p>那我想给大家聊的事儿，说白了，它呈现了一种什么呢。而我所最终要求的一个最值要证明的这个事情那说白了，它一种最优情况下的一种挖矿的策略，啥意思呢。我们想一种挖矿的方式比如我现在有片大矿区。</p>
+                <p>这些各个矿区，我们以一个什么样的最优的方式，。不漏掉里面的宝石矿，这个矿大家宝有没有玩过《我的世界》呀。那问题就变成我该怎么样的去经历一些格格。</p>
+                <p>经历最少的方格，然后我还能够不重复不漏掉整个矿区当中的每一个钻石呢。有人说老师，我能不能一下子把所有矿全挖了，。你这把每个根都凿一遍你斧子估计都都都得凿劈了。</p>
+                <p>凿尽可能少的格，但我能看到更多的方块块呢。所以说白了这个题目呢，最终呈现的一个效果是鱼骨挖矿。那当年在考完这个题之后我我我也看了看论坛论坛里就有好多学生有些学生他非常的开心，为啥呢。</p>
+            </section>
+            <section id="section2">
+                <h2>第四题</h2>
+            </section>
+            <section id="section3">
+                <h2>第四题</h2>
+                <p>第四题这个题目呢也非常的漂亮，非常的优美公认的很优美。那有意思、有意思、有意思的事儿出现了。这个题目呢，它其实有一个核心的一个词儿，它其实是玩戏它是基于欧拉定理设置的一个玩戏。</p>
+                <p>思想很有趣的是，在第二年今年也再次考了一遍。今年在这个数列题当中也用到这个东西了。我想聊的点对于我们整个树洞体系而言，这些知识模块是有着明确的发展脉络的。</p>
+                <p>你有着整数同余的认知，那你有了剩余类的认知，你有了完全剩余系的认知，那进而有了基约剩余系的认知。都是顺理成章一一条线推导出来的那再往下去聊，。例如一些更高级的数学技巧，那么我们可能就要对于质因子类型和幂次做分析了。</p>
+                <p>我在此呢，在右下角截一段话那大家家长们可以看一下，。这个话，如果说大家听过去你的讲座应该很有印象。那么，这个是在罗伟老师的翻译的那本书当中他的这个译者语所写的。</p>
+                <p>那么，对于书论问题，我们研究的这个工具传统的工具。它前面这写了取模我选取一个合适的除数，然后我来看余数的情况能不能整除。不等式呢，因式分解都非常的代数非常非常的代数。</p>
+                <p>我们在在数论的的这种习惯性而言，一般会模一个素数，。那好的，模完素数，你发现这个整体有这样的一个素因子了，那它有几个呢。那 下面的问题就变成了你要关注素因子的幂次，。</p>
+            </section>
+            <section id="section4">
+                <h2>第三题</h2>
+                <p>那老师还是我在这里不去讲这个题目，我只去聊思想方法。</p>
+            </section>
+            <section id="section5">
+                <h2>第三题</h2>
+                <p>第三题，给大家去讲一讲我们是怎么样在低年级的课程当中呈现高联的。解题思想，好，这个题目那如果各位家长们咱们的孩子们在身边儿，可以拉着孩子过来孩子如果觉得自己说的不错的话，。关注初阶的家长可以感受一下可以感受一下。</p>
+                <p>其实就把今年高联正式试卷上的题，其实，在我们是在初阶阶段用比较容易理解的方式，让孩子们去能够去处理这。或者这么说吧，孩子去处理这个题可能有点困难，但是。处理这个问题所需要的全部原理，都是我们初阶上的原题，就就全部都是原题。</p>
+                <p>思想是原题，然后包括它具体的这个操作，原理的操作也是原题。OK那看不完截个图后面看回放也行。看这个题它的操作，大家先要把这个题目给理解明白。</p>
+                <p>你随便挑一种数字一到九随便挑一个数字，然后呢。A挑一个数字，然后呢，B看看这个大N，然后我在大N当中我选一个我我挑一个位置把这个数字给删了这是题目的一个意思。OK，你在删除这个数字的时候是随便选一个数字，但是到底删到哪块儿，。</p>
+                <p>比如这个答案当中有好多个一好，你确定要删一，到底删哪个一呢。这是你需要抉择的一个事情所以由此，这个题目就非常的博弈，。其实，你把这高能题打开，你看这答案很简单。</p>
+                <p>你看题目要求，这个大N它是不含数码零的，。那我如果小N是个十的倍数，那大N的末位一定会有零。所以我们就有了第一类的就第一类要求，关键答案的第一个要求，这个小n坚决不能是十的倍数。</p>
+            </section>
+            <section id="section6">
+                <h2>第一题</h2>
+                <p>第一题这个类型，它都是小奥问题，在杯赛考试当中都能出现的，只不过是给改了个数。你这个这个数只要是与二和五互质，想改几改几都是一样的不影响任何结果。那其他的问题属于是难度来讲稍微有提升，但总体难度而言依然是对于小学阶段的思维速度很快的孩子能够理解的过程。</p>
+                <p>那好的，这些锻炼则是这些问题，则是孩子这种。当一个孩子能够比较快的处理初一、初一二的学习，特别是你有可能上课。你能听懂百分之五六十，但你课下复盘习，。</p>
+                <p>百分之九十的题目都理解了，包括老师讲的这知识方法你全部都形成自己的思维概念了那就说明你是有进阶潜质的。我深圳的初阶二线下的班，我感受非常明显线上也是很明显。一帮小学生五六年级他对于阶和半阶已经有很深刻的敏感度了。</p>
+                <p>包括在出现结合半年之后，他会主动去想背后的一个这样这样一个数值到底是几。这个其实很难得，这个思维习惯的培养和建立是我们所希望的。那在这些，我我们可以预言，在这些孩子以后学习高龄二式的时候别的冒话不敢说学数学的时候，在处理相关问题的时候，他一定是有着更快的思考速度的。</p>
+                <p>知识配合思维能力的培养，能力的培养，一定离不开知识。知识是载体，能力培养是你这个载体在往前走的时候是耐时间的事情。好的，那么下一个下一个老师，你刚才说了能力。</p>
+                <p>能力主要指的是思考能力思维的能力。对于中阶而言，整个的二世的模块，我们会把它的所有知识，甚至说更多的知识，都给呈现进来。我看到大家很多弹幕上在问所以我不好意思打断吴老师，就给大家写了几个比较丑的字，先认真听稍后我们会答疑，稍后会答疑的。</p>
+            </section>
+            <section id="section7">
+                <h2>第三题</h2>
+                <p>但这个题目呢，其实方小乔属于它有点坏，为啥呢。所以，我们其实还是会放到指数，它这个周期的这个特征放到这一点去考察。这个基于算术基本定理有关的公式那显然什么呢。</p>
+                <p>基于这个公式的有关命题这个东西会涉及会涉及。但实际上呢，但实际上呢，它本身里面也是有着这个周期在的也是有着我们在模上性质在的。那组合，sorry往前再说完把组合也说完。</p>
+                <p>组合的话，这里也会考察一些有关的技术问题这个也都会出现也都会出现。好的，那推荐书籍首先前面没有做完的书可以接着做特别是像是这两本这四本这四本什么时候做呢。你说你放到初中去做，你放到学高年级的来做，它肯定不合适。</p>
+                <p>你在学高一、二的时候就来做，它肯定是不合适的。好的，那除此之外有一些难度上更高的书，你也可以开始去做一做了。这是这个初等数学入门这套书这个名字叫入门。</p>
+                <p>那包括这本韩涛老师这本书也都非常好可以去做的。这个组合最近我单独拎出来是这个书比较难它的难度是比那些玩意儿要高的高的。那中级中级我记得好像有一个大块儿，。</p>
+                <p>对，中间其实和前面的差别还是比较大的。但中间的话，因为本身这个课是半年一开嘛，对，所以说我们到寒春的话。对今天讲的我们的体系，尤其是涉及到开班是完全适用于线上百字的。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

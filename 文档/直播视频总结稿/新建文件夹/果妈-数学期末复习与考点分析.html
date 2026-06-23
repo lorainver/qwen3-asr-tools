@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小升初数学专题讲解笔记</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --surface: #ffffff;
+            --surface-alt: #f3efe9;
+            --accent: #c0392b;
+            --accent-light: #e74c3c;
+            --accent-bg: #fdf2f0;
+            --blue: #2471a3;
+            --blue-light: #d6eaf8;
+            --green: #1e8449;
+            --green-light: #d5f5e3;
+            --orange: #d35400;
+            --orange-light: #fdebd0;
+            --purple: #6c3483;
+            --purple-light: #ebdef0;
+            --text-primary: #2c2c2c;
+            --text-secondary: #555;
+            --text-muted: #888;
+            --border: #e0dbd4;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 0;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            padding: 60px 40px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(192,57,43,0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(36,113,163,0.1) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+            letter-spacing: 0.05em;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.7);
+            font-weight: 300;
+            position: relative;
+        }
+
+        .header .tag-row {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .header .tag {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        /* Container */
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.05s; }
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.15s; }
+        .section:nth-child(4) { animation-delay: 0.2s; }
+        .section:nth-child(5) { animation-delay: 0.25s; }
+        .section:nth-child(6) { animation-delay: 0.3s; }
+        .section:nth-child(7) { animation-delay: 0.35s; }
+        .section:nth-child(8) { animation-delay: 0.4s; }
+        .section:nth-child(9) { animation-delay: 0.45s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Title */
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--accent);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title .num {
+            background: var(--accent);
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Card */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--blue);
+            margin: 16px 0 8px;
+        }
+
+        .card p {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .card ul, .card ol {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .card li {
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .card li strong {
+            color: var(--text-primary);
+        }
+
+        /* Problem Box */
+        .problem-box {
+            background: var(--surface-alt);
+            border-left: 4px solid var(--accent);
+            padding: 16px 20px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 16px 0;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.05rem;
+            line-height: 1.9;
+        }
+
+        .problem-box .label {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        /* Math block */
+        .math-block {
+            background: #1a1a2e;
+            color: #e8e8e8;
+            padding: 18px 22px;
+            border-radius: var(--radius);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 14px 0;
+            overflow-x: auto;
+        }
+
+        .math-block .comment {
+            color: #7ec8e3;
+        }
+
+        .math-block .highlight {
+            color: #f9ca24;
+        }
+
+        .math-block .result {
+            color: #55efc4;
+            font-weight: bold;
+        }
+
+        /* Key Point */
+        .key-point {
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 14px 0;
+            font-size: 0.95rem;
+        }
+
+        .key-point strong {
+            color: var(--blue);
+        }
+
+        /* Tip */
+        .tip {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 14px 0;
+            font-size: 0.95rem;
+        }
+
+        .tip strong {
+            color: var(--green);
+        }
+
+        /* Warning */
+        .warning {
+            background: var(--orange-light);
+            border-left: 4px solid var(--orange);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 14px 0;
+            font-size: 0.95rem;
+        }
+
+        .warning strong {
+            color: var(--orange);
+        }
+
+        /* Insight */
+        .insight {
+            background: var(--purple-light);
+            border-left: 4px solid var(--purple);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 14px 0;
+            font-size: 0.95rem;
+        }
+
+        .insight strong {
+            color: var(--purple);
+        }
+
+        /* Teacher quote */
+        .teacher-quote {
+            background: linear-gradient(135deg, #fef9ef, #fdf6ec);
+            border: 1px solid #e8dcc8;
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin: 14px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .teacher-quote::before {
+            content: '"';
+            position: absolute;
+            left: 14px;
+            top: 6px;
+            font-size: 2rem;
+            color: var(--accent);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .teacher-quote .speaker {
+            display: block;
+            font-style: normal;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .toc h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 24px;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            padding: 5px 0;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            border-bottom: 1px dotted var(--border);
+        }
+
+        .toc-item .toc-num {
+            color: var(--accent);
+            font-weight: 700;
+            min-width: 24px;
+        }
+
+        .toc-item .toc-label {
+            flex: 1;
+        }
+
+        .toc-item .toc-tag {
+            font-size: 0.75rem;
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .toc-tag.easy { background: var(--green-light); color: var(--green); }
+        .toc-tag.medium { background: var(--orange-light); color: var(--orange); }
+        .toc-tag.hard { background: var(--accent-bg); color: var(--accent); }
+
+        /* Method badge */
+        .method-badge {
+            display: inline-block;
+            font-size: 0.78rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .method-badge.algebra { background: var(--blue-light); color: var(--blue); }
+        .method-badge.logic { background: var(--purple-light); color: var(--purple); }
+        .method-badge.counting { background: var(--green-light); color: var(--green); }
+        .method-badge.geometry { background: var(--orange-light); color: var(--orange); }
+
+        /* Step list */
+        .steps {
+            list-style: none;
+            padding: 0;
+            counter-reset: step;
+        }
+
+        .steps li {
+            counter-increment: step;
+            padding: 8px 0 8px 36px;
+            position: relative;
+            border-left: 2px solid var(--border);
+            margin-left: 12px;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: -13px;
+            top: 8px;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .steps li:last-child {
+            border-left-color: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.6rem; }
+            .container { padding: 24px 16px 60px; }
+            .toc-grid { grid-template-columns: 1fr; }
+            .card { padding: 18px 16px; }
+            .section-title { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>小升初数学专题讲解笔记</h1>
+    <p class="subtitle">填空题 · 计算题 · 应用题 全面解析</p>
+    <div class="tag-row">
+        <span class="tag">填空题 × 15</span>
+        <span class="tag">计算题 × 4</span>
+        <span class="tag">应用题 × 1</span>
+        <span class="tag">难度：中等偏上</span>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- TOC -->
+    <nav class="toc">
+        <h2>目录索引</h2>
+        <div class="toc-grid">
+            <div class="toc-item">
+                <span class="toc-num">1</span>
+                <span class="toc-label">分数与百分数运算</span>
+                <span class="toc-tag easy">基础</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">2</span>
+                <span class="toc-label">除法与小数点移动</span>
+                <span class="toc-tag easy">基础</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">3</span>
+                <span class="toc-label">百分数连续变化</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">4</span>
+                <span class="toc-label">减法中的和差关系</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">5</span>
+                <span class="toc-label">数的周期性与含七计数</span>
+                <span class="toc-tag hard">较难</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">6</span>
+                <span class="toc-label">最小公倍数与发车间隔</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">7</span>
+                <span class="toc-label">圆柱与圆锥体积</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">8</span>
+                <span class="toc-label">网格中三角形计数</span>
+                <span class="toc-tag hard">较难</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">9</span>
+                <span class="toc-label">图形规律探索</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">10</span>
+                <span class="toc-label">质因数分解与分组</span>
+                <span class="toc-tag hard">较难</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">11</span>
+                <span class="toc-label">年龄问题（和差倍）</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">12</span>
+                <span class="toc-label">水中浸物（体积计算）</span>
+                <span class="toc-tag hard">较难</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">13</span>
+                <span class="toc-label">正方形面积与比例</span>
+                <span class="toc-tag hard">较难</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">14</span>
+                <span class="toc-label">逻辑推理（真假话）</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">15</span>
+                <span class="toc-label">约瑟夫抽杀问题</span>
+                <span class="toc-tag hard">较难</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">Ⅱ</span>
+                <span class="toc-label">计算题部分（4题）</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">18</span>
+                <span class="toc-label">分数不变量应用题</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">19</span>
+                <span class="toc-label">折叠与相似三角形</span>
+                <span class="toc-tag hard">较难</span>
+            </div>
+            <div class="toc-item">
+                <span class="toc-num">20</span>
+                <span class="toc-label">ST图（行程分析）</span>
+                <span class="toc-tag medium">中等</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== 填空题部分 ==================== -->
+
+    <!-- 第1题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">1</span> 分数与百分数运算</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第1题</span><br>
+                一个数的 ⅔ 是 ⅙，求这个数的 50% 是多少？
+            </div>
+
+            <h4>解题思路：从问题出发</h4>
+            <p>要求一个数的 50%，<strong>先求出这个数本身</strong>。</p>
+
+            <ol class="steps">
+                <li>由"它的 ⅔ 是 ⅙"，根据<strong>量率对应</strong>关系：<br>
+                    <em>这个数 = ⅙ ÷ ⅔</em></li>
+                <li>计算得：⅙ × 3/2 = <strong>3/12 = ¼</strong></li>
+                <li>50% 即 ½，所以：<br>
+                    <em>¼ × ½ = <strong>⅛</strong></em></li>
+            </ol>
+
+            <div class="math-block">
+<span class="comment">// 第一步：求原数</span>
+这个数 = ⅙ ÷ ⅔ = ⅙ × 3/2 = <span class="highlight">¼</span>
+
+<span class="comment">// 第二步：求50%</span>
+¼ × 50% = ¼ × ½ = <span class="result">⅛</span>
+            </div>
+
+            <div class="key-point">
+                <strong>核心方法：</strong>从问题出发——"要求什么，需要先知道什么"。这是解决数学问题最基本的思考路径。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第2题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">2</span> 除法与小数点移动</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第2题</span><br>
+                两个数的商是 3.14。把被除数乘以 2，除数的小数点向左移动两位，求新的商。
+            </div>
+
+            <h4>分步分析</h4>
+            <p>读题时要<strong>边读边分析</strong>每个操作对商的影响：</p>
+
+            <ul>
+                <li><strong>被除数 × 2</strong> → 商变为原来的 <strong>2 倍</strong></li>
+                <li><strong>除数小数点左移两位</strong> → 除数缩小为原来的 <strong>1/100</strong> → 商变为原来的 <strong>100 倍</strong></li>
+            </ul>
+
+            <div class="math-block">
+<span class="comment">// 原商</span>
+原商 = 3.14
+
+<span class="comment">// 变化后</span>
+新商 = 3.14 × <span class="highlight">2</span> × <span class="highlight">100</span> = <span class="result">628</span>
+            </div>
+
+            <div class="warning">
+                <strong>易错点：</strong>"小数点向左移动两位"意味着除数缩小为原来的 1/100，对应的是<strong>商扩大 100 倍</strong>，不是缩小。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第3题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">3</span> 百分数连续变化</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第3题</span><br>
+                一批零件，吃掉 20%，再装进余下的 20%，此时有 480 个。求原来的零件数。
+            </div>
+
+            <h4>解题过程</h4>
+
+            <ul>
+                <li>吃掉 20% → 剩余 <strong>80%</strong>（以原数为单位"1"）</li>
+                <li>再装进余下的 20% → 以<strong>余下的</strong>为单位"1"，乘以 <strong>(1 + 20%)</strong></li>
+            </ul>
+
+            <div class="math-block">
+<span class="comment">// 设原数为 x</span>
+x × (1 - 20%) × (1 + 20%) = 480
+x × 0.8 × 1.2 = 480
+x × 0.96 = 480
+x = <span class="result">500</span>
+            </div>
+
+            <div class="warning">
+                <strong>关键：</strong>"装进余下的 20%"中的单位"1"是<strong>余下的数量</strong>，不是原数。两次百分比的单位"1"不同，必须分步计算。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第4题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">4</span> 减法中的和差关系</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第4题</span><br>
+                在一个减法运算中，被减数、减数、差的和是 80，且减数比差小 4，求差。
+            </div>
+
+            <h4>分析过程</h4>
+
+            <ol class="steps">
+                <li>由"被减数 = 减数 + 差"，三者之和 = 80<br>
+                    即 被减数 + (减数 + 差) = 80<br>
+                    即 <strong>被减数 × 2 = 80</strong>，得 被减数 = <strong>40</strong></li>
+                <li>因此"减数 + 差 = 40"，又知"减数比差小 4"<br>
+                    → 转化为<strong>和差问题</strong></li>
+                <li>差（较大数）= (40 + 4) ÷ 2 = <strong>22</strong></li>
+            </ol>
+
+            <div class="math-block">
+被减数 = 80 ÷ 2 = <span class="highlight">40</span>
+减数 + 差 = 40
+差 - 减数 = 4
+差 = (40 + 4) ÷ 2 = <span class="result">22</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第5题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">5</span> 数的周期性与含七计数</h2>
+
+        <div class="card">
+            <h3>方法一：按数位分类讨论</h3>
+
+            <div class="problem-box">
+                <span class="label">填空题 · 第5题</span><br>
+                1 到 90 的运动员号码中，含有数字 7 的号码有多少个？
+            </div>
+
+            <p>分别统计<strong>个位</strong>和<strong>十位</strong>上出现 7 的情况：</p>
+
+            <h4>个位上的 7</h4>
+            <ul>
+                <li>个位数字呈周期性变化：每 <strong>10 个数</strong>为一个周期</li>
+                <li>每个周期中，个位为 7 的出现 <strong>1 次</strong></li>
+                <li>1–90 共 90 个数，共 <strong>9 个周期</strong></li>
+                <li>个位出现 7 的共有 <strong>9 个</strong>（7, 17, 27, 37, 47, 57, 67, 77, 87）</li>
+            </ul>
+
+            <h4>十位上的 7</h4>
+            <ul>
+                <li>十位上每 <strong>100 个数</strong>中出现 10 次 7</li>
+                <li>1–90 超过 70，故十位上为 7 的有 <strong>10 个</strong>（70–79）</li>
+            </ul>
+
+            <h4>去重</h4>
+            <p>数字 <strong>77</strong> 同时被个位和十位统计了一次，需要减去。</p>
+
+            <div class="math-block">
+含 7 的数 = 9 + 10 - <span class="highlight">1</span> = <span class="result">18 个</span>
+            </div>
+
+            <div class="key-point">
+                <strong>推广规律：</strong>
+                <ul>
+                    <li><strong>个位</strong>上某数字每 10 个数出现 1 次</li>
+                    <li><strong>十位</strong>上某数字每 100 个数出现 10 次</li>
+                    <li><strong>百位</strong>上某数字每 1000 个数出现 100 次</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>方法二：补集法（更巧妙）</h3>
+
+            <p>先算<strong>不含 7 的数</strong>有多少个，再用总数减去。</p>
+
+            <ol class="steps">
+                <li>考虑 1–89 的两位数（十位 0–8，个位 0–9），要求不含 7：
+                    <ul>
+                        <li>十位选择：0, 1, 2, 3, 4, 5, 6, 8 → <strong>8 种</strong>（排除 7 和 9）</li>
+                        <li>个位选择：0–9 中去掉 7 → <strong>9 种</strong></li>
+                        <li>共 8 × 9 = 72 个不含 7 的数</li>
+                    </ul>
+                </li>
+                <li>减去编号为 0 的情况（不存在），加上 90 号（不含 7）</li>
+                <li>不含 7 的数 = 72 - 1 + 1 = 72 个</li>
+                <li>含 7 的数 = 90 - 72 = <strong>18 个</strong></li>
+            </ol>
+
+            <div class="tip">
+                <strong>为什么算到 89 而不是 90？</strong>因为十位为 9 时，个位只能取 0（只有 90），不符合"十位 0–8、个位 0–9"的整齐结构，所以单独处理。
+            </div>
+
+            <div class="insight">
+                <strong>方法对比：</strong>分类讨论是通法；补集法在总数不太大时更快捷，但需要仔细处理边界情况。掌握两种方法，考试时可以根据具体数字灵活选择。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第6题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">6</span> 最小公倍数与发车间隔</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第6题</span><br>
+                11 路车每隔 8 分钟发一辆，9 路车每隔 12 分钟发一辆。5:40 第一次同时发车，求第三次同时发车的时刻。
+            </div>
+
+            <ol class="steps">
+                <li>求 8 和 12 的<strong>最小公倍数</strong>：<br>
+                    8 = 2³, 12 = 2² × 3<br>
+                    LCM = <strong>24</strong> 分钟</li>
+                <li>5:40 为第一次同时发车，到第三次同时发车，经过了 <strong>2 个间隔</strong>（不是 3 个！）</li>
+                <li>5:40 + 2 × 24 分 = 5:40 + 48 分 = <strong>6:28</strong></li>
+            </ol>
+
+            <div class="warning">
+                <strong>常见错误：</strong>算出最小公倍数后乘以 3。实际上从第一次到第三次同时发车，中间只隔了 <strong>2 个时间间隔</strong>。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第7题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">7</span> 圆柱与圆锥体积</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第7题</span><br>
+                把一个圆柱削成最大的圆锥，圆柱底面积为 24，高为 12，求最大圆锥的体积。
+            </div>
+
+            <h4>核心关系</h4>
+            <p>把圆柱削成最大的圆锥 = <strong>等底等高</strong>的圆锥。</p>
+
+            <div class="math-block">
+V<sub>柱</sub> = 底面积 × 高 = 24 × 12 = 288
+V<sub>锥</sub> = ⅓ × V<sub>柱</sub> = ⅓ × 288 = <span class="result">96</span>
+            </div>
+
+            <div class="key-point">
+                <strong>变形考点：</strong>
+                <ul>
+                    <li>已知<strong>削掉部分</strong>求圆锥 → 削掉部分 = 圆柱的 ⅔ = 圆锥的 2 倍</li>
+                    <li>已知削掉部分为 96，圆锥体积 = 96 ÷ 2 = <strong>48</strong></li>
+                    <li>已知削掉部分求圆柱 → 圆柱 = 96 ÷ ⅔ = <strong>144</strong></li>
+                </ul>
+            </div>
+
+            <div class="insight">
+                <strong>关系总结：</strong>圆锥是等底等高圆柱体积的 ⅓；削掉的部分占圆柱的 ⅔，恰好是圆锥体积的 <strong>2 倍</strong>。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第8题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">8</span> 网格中三角形计数</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第8题</span><br>
+                在如右图的三角形网格中，数出所有三角形的个数。
+            </div>
+
+            <h4>分类计数（按边长）</h4>
+
+            <ul>
+                <li><strong>边长为 1 的小三角形：</strong>16 个</li>
+                <li><strong>边长为 2 的三角形：</strong>
+                    <ul>
+                        <li>正向（顶点朝上）：3 个</li>
+                        <li>倒向（顶点朝下）：3 个</li>
+                        <li>共 6 个</li>
+                    </ul>
+                </li>
+                <li><strong>边长为 3 的三角形：</strong>不存在（网格中无法构成）</li>
+            </ul>
+
+            <div class="math-block">
+总数 = 16 + 6 = <span class="result">22 个</span>   <span class="comment">// 注意：有正向和倒向之分</span>
+            </div>
+
+            <div class="warning">
+                <strong>易遗漏：</strong>三角形有<strong>正向和倒向</strong>两种方向，必须都数到。这与数正六边形不同（正六边形是中心对称的，不存在"倒着"的情况）。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第9题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">9</span> 图形规律探索</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第9题</span><br>
+                三角形中三个顶点处的数与中间数存在规律，已知前几组的规律，求最后一组中间数。
+            </div>
+
+            <h4>规律分析</h4>
+            <p>通过观察发现：<strong>中间数 = 外圈三个数之和 × 2</strong></p>
+
+            <div class="math-block">
+<span class="comment">// 验证规律</span>
+第一组：(外圈和) × 2 = 19  ✓
+第二组：(外圈和) × 2 = 14  ✓
+
+<span class="comment">// 应用规律</span>
+(4 + 2 + 7) × 2 = <span class="result">26</span>
+            </div>
+
+            <div class="tip">
+                <strong>找规律的方法：</strong>先通过第一组大胆假设，再用后续组验证。如果符合，则应用到最后的计算中。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第10题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">10</span> 质因数分解与分组</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第10题</span><br>
+                把 4、15、40、105、117、338、455 分成两组，使得每组数的乘积相等。与 45 分在一组的数是？
+            </div>
+
+            <h4>核心思想</h4>
+            <p>把质数看作<strong>构成数的最小零件</strong>。两个组乘积相等，意味着两边分配的"零件"完全一样。</p>
+
+            <h4>第一步：分解所有数的质因数</h4>
+            <div class="math-block">
+4    = 2²
+15   = 3 × 5
+40   = 2³ × 5
+105  = 3 × 5 × 7
+117  = 3² × 13
+338  = 2 × 13²
+455  = 5 × 7 × 13
+            </div>
+
+            <h4>第二步：统计各类质因数的总次数</h4>
+            <div class="math-block">
+2: 出现 <span class="highlight">6</span> 次  →  每组分配 3 个 2
+3: 出现 <span class="highlight">4</span> 次  →  每组分配 2 个 3
+5: 出现 <span class="highlight">4</span> 次  →  每组分配 2 个 5
+7: 出现 <span class="highlight">2</span> 次  →  每组分配 1 个 7
+13: 出现 <span class="highlight">4</span> 次  →  每组分配 2 个 13
+            </div>
+
+            <h4>第三步：根据已知条件分配</h4>
+            <p>已知 45 分在左边（45 = 9 × 5 = 3² × 5）：</p>
+            <ul>
+                <li>含 7 的数只有 105 和 455，各分到一组</li>
+                <li>105 = 3 × 5 × 7 → 分到左边</li>
+                <li>455 = 5 × 7 × 13 → 分到右边</li>
+                <li>逐步平衡其余质因数...</li>
+            </ul>
+
+            <div class="math-block">
+<span class="comment">// 最终分组</span>
+<span class="highlight">左边：</span>45、40
+<span class="highlight">右边：</span>105、117、338、455、15、4
+
+<span class="comment">// 验证：与45分在一组的是 → 40</span>
+结果：<span class="result">40</span>
+            </div>
+
+            <div class="key-point">
+                <strong>方法推广：</strong>如果要分成三组使乘积相等，则每种质因数的总次数必须是 <strong>3 的倍数</strong>，各组分得相同的份数。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第11题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">11</span> 年龄问题（和差倍）</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第11题</span><br>
+                今年妈妈的年龄是儿子的 3 倍，两年后母子年龄之和为 52 岁。求今年妈妈的年龄。
+            </div>
+
+            <ol class="steps">
+                <li>两年后母子和 = 52，每人各增加 2 岁，共增加 4 岁<br>
+                    → 今年母子年龄和 = 52 - 4 = <strong>48 岁</strong></li>
+                <li>今年妈妈 = 儿子 × 3，设儿子为 1 份，妈妈为 3 份<br>
+                    → 总共 4 份 = 48</li>
+                <li>1 份 = 48 ÷ 4 = 12（儿子年龄）<br>
+                    妈妈 = 12 × 3 = <strong>36 岁</strong></li>
+            </ol>
+
+            <div class="math-block">
+今年年龄和 = 52 - 2×2 = <span class="highlight">48</span>
+儿子 = 48 ÷ (3+1) = 12
+妈妈 = 12 × 3 = <span class="result">36 岁</span>
+            </div>
+
+            <div class="insight">
+                <strong>年龄问题的本质：</strong>年龄之<strong>差</strong>是不变的（天然的差不变），所以年龄问题常与<strong>和差倍</strong>问题结合。只要知道年龄和的变化方式（人数 × 年数），就可以灵活求解。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第12题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">12</span> 水中浸物（体积计算）</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第12题</span><br>
+                将一座假山放入长方体水池中（完全淹没），水池尺寸为 46cm × 25cm × 28cm，假山体积为 8 立方分米。以每分钟 8000 立方厘米的速度注水，至少需要多少分钟才能完全淹没假山？
+            </div>
+
+            <h4>解题思路：完全淹没 = 往里面注水</h4>
+
+            <ol class="steps">
+                <li><strong>统一单位：</strong>假山体积 8 立方分米 = <strong>8000 立方厘米</strong></li>
+                <li>完全淹没时，水位高度 = 假山高度 = 28cm<br>
+                    水池至 28cm 的容积 = 46 × 25 × 28 = <strong>32200 cm³</strong></li>
+                <li>需要注入的水量 = 水池容积 - 假山体积<br>
+                    = 32200 - 8000 = <strong>24200 cm³</strong></li>
+                <li>注水时间 = 24200 ÷ 8000 = <strong>3.025 分钟</strong></li>
+            </ol>
+
+            <div class="math-block">
+<span class="comment">// 单位换算</span>
+V<sub>假山</sub> = 8 dm³ = <span class="highlight">8000</span> cm³
+
+<span class="comment">// 所需水量 = 水池容量 - 假山体积</span>
+V<sub>注水</sub> = 46 × 25 × 28 - 8000 = 32200 - 8000 = <span class="highlight">24200</span> cm³
+
+<span class="comment">// 注水时间</span>
+t = 24200 ÷ 8000 = <span class="result">3.025 分钟</span>
+            </div>
+
+            <div class="key-point">
+                <strong>水中浸物分为两种情况：</strong>
+                <ul>
+                    <li><strong>完全淹没：</strong>相当于往容器里注水，需注入水量 = 容器容积 - 物体体积</li>
+                    <li><strong>部分淹没：</strong>需要考虑物体浸入水中的体积，计算更复杂</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第13题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">13</span> 正方形面积与比例</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第13题</span><br>
+                在一个大正方形内画两个正方形，三个正方形有公共顶点。区域甲、乙、丙的周长之比为 3:4:5，且乙的面积为 21。求大正方形的面积。
+            </div>
+
+            <h4>解题过程</h4>
+
+            <ol class="steps">
+                <li>设三个正方形边长分别为 a、b、c，由图可得：<br>
+                    甲的周长 = 4a，乙的周长 = 4b，丙的周长 = 4c<br>
+                    → <strong>a : b : c = 3 : 4 : 5</strong></li>
+                <li>面积比 = 边长比的平方：<br>
+                    a² : b² : c² = <strong>9 : 16 : 25</strong></li>
+                <li>乙的面积 = b² - a² = 21<br>
+                    即 (16 - 9) 份 = 21 → 1 份 = 3</li>
+                <li>大正方形面积 = c² = 25 × 3 = <strong>75</strong></li>
+            </ol>
+
+            <div class="math-block">
+a : b : c = 3 : 4 : 5
+a² : b² : c² = 9 : 16 : 25
+
+<span class="comment">// 乙面积 = b² - a² = 16k - 9k = 7k = 21</span>
+k = 3
+
+<span class="comment">// 大正方形 = c² = 25k</span>
+大正方形面积 = 25 × 3 = <span class="result">75</span>
+            </div>
+
+            <div class="teacher-quote">
+                学数学不是学一道题怎么做，而是学面对不会做的题时怎么办。找问题——他问的是什么？要知道这个问题，我应该知道什么？然后逐步转化条件。
+                <span class="speaker">—— 果妈老师</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第14题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">14</span> 逻辑推理（真假话）</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第14题</span><br>
+                四人中只有一人是主谋。甲说"我不是主谋"，乙说"丁是主谋"，丙说"我不是主谋"，丁说"甲是主谋"。已知只有一人说了真话，求主谋。
+            </div>
+
+            <h4>解题过程：找矛盾关系</h4>
+
+            <ol class="steps">
+                <li><strong>找矛盾对：</strong>甲说"我不是主谋"，丁说"甲是主谋"—— 两句话<strong>必有一真一假</strong></li>
+                <li>只有一人说真话 → 真话在甲、丁之中 → <strong>乙和丙说的都是假话</strong></li>
+                <li>乙说"丁是主谋"为假 → 丁不是主谋</li>
+                <li>丙说"我不是主谋"为假 → <strong>丙就是主谋</strong></li>
+            </ol>
+
+            <div class="key-point">
+                <strong>真假话问题的核心技巧：</strong>
+                <ul>
+                    <li><strong>矛盾关系：</strong>两句话一真一假（如"是"与"不是"）</li>
+                    <li><strong>同真同假：</strong>两句话要么都真，要么都假</li>
+                    <li>找到矛盾对后，真话的范围就缩小了，其余人的真假也就确定了</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第15题 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">15</span> 约瑟夫抽杀问题</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">填空题 · 第15题</span><br>
+                300 个福袋编号 1–300，每次去掉所有奇数编号的袋子，将剩余的偶数重新编号，如此反复，直到只剩一个袋子。求最后剩下的编号。
+            </div>
+
+            <h4>规律分析</h4>
+
+            <div class="math-block">
+初始：1, 2, 3, ..., 300
+
+第 1 次：去掉奇数，剩下 2 的倍数
+         → 2, 4, 6, ..., 300（即 2¹ 的倍数）
+
+第 2 次：重新编号后再去奇数
+         → 4, 8, 12, ..., 300（即 2² 的倍数）
+
+第 3 次：剩下 2³ 的倍数
+
+第 n 次：剩下 2ⁿ 的倍数
+            </div>
+
+            <h4>求解</h4>
+            <p>需要找最大的 <strong>2ⁿ</strong>，使得 2ⁿ ≤ 300，但 2ⁿ⁺¹ > 300。</p>
+
+            <div class="math-block">
+2⁶  = 64    ≤ 300  ✓
+2⁷  = 128   ≤ 300  ✓
+2⁸  = 256   ≤ 300  ✓
+2⁹  = 512   > 300  ✗
+
+<span class="result">最后剩下的编号 = 256</span>
+            </div>
+
+            <div class="insight">
+                <strong>约瑟夫抽杀（Josephus Problem）：</strong>这是一个经典的数学趣题。名字源于古代战争中战俘的故事——战俘们约定按一定规则逐个淘汰，其中一人通过计算确定了自己的安全位置。
+            </div>
+
+            <div class="tip">
+                <strong>拓展思考：</strong>如果 300 个球<strong>围成一圈</strong>（环形排列），最后剩下哪个？这与线性排列的结果不同，需要单独研究。可以课后尝试用编程或枚举来探索。
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 计算题部分 ==================== -->
+
+    <section class="section">
+        <h2 class="section-title"><span class="num">Ⅱ</span> 计算题部分</h2>
+
+        <div class="card">
+            <h3>解方程</h3>
+
+            <div class="problem-box">
+                <span class="label">计算题 · 第16题</span><br>
+                0.5x - 0.15x = 0.6x - ? 求 x
+            </div>
+
+            <div class="math-block">
+0.5x - 0.15x = 0.6x - x
+左边 = 0.35x
+右边 = -0.4x
+
+<span class="comment">// 化简后</span>
+½x = ¼
+x = <span class="result">¼</span>
+            </div>
+
+            <div class="problem-box">
+                <span class="label">计算题 · 第17题</span><br>
+                解方程（含分母去分母）
+            </div>
+
+            <div class="math-block">
+<span class="comment">// 去分母，两边同乘以 10</span>
+<span class="warning" style="background:var(--orange-light);padding:4px 8px;border-radius:4px;font-size:0.85rem;">注意负号！括号要括起来再乘</span>
+
+x = <span class="result">7/13</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>简便计算</h3>
+
+            <div class="problem-box">
+                <span class="label">计算题 · 第18题（上）</span><br>
+                巧算凑整
+            </div>
+
+            <div class="math-block">
+<span class="comment">// 凑整法：利用分数裂项</span>
+2 + ½ + ⅓ + ¼ + ... → 凑整
+
+<span class="result">= 19⅓</span>
+            </div>
+
+            <div class="problem-box">
+                <span class="label">计算题 · 第18题（下）</span><br>
+                36 × (¼ + ...) - ... × 0.01
+            </div>
+
+            <div class="math-block">
+<span class="comment">// 利用乘法分配律</span>
+= 36 × ¼ + 36 × ... - ... × 0.01
+= 9 + 28 - 15 ... × 0.01
+= <span class="result">0.04</span>
+            </div>
+
+            <div class="teacher-quote">
+                巧算总是少数——"巧"就是"凑巧"的意思。世界上凑巧的事情很少。实际计算中，大部分题目需要的恰恰是这种不算太巧、需要耐心的计算能力。
+                <span class="speaker">—— 果妈老师</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>分小百混合运算</h3>
+
+            <div class="problem-box">
+                <span class="label">计算题 · 第19题</span><br>
+                分数、小数、百分数混合运算
+            </div>
+
+            <div class="math-block">
+<span class="comment">// 列差/列和凑整</span>
+原式 = (分数裂项组合) × ...
+
+<span class="comment">// 关键步骤</span>
+两个 ⅓ + 两个 ⅙ = ⅓ + ⅓ = ⅔ + ⅙×2 = ⅔ + ⅓ = 1
+两个 ⅕ 和 ⅖ 抵消
+两个 1/7 抵消
+
+<span class="result">= 4</span>
+            </div>
+
+            <div class="problem-box">
+                <span class="label">计算题 · 第20题</span><br>
+                分小百混合竖式计算
+            </div>
+
+            <div class="math-block">
+<span class="comment">// 正常进行分数、小数、百分数互化后计算</span>
+<span class="result">= 1161</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 应用题部分 ==================== -->
+
+    <!-- 第18题 - 分数不变量 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">18</span> 分数不变量应用题</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">应用题 · 第18题</span><br>
+                某校共有 1800 人，男生占 5/9。后来又来了一些女生，此时男生占总人数的 40%。求新来的女生有多少人？
+            </div>
+
+            <h4>方法一：算式方法</h4>
+            <ol class="steps">
+                <li>原来的男生 = 1800 × 5/9 = <strong>1000 人</strong></li>
+                <li>男生人数不变（不变量），现在男生占 40%<br>
+                    → 现在总人数 = 1000 ÷ 40% = <strong>2500 人</strong></li>
+                <li>新来的女生 = 2500 - 1800 = <strong>700 人</strong></li>
+            </ol>
+
+            <h4>方法二：比例方法</h4>
+            <ol class="steps">
+                <li>原来：男 : 女 = 5 : 4<br>
+                    现在：男 : 女 = 4 : 6 = 2 : 3</li>
+                <li>男生不变，统一为 4 份<br>
+                    原来：男 4 份，女 5 份，共 9 份 = 1800 → 1 份 = 200</li>
+                <li>现在：男 4 份，女 6 份，共 10 份 = 2000</li>
+                <li>新来女生 = 10 份 - 9 份 = 1 份 = <strong>200 人</strong></li>
+            </ol>
+
+            <div class="math-block">
+<span class="comment">// 方法一</span>
+男生 = 1800 × 5/9 = <span class="highlight">1000</span>
+现总人数 = 1000 ÷ 0.4 = <span class="highlight">2500</span>
+新来女生 = 2500 - 1800 = <span class="result">700</span>
+            </div>
+
+            <div class="key-point">
+                <strong>不变量思想：</strong>分数/比例应用题中，找到不变的量是突破口。本题中"男生人数不变"是关键。这种方法在物理中同样重要（如质量守恒、能量守恒）。
+            </div>
+        </div>
+    </section>
+
+    <!-- 第19题 - 折叠与相似 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">19</span> 折叠与相似三角形</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">应用题 · 第19题</span><br>
+                在直角三角形 ABC 中（直角在 B），AB = 8，BC = 6。沿 DE 折叠，使 A 点落在 BC 上的 C 点（AD = 8，DC = 2）。求阴影部分面积。
+            </div>
+
+            <h4>方法一：相似三角形</h4>
+
+            <div class="key-point">
+                <strong>核心结论：</strong>在直角三角形内，从任意一边上的点向对边做垂线，所形成的小三角形一定与原三角形<strong>相似</strong>（共角 + 直角）。
+            </div>
+
+            <ol class="steps">
+                <li>△ABC ∽ △DEC（角 A = 角 E，均有直角）</li>
+                <li>对应边之比：<br>
+                    BC / DC = AB / DE<br>
+                    6 / 2 = 8 / DE<br>
+                    DE = 8 / 3</li>
+                <li>阴影面积 = ½ × 2 × (8/3) = <strong>32/3</strong></li>
+            </ol>
+
+            <h4>方法二：勾股定理</h4>
+            <p>设 CE = x，则 AE = 8 - x（折叠后 AE = DE）</p>
+            <p>由勾股定理：DE² + x² = (6 - x)²</p>
+            <p>解方程可得 x = 8/3，面积 = ½ × 2 × 8/3 = <strong>32/3</strong></p>
+
+            <h4>方法三：面积比例法</h4>
+            <p>将 BE 设为 x，△ABE 的面积 = ½ × 8 × x = 4x</p>
+            <p>△ABE + △BCE + △ACE = ½ × 8 × 6 = 24</p>
+            <p>解得 x，进而求出阴影面积。</p>
+
+            <div class="math-block">
+<span class="comment">// 方法一：相似三角形</span>
+BC : DC = AB : DE
+6 : 2 = 8 : DE
+DE = 8/3
+
+S<sub>阴影</sub> = ½ × DC × DE
+        = ½ × 2 × 8/3
+        = <span class="result">32/3</span>
+            </div>
+
+            <div class="insight">
+                <strong>多方法对比：</strong>相似三角形最快；勾股定理是最通用的方法；面积比例法思路也很自然。<strong>学的是思考过程，不是某一种固定解法。</strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第20题 - ST图 -->
+    <section class="section">
+        <h2 class="section-title"><span class="num">20</span> ST图（行程分析）</h2>
+
+        <div class="card">
+            <div class="problem-box">
+                <span class="label">应用题 · 第20题</span><br>
+                甲、乙两条龙舟的 ST 图（路程-时间图），全程 1000m。甲匀速前进，乙先慢后快（在某时刻变速）。<br>
+                ① 1.8 分钟时谁领先？谁先到达终点？<br>
+                ② 乙龙舟在比赛开始多少分钟后开始领先？
+            </div>
+
+            <h4>读图要点</h4>
+            <ul>
+                <li><strong>直线（斜线）</strong>→ 匀速运动，速度不变</li>
+                <li><strong>折点</strong>→ 变速时刻</li>
+                <li><strong>斜率越大</strong>→ 速度越快</li>
+            </ul>
+
+            <h4>第一问</h4>
+            <ul>
+                <li>1.8 分钟时，甲走的路程更远 → <strong>甲领先</strong></li>
+                <li>到达 1000m 时，乙用时更短 → <strong>乙先到</strong></li>
+            </ul>
+
+            <h4>第二问</h4>
+            <p>求两线交点对应的时间——即乙开始领先的时刻。</p>
+
+            <ol class="steps">
+                <li>甲的速度 = 1000 ÷ 4 = <strong>250 m/min</strong></li>
+                <li>乙变速前：走了 400m，用时 2.2 min<br>
+                    → 变速前速度 = 400 ÷ 2.2 ≈ 181.8 m/min</li>
+                <li>乙变速后：从 400m 到 1000m，斜率变大</li>
+                <li>在 ST 图中找到两条线的<strong>交点</strong>，对应的时间即为答案</li>
+            </ol>
+
+            <div class="key-point">
+                <strong>ST 图的核心：</strong>
+                <ul>
+                    <li>直线段 = 匀速（斜率 = 速度）</li>
+                    <li>折线 = 变速</li>
+                    <li>两条线的交点 = 相遇时刻（或领先关系转换的时刻）</li>
+                    <li>到达同一终点的时间越短 = 速度越快</li>
+                </ul>
+            </div>
+
+            <div class="tip">
+                <strong>ST 图在高中还会继续学习。</strong>现在打好基础，理解"路程-时间"图中每条线段、每个折点的物理含义，对将来学物理非常有帮助。
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 课堂总结 ==================== -->
+
+    <section class="section">
+        <h2 class="section-title"><span class="num">总</span> 课堂总结与学习建议</h2>
+
+        <div class="card">
+            <h3>本次课重点方法回顾</h3>
+
+            <table style="width:100%; border-collapse:collapse; margin:12px 0; font-size:0.95rem;">
+                <thead>
+                    <tr style="background:var(--surface-alt); text-align:left;">
+                        <th style="padding:10px 14px; border-bottom:2px solid var(--border);">方法</th>
+                        <th style="padding:10px 14px; border-bottom:2px solid var(--border);">应用场景</th>
+                        <th style="padding:10px 14px; border-bottom:2px solid var(--border);">对应题号</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">量率对应</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">分数/百分数应用</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">1, 3</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">周期性分析</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">数的规律/计数</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">5</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">最小公倍数</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">周期/间隔问题</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">6</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">等底等高</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">圆柱圆锥关系</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">7</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">补集法</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">间接计数</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">5, 8</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">质因数分解</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">等积拆分</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">10</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">不变量思想</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">比例/年龄/行程</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">11, 18</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">矛盾法</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">逻辑推理</td>
+                        <td style="padding:8px 14px; border-bottom:1px solid var(--border);">14</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 14px;">相似三角形</td>
+                        <td style="padding:8px 14px;">折叠/几何</td>
+                        <td style="padding:8px 14px;">19</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>果妈老师的三句忠告</h3>
+
+            <div class="teacher-quote">
+                学数学不仅仅是学一道题怎么做，更要学的是面对不会做的题时怎么办。从问题出发——要求什么？需要知道什么？
+                <span class="speaker">—— 关于解题思维</span>
+            </div>
+
+            <div class="teacher-quote">
+                你不可能做遍天下所有的题，哪怕做了三百多张卷子，也会遇到没见过的题。练的就是面对陌生题目的思考能力。
+                <span class="speaker">—— 关于刷题与思考</span>
+            </div>
+
+            <div class="teacher-quote">
+                巧算总是少数。世界上凑巧的事情很少。要适应那些不算太巧、需要耐心一步步算的题目。
+                <span class="speaker">—— 关于计算能力</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>课后建议</h3>
+            <ul>
+                <li><strong>约瑟夫抽杀</strong>：研究环形排列版本，尝试编程或枚举验证</li>
+                <li><strong>含七计数</strong>：用同样的方法尝试 1–999 中含 7 的数有多少个</li>
+                <li><strong>质因数分解</strong>：尝试将 7 个数分成三组，使乘积相等</li>
+                <li><strong>计算练习</strong>：每天坚持做一到两张卷子的计算题，提高运算的耐心和准确率</li>
+                <li><strong>比例思维</strong>：多练习正反比思想，为初中物理打基础</li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>

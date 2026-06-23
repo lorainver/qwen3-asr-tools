@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工程与配套问题专题 | 数学课堂笔记</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0e0920;
+            --surface: #171030;
+            --surface-alt: #201745;
+            --surface-hover: #281e52;
+            --accent: #d4a537;
+            --accent-bright: #f0c850;
+            --accent-dim: #9a7520;
+            --text: #f0ece4;
+            --text-sec: #b8b0a4;
+            --text-muted: #706860;
+            --code-bg: #0c081a;
+            --highlight: rgba(212, 165, 55, 0.1);
+            --border: rgba(212, 165, 55, 0.25);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --success: #4ecdc4;
+            --info: #7ca8e0;
+            --radius: 12px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+            font-weight: 300;
+            line-height: 1.85;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 10% 20%, rgba(50, 20, 100, 0.4) 0%, transparent 55%),
+                radial-gradient(ellipse at 90% 80%, rgba(30, 15, 70, 0.35) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(14, 9, 32, 0.2) 0%, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ========== Header ========== */
+        header {
+            text-align: center;
+            padding: 80px 0 50px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 36px auto 0;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 5vw, 2.6rem);
+            background: linear-gradient(135deg, var(--accent-bright), var(--accent), var(--accent-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.04em;
+        }
+
+        header .subtitle {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 400;
+            font-size: 1.05rem;
+            color: var(--text-sec);
+            margin-top: 12px;
+            letter-spacing: 0.1em;
+        }
+
+        /* ========== Table of Contents ========== */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.6s ease both;
+        }
+
+        .toc h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            color: var(--accent);
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+        }
+
+        .toc ol {
+            list-style: none;
+            counter-reset: toc;
+            columns: 2;
+            column-gap: 32px;
+        }
+
+        .toc li {
+            counter-increment: toc;
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+            color: var(--text-sec);
+            break-inside: avoid;
+        }
+
+        .toc li::before {
+            content: counter(toc, decimal-leading-zero) " ";
+            color: var(--accent-dim);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.82rem;
+            margin-right: 6px;
+        }
+
+        .toc a {
+            color: var(--text-sec);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .toc a:hover { color: var(--accent-bright); }
+
+        /* ========== Methodology Section ========== */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .method-card {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 18px 20px;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-2px);
+            border-left-color: var(--accent-bright);
+        }
+
+        .method-card .method-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--accent-dim);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .method-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            font-size: 1.02rem;
+            color: var(--accent);
+            margin: 4px 0 6px;
+        }
+
+        .method-card p {
+            font-size: 0.85rem;
+            color: var(--text-sec);
+            line-height: 1.6;
+        }
+
+        /* ========== Sections ========== */
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-bright);
+            margin: 56px 0 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            letter-spacing: 0.04em;
+        }
+
+        .section-desc {
+            color: var(--text-sec);
+            font-size: 0.92rem;
+            margin-bottom: 32px;
+        }
+
+        /* ========== Problem Card ========== */
+        .problem {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            margin-bottom: 36px;
+            overflow: hidden;
+            animation: fadeUp 0.6s ease both;
+        }
+
+        .problem:nth-child(2) { animation-delay: 0.08s; }
+        .problem:nth-child(3) { animation-delay: 0.16s; }
+        .problem:nth-child(4) { animation-delay: 0.24s; }
+        .problem:nth-child(5) { animation-delay: 0.32s; }
+
+        .problem-header {
+            background: var(--surface-alt);
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .problem-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--bg);
+            background: var(--accent);
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .problem-header h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: var(--text);
+        }
+
+        .problem-body {
+            padding: 24px 28px 28px;
+        }
+
+        /* Problem statement box */
+        .statement {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-bottom: 24px;
+            font-size: 0.93rem;
+            line-height: 1.9;
+            color: var(--text);
+        }
+
+        .statement::before {
+            content: '题目';
+            display: inline-block;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            background: rgba(212, 165, 55, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        /* Solution method */
+        .solution {
+            margin-top: 20px;
+        }
+
+        .solution-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .solution-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--bg);
+            background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .solution-title h4 {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--accent);
+        }
+
+        .solution p, .solution li {
+            font-size: 0.9rem;
+            color: var(--text-sec);
+            line-height: 1.85;
+            margin-bottom: 8px;
+        }
+
+        .solution ul, .solution ol {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        /* Math formula blocks */
+        .math-block {
+            background: var(--code-bg);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            margin: 14px 0;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.88rem;
+            line-height: 2;
+            color: var(--text);
+            overflow-x: auto;
+        }
+
+        .math-block .comment {
+            color: var(--text-muted);
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 0.8rem;
+        }
+
+        .math-block .result {
+            color: var(--accent-bright);
+            font-weight: 500;
+        }
+
+        .math-block .highlight-line {
+            background: var(--highlight);
+            display: inline-block;
+            padding: 0 6px;
+            border-radius: 3px;
+            margin: 0 -6px;
+        }
+
+        /* Inline math */
+        code {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.85em;
+            background: var(--highlight);
+            color: var(--accent-bright);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Insight box */
+        .insight {
+            background: rgba(78, 205, 196, 0.06);
+            border: 1px solid rgba(78, 205, 196, 0.2);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 18px 0 0;
+            font-size: 0.88rem;
+            color: var(--text-sec);
+        }
+
+        .insight::before {
+            content: '核心要点';
+            display: inline-block;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--success);
+            background: rgba(78, 205, 196, 0.12);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            letter-spacing: 0.08em;
+        }
+
+        .insight strong {
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        /* Method comparison table */
+        .compare {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.85rem;
+        }
+
+        .compare th {
+            background: var(--surface-alt);
+            color: var(--accent);
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compare td {
+            padding: 10px 14px;
+            color: var(--text-sec);
+            border-bottom: 1px solid var(--border-subtle);
+            vertical-align: top;
+        }
+
+        .compare tr:hover td {
+            background: var(--highlight);
+        }
+
+        /* Summary section */
+        .summary-card {
+            background: linear-gradient(135deg, var(--surface-alt), var(--surface));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .summary-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent-bright);
+            margin-bottom: 18px;
+        }
+
+        .summary-card ol {
+            padding-left: 20px;
+        }
+
+        .summary-card li {
+            font-size: 0.92rem;
+            color: var(--text-sec);
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .summary-card li strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 48px 0 40px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 56px;
+        }
+
+        footer .deco {
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--accent-dim);
+            margin: 0 auto 16px;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container { padding: 0 16px; }
+            header { padding: 48px 0 36px; }
+            .toc ol { columns: 1; }
+            .problem-body { padding: 18px 18px 22px; }
+            .problem-header { padding: 16px 18px; }
+            .methods-grid { grid-template-columns: 1fr; }
+            .compare { font-size: 0.78rem; }
+            .compare th, .compare td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<!-- ==================== HEADER ==================== -->
+<header>
+    <h1>工程与配套问题专题</h1>
+    <p class="subtitle">数学直播课堂笔记 &middot; 解题方法与思路精讲</p>
+</header>
+
+<!-- ==================== TOC ==================== -->
+<nav class="toc fade-in">
+    <h2>目录</h2>
+    <ol>
+        <li><a href="#methods">核心解题方法论</a></li>
+        <li><a href="#sec-engineering">工程问题</a></li>
+        <li><a href="#p1">合作者中途休息</a></li>
+        <li><a href="#p2">多人合作求整体效率</a></li>
+        <li><a href="#p3">三人两库（经典模型）</a></li>
+        <li><a href="#p4">人员分派问题</a></li>
+        <li><a href="#p5">轮流做工（周期问题）</a></li>
+        <li><a href="#sec-matching">配套问题</a></li>
+        <li><a href="#p6">盒身盒底配套</a></li>
+        <li><a href="#summary">学习总结与建议</a></li>
+    </ol>
+</nav>
+
+<main>
+
+<!-- ==================== METHODOLOGY ==================== -->
+<section id="methods" class="fade-in">
+    <h2 class="section-title">核心解题方法论</h2>
+    <p class="section-desc">以下七种方法贯穿本专题全部题目，理解方法比记住答案更重要。</p>
+
+    <div class="methods-grid">
+        <div class="method-card">
+            <div class="method-num">method 01</div>
+            <h3>方程法</h3>
+            <p>万能方法。抓住"比较句"列等式，问什么设什么，写不下去时用未知数过渡。</p>
+        </div>
+        <div class="method-card">
+            <div class="method-num">method 02</div>
+            <h3>合干分享 / 分干合享</h3>
+            <p>合作完成的工程可拆分为各人独立完成的份额；分开做的工程可合并看待总量。</p>
+        </div>
+        <div class="method-card">
+            <div class="method-num">method 03</div>
+            <h3>假设法</h3>
+            <p>从鸡兔同笼演变而来。假设某一条件改变，用"多出"或"不足"的部分求解。</p>
+        </div>
+        <div class="method-card">
+            <div class="method-num">method 04</div>
+            <h3>比例法</h3>
+            <p>时间相同时，工作量与效率成正比。已知比值与总和即可求各量。</p>
+        </div>
+        <div class="method-card">
+            <div class="method-num">method 05</div>
+            <h3>量率对应</h3>
+            <p>找到具体数量占整体的几分之几，用"具体量 ÷ 对应分率 = 整体"求解。</p>
+        </div>
+        <div class="method-card">
+            <div class="method-num">method 06</div>
+            <h3>周期分析法</h3>
+            <p>轮流做工本质是周期问题：求每周期工作量 → 求整周期数 → 求零头。</p>
+        </div>
+        <div class="method-card">
+            <div class="method-num">method 07</div>
+            <h3>关键句翻译</h3>
+            <p>数学的本质是翻译。将文字语言（比较句、陈述句）转化为数学表达式。</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ENGINEERING PROBLEMS ==================== -->
+<h2 class="section-title" id="sec-engineering">一、工程问题</h2>
+<p class="section-desc">工程问题的核心公式：<code>工作量 = 效率 × 时间</code>，即 <code>t = S ÷ v</code>。以下五道题覆盖工程问题的主要题型。</p>
+
+<!-- ===== Problem 1 ===== -->
+<article class="problem" id="p1">
+    <div class="problem-header">
+        <span class="problem-badge">工程 01</span>
+        <h3>合作者中途休息</h3>
+    </div>
+    <div class="problem-body">
+        <div class="statement">
+            甲单独完成一项工程需 <strong>40 天</strong>，乙单独完成需 <strong>60 天</strong>。两人合作若干天后，甲因病休息，乙继续工作。从开工到完工共用了 <strong>27 天</strong>。问：甲休息了几天？
+        </div>
+
+        <!-- Method A -->
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">1</span>
+                <h4>合干分享法（算术）</h4>
+            </div>
+            <p>思路：乙全程工作 27 天，先算出乙完成的工作量，再用剩余工作量除以甲的效率得甲的工作天数。</p>
+            <div class="math-block">
+<span class="comment">// 乙 27 天完成的工作量</span>
+乙完成 = 27 × 1/60 = 27/60 = 9/20
+
+<span class="comment">// 甲完成的工作量</span>
+甲完成 = 1 − 9/20 = 11/20
+
+<span class="comment">// 甲工作的天数</span>
+甲天数 = (11/20) ÷ (1/40) = <span class="result">22 天</span>
+
+<span class="comment">// 甲休息的天数</span>
+<span class="highlight-line">休息 = 27 − 22 = <span class="result">5 天</span></span>
+            </div>
+        </div>
+
+        <!-- Method B -->
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">2</span>
+                <h4>假设法 — 直接求休息天数</h4>
+            </div>
+            <p>假设甲不休息，两人合干 27 天，总工作量会超过"1"。多出的部分正是甲休息那几天本应做的工作。</p>
+            <div class="math-block">
+<span class="comment">// 合效率</span>
+v合 = 1/40 + 1/60 = 1/24
+
+<span class="comment">// 假设不休息的总工作量</span>
+总量 = 27 × 1/24 = 27/24 = 9/8
+
+<span class="comment">// 超出部分 = 甲休息期间应做的量</span>
+超出 = 9/8 − 1 = 1/8
+
+<span class="highlight-line">休息天数 = (1/8) ÷ (1/40) = <span class="result">5 天</span></span>
+            </div>
+        </div>
+
+        <!-- Method C -->
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">3</span>
+                <h4>假设法 — 通过正常完工天数求解</h4>
+            </div>
+            <p>先算甲不休息时两人合干的天数，再通过乙多干的天数反推甲少干的天数。</p>
+            <div class="math-block">
+<span class="comment">// 正常合干完工天数</span>
+正常天数 = 1 ÷ 1/24 = 24 天
+
+<span class="comment">// 乙比正常多干了 3 天</span>
+乙多干 = 3 × 1/60 = 1/20
+
+<span class="comment">// 甲比正常少干的天数</span>
+甲少干 = (1/20) ÷ (1/40) = 2 天
+
+<span class="comment">// 甲实际工作</span>
+甲工作 = 24 − 2 = 22 天
+<span class="highlight-line">休息 = 27 − 22 = <span class="result">5 天</span></span>
+            </div>
+        </div>
+
+        <div class="insight">
+            <strong>合干分享</strong>的关键在于理解：总工作量 = 甲完成量 + 乙完成量。当题目告知"分干"（一人休息），即可用"合享"（总量减去另一人的份额）来求解。<strong>假设法</strong>的精髓是：改变一个条件，用差值反推原问题。
+        </div>
+    </div>
+</article>
+
+<!-- ===== Problem 2 ===== -->
+<article class="problem" id="p2">
+    <div class="problem-header">
+        <span class="problem-badge">工程 02</span>
+        <h3>多人合作求整体效率</h3>
+    </div>
+    <div class="problem-body">
+        <div class="statement">
+            五人 A、B、C、D、E 合作完成一项工程。已知：<br>
+            A、B、C 合作需 7.5 小时；A、C、E 合作需 5 小时；<br>
+            A、C、D 合作需 6 小时；B、D、E 合作需 4 小时。<br>
+            问：五人合作需几小时完成？
+        </div>
+
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">1</span>
+                <h4>翻译条件 + 整体叠加法</h4>
+            </div>
+            <p>将每个条件翻译为效率方程，再通过巧妙叠加求五人效率之和。</p>
+            <div class="math-block">
+<span class="comment">// 翻译四组条件为方程</span>
+① A + B + C = 1/7.5 = <span class="result">2/15</span>
+② A + C + E = <span class="result">1/5</span>
+③ A + C + D = <span class="result">1/6</span>
+④ B + D + E = <span class="result">1/4</span>
+            </div>
+
+            <p>观察各字母出现次数：</p>
+            <table class="compare">
+                <tr><th>字母</th><th>出现方程</th><th>出现次数</th></tr>
+                <tr><td>A</td><td>① ② ③</td><td>3 次</td></tr>
+                <tr><td>B</td><td>① ④</td><td>2 次</td></tr>
+                <tr><td>C</td><td>① ② ③</td><td>3 次</td></tr>
+                <tr><td>D</td><td>③ ④</td><td>2 次</td></tr>
+                <tr><td>E</td><td>② ④</td><td>2 次</td></tr>
+            </table>
+
+            <p>B、D、E 各少一次，恰好在方程④中同时出现，因此将④多加一遍：</p>
+            <div class="math-block">
+<span class="comment">// ① + ② + ③ + 2 × ④，每个字母恰好出现 3 次</span>
+3(A+B+C+D+E) = 2/15 + 1/5 + 1/6 + 2 × 1/4
+             = 2/15 + 3/15 + 1/6 + 1/2
+             = 1/3 + 1/6 + 1/2
+             = <span class="result">1</span>
+
+<span class="highlight-line">A + B + C + D + E = 1/3</span>
+
+<span class="comment">// 五人合干时间</span>
+<span class="highlight-line">t = 1 ÷ (1/3) = <span class="result">3 小时</span></span>
+            </div>
+        </div>
+
+        <div class="insight">
+            <strong>多人多条件题型</strong>的通用策略：不必逐一求出每个人的效率。只需将方程巧妙叠加，使每个未知数出现相同次数，从而直接求出总和。<br>
+            关键技巧：统计每个字母出现次数，找到能"补齐"的方程多加一遍。
+        </div>
+    </div>
+</article>
+
+<!-- ===== Problem 3 ===== -->
+<article class="problem" id="p3">
+    <div class="problem-header">
+        <span class="problem-badge">工程 03 · 经典</span>
+        <h3>三人两库</h3>
+    </div>
+    <div class="problem-body">
+        <div class="statement">
+            甲、乙、丙三人同时开始搬运两个相同仓库的货物。甲每小时搬 <code>1/6</code> 个仓库，乙每小时搬 <code>1/7</code> 个仓库，丙每小时搬 <code>1/14</code> 个仓库。丙先帮甲搬运，后又去帮乙搬运，最后两个仓库同时搬完。<br>
+            问：丙帮甲多少小时？帮乙多少小时？
+        </div>
+
+        <!-- Method A -->
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">1</span>
+                <h4>传统方法 — 先求总时间</h4>
+            </div>
+            <div class="math-block">
+<span class="comment">// 三人合效率</span>
+v合 = 1/6 + 1/7 + 1/14
+   = 14/84 + 12/84 + 6/84 = 32/84 = <span class="result">8/21</span>
+
+<span class="comment">// 总工作量为 2（两个仓库）</span>
+<span class="highlight-line">总时间 t = 2 ÷ 8/21 = <span class="result">21/4 小时</span></span>
+
+<span class="comment">// 甲在这段时间内自己完成的量</span>
+甲完成 = 1/6 × 21/4 = 7/8
+<span class="comment">// 丙帮甲完成的量</span>
+丙帮甲量 = 1 − 7/8 = 1/8
+<span class="highlight-line">丙帮甲时间 = (1/8) ÷ (1/14) = <span class="result">7/4 小时</span></span>
+
+<span class="comment">// 乙在这段时间内自己完成的量</span>
+乙完成 = 1/7 × 21/4 = 3/4
+丙帮乙量 = 1 − 3/4 = 1/4
+<span class="highlight-line">丙帮乙时间 = (1/4) ÷ (1/14) = <span class="result">7/2 小时</span></span>
+
+<span class="comment">// 验证：7/4 + 7/2 = 21/4 = 总时间 ✓</span>
+            </div>
+        </div>
+
+        <!-- Method B -->
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">2</span>
+                <h4>比例法 — 利用时间相同，工量比等于效率比</h4>
+            </div>
+            <p>三人工作时间相同，因此工作量之比等于效率之比。</p>
+            <div class="math-block">
+<span class="comment">// 效率通分：乘以 42</span>
+甲 : 乙 : 丙 = 1/6 : 1/7 : 1/14 = 7 : 6 : 3
+
+<span class="comment">// 总份数 = 16，总工作量 = 2</span>
+每份 = 2/16 = <span class="result">1/8</span>
+
+甲完成 = 7 × 1/8 = 7/8 → 丙帮甲 = 1/8
+乙完成 = 6 × 1/8 = 3/4 → 丙帮乙 = 1/4
+
+<span class="highlight-line">丙帮甲时间 = (1/8) ÷ (1/14) = <span class="result">7/4 小时</span></span>
+<span class="highlight-line">丙帮乙时间 = (1/4) ÷ (1/14) = <span class="result">7/2 小时</span></span>
+            </div>
+        </div>
+
+        <div class="insight">
+            <strong>三人两库</strong>是高频经典题。核心突破口：三人工作时间相同 → <strong>工量比 = 效率比</strong>。知道比值和总量，即可用"按比分配"快速求解，无需先算总时间。<br>
+            进阶：如果两个仓库大小不同（如 A 是 B 的 1.25 倍），需先用分数表示两个仓库的大小关系，再用同样思路求解。
+        </div>
+    </div>
+</article>
+
+<!-- ===== Problem 4 ===== -->
+<article class="problem" id="p4">
+    <div class="problem-header">
+        <span class="problem-badge">工程 04</span>
+        <h3>人员分派问题</h3>
+    </div>
+    <div class="problem-body">
+        <div class="statement">
+            一批工人分配到甲、乙两个工地。甲工地的工作量是乙工地的 <strong>1.5 倍</strong>。<br>
+            上午，去甲工地的人数是去乙工地人数的 <strong>3 倍</strong>；下午，这批工人的 <strong>7/12</strong> 去了甲工地。<br>
+            到傍晚时，甲工地的工作已完成，乙工地还需 <strong>4 名工人再做一天</strong>才能完成。<br>
+            问：这批工人共有多少人？
+        </div>
+
+        <!-- Method A -->
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">1</span>
+                <h4>方程法 — 设人数列等式</h4>
+            </div>
+            <p>设总人数为 <code>12x</code>（取 12 的倍数便于处理 1/4 和 7/12），每人半天做 1 份工作。</p>
+            <div class="math-block">
+<span class="comment">// 人员分配</span>
+上午：甲工地 3/4 × 12x = 9x 人，乙工地 1/4 × 12x = 3x 人
+下午：甲工地 7/12 × 12x = 7x 人，乙工地 5/12 × 12x = 5x 人
+
+<span class="comment">// 工作量（每人半天 = 1 份）</span>
+甲工地 = 9x + 7x = 16x
+乙工地 = 3x + 5x + 4×2 = 8x + 8 <span class="comment">← 4人再做1天=8份</span>
+
+<span class="comment">// 列方程：甲 = 1.5 × 乙</span>
+16x = 1.5 × (8x + 8)
+16x = 12x + 12
+4x = 12
+<span class="highlight-line">x = 3 → 总人数 = 12 × 3 = <span class="result">36 人</span></span>
+            </div>
+        </div>
+
+        <!-- Method B -->
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">2</span>
+                <h4>量率对应法</h4>
+            </div>
+            <p>将全部工人一天的工作量设为"1"，用分率表达各工地完成量，再用"具体量 ÷ 分率 = 整体"求解。</p>
+            <div class="math-block">
+<span class="comment">// 每半天 = 1/2</span>
+甲当天完成：3/4 × 1/2 + 7/12 × 1/2 = 3/8 + 7/24 = <span class="result">2/3</span>
+乙当天完成：1/4 × 1/2 + 5/12 × 1/2 = 1/8 + 5/24 = <span class="result">1/3</span>
+
+<span class="comment">// 甲 = 1.5 × 乙总量 → 乙总量</span>
+乙总量 = 2/3 ÷ 3/2 = <span class="result">4/9</span>
+
+<span class="comment">// 乙剩余工作量</span>
+乙剩余 = 4/9 − 1/3 = <span class="result">1/9</span>
+
+<span class="comment">// 4 名工人做 1 天 = 总工人 1 天工作量的 1/9</span>
+<span class="highlight-line">4 人 = 全体的 1/9 → 总人数 = 4 ÷ 1/9 = <span class="result">36 人</span></span>
+            </div>
+        </div>
+
+        <div class="insight">
+            <strong>方程法</strong>是"万能保底"方法——不确定怎么做的时候，先找等式、列方程。<strong>量率对应</strong>则更加巧妙，将"4 名工人做 1 天"与全体的关系用分率表达出来。两种方法殊途同归，都值得掌握。
+        </div>
+    </div>
+</article>
+
+<!-- ===== Problem 5 ===== -->
+<article class="problem" id="p5">
+    <div class="problem-header">
+        <span class="problem-badge">工程 05</span>
+        <h3>轮流做工（周期问题）</h3>
+    </div>
+    <div class="problem-body">
+        <div class="statement">
+            一项工程，甲单独做需 <strong>6 小时</strong>完成，乙单独做需 <strong>8 小时</strong>完成。现由甲、乙两人轮流各做 1 小时（先甲后乙）。问：共需多少小时完成？
+        </div>
+
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">1</span>
+                <h4>周期分析法</h4>
+            </div>
+            <p>轮流做工本质是<strong>周期问题</strong>：每个周期 2 小时（甲 1 小时 + 乙 1 小时），按"求周期 → 求整周期数 → 求零头"三步走。</p>
+            <div class="math-block">
+<span class="comment">// 第一步：求每周期工作量</span>
+每周期 = 1/6 + 1/8 = 4/24 + 3/24 = <span class="result">7/24</span>
+
+<span class="comment">// 第二步：求整周期数</span>
+整周期数 = 1 ÷ 7/24 = 24/7 ≈ <span class="result">3 个整周期</span>
+3 个周期完成：3 × 7/24 = 21/24 = 7/8
+耗时：3 × 2 = 6 小时
+
+<span class="comment">// 第三步：求零头</span>
+剩余 = 1 − 7/8 = <span class="result">1/8</span>
+1/8 &lt; 1/6（甲的效率），由甲完成
+零头时间 = (1/8) ÷ (1/6) = 6/8 = <span class="result">3/4 小时</span>
+
+<span class="highlight-line">总时间 = 6 + 3/4 = <span class="result">6¾ 小时</span></span>
+            </div>
+        </div>
+
+        <div class="insight">
+            <strong>轮流做工三步法</strong>：①算每周期工作量；②算整周期个数和剩余量；③按顺序分配零头。<br>
+            类似模型：蜗牛爬井、进退交替等，底层逻辑相同——<strong>周期分析 + 尾部处理</strong>。务必先掌握基础周期问题，再挑战复杂轮流题。
+        </div>
+    </div>
+</article>
+
+<!-- ==================== MATCHING PROBLEMS ==================== -->
+<h2 class="section-title" id="sec-matching">二、配套问题</h2>
+<p class="section-desc">配套问题的核心：<strong>找到配比关系（关键句）</strong>，将其转化为等式。</p>
+
+<!-- ===== Problem 6 ===== -->
+<article class="problem" id="p6">
+    <div class="problem-header">
+        <span class="problem-badge">配套 01</span>
+        <h3>盒身盒底配套</h3>
+    </div>
+    <div class="problem-body">
+        <div class="statement">
+            用铁皮做罐头盒。一张铁皮可制盒身 <strong>15 个</strong>，或盒底 <strong>45 个</strong>。一个盒身与两个盒底配成一套罐头盒。现有一百五十张铁皮，用多少张制盒身、多少张制盒底，可以正好制成配套的罐头盒？
+        </div>
+
+        <div class="solution">
+            <div class="solution-title">
+                <span class="solution-num">1</span>
+                <h4>方程法 — 翻译配比关系</h4>
+            </div>
+            <p><strong>关键句</strong>：一个盒身与两个盒底配成一套。翻译为数学语言：<code>盒底数 = 2 × 盒身数</code></p>
+            <div class="math-block">
+<span class="comment">// 设 x 张铁皮制盒身，则 (150 − x) 张制盒底</span>
+盒身数 = 15x
+盒底数 = 45(150 − x)
+
+<span class="comment">// 配套关系：盒底 = 2 × 盒身</span>
+45(150 − x) = 2 × 15x
+6750 − 45x = 30x
+6750 = 75x
+<span class="highlight-line">x = 90</span>
+
+<span class="highlight-line">盒身用 <span class="result">90 张</span>，盒底用 <span class="result">60 张</span></span>
+
+<span class="comment">// 验证：盒身 15×90 = 1350，盒底 45×60 = 2700，2700 = 2×1350 ✓</span>
+            </div>
+        </div>
+
+        <div class="insight">
+            配套问题解题三步：①<strong>找到关键句</strong>（配比关系）→ ②<strong>翻译为等式</strong> → ③<strong>设未知数求解</strong>。<br>
+            分析句子类型：陈述句（描述过程）、比较句（列等式的关键）、问句（目标）。重点勾画<strong>比较句</strong>，而非所有带数字的句子。
+        </div>
+    </div>
+</article>
+
+<!-- ==================== SUMMARY ==================== -->
+<section id="summary">
+    <h2 class="section-title">学习总结与建议</h2>
+
+    <div class="summary-card fade-in">
+        <h3>解题思维框架</h3>
+        <ol>
+            <li><strong>读题翻译</strong>：将文字语言转化为数学表达式。分清陈述句（描述过程）和比较句（列等式）。</li>
+            <li><strong>分析目标</strong>：问什么？需要什么条件？从问题出发逆向推理。</li>
+            <li><strong>选择方法</strong>：方程法（万能保底）、算术法（更简洁灵活）、比例/假设法（特定场景）。</li>
+            <li><strong>一题多解</strong>：用一种方法做完后，尝试其他方法。做对不是终点，找到最优解才是。</li>
+            <li><strong>分类总结</strong>：给题目"贴标签"——三人两库、轮流做工、配套问题……分类越清晰，考试时提取越快速。</li>
+        </ol>
+    </div>
+
+    <div class="summary-card fade-in">
+        <h3>工程问题公式速查</h3>
+        <table class="compare">
+            <tr>
+                <th>模型</th>
+                <th>核心关系</th>
+                <th>解题关键</th>
+            </tr>
+            <tr>
+                <td>合作完工</td>
+                <td><code>1 = v合 × t</code></td>
+                <td>合效率 = 各效率之和</td>
+            </tr>
+            <tr>
+                <td>中途休息</td>
+                <td><code>总量 = 甲份额 + 乙份额</code></td>
+                <td>合干分享 / 假设法</td>
+            </tr>
+            <tr>
+                <td>多人求和</td>
+                <td>叠加方程使各字母次数相同</td>
+                <td>不求个体，只求总和</td>
+            </tr>
+            <tr>
+                <td>三人两库</td>
+                <td>时间同 → 工量比 = 效率比</td>
+                <td>按比分配 + 总量检验</td>
+            </tr>
+            <tr>
+                <td>轮流做工</td>
+                <td>周期工作量 → 整周期 → 零头</td>
+                <td>先找周期，再处理余数</td>
+            </tr>
+            <tr>
+                <td>配套问题</td>
+                <td>A 的数量 : B 的数量 = 固定配比</td>
+                <td>翻译关键比较句为等式</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="summary-card fade-in">
+        <h3>给家长的建议</h3>
+        <ol>
+            <li>引导孩子<strong>找关键句</strong>：每道题都让孩子指出"哪句话可以列等式"，养成精准审题习惯。</li>
+            <li>鼓励<strong>讲解思路</strong>：能做对但说不清为什么的孩子，需要加强"表达"训练——讲得清才是真懂。</li>
+            <li><strong>简单题练透</strong>：一道简单题用三种方法做，胜过三道难题各做一遍。深度优于广度。</li>
+            <li>接受<strong>重复学习</strong>：好的题目值得做两三遍，每遍可能有新的发现和更优的解法。</li>
+        </ol>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    <span class="deco"></span>
+    数学课堂笔记 &middot; 工程与配套问题专题<br>
+    内容整理自直播课程，仅供学习参考
+</footer>
+
+</div>
+</body>
+</html>

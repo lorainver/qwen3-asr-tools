@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数竞名师选荐与升学规划全指南</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+/* Page Header */
+.page-header {
+  background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 50%, #a855a0 100%);
+  color: #fff;
+  padding: 56px 32px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: -10%;
+  width: 120%; height: 180%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.page-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.page-header .subtitle {
+  font-size: 1rem;
+  opacity: 0.85;
+  font-weight: 300;
+  margin-bottom: 20px;
+  position: relative;
+}
+.tag-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.tag-purple { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.tag-gold { background: rgba(184,134,11,0.25); color: #ffd700; border: 1px solid rgba(184,134,11,0.4); }
+
+/* Container */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Nav */
+.toc {
+  margin: -32px auto 40px;
+  position: relative;
+  z-index: 2;
+}
+.toc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.toc-label {
+  display: inline-block;
+  position: absolute;
+  top: 0; left: 28px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 3px 12px;
+  border-radius: 0 0 6px 6px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  list-style: none;
+  margin-top: 12px;
+}
+.toc-grid li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.toc-grid li a:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.toc-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Section */
+section {
+  margin-bottom: 48px;
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.section-title .num {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.75rem;
+  color: var(--accent-light);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.section-title h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 24px 0 12px;
+}
+h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+}
+
+p { margin-bottom: 12px; color: var(--text-secondary); }
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card-accent {
+  border-left: 4px solid var(--accent);
+}
+
+/* Alert Boxes */
+.alert {
+  border-left: 4px solid;
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.alert-gold { background: var(--highlight); border-color: var(--gold); }
+.alert-success { background: #eaf5ed; border-color: var(--success); }
+.alert-danger { background: #fdf0ec; border-color: var(--danger); }
+.alert-info { background: #eaf2f8; border-color: var(--info); }
+.alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+.alert strong { color: var(--text-primary); }
+
+/* Two Column */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.88rem;
+}
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+tbody tr:hover { background: var(--accent-bg); }
+tbody tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+tbody tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+/* Lists */
+ul, ol {
+  padding-left: 20px;
+  margin: 8px 0 16px;
+}
+li {
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+li strong { color: var(--text-primary); }
+
+/* Flow Timeline */
+.flow {
+  position: relative;
+  padding-left: 36px;
+  margin: 16px 0 24px;
+}
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--border);
+}
+.flow-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -27px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 2px solid var(--accent-bg);
+}
+.flow-item .flow-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.flow-item .flow-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Diff Bar */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+}
+.diff-label {
+  width: 80px;
+  flex-shrink: 0;
+  text-align: right;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+.diff-track {
+  flex: 1;
+  height: 8px;
+  background: #f0ede8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.diff-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Utility */
+.text-accent { color: var(--accent); }
+.text-gold { color: var(--gold); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-muted { color: var(--text-muted); }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mt-16 { margin-top: 16px; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .page-header { padding: 36px 20px 32px; }
+  .page-header h1 { font-size: 1.5rem; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+  section { margin-bottom: 36px; }
+  .section-title h2 { font-size: 1.15rem; }
+  table { font-size: 0.8rem; }
+  thead th, tbody td { padding: 8px 10px; }
+}
+
+/* Print */
+@media print {
+  .page-header { background: var(--accent) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE HEADER ========== -->
+<header class="page-header">
+  <h1>数竞名师选荐与升学规划全指南</h1>
+  <div class="subtitle">从初联到高联二试 · 各阶段教师推荐 · 小初高全周期规划 · 强基政策解读</div>
+  <div class="tag-bar">
+    <span class="tag tag-purple">初联阶段</span>
+    <span class="tag tag-purple">高联一试</span>
+    <span class="tag tag-gold">高联二试四大板块</span>
+    <span class="tag tag-purple">小初高规划</span>
+    <span class="tag tag-gold">强基与金牌政策</span>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ========== TOC ========== -->
+<nav class="toc">
+  <div class="toc-card">
+    <span class="toc-label">目 录</span>
+    <ul class="toc-grid">
+      <li><a href="#sec1"><span class="toc-num">01</span>初联阶段：作用、师资与学习节奏</a></li>
+      <li><a href="#sec2"><span class="toc-num">02</span>高联一试：特点与推荐教师</a></li>
+      <li><a href="#sec3"><span class="toc-num">03</span>高联二试：顶尖名师总览</a></li>
+      <li><a href="#sec4"><span class="toc-num">04</span>高联二试·代数板块</a></li>
+      <li><a href="#sec5"><span class="toc-num">05</span>高联二试·几何板块</a></li>
+      <li><a href="#sec6"><span class="toc-num">06</span>高联二试·数论板块</a></li>
+      <li><a href="#sec7"><span class="toc-num">07</span>高联二试·组合板块</a></li>
+      <li><a href="#sec8"><span class="toc-num">08</span>小学阶段规划</a></li>
+      <li><a href="#sec9"><span class="toc-num">09</span>初中阶段规划与平台校</a></li>
+      <li><a href="#sec10"><span class="toc-num">10</span>高中阶段：强基政策与金牌降分</a></li>
+      <li><a href="#sec11"><span class="toc-num">11</span>省一的用途与综评</a></li>
+      <li><a href="#sec12"><span class="toc-num">12</span>集训选课核心原则</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ==================== SEC 1 ==================== -->
+<section id="sec1">
+  <div class="section-title">
+    <span class="num">Chapter 01</span>
+    <h2>初联阶段：作用、师资与学习节奏</h2>
+  </div>
+
+  <h3>一、初联的三个核心作用</h3>
+  <ol>
+    <li><strong>衔接台阶</strong>：初联在小学奥数与高联之间起到过渡和衔接作用，相当于中间补了一个台阶。</li>
+    <li><strong>竞赛能力提前训练</strong>：为未来的竞赛生涯提供做题能力的提前训练与培养。能否啃得动初联阶段的<strong>数论和组合</strong>内容，往往决定未来是否成为全职竞赛生。</li>
+    <li><strong>自主选拔考试内容</strong>：当前大量高中自主选拔、特殊招生机会的考试内容即为初联层次。顶尖班型则在初联基础上加入部分高中内容。</li>
+  </ol>
+
+  <div class="alert alert-gold">
+    <strong>关键提醒：</strong>初联的数论与组合板块是判断孩子是否适合走竞赛路线的核心试金石。
+  </div>
+
+  <h3>二、初联阶段推荐教师</h3>
+  <div class="alert alert-info">
+    <strong>说明：</strong>所有推荐教师均经过确认，水平足够。选择时唯一的区分标准是——哪个更契合孩子的学习风格。
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>教师姓名</th><th>特点</th><th>备注</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>陈祖维</strong></td><td>初联阶段口碑教师，线上课资源丰富</td><td>初联与高联一试均有授课</td></tr>
+      <tr><td><strong>卢鼎</strong></td><td>讲解质量高</td><td>可与陈祖维互补</td></tr>
+      <tr><td><strong>陈泽彤</strong></td><td>讲解质量高</td><td>——</td></tr>
+      <tr><td><strong>叶中豪</strong></td><td>几何讲解突出，当年也曾讲授初联课程</td><td>后续几何板块将再次提及</td></tr>
+      <tr><td><strong>陈瑞</strong></td><td>近年口碑上升，西南地区推荐关注</td><td>无网课，需关注线下集训</td></tr>
+      <tr><td><strong>苏玉坚</strong></td><td>讲解质量高</td><td>高联一试阶段名气更大</td></tr>
+    </tbody>
+  </table>
+
+  <h3>三、初联学习节奏</h3>
+  <ul>
+    <li>初联本身难度较低，大多数同学由校内教练带领即可完成。</li>
+    <li>目标顶尖班型（如秋班）：<strong>四年级、五年级</strong>即需开始学习。</li>
+    <li>冲击未来国集金牌、需要跑得较快的同学：基本在<strong>小四、小五</strong>阶段完成初联。</li>
+    <li>初联涵盖内容：数论、组合、代数、平面几何（二轮阶段难度提升）。</li>
+  </ul>
+
+  <h3>四、学习资源与建议</h3>
+  <ul>
+    <li>首选方案：跟随学校教练学习，尤其是<strong>初高一贯制教练</strong>，了解孩子学习程度，按节奏推进。</li>
+    <li>次选方案：选择上述推荐教师的线上/线下课程。</li>
+    <li>小蓝本属于训练过程中的练习材料，适合配合使用。</li>
+    <li>各地初联二轮内容分划略有不同，一般涵盖数论、组合、代数、平几的进阶内容。</li>
+  </ul>
+</section>
+
+<!-- ==================== SEC 2 ==================== -->
+<section id="sec2">
+  <div class="section-title">
+    <span class="num">Chapter 02</span>
+    <h2>高联一试：特点与推荐教师</h2>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心特点：</strong>高联一试难度不大，大部分学校校内教练可以处理，不属于必须请大神针对性点拨的阶段。
+  </div>
+
+  <h3>一、一试得分规律</h3>
+  <ul>
+    <li>早期训练阶段，一试分数往往跳跃波动较大。</li>
+    <li>一般流程：快速过完一试后衔接二试内容，初期一试可能仅考60来分。</li>
+    <li>随着<strong>训练量和做题磨练</strong>的积累，一试分数会持续提升。</li>
+    <li>一试主要拼的是<strong>熟练度</strong>，无需太多针对性点拨。</li>
+  </ul>
+
+  <h3>二、一试推荐教师</h3>
+  <table>
+    <thead>
+      <tr><th>教师姓名</th><th>备注</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>陈祖维</strong></td><td>初联阶段已推荐，高联一试同样擅长</td></tr>
+      <tr><td><strong>苏玉坚</strong></td><td>高联一试阶段名气较大，基础讲解出色</td></tr>
+      <tr><td><strong>陈开茂</strong></td><td>一试讲解比较出名</td></tr>
+      <tr><td><strong>叶新年</strong></td><td>一试讲解比较出名</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>补充说明：</strong>一试阶段不太需要特意挑选教师，学校教练通常可以搞定。正式打高联之前，一试必须刷题以积累熟练度。
+  </div>
+
+  <h3>三、一试刷题建议</h3>
+  <ul>
+    <li>以校本教材为主，各地有各地的练习册。</li>
+    <li>不一定刚学完就刷，但正式参赛前必须完成刷题训练。</li>
+    <li>一试以网课形式学习即可，进度较快。</li>
+  </ul>
+</section>
+
+<!-- ==================== SEC 3 ==================== -->
+<section id="sec3">
+  <div class="section-title">
+    <span class="num">Chapter 03</span>
+    <h2>高联二试：顶尖名师总览</h2>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>重要提醒：</strong>二试大部分大神级教师相对"自由"，不固定绑定某一机构。选择课程时应关注<strong>实际授课教师是谁</strong>，警惕"挂羊头卖狗肉"——名义上某名师领衔，实际仅上一节开场课，后续由其他教师授课。一个班/营的含金量取决于大神讲课的占比。
+  </div>
+
+  <h3>顶尖名师一览</h3>
+  <table>
+    <thead>
+      <tr><th>教师姓名</th><th>核心专长</th><th>特色</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>付云浩</strong></td>
+        <td>数论、组合尤其强</td>
+        <td>MO金牌；能让孩子当面讲题并实时跟进思路，做题能力极强（前三至前五水平）；有公益课，不看经济实力只看做题实力</td>
+      </tr>
+      <tr>
+        <td><strong>王斌</strong></td>
+        <td>代数很强，各板块均强</td>
+        <td>全能型教师</td>
+      </tr>
+      <tr>
+        <td><strong>艾颖华</strong></td>
+        <td>数论方向非常强</td>
+        <td>有命题经历及国家队带队经历</td>
+      </tr>
+      <tr>
+        <td><strong>田开斌</strong></td>
+        <td>四大板块全能（代数、几何、数论、组合均强）</td>
+        <td>常被称为TKB；会串机构，看到课表有他即可</td>
+      </tr>
+      <tr>
+        <td><strong>罗伟</strong></td>
+        <td>数论强</td>
+        <td>有管理工作，需判断其在具体集训中的授课占比</td>
+      </tr>
+      <tr>
+        <td><strong>邹锦</strong></td>
+        <td>各板块较强</td>
+        <td>需关注其实际授课占比</td>
+      </tr>
+      <tr>
+        <td><strong>李伟顾</strong></td>
+        <td>各板块较强</td>
+        <td>——</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-success">
+    <strong>选课原则：</strong>在集训营/课程中看到上述名字且为亲授课程，即值得一听。核心记住名字，再看是谁在上。
+  </div>
+</section>
+
+<!-- ==================== SEC 4 ==================== -->
+<section id="sec4">
+  <div class="section-title">
+    <span class="num">Chapter 04</span>
+    <h2>高联二试 · 代数板块</h2>
+  </div>
+
+  <p>代数是基础板块，也是大部分同学需要争取拿分的板块。如果代数未拿到分数，基本上国集无缘，金牌也悬。</p>
+
+  <table>
+    <thead>
+      <tr><th>教师姓名</th><th>特点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>计晨</strong>（"计神"）</td><td>不等式部分非常厉害，风格鲜明，"爱的人特别爱，不爱的人不感冒"；目前主要在宁波，不太上线上课</td></tr>
+      <tr><td><strong>王永喜</strong></td><td>原山大附中台柱子，代数非常强</td></tr>
+      <tr><td><strong>冷刚松</strong></td><td>冷教授，代数非常强</td></tr>
+      <tr><td><strong>杨明亮</strong></td><td>代数方面强</td></tr>
+      <tr><td><strong>杨运新</strong></td><td>几何和代数均强</td></tr>
+      <tr><td><strong>何一杰</strong></td><td>代数较强</td></tr>
+      <tr><td><strong>王文喜</strong></td><td>代数方面强</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-gold">
+    <strong>关键提醒：</strong>不同教师讲解同一板块时思路和解题方法不同，不存在一个教师包打所有问题。建议多了解不同教师的讲题思路，选择最契合孩子的。
+  </div>
+</section>
+
+<!-- ==================== SEC 5 ==================== -->
+<section id="sec5">
+  <div class="section-title">
+    <span class="num">Chapter 05</span>
+    <h2>高联二试 · 几何板块</h2>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>重要说明：</strong>竞赛几何<strong>只考平面几何</strong>，与奥数中涉及的立体几何等不同，对高槽（高中数学）帮助有限。
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>教师姓名</th><th>特点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>李先颖</strong></td><td>曾为AMO金牌，一度转做游戏，近年重新出山参与集训营；几何讲解非常强</td></tr>
+      <tr><td><strong>杨运新</strong></td><td>几何和代数均强</td></tr>
+      <tr><td><strong>顾东华</strong></td><td>平面几何切题非常熟练</td></tr>
+      <tr><td><strong>曹觉云</strong></td><td>几何非常强的教师</td></tr>
+      <tr><td><strong>叶中豪</strong></td><td>几何讲得很好，现在仍有部分初中课程；主要在线下集训授课</td></tr>
+      <tr><td><strong>卢圣</strong></td><td>几何讲得很好</td></tr>
+      <tr><td><strong>黄立兵</strong></td><td>授课质量较高</td></tr>
+      <tr><td><strong>潘成华</strong></td><td>授课质量较高</td></tr>
+      <tr><td><strong>张思慧</strong></td><td>代数几何均不错</td></tr>
+      <tr><td><strong>李建全</strong></td><td>授课质量较高</td></tr>
+      <tr><td><strong>金磊</strong></td><td>圈内口碑好，目前似乎在公立校（交大附中）代课</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== SEC 6 ==================== -->
+<section id="sec6">
+  <div class="section-title">
+    <span class="num">Chapter 06</span>
+    <h2>高联二试 · 数论板块</h2>
+  </div>
+
+  <p>数论是很多学生核心被卡住的板块。</p>
+
+  <div class="alert alert-purple">
+    <strong>推荐工具：</strong>"数之谜"小程序——数竞圈子中做题和讨论的核心平台，基本不会错过。
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>教师姓名</th><th>特点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>于洪彬</strong></td><td>数论领域非常厉害，著有多部相关书籍</td></tr>
+      <tr><td><strong>季春刚</strong></td><td>数论讲得很好</td></tr>
+      <tr><td><strong>周晓东</strong></td><td>数论讲解非常不错</td></tr>
+      <tr><td><strong>边红平</strong></td><td>数论领域教师</td></tr>
+      <tr><td><strong>杨全慧</strong></td><td>数论讲得不错</td></tr>
+      <tr><td><strong>于晨杰</strong></td><td>较年轻一代金牌，评价不错；目前亲授课程不多</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-danger">
+    <strong>注意口音问题：</strong>部分老一辈金牌教练存在口音问题，选课时需要考虑孩子的实际听课感受。若听不懂，讲得再好也难以吸收。
+  </div>
+</section>
+
+<!-- ==================== SEC 7 ==================== -->
+<section id="sec7">
+  <div class="section-title">
+    <span class="num">Chapter 07</span>
+    <h2>高联二试 · 组合板块</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>教师姓名</th><th>特点</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>陈小敏</strong></td><td>非数学出身（计算机背景），组合讲得非常好；开课不太规律；公众号"半圆club"；多位国集同学反馈其最大帮助在于<strong>思维层面的影响</strong>，需课后自行内化思路</td></tr>
+      <tr><td><strong>冯月峰</strong></td><td>优秀组合教师，讲解风格"温文尔雅"</td></tr>
+      <tr><td><strong>任涵</strong></td><td>组合板块讲课较好</td></tr>
+      <tr><td><strong>康佳颖</strong></td><td>水平足够</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>说明：</strong>前文提到的付云浩（数论组合尤其强）、艾颖华等全能型教师同样覆盖组合板块，此处不再重复。
+  </div>
+</section>
+
+<!-- ==================== SEC 8 ==================== -->
+<section id="sec8">
+  <div class="section-title">
+    <span class="num">Chapter 08</span>
+    <h2>小学阶段规划</h2>
+  </div>
+
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-title">一至三年级：兴趣启蒙</div>
+      <div class="flow-desc">
+        <ul>
+          <li>通过科普书、趣味资料进行兴趣启蒙。</li>
+          <li>家长可与孩子多聊数学相关内容，创造接触机会。</li>
+          <li>兴趣不会主动出现，需要给孩子接触和感受的契机。</li>
+          <li><strong>不需要急于进入正式训练</strong>，有人启蒙早、有人启蒙晚，顺其自然。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">三年级起：进入小奥训练</div>
+      <div class="flow-desc">
+        <ul>
+          <li>三年级开始进入小奥（小学奥数）的针对性学习。</li>
+          <li>核心目的：将兴趣转化为成绩，通过<strong>竞技训练</strong>检验孩子能否在训练中保持兴趣并跟上节奏。</li>
+          <li>数竞本质是竞技——除喜欢外，必须有针对性训练，训练往往不会太舒适。</li>
+          <li>感受训练氛围，在竞争中判断孩子能否坚持。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>小升初两种路径</h3>
+  <div class="two-col">
+    <div class="card card-accent">
+      <h4 style="color: var(--success);">路径一：当地有择校机会</h4>
+      <ul>
+        <li>核心任务：<strong>抓住择校机会</strong>（密考等选拔）。</li>
+        <li>资源永远往尖端富集——进入优秀初中即可获得更多资源和指引。</li>
+        <li>人家怎么考就怎么准备。</li>
+        <li>小三至小六的核心：全力争取择校入学。</li>
+      </ul>
+    </div>
+    <div class="card card-accent">
+      <h4 style="color: var(--accent);">路径二：当地无择校机会</h4>
+      <ul>
+        <li>核心资源转变为<strong>时间</strong>。</li>
+        <li>小升初择校机会越来越少，但<strong>初升高的选拔机会越来越多</strong>。</li>
+        <li>核心策略：<strong>提前学</strong>——利用充裕时间提前推进课程。</li>
+        <li>课内资源比竞赛资源更容易获取，提前省出时间。</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>无择校机会时的提前学路径</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-title">方向一：确定走数竞</div>
+      <div class="flow-desc">小奥之后进入初联学习。三年内学完初一内容，快的孩子六年级即可学完高中课内数学，高一开始进一试，甚至初一进二试。此为顶尖孩子的节奏。</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-title">方向二：尚未确定走数竞</div>
+      <div class="flow-desc">学完初中后进高中内容。优先级：先学完小学数学→初中数学和物理→高中内容。英语最好提前搞定。</div>
+    </div>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>适配判断：</strong>是否适合搞竞赛，取决于孩子学习当下内容是否吃力。若本身学习校内内容都吃力，则不适合额外加竞赛。
+  </div>
+</section>
+
+<!-- ==================== SEC 9 ==================== -->
+<section id="sec9">
+  <div class="section-title">
+    <span class="num">Chapter 09</span>
+    <h2>初中阶段规划与平台校</h2>
+  </div>
+
+  <h3>一、时间线倒推</h3>
+  <div class="alert alert-purple">
+    <strong>核心逻辑：</strong>高联首次参赛在<strong>高一九月份</strong>（一上高一即参赛）。二试至少需要一年学习时间。倒推可知：<strong>最晚初三必须进入二试学习</strong>。以此为标准，大致节奏为——初二开始进入高联，初一或初二完成高中课内数学。
+  </div>
+
+  <div class="diff-bar">
+    <span class="diff-label">难度递进</span>
+    <div class="diff-track"><div class="diff-fill" style="width: 30%; background: linear-gradient(90deg, #b8860b, #e8c547);"></div></div>
+    <span style="font-size:0.8rem; color:var(--text-muted);">小奥</span>
+  </div>
+  <div class="diff-bar">
+    <span class="diff-label"></span>
+    <div class="diff-track"><div class="diff-fill" style="width: 50%; background: linear-gradient(90deg, #8e4585, #b866a8);"></div></div>
+    <span style="font-size:0.8rem; color:var(--text-muted);">初联</span>
+  </div>
+  <div class="diff-bar">
+    <span class="diff-label"></span>
+    <div class="diff-track"><div class="diff-fill" style="width: 72%; background: linear-gradient(90deg, #6b2d5b, #a855a0);"></div></div>
+    <span style="font-size:0.8rem; color:var(--text-muted);">高联一试</span>
+  </div>
+  <div class="diff-bar">
+    <span class="diff-label"></span>
+    <div class="diff-track"><div class="diff-fill" style="width: 100%; background: linear-gradient(90deg, #8b2500, #d4553a);"></div></div>
+    <span style="font-size:0.8rem; color:var(--text-muted);">高联二试</span>
+  </div>
+
+  <h3>二、初中学段参考节奏</h3>
+  <table>
+    <thead>
+      <tr><th>时间节点</th><th>目标</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>初一</td><td>学完高中课内数学（顶尖节奏）</td></tr>
+      <tr><td>初二</td><td>开始进入高联一试技巧提升和二试学习</td></tr>
+      <tr><td>初三（最晚）</td><td>进入二试学习，为高一九月参赛做准备</td></tr>
+      <tr><td>五四制初四</td><td>初三进高联，初四完成二试学习</td></tr>
+    </tbody>
+  </table>
+
+  <h3>三、初中核心：平台校</h3>
+  <div class="alert alert-danger">
+    <strong>核心观点：</strong>初中阶段的核心不在节奏，而在于<strong>平台校</strong>。平台校能提供三样关键资源：① 教练的指引；② 教练告诉你缺什么资源、从哪补；③ 教练能提供的实际资源。纯靠家长自己托举出一个竞赛生，非常困难。
+  </div>
+
+  <h4>平台校示例</h4>
+  <table>
+    <thead>
+      <tr><th>学校</th><th>代表教练</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>上海中学</td><td>冯志刚（校长）</td></tr>
+      <tr><td>深圳中学</td><td>朱华伟</td></tr>
+      <tr><td>人大附中</td><td>张丹阳</td></tr>
+      <tr><td>名城（北京）</td><td>蔡桥（"桥爷"）、张璐（MO金牌）</td></tr>
+      <tr><td>海口中学</td><td>蔡老师（近年化学成绩突出，23年出国集，24年出国际金牌，近年出三个国集）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-gold">
+    <strong>平台校优先级：</strong>最佳选择——平台校自有初中，六年一贯培养；次选——高中进入平台校。核心是高中阶段有教练指引和资源支持。
+  </div>
+
+  <h3>四、弱省策略</h3>
+  <ul>
+    <li>弱省无法依赖平台校，需<strong>家长和孩子自身提供更大支持</strong>。</li>
+    <li>紧盯前文推荐的全国性名师，利用线上课、线下集训补充资源。</li>
+    <li>弱省特征：国集少，但金银牌不少（如河南）。</li>
+    <li>若无法进入平台校，两手准备：① 自行提供支持；② 切换到对资源要求较低的强基赛道。</li>
+  </ul>
+
+  <h3>五、外培与集训原则</h3>
+  <ul>
+    <li>线上线下对比：建议<strong>线下集训</strong>为优先，线上难以感知氛围和场域。</li>
+    <li>不建议纯零基础参加集训——大神教师难以从基础讲起，更多是思路和技巧的点拨。</li>
+    <li>如果某一板块已自学过一遍，可以去听该板块的集训。</li>
+  </ul>
+</section>
+
+<!-- ==================== SEC 10 ==================== -->
+<section id="sec10">
+  <div class="section-title">
+    <span class="num">Chapter 10</span>
+    <h2>高中阶段：强基政策与金牌降分</h2>
+  </div>
+
+  <h3>一、不同金牌层级的出路</h3>
+
+  <div class="two-col">
+    <div class="card card-accent">
+      <h4 style="color: var(--success);">国集（国家集训队）</h4>
+      <ul>
+        <li>直接保送，任选专业。</li>
+        <li>相当于保送，无需担心后续问题。</li>
+      </ul>
+    </div>
+    <div class="card card-accent">
+      <h4 style="color: var(--gold);">金牌 / 银牌</h4>
+      <ul>
+        <li>通过强基计划破格通道争取降分录取。</li>
+        <li>需关注高考成绩与校测表现的综合计算。</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>二、天赋型 vs 努力型</h3>
+  <table>
+    <thead>
+      <tr><th>类型</th><th>适配路径</th><th>关键考核</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>天赋型</strong></td>
+        <td>清华新领军、清北英才班、物理卓越/攀登计划</td>
+        <td><strong>现学现考</strong>——当场讲授大学高年级内容，考察学习能力和天赋</td>
+      </tr>
+      <tr>
+        <td><strong>努力型</strong></td>
+        <td>金银牌→强基破格</td>
+        <td>综合成绩 + 校测成绩的综合评分</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-danger">
+    <strong>警示：</strong>现学现考内容为<strong>大学高年级数学/物理</strong>（如复变函数、泛函分析等），但理论上选择的是即使没有基础也能听懂的讲解内容。曾出现同一省份同一学校，物理金牌未过卓越计划、银牌却通过的情况。这说明金牌≠一定能通过，天赋和临场学习能力是核心。
+  </div>
+
+  <h3>三、强基破格降分计算</h3>
+
+  <div class="alert alert-gold">
+    <strong>核心数据：</strong>综合计算后，金牌破格生约有<strong>54分</strong>的降分空间。
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>降分来源</th><th>说明</th><th>估算分值</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>入围线与录取线差值</td><td>非破格最低综合分对应的高考分，约比录取线低15-20分</td><td>约15分</td></tr>
+      <tr><td>校测成绩差值</td><td>破格生校测应拿满分（15分满分），比非破格生高出约2分，折合高考约16分</td><td>约15分</td></tr>
+      <tr><td>2025年新规差值</td><td>新规下破格生综合分可再低于非破格生约3分，折合高考约24分</td><td>约24分</td></tr>
+      <tr><td style="font-weight:700;">合计</td><td></td><td style="font-weight:700; color:var(--danger);">约54分</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>概念解释：</strong>"本省非破格最低综合分"——强基总分 = 高考成绩（占85%）+ 校测成绩（占15%）。非破格生凭高考分数线入围后参加校测。该综合分对应的高考分约比清北录取线低15-20分。
+  </div>
+
+  <h3>四、清北破格审核机制</h3>
+  <ul>
+    <li>2020年强基初设时：金银牌即可报名破格。</li>
+    <li>当前机制：金牌方可报名破格，报名后需通过<strong>审核</strong>——综合考察竞赛成绩、综合成绩、校内排名、过往经历等。</li>
+    <li><strong>银牌破格越来越困难</strong>，但若综合成绩突出（如校内排名靠前），仍有机会。</li>
+    <li>仅一块金牌且排名靠后、综合成绩一般、无论文/实践经历者，金牌也有可能被刷。</li>
+  </ul>
+
+  <h3>五、退役决策框架</h3>
+  <div class="alert alert-purple">
+    <strong>核心决策：</strong>时间投入在竞赛上拿金银牌的概率大，还是投入在高考上多拿40分到660+的概率大？<strong>高考是基本盘</strong>——若进不了金牌前列，高考成绩必须保底650-660分。家长需在高中阶段持续关注政策动态，做好时间分配的性价比判断。
+  </div>
+
+  <ul>
+    <li>不建议完全脱产搞竞赛——还需考虑青春期发展和文科素养。</li>
+    <li>高强度竞赛训练目前未见过持续超过三年的案例。</li>
+    <li>保底策略：不能因竞赛导致高考完全不够。</li>
+  </ul>
+</section>
+
+<!-- ==================== SEC 11 ==================== -->
+<section id="sec11">
+  <div class="section-title">
+    <span class="num">Chapter 11</span>
+    <h2>省一的用途与综评</h2>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>关键判断：</strong>省一是否有用取决于<strong>两个因素</strong>：① 所在省份的强弱（强省省一含金量可能高于弱省省队/铜牌）；② 本地的招生政策。
+  </div>
+
+  <h3>省一的两个实际用途</h3>
+
+  <div class="two-col">
+    <div class="card card-accent">
+      <h4>用途一：综合评价招生</h4>
+      <ul>
+        <li>各综评学校招生省份不同（山东、广东等较多；北京较少）。</li>
+        <li>省一可在综评报名时提交材料，部分学校明确降分（如南科大约降10分）。</li>
+        <li>更多情况下，省一能<strong>大幅提升综评面试成绩</strong>。</li>
+        <li>需确认所在省份是否有综评招生学校。</li>
+      </ul>
+    </div>
+    <div class="card card-accent">
+      <h4>用途二：大学二次选拔</h4>
+      <ul>
+        <li>进入大学后的二次选拔中，省一可获得优待。</li>
+        <li>如武汉大学弘毅学堂二次选拔中，数理省一可获得跨专业等机会。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SEC 12 ==================== -->
+<section id="sec12">
+  <div class="section-title">
+    <span class="num">Chapter 12</span>
+    <h2>集训选课核心原则</h2>
+  </div>
+
+  <div class="card" style="background: linear-gradient(135deg, var(--accent-bg) 0%, #fff 100%);">
+    <h3 style="margin-top: 0;">二比八法则</h3>
+    <p>在整个竞赛学习过程中，<strong>两成</strong>来自教师的教授（领进门），<strong>八成</strong>来自自学和内化。</p>
+  </div>
+
+  <h3>选课核心原则</h3>
+  <ol>
+    <li><strong>跟人不跟机构</strong>：了解教师名字，再看课程表中实际授课者是谁。</li>
+    <li><strong>警惕挂羊头卖狗肉</strong>：名义名师领衔、实际仅上一节课的情况需重点甄别。</li>
+    <li><strong>精准外培优于密集外培</strong>：密集外培但无时间内化，效果不佳。每次外培后需做题、将思路内化为自己的思维。</li>
+    <li><strong>不建议零基础参训</strong>：大神教师的课程更多是思路和技巧点拨，需先有基础。</li>
+    <li><strong>集训费用参考</strong>：大神级教师线下集训一场约<strong>六天，中四位数</strong>（不包食宿）。</li>
+    <li><strong>适配优先</strong>：每位教师思路不同，不存在一个教师解决所有问题。选择最契合孩子的教师比选择"最强"教师更重要。</li>
+  </ol>
+
+  <div class="alert alert-success">
+    <strong>总结：</strong>竞赛学习的核心是"老师领进门，修行在个人"。盲目追求外培数量不如追求精准匹配和充分内化。
+  </div>
+</section>
+
+<!-- Footer spacer -->
+<div style="height: 60px;"></div>
+
+</div><!-- /container -->
+
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-12-22-道哥直播-中科大少年班变化与竞赛升学策略</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2025-12-22-道哥直播-中科大少年班变化与竞赛升学策略</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>西交大为例，包括说今年英才呀、领军呀、卓越呀、攀登呀，都在发生了一些变化</li>
+                <li>变化的问题，也带大家看看未来的一个发展的趋势</li>
+                <li>那后面呢，我们还是基于中科大的这样的变化</li>
+                <li>包括说我们的今年各个政策的变化，来去讨论一下，</li>
+                <li>我们先问问各位家长朋友有多少人的年级是符合中科大少年班和少创班要求的</li>
+                <li>如果你们家孩子的年级是符合今年的中科大少年班的要求的初三以上你 那如果你说，呀，老师，我们年龄还差得远或者说我们今年就高三已经超出去了，根本不考虑这件事儿了你可以打个不考虑</li>
+                <li>我们先说一个核心的方向，来，各位家长朋友们，记住一个核心的方向叫做：现在越来越少的机会给到初三的朋友</li>
+                <li>但是在这几年的调整中，你像西少那天直播，如果大家看了，应该知道，叫做初三的名额砍了一半儿</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>西交大为例，包括说今年英才呀、领军呀、卓越呀、攀登呀，都在发生了一些变化。我们借着今天的中科大少年班，可以跟大家串一下，。大家进来之后能够听清，能够看清， 那我大概会花十到十五分钟的时间吧，跟大家去过一下今年中科大少年班的这个。</p>
+                <p>变化的问题，也带大家看看未来的一个发展的趋势。包括说我们的今年各个政策的变化，来去讨论一下，。我们到底怎么去看待竞赛，怎么去看待这些升学的策略。</p>
+                <p>我们先问问各位家长朋友有多少人的年级是符合中科大少年班和少创班要求的。如果你们家孩子的年级是符合今年的中科大少年班的要求的初三以上你 那如果你说，呀，老师，我们年龄还差得远或者说我们今年就高三已经超出去了，根本不考虑这件事儿了你可以打个不考虑。我们先说一个核心的方向，来，各位家长朋友们，记住一个核心的方向叫做：现在越来越少的机会给到初三的朋友。</p>
+                <p>你像中科大的少年班，它不是分少年班和少创班吗。但是在这几年的调整中，你像西少那天直播，如果大家看了，应该知道，叫做初三的名额砍了一半儿。中科大的少年班也是叫做非常特殊的、非常优秀的初三朋友，可以。</p>
+                <p>进行这样的一个破格的把你把你录进来，就极其优秀可以让你进来。如果你们家的孩子是初三的话，你愿不愿意让他现在就直接去上大学去。今年的要求是初三以上甚至还有一个比较严肃的表述，叫做：如果你没有到初三，然后你就去报名的话，他是会会就之后就不让你报了。</p>
+                <p>你看卷笔刀说不愿意来，各位家长朋友们从我们的整体的这个。关注下来去看会发现少数的初三的同学他是很适应这样的科研的发展，进入到大学的发展的，但是大部分的初三的小朋友叫做太小了。来，自己家孩子现在是初三，也差不多十四五岁的朋友可以给我打一下可以给我打一个赞，。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>你例如历年来看一般，例如有一些银牌的朋友说，我想早一点就直接去中科大了我也不想再熬着去熬清北，老走中科大。那你主竞赛那一科，例如我是数竞的，我数竞拿八十物理浅拿二十分，或者物竞拿八十，数学浅拿二十分。那两个都学来各位来各位，大家觉得为什么不能双休。</p>
+                <p>你数学拿八十，物理也拿八十，那你不是无敌了吗。如果知道为什么的，可以打知道；如果不知道为什么的，可以打想知道。木，你的这个问题问的其实特别的好，叫两个都学，当然是更稳。</p>
+                <p>不学那科二十分也拿不到，那你确实没有花没有花时间，很难很难拿到，就不能纯不学，一点不学不行是有主次的。两科同时作为重点去学的话，对大部分同学来说，你的时间是不够的。我们一会儿会给大家讲到数学、物理，想要学到省一大概是一个什么样的时间的一个划分。</p>
+                <p>在你上上高一之前，你要挤出来三年的额外时间，一年半学数学，一年半学物理。你还得把高考也得搞出来所以这个压力是非常非常大的。各位，还有另外一个原因刚刚这个说的是我们应试上面的原因，你的时间没那么多。</p>
+                <p>我是按照我的兴趣和天赋去学一科，还是也像高中一样要学很多科。觉得是学一科的打一科，觉得是很多科的打很多科。你上大学之后，你是应该专精一科发展好还是很多科都学得好发展好。</p>
+                <p>游泳其实不是很多科，叫做你你的其他科应该有一个基础的实力但是你真正你要发论文。你要出结果，你要好好的去搞好一科，浪迹天涯就像我说的，是你有一科要非常的突出，然后其他的达标就可以。那这种情况下，我们跟大家去讲数学需不需要学一式。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>中科大的量子很强，中科大在物理的应用方面做的很强。初中没有特别有含金量的证儿，你就说的不是特别好听没有特别有含金量的证儿，因为现在初中很多白名单都被取消，白名单里面就没有那种。统计一下，大部分物理省奖比数学省奖要多，主要原因是数学省奖可能在冲其他的，在够其他的，。</p>
+                <p>中科大会分三档，第一档是一本线录取，第二档降四十分录取，第三档就分数线。好我们这个问题问题特别多各位问题特别多，然后我们跟大家说一下，就我今天可能没有想到大家有这么多的问题可能没有办法。在这个过程中给大家全都回答完也有这个交流的社群如果你的问题没有回答到的话。</p>
+                <p>如果你是师某号的朋友，你会看到这儿有一个一个一个一个图你可以截一下去。添加潘潘，然后他把你拉到我们群里面，我们再去更深入的交流。然后，如果你是某音的朋友，点头像弹出来一个加群，点加群，然后留意群内的信息就可以了，。</p>
+                <p>好我们刚刚跟大家简单的去整理了这个中科大少年班的情况。那在这个里面，我们给大家分析了，说今年整体对于竞赛的倾向，对于年龄的倾向，对于你的核心的选择专业的倾向，都给大家讲清楚了。路人甲对的，本科专业是专业任选所以如果你还不在群里的话，如果是某音的朋友，点头像会弹一个加群，点加群，然后留意群内消息。</p>
+                <p>那如果是施某号的朋友的话，留留意这个屏幕上这儿有一个能够添加的方式，你去添加，。刚刚一直在听的朋友应该发现，刚刚我有一些表述不是特别适合公开放出来，会被人攻击。你们学校如果往年有人能上中科大的话，你去划中科大的线，再上下波动个百分之十到二十，问题不大。</p>
+                <p>如果错过前面讲中科大的这个部分的朋友，你就点头像，然后点加群，然后留意里面的消息，回头看回放。我们先讲第二个部分了，因为第二个部分其实是核心，叫做如何进行你的中科大少年班的规划，或者这儿不应该叫中科大的少年班的规划。会不会觉得，如果我的规划只能指向中科大少年班，或者只能指向竞赛，或者只能指向西交大少年班，会特别的遗憾。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>各位，所有人都应该打出来，叫做时间把时间打在评论区。” 我有额外的时间，来，各位，请问，如果你们家孩子在上小学或者在上初中，然后跟你说妈妈或者说爸爸。我学校学太简单了，你看我轻轻松松就把题做完了，作业也做完了，分考的也不错。</p>
+                <p>各位家长，你此时是认为他应该去玩，还是应该再学点东西。觉得应该去玩的，打玩儿；觉得应该学东西的，打学。就没有本质的区别，各位没有本质的区别，它俩代表的是不同的人生观。</p>
+                <p>如果你的选择是去玩的话，那大概率你更想让孩子说：“我这个过程的体验，我自己会非常的开心。而你如果是学的话，那大概率来，各位我们说一句话。叫做，我们终其一生，其实都在不断的试图提高最后或成功或幸福的概率。</p>
+                <p>因为我觉得上好大学出来找到好工作，人生更幸福，不愁赚钱。能够遇到更好的人的概率更大，所以，我们中行一生都在不断的说，我要尽力的累积下一个阶段的更高的成功的概率，我在不断的提升这个东西。那我想去提升我的初中成功概率、高中成功概率怎么办呢。</p>
+                <p>那我在初中说，我这些东西学起来很简单，我还有时间，。那这种情况下， 你其实就会选择我去学初联要么走竞赛，要么能够做我的初高之间的一个衔接。然后在高中，你说高中东西确实有难度，但是我小初的时候已经把高中学完了。</p>
+                <p>没什么孩子，或者没什么家长会愿意，真的把中间能够挤出的大笔时间都把它浪费掉。如果你真的能挤出时间的话，除了你想去外国发展去外部发展的话，不然的话，竞赛是你手里面性价比最高的一个学习的方向。你看，从自主招生到强基，砍掉了大量的能加分的方式，最后留下的硬通货还是竞赛。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>说我很明确的知道，叫做我们这个学校可能从头到尾也没培养出几个省队知道我们没有一个完整的竞赛培养的体系。小人宝说会请蔡子兴老师、应应老师、郭爷做客吗。不用不用刻意等一式结束有很多孩子是一式二式同步搞的。</p>
+                <p>我们一会儿放到答疑的时候给你讲这个问题给你讲清楚为什么二式没有这种、这种、这种卡顿。如果你是一个弱省弱校的朋友，记住你只能靠谁。来，各位记住，家长要提供的三个东西我先说是这三个是什么东西，你先把它记下来，然后我们挨个儿解释到底为什么需要这个东西。</p>
+                <p>因为很多时候，当你在强省或者强校的话，你有着这样非常良好的一个交流的氛围。国家队教练出来代课了，有这么一个小的刷题班，有这么一个资源，有这么一个题，你就快速的拿到手里面了。但是如果你不在这个圈子里面，或者你所在这个地区，你不在这个氛围里面的话，你就只能主动提升自己的能力。</p>
+                <p>那另外呢，我们还会有很多信息在群里面去交流。你像基本上每次这些政策一发，然后啪，我们群里就有家长在问是什么情况了，我们就来交流了。包括说我们每个月都会去邀请一些大咖给大家讲一讲大学里面的信息，例如大学的教授例如物理协会的秘书长，给大家讲一讲这些方面的信息。</p>
+                <p>包括我不是也给你们整理了今年寒假的集训的信息，各种老师的信息都整理好了。所以如果你在发愁信息的话，你就一定要到社群里面去抱团取暖甚至你要进很多很多的群，来在各个群里面去收集信息，然后互相的去对比。如果你还不在我们的交流的社群里面的话，是某号的朋友进群的方式给你放在屏幕上面了。</p>
+                <p>如果是某音的朋友，点头像会弹一个加群，然后进群之后。所有的某音的朋友，今天点完加群之后，一定一会儿直播完了，看一眼群里的消息。这是信息就只要你混的家长群够多，你的圈子够大，包括你的圈子里面，当然必须得有一些深度交流的群那那种比较随便、没什么筛选的群里面信息你就。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

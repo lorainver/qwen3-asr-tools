@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSP-S 提高组赛事解读与升学规划指南</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #4a1a3d 100%);
+  color: #fff;
+  padding: 56px 32px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: rgba(184,134,11,0.08);
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+.header .subtitle {
+  font-size: 1rem;
+  opacity: 0.85;
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
+}
+.header .tags {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== TAG ===== */
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.tag-purple { background: rgba(255,255,255,0.18); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.tag-gold { background: rgba(184,134,11,0.2); color: #f0d080; border: 1px solid rgba(184,134,11,0.3); }
+.tag-green { background: rgba(45,107,63,0.2); color: #8fd4a0; border: 1px solid rgba(45,107,63,0.3); }
+
+/* ===== CONTAINER ===== */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== NAV ===== */
+.nav-section {
+  margin: 40px auto;
+  max-width: 960px;
+  padding: 0 24px;
+}
+.nav-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  position: relative;
+}
+.nav-card::before {
+  content: '目录';
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 14px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 32px;
+  margin-top: 8px;
+}
+.nav-grid a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.2s, padding-left 0.2s;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.nav-grid a .nav-num {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.82rem;
+  min-width: 22px;
+}
+.nav-grid a:hover {
+  color: var(--accent);
+  padding-left: 4px;
+}
+
+/* ===== SECTION ===== */
+.section {
+  margin: 48px auto;
+  max-width: 960px;
+  padding: 0 24px;
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent-bg);
+}
+.section-title .num {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.72rem;
+  color: var(--accent-light);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.section-title h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-left: 4px solid var(--accent);
+  padding-left: 14px;
+}
+.section p, .section li {
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+.section p {
+  margin-bottom: 14px;
+}
+.section ul, .section ol {
+  margin: 12px 0 16px 20px;
+}
+.section li {
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+.card-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+/* ===== ALERT ===== */
+.alert {
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  border-left: 4px solid;
+}
+.alert-gold {
+  background: var(--highlight);
+  border-color: var(--gold);
+  color: #6d5a00;
+}
+.alert-success {
+  background: #eaf5ed;
+  border-color: var(--success);
+  color: #1e5230;
+}
+.alert-danger {
+  background: #fdf0ec;
+  border-color: var(--danger);
+  color: #6d1a00;
+}
+.alert-info {
+  background: #eaf2f8;
+  border-color: var(--info);
+  color: #133d56;
+}
+.alert-purple {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: #4a1a3d;
+}
+
+/* ===== TABLE ===== */
+.table-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+tbody tr:hover { background: var(--accent-bg); }
+tbody tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+tbody tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+/* ===== TWO COL ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+/* ===== DIFF BAR ===== */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.diff-bar .label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+}
+.diff-bar .bar-track {
+  flex: 1;
+  height: 10px;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.diff-bar .bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+
+/* ===== FLOW ===== */
+.flow {
+  margin: 16px 0;
+}
+.flow-item {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  padding-bottom: 24px;
+}
+.flow-item:last-child { padding-bottom: 0; }
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 20px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.flow-item:last-child::before { display: none; }
+.flow-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--accent-bg);
+  flex-shrink: 0;
+  margin-top: 3px;
+  position: relative;
+  z-index: 1;
+}
+.flow-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.flow-content p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+/* ===== HIGHLIGHT BOX ===== */
+.highlight-box {
+  background: linear-gradient(135deg, var(--accent-bg) 0%, #faf9f6 100%);
+  border: 1px solid var(--accent-bg);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--border);
+  margin-top: 56px;
+}
+
+strong { color: var(--text-primary); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .header { padding: 40px 20px 36px; }
+  .header h1 { font-size: 1.4rem; }
+  .nav-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .section-title h2 { font-size: 1.15rem; }
+  .section { padding: 0 16px; }
+  .nav-section { padding: 0 16px; }
+  .container { padding: 0 16px; }
+  .card { padding: 18px; }
+  .alert { padding: 12px 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <h1>CSP-S 提高组赛事解读与升学规划指南</h1>
+  <div class="subtitle">基于代码部落直播间答疑内容的系统整理</div>
+  <div class="tags">
+    <span class="tag tag-purple">CSP-S 提高组</span>
+    <span class="tag tag-gold">NOIP 备战</span>
+    <span class="tag tag-green">升学规划</span>
+    <span class="tag tag-purple">省队选拔</span>
+  </div>
+</header>
+
+<!-- ===== NAV ===== -->
+<nav class="nav-section">
+  <div class="nav-card">
+    <div class="nav-grid">
+      <a href="#sec1"><span class="nav-num">01</span>提高组总体赛况与爆零分析</a>
+      <a href="#sec2"><span class="nav-num">02</span>各省分数线预测与排名解析</a>
+      <a href="#sec3"><span class="nav-num">03</span>CSP-S 与 NOIP 的分数换算</a>
+      <a href="#sec4"><span class="nav-num">04</span>冲高分训练路径：保难题、冲子题</a>
+      <a href="#sec5"><span class="nav-num">05</span>初中生 NOIP 体验名额政策</a>
+      <a href="#sec6"><span class="nav-num">06</span>省队选拔：强省与弱省的差异</a>
+      <a href="#sec7"><span class="nav-num">07</span>入门组到提高组的学习规划</a>
+      <a href="#sec8"><span class="nav-num">08</span>爆零原因分析与应对</a>
+      <a href="#sec9"><span class="nav-num">09</span>头部高中签约门槛与趋势</a>
+      <a href="#sec10"><span class="nav-num">10</span>信奥历史与国际赛事认知</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== 01 ===== -->
+<section class="section" id="sec1">
+  <div class="section-title">
+    <span class="num">CHAPTER 01</span>
+    <h2>提高组总体赛况与爆零分析</h2>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>核心数据：</strong>今年 CSP-S 提高组全国参赛总人数约 <strong>3 万人</strong>；已公布省份详细数据 8000 多人，加上未公布省份合计约 3 万人。
+  </div>
+
+  <div class="card">
+    <div class="card-title">难度与爆零趋势</div>
+    <ul>
+      <li>提高组近两年门槛持续升高，"混分"难度增大，爆零比例将长期维持在较高水平。</li>
+      <li>每年参加提高组复赛（第二轮）的学生中，约 <strong>25%（四分之一以上）</strong>会获得零分。</li>
+      <li>参加提高组复赛前，建议孩子具备足够能力再报名，否则可通过模拟赛或其他赛事练手，不必死盯 CSP-S。</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>补充说明：</strong>入门组与提高组第二轮人数相差不大（均在三万出头），最大差别在第一轮——大量学生在第一轮被筛掉。
+  </div>
+
+  <div class="card">
+    <div class="card-title">头部省份参赛热度</div>
+    <p>复赛第二轮参赛人数最多的省份依次为：<strong>福建、浙江、北京、江苏、山东、湖南</strong>等，反映出这些地区对信息学的高度关注。</p>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心观点：</strong>信息学竞赛中，代码能力与赛制理解缺一不可。参加提高组复赛，一定是在孩子具备足够能力的前提下再做选择。
+  </div>
+</section>
+
+<!-- ===== 02 ===== -->
+<section class="section" id="sec2">
+  <div class="section-title">
+    <span class="num">CHAPTER 02</span>
+    <h2>各省分数线预测与排名解析</h2>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>关键数据：</strong>去年提高组全国一等基准线为 <strong>165 分</strong>。今年预估全国一等线在 <strong>150 分以下</strong>（约 140 多分），难度高于去年。
+  </div>
+
+  <div class="card">
+    <div class="card-title">全国分数线预测汇总</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>类别</th>
+            <th>去年分数线</th>
+            <th>今年预估</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>提高组一等全国线</strong></td>
+            <td>165 分</td>
+            <td>约 140–150 分</td>
+            <td>今年难度高于去年，降幅明显</td>
+          </tr>
+          <tr>
+            <td><strong>提高组二等全国线</strong></td>
+            <td>约 100–105 分</td>
+            <td>预估相近</td>
+            <td>大部分省份二等奖线在 100 分左右</td>
+          </tr>
+          <tr>
+            <td><strong>NOIP 三等全国线</strong></td>
+            <td>40 分</td>
+            <td>—</td>
+            <td>全国统一线，门槛较低</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">重点省份排名与分数参考</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>省份</th>
+            <th>组别</th>
+            <th>分数</th>
+            <th>省排名</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>浙江</td>
+            <td>提高组</td>
+            <td>206 分</td>
+            <td>约第 153 名</td>
+            <td>初三自学，成绩优秀</td>
+          </tr>
+          <tr>
+            <td>广东</td>
+            <td>提高组</td>
+            <td>316 分</td>
+            <td>约前 50 名</td>
+            <td>300 分排第 74 名</td>
+          </tr>
+          <tr>
+            <td>广东</td>
+            <td>提高组</td>
+            <td>250 分</td>
+            <td>约第 200 名</td>
+            <td>初二，省一稳</td>
+          </tr>
+          <tr>
+            <td>贵州</td>
+            <td>提高组</td>
+            <td>212 分</td>
+            <td>约 200–300 名</td>
+            <td>一等线有悬念</td>
+          </tr>
+          <tr>
+            <td>安徽</td>
+            <td>入门组</td>
+            <td>260 分</td>
+            <td>约 300–400 名</td>
+            <td>二等高分，够不着一等</td>
+          </tr>
+          <tr>
+            <td>上海</td>
+            <td>入门组</td>
+            <td>192 分</td>
+            <td>—</td>
+            <td>二等稳，一等无望</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>说明：</strong>强省一般不看全国线，以本省排名和自行划定的分数线为准；弱省参考全国线即可。
+  </div>
+</section>
+
+<!-- ===== 03 ===== -->
+<section class="section" id="sec3">
+  <div class="section-title">
+    <span class="num">CHAPTER 03</span>
+    <h2>CSP-S 与 NOIP 的分数换算</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">今年特点</div>
+      <p>往年 CSP-S 比 NOIP 简单，两者约有 <strong>30–40 分落差</strong>。但今年 CSP-S 本身难度已高，预计与 NOIP 的落差仅 <strong>10–20 分</strong>。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">换算参考</div>
+      <p>建议将 CSP-S 分数 <strong>下调约 30 分</strong> 作为 NOIP 预估分数（往年标准）；今年因难度接近，<strong>实际落差可能更小</strong>。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">CSP-S 分数对应的 NOIP 预期</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>CSP-S 分数</th>
+            <th>NOIP 预估</th>
+            <th>对应奖项</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>150 分</strong></td>
+           0 分</td>
+            <td>NOIP 二等奖稳；发挥 <td>约 120–15好可冲一等</td>
+          </tr>
+          <tr>
+            <td><strong>200 分</strong></td>
+            <td>约 170–200 分</td>
+            <td>NOIP 一等（除强省外）</td>
+          </tr>
+          <tr>
+            <td><strong>300 分</strong></td>
+            <td>约 250–280 分</td>
+            <td>NOIP 一等稳；弱省可冲省队</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>正面结论：</strong>CSP-S 提高组 150 分以上的学生，正常发挥下 NOIP 二等奖较稳，不要低估自身水平。NOIP 二等奖全国分数线约 100 分左右，远低于大多数家长的预期。
+  </div>
+</section>
+
+<!-- ===== 04 ===== -->
+<section class="section" id="sec4">
+  <div class="section-title">
+    <span class="num">CHAPTER 04</span>
+    <h2>冲高分训练路径：保难题、冲子题</h2>
+  </div>
+
+  <div class="highlight-box">
+    <strong>核心策略（来自金牌教练建议）：</strong>从 100 多分跳到 200 多分，关键在于——<strong>"保难题、冲子题"</strong>。即：确保提高组本身的难题能稳定做出，同时冲刺子题（即"提高+"难度，接近省选级别）。
+  </div>
+
+  <div class="card">
+    <div class="card-title">周康阳（周 AK）的训练量参考</div>
+    <ul>
+      <li>一年完成 <strong>200 多道蓝题</strong>（提高+级别试题）</li>
+      <li>平均约 <strong>3 天做 2 道题</strong></li>
+      <li>训练方向：稳定难题 → 冲刺子题</li>
+    </ul>
+  </div>
+
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-dot"></div>
+      <div class="flow-content">
+        <h4>第一阶段：稳定难题</h4>
+        <p>将提高组标准难度的题目做到稳定通过，确保基本盘不丢分。</p>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot"></div>
+      <div class="flow-content深度。</p>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-dot"></div>
+      <div class="flow-content">
+        <h4>第三阶段：持续积累</h4>
+        <p>按此节奏训练一年，第二年提高组 200+ 甚至 300+ 很有把握。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心观点：</strong>提高组两百分以上在全国任何省份均为一等奖水平；250 分以上算高分。想要稳定达到此水平，必须以提高+难度的题为主要训练内容。
+  </div>
+
+  <div class="card">
+    <div class="card-title">S 组 200 分冲刺 300 分的时间窗口</div>
+"提高+"（省">
+        <h4>第二阶段：冲刺子题</h4>
+        <p>开始练习选级别）的题目，拓展知识面和思维    <p>对于已经拿到提高组 200 分的学生，冲刺 300 分通常只有 <strong>一年</strong> 的时间窗口。一年内能冲过就意味着有发展潜力；冲不过则不再花时间，转向文化课备战。</p>
+  </div>
+</section>
+
+<!-- ===== 05 ===== -->
+<section class="section" id="sec5">
+  <div class="section-title">
+    <span class="num">CHAPTER 05</span>
+    <h2>初中生 NOIP 体验名额政策</h2>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>关键判断：</strong>初中生 NOIP 体验名额<strong>由各省自行决定</strong>，并非全国统一。部分省份已明确开放，部分省份未开放。是否有名额取决于所在省份的政策文件。
+  </div>
+
+  <div class="card">
+    <div class="card-title">已知省份体验名额情况</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>省份</th>
+            <th>体验名额状态</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>江苏</td>
+            <td style="color: var(--success);">已开放</td>
+            <td>已明确通知</td>
+          </tr>
+          <tr>
+            <td>四川</td>
+            <td style="color: var(--success);">已开放</td>
+            <td>已明确通知</td>
+          </tr>
+          <tr>
+            <td>上海</td>
+            <td style="color: var(--success);">已开放</td>
+            <td>已明确通知</td>
+          </tr>
+          <tr>
+            <td>广东</td>
+            <td style="color: var(--success);">已开放</td>
+            <td>100 分以上即可体验</td>
+          </tr>
+          <tr>
+            <td>浙江</td>
+            <td style="color: var(--danger);">未开放</td>
+            <td>官网可报名但未必通过审核；需关注后续是否有推荐通道</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">体验名额的规则</div>
+    <ul>
+      <li><strong>不设固定名额限制</strong>，只要分数达到该省高中生最低进队分数线即可。</li>
+      <li>初中生体验<strong>不占用正式选手的奖项</strong>，即使拿到金牌也只是体验性质。</li>
+      <li>例：今年初中生第一名王茂华凭成绩拿金牌绰绰有余，但最终未获得金牌。</li>
+      <li>建议：先确认所在省份是否开放，可查阅省红头文件或咨询当地教练。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 06 ===== -->
+<section class="section" id="sec6">
+  <div class="section-title">
+    <span class="num">CHAPTER 06</span>
+    <h2>省队选拔：强省与弱省的差异</h2>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>核心数据：</strong>NOIP 进省队的最低分数线因省而异——浙江、江苏等头部省份要求 <strong>360 分以上</strong>；中等省份约 <strong>250 分</strong>；弱省（如宁夏）最低仅 <strong>180 分</strong>。
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">强省特征</div>
+      <ul>
+        <li>进省队难度极高（如浙江、江苏需 360+）</li>
+        <li>NOIP 线远超全国线</li>
+        <li>目标：<strong>保银争金</strong>，冲击国家集训队/保送清北</li>
+        <li>考差也能拿银牌</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">弱省特征</div>
+      <ul>
+        <li>进省队门槛低（180–250 分即可）</li>
+        <li>但进省队可能只是<strong>"国赛体验卡"</strong></li>
+        <li>目标：<strong>保铜争银</strong></li>
+        <li>银牌都可能有难度</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>客观事实：</strong>很多弱省的 NOI 选手实力仅相当于强省的 NOIP 一等奖水平。不要认为国赛银牌的实力一定强于 NOIP 一等奖。
+  </div>
+
+  <div class="card">
+    <div class="card-title">满分数据（今年 CSP-S）</div>
+    <ul>
+      <li>全国提高组满分约 <strong>120–130 人</strong>（前 26 省统计 122 人）</li>
+      <li>满分最多的省份：<strong>浙江（20 人）、广东（20 人）</strong>并列第一</li>
+      <li>广东参赛人数（3700+）约为浙江（2000）的 <strong>1.8 倍</strong>，但满分人数相同，说明浙江整体平均质量略高</li>
+      <li><strong>重庆</strong>：700 人考试，14 人满分，三百分以上比例极高——"传说级"表现</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 07 ===== -->
+<section class="section" id="sec7">
+  <div class="section-title">
+    <span class="num">CHAPTER 07</span>
+    <h2>入门组到提高组的学习规划</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">完美剧本（头部地区参考）</div>
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-content">
+          <h4>初一：入门组一等奖</h4>
+          <p>证明基础扎实，算法入门完成。</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-content">
+          <h4>初二：提高组一等奖</h4>
+          <p>进入核心竞争力区间，具备签约资格。</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-content">
+          <h4>初三：提高组高分（300+）</h4>
+          <p>签约头部高中，后续备战 NOIP/省队。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">不同起点的学习时间参考</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>起点</th>
+            <th>目标</th>
+            <th>建议时间</th>
+            <th>难度评估</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>入门组一等奖</td>
+            <td>提高组一等奖</td>
+            <td>1–2 年</td>
+            <td>跨度增大，1 年为能力突出者，2 年更常见</td>
+          </tr>
+          <tr>
+            <td>提高组 100 分</td>
+            <td>提高组 200+ 分</td>
+            <td>1 年</td>
+            <td>保难题、冲子题方向训练</td>
+          </tr>
+          <tr>
+            <td>提高组 200 分</td>
+            <td>提高组 300+ 分</td>
+            <td>1 年</td>
+            <td>时间窗口有限，一年内定胜负</td>
+          </tr>
+          <tr>
+            <td>提高组 0 分</td>
+            <td>提高组 200+ 分</td>
+            <td>1–2 年</td>
+            <td>跨度大，不建议脱产冲</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心建议：</strong>入门组现在<strong>纯靠踏实即可</strong>，不需要天赋。只要孩子属中等水平且够踏实，入门组就能拿高分甚至满分。提高组越往后越看天赋。
+  </div>
+
+  <div class="card">
+    <div class="card-title">分数段能力对照</div>
+    <div class="diff-bar">
+      <span class="label">100 分</span>
+      <div class="bar-track"><div class="bar-fill" style="width:25%;background:linear-gradient(90deg,#8e4585,#b8860b);"></div></div>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-top:-4px;margin-bottom:16px;">提高组二等奖水平</p>
+
+    <div class="diff-bar">
+      <span class="label">200 分</span>
+      <div class="bar-track"><div class="bar-fill" style="width:50%;background:linear-gradient(90deg,#8e4585,#b8860b);"></div></div>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-top:-4px;margin-bottom:16px;">提高组一等奖，全国大部分省份均可</p>
+
+    <div class="diff-bar">
+      <span class="label">300 分</span>
+      <div class="bar-track"><div class="bar-fill" style="width:75%;background:linear-gradient(90deg,#8e4585,#2d6b3f);"></div></div>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-top:-4px;margin-bottom:16px;">保底 NOIP 一等奖；弱省有机会进省队</p>
+
+    <div class="diff-bar">
+      <span class="label">360+ 分</span>
+      <div class="bar-track"><div class="bar-fill" style="width:90%;background:linear-gradient(90deg,#2d6b3f,#b8860b);"></div></div>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-top:-4px;">浙江、江苏等强省进省队最低门槛</p>
+  </div>
+</section>
+
+<!-- ===== 08 ===== -->
+<section class="section" id="sec8">
+  <div class="section-title">
+    <span class="num">CHAPTER 08</span>
+    <h2>爆零原因分析与应对</h2>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>关键警示：</strong>今年全国提高组报名约 <strong>7000–8000 人</strong>，实际参赛约 3 万人——每四个学生中就有至少一个爆零。
+  </div>
+
+  <div class="card">
+    <div class="card-title">入门组爆零的两大原因</div>
+    <ol>
+      <li><strong>不熟悉文件输入输出流：</strong>漏写字母、格式错误等低级失误导致零分。</li>
+      <li><strong>不熟悉 OI 赛制规则：</strong>对比赛的文件格式、命名格式等基本要求不了解。</li>
+    </ol>
+    <p style="margin-top:12px;">入门组完全不会做题的学生不会进复赛，因此爆零者多数是<strong>会做题但不熟悉赛制</strong>。这是教学中应重点关注的问题。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">申诉机制</div>
+    <ul>
+      <li>可向官网申诉，每道题申诉费约 50 元。</li>
+      <li>但成功概率极低——信奥评测全部由系统完成，个人代码出错的概率远大于系统故障。</li>
+      <li>如果评测机本身有问题，影响的会是大批量考生，不会仅针对个例。</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>应对策略：</strong>爆零后最重要的是通过复盘发现问题。一般今年犯过的错，明年不会再犯。可通过模拟赛平台（如代码部落平台）用官方数据跑自己的代码，定位问题根源。
+  </div>
+</section>
+
+<!-- ===== 09 ===== -->
+<section class="section" id="sec9">
+  <div class="section-title">
+    <span class="num">CHAPTER 09</span>
+    <h2>头部高中签约门槛与趋势</h2>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心观点：</strong>学信奥的第一个目标——<strong>进入当地头部高中</strong>。如果信奥没有进当地重高，这条路的天花板就非常低了。
+  </div>
+
+  <div class="card">
+    <div class="card-title">浙江头部学校签约门槛参考</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>学校</th>
+            <th>当前门槛</th>
+            <th>实际签约标准</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>杭二中</strong></td>
+            <td>一等</td>
+            <td>提高组 <strong>300 分以上</strong>（省内要求最高）</td>
+          </tr>
+          <tr>
+            <td>镇海中学</td>
+            <td>入门一等（名义）</td>
+            <td>实际上需提高组一等</td>
+          </tr>
+          <tr>
+            <td>绍兴一中</td>
+            <td>入门一等</td>
+            <td>入门一等可入围</td>
+          </tr>
+          <tr>
+            <td>温州中学</td>
+            <td>入门一等</td>
+            <td>入门一等可入围</td>
+          </tr>
+          <tr>
+            <td>余高（余一中）</td>
+            <td>入门一等（名义）</td>
+            <td>每年招 6 名特长生，门槛趋高</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>重要提醒：</strong>学校公布的招生门槛（如"入门组一等奖即可入围"）只是<strong>最低报名条件</strong>，不代表实际录取标准。实际签约时，竞争者往往远超门槛线。家长切勿仅凭政策文件判断录取可能性。
+  </div>
+
+  <div class="card">
+    <div class="card-title">趋势预判</div>
+    <ul>
+      <li>随着入门组难度降低，拿入门组一等奖的学生越来越多，学校将<strong>逐步收紧门槛</strong>。</li>
+      <li>未来趋势：<strong>提高组一等奖</strong>将成为头部高中签约的主要参考标准。</li>
+      <li>案例：深圳中学名义上门槛为入门一等，但实际招收的基本都是提高一等以上的学生。</li>
+      <li>案例：杭电三维一体的书面门槛为 NOIP 三等奖或 CSP-S 三等奖，但实际起步需 NOIP 一等。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2024 年 NOIP 浙江一等奖学校分布</div>
+    <p>浙江 2024 年 120 多名 NOIP 一等奖中，<strong>仅 1 名选手来自普通高中</strong>，其余全部来自各地重点中学。这充分说明<strong>进入头部高中</strong>是信奥升学路径的核心前提。</p>
+  </div>
+</section>
+
+<!-- ===== 10 ===== -->
+<section class="section" id="sec10">
+  <div class="section-title">
+    <span class="num">CHAPTER 10</span>
+    <h2>信奥历史与国际赛事认知</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title">中国信奥的起源</div>
+    <ul>
+      <li>1984 年，国家领导人出访日本、新加坡、欧洲时发现各国青少年已开始计算机普及与竞赛。</li>
+      <li>随即提出<strong>"计算机要从娃娃抓起"</strong>，并于 1984 年举办第一届 NOI。</li>
+      <li>1989 年首次参加国际信息学奥林匹克（IOI）。</li>
+    </ul>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">国际影响力</div>
+      <ul>
+        <li><strong>全球影响力最大</strong>的信奥赛事：美国 USACO（尤其在升学维度）</li>
+        <li><strong>内卷程度最高</strong>：国内 CSP/NOI 赛道</li>
+        <li>各国国家队中<strong>华裔面孔越来越多</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">美国信奥国家队</div>
+      <ul>
+        <li>每年例行项目：来<strong>杭州</strong>进行封闭式集训</li>
+        <li>教练和选手以华裔为主</li>
+        <li>部分教练和选手英文不如中文流利</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>客观对比：</strong>新加坡国赛（也称 NOI）的难度仅相当于国内 CSP-S 水平，连 NOIP 难度都未达到。杭州市科技节的内卷程度远超新加坡国赛。
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心观点：</strong>对于在强省难以冲到顶层的学生，国际赛事（USACO、加拿大信奥、新加坡信奥等）是值得考虑的替代路线。代码部落冬令营同时备战 CSP 和 USACO，即"一场集训、两场比赛"。
+  </div>
+
+  <div class="card">
+    <div class="card-title">浙江信奥的整体优势</div>
+    <p>浙江的独特之处在于<strong>每个地级市</strong>都对信息学投入了高度重视——杭州有杭二、学军，宁波有镇海、宁外，绍兴有绍兴一中，温州有温州中学，台州、金华、丽水等城市也均有布局。这使得浙江的选手整体强度远高于仅由一两个头部城市支撑的省份。</p>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>本文档基于代码部落直播间答疑内容整理，仅供学习参考。具体数据以官方发布为准。</p>
+  <p style="margin-top:6px;">整理时间：2025 年</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小学阶段上岸高中的三条路径</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ── 页面头部 ── */
+        .header {
+            background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #b8860b 100%);
+            padding: 56px 0 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 40px,
+                rgba(255,255,255,0.03) 40px,
+                rgba(255,255,255,0.03) 80px
+            );
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.82);
+            font-weight: 300;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tag-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .tag-purple {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .tag-gold {
+            background: rgba(184,134,11,0.25);
+            color: #fff3cd;
+            border: 1px solid rgba(184,134,11,0.45);
+        }
+
+        /* ── 目录卡片 ── */
+        .toc-section {
+            padding: 40px 0 20px;
+        }
+
+        .toc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px 32px;
+            position: relative;
+        }
+
+        .toc-card .toc-label {
+            position: absolute;
+            top: -1px;
+            left: 24px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 4px 14px;
+            border-radius: 0 0 6px 6px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 32px;
+            margin-top: 16px;
+        }
+
+        .toc-grid a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .toc-grid a:hover {
+            background: var(--accent-bg);
+            color: var(--accent);
+        }
+
+        .toc-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent-bg);
+            color: var(--accent);
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* ── 章节标题 ── */
+        .section {
+            padding: 32px 0 16px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .section-title .num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.82rem;
+            color: var(--accent-light);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .section-title h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ── Alert 提示框 ── */
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        .alert-gold {
+            background: var(--highlight);
+            border-left: 4px solid var(--gold);
+        }
+
+        .alert-success {
+            background: #eaf5ed;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-danger {
+            background: #fdf0ec;
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-info {
+            background: #eaf2f8;
+            border-left: 4px solid var(--info);
+        }
+
+        .alert-purple {
+            background: var(--accent-bg);
+            border-left: 4px solid var(--accent);
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.92rem;
+        }
+
+        /* ── 数据卡片 ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 16px 0;
+        }
+
+        .card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card p, .card li {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ── 路径卡片 ── */
+        .path-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px 28px 24px;
+            margin: 18px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .path-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .path-card.path-math::before {
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        .path-card.path-cs::before {
+            background: linear-gradient(90deg, var(--info), #3498db);
+        }
+
+        .path-card.path-art::before {
+            background: linear-gradient(90deg, var(--gold), #d4a843);
+        }
+
+        .path-card .path-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .path-math .path-num { background: var(--accent); }
+        .path-cs .path-num { background: var(--info); }
+        .path-art .path-num { background: var(--gold); }
+
+        .path-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .path-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        /* ── 对比双栏 ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .two-col .col-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .two-col .col-item h4 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .two-col .col-item p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* ── 流程时间线 ── */
+        .flow {
+            position: relative;
+            padding-left: 32px;
+            margin: 20px 0;
+        }
+
+        .flow::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .flow-item {
+            position: relative;
+            padding: 0 0 24px 20px;
+        }
+
+        .flow-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .flow-item::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 8px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--accent-bg);
+        }
+
+        .flow-item .flow-title {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .flow-item .flow-desc {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+        }
+
+        /* ── 表格 ── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        thead th {
+            background: var(--accent);
+            color: #fff;
+            font-weight: 500;
+            padding: 12px 16px;
+            text-align: left;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        tbody tr:last-child td:first-child {
+            border-radius: 0 0 0 8px;
+        }
+
+        tbody tr:last-child td:last-child {
+            border-radius: 0 0 8px 0;
+        }
+
+        /* ── 列表美化 ── */
+        .content-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .content-list li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        .content-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ── 页脚 ── */
+        .footer {
+            text-align: center;
+            padding: 40px 0 32px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* ── 强调文字 ── */
+        strong {
+            color: var(--accent);
+        }
+
+        mark {
+            background: var(--highlight);
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        /* ── 响应式 ── */
+        @media (max-width: 700px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .header .subtitle {
+                font-size: 0.92rem;
+            }
+
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 16px;
+            }
+
+            .section-title h2 {
+                font-size: 1.2rem;
+            }
+
+            .path-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ 页面头部 ═══ -->
+    <header class="header">
+        <div class="container">
+            <h1>小学阶段上岸高中的三条路径</h1>
+            <p class="subtitle">从竞赛到艺术——面向不同禀赋家庭的升学策略梳理</p>
+            <div class="tag-bar">
+                <span class="tag tag-purple">升学规划</span>
+                <span class="tag tag-purple">竞赛路径</span>
+                <span class="tag tag-gold">美术方向</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- ═══ 目录 ═══ -->
+        <nav class="toc-section">
+            <div class="toc-card">
+                <span class="toc-label">目录</span>
+                <div class="toc-grid">
+                    <a href="#overview">
+                        <span class="toc-num">0</span> 整体概览
+                    </a>
+                    <a href="#path-math">
+                        <span class="toc-num">1</span> 数学竞赛路径
+                    </a>
+                    <a href="#path-cs">
+                        <span class="toc-num">2</span> 信息学竞赛路径（信竞）
+                    </a>
+                    <a href="#path-art">
+                        <span class="toc-num">3</span> 美术方向路径
+                    </a>
+                    <a href="#art-detail">
+                        <span class="toc-num">4</span> 美术路径详解
+                    </a>
+                    <a href="#comparison">
+                        <span class="toc-num">5</span> 三条路径对比
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ═══ 第0章 整体概览 ═══ -->
+        <section class="section" id="overview">
+            <div class="section-title">
+                <span class="num">PART 0</span>
+                <h2>整体概览</h2>
+            </div>
+
+            <div class="alert alert-purple">
+                <strong>核心结论</strong>
+                小学阶段要想上岸优质高中，目前共有三条路径可供选择：数学竞赛路径、信息学竞赛（信竞）路径，以及正在兴起的美术方向路径。
+            </div>
+
+            <div class="card">
+                <h3>路径全景</h3>
+                <ul class="content-list">
+                    <li><strong>路径一：数学竞赛</strong>——传统且成熟的竞赛升学通道</li>
+                    <li><strong>路径二：信息学竞赛（信竞）</strong>——以编程竞赛为核心的升学通道</li>
+                    <li><strong>路径三：美术方向</strong>——近年逐步浮现的新路径，最终指向清华美院（清美班）路线</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ═══ 第1章 数学竞赛 ═══ -->
+        <section class="section" id="path-math">
+            <div class="section-title">
+                <span class="num">PART 1</span>
+                <h2>数学竞赛路径</h2>
+            </div>
+
+            <div class="path-card path-math">
+                <div class="path-num">1</div>
+                <h3>数学竞赛</h3>
+                <p>作为三条路径中最早明确、体系最成熟的升学通道，数学竞赛是小学阶段冲击优质高中学位的首要路径。该路径以数学学科竞赛成绩为核心评价指标，通过竞赛获奖实现升学目标。</p>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>背景说明</strong>
+                数学竞赛路径长期存在且体系完善，是家长和学生最为熟知的小升初及高中升学通道之一。
+            </div>
+        </section>
+
+        <!-- ═══ 第2章 信竞 ═══ -->
+        <section class="section" id="path-cs">
+            <div class="section-title">
+                <span class="num">PART 2</span>
+                <h2>信息学竞赛路径（信竞）</h2>
+            </div>
+
+            <div class="path-card path-cs">
+                <div class="path-num">2</div>
+                <h3>信息学竞赛（信竞）</h3>
+                <p>信息学竞赛即以编程能力为核心的竞赛路径，与数学竞赛并列为当前最明确的两条小学阶段升学路径。该路径以编程竞赛成绩为评价标准，为学生提供进入优质高中的通道。</p>
+            </div>
+
+            <div class="alert alert-gold">
+                <strong>关键定位</strong>
+                信息学竞赛与数学竞赛同属第一梯队，是目前小学阶段仅有的两条路径明确、指标清晰的升学通道。
+            </div>
+        </section>
+
+        <!-- ═══ 第3章 美术方向 ═══ -->
+        <section class="section" id="path-art">
+            <div class="section-title">
+                <span class="num">PART 3</span>
+                <h2>美术方向路径</h2>
+            </div>
+
+            <div class="path-card path-art">
+                <div class="path-num">3</div>
+                <h3>美术方向</h3>
+                <p>这是一条正在逐步浮现的第三条路径。相较于前两条竞赛路径，美术方向在小学阶段尚未给出明确的高中招生指标，但其趋势已经初现端倪。</p>
+            </div>
+        </section>
+
+        <!-- ═══ 第4章 美术路径详解 ═══ -->
+        <section class="section" id="art-detail">
+            <div class="section-title">
+                <span class="num">PART 4</span>
+                <h2>美术路径详解</h2>
+            </div>
+
+            <div class="alert alert-danger">
+                <strong>重要提示</strong>
+                美术方向在小学阶段<strong>尚未给出明确的高中指标</strong>，但该路径已隐约成型，值得前瞻性关注与布局。
+            </div>
+
+            <h3 style="font-family: 'Noto Serif SC', serif; font-size: 1.1rem; margin: 20px 0 12px; color: var(--text-primary);">适用条件</h3>
+
+            <div class="two-col">
+                <div class="col-item">
+                    <h4>学业基础</h4>
+                    <p>文化课成绩需保持在<strong>还不错</strong>的水平，确保综合竞争力。</p>
+                </div>
+                <div class="col-item">
+                    <h4>家庭条件</h4>
+                    <p>家庭经济条件需<strong>还不错</strong>，能够支持长期的艺术类学习投入。</p>
+                </div>
+            </div>
+
+            <div class="flow">
+                <div class="flow-item">
+                    <div class="flow-title">第一步：小学阶段保留艺术技能</div>
+                    <div class="flow-desc">无需学习钢琴，建议选择<strong>绘画</strong>方向，在小学阶段系统学习并保留一门艺术技能。</div>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-title">第二步：保持文化课成绩</div>
+                    <div class="flow-desc">在学习绘画的同时，确保文化课成绩不低于竞争水平。</div>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-title">第三步：对接清美班路线</div>
+                    <div class="flow-desc">最终通过美术特长对接<strong>清北路线中的清美班</strong>（清华美院方向），实现优质高中乃至更高层次的升学目标。</div>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>路径终点</strong>
+                美术方向的最终目标是对接<strong>清北路线中的清美班</strong>。清美班路线对学生敞开，其录取数据具有参考价值。
+            </div>
+
+            <div class="alert alert-gold">
+                <strong>数据参考</strong>
+                根据公开信息，清华美院（清美班）曾在八本招生中录取美术类学生，此前录取人数为18人，表明该通道具有实际的升学价值。
+            </div>
+        </section>
+
+        <!-- ═══ 第5章 对比 ═══ -->
+        <section class="section" id="comparison">
+            <div class="section-title">
+                <span class="num">PART 5</span>
+                <h2>三条路径对比</h2>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>维度</th>
+                            <th>数学竞赛</th>
+                            <th>信息学竞赛（信竞）</th>
+                            <th>美术方向</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>路径明确度</strong></td>
+                            <td>成熟明确</td>
+                            <td>成熟明确</td>
+                            <td>初步浮现，尚无明确高中指标</td>
+                        </tr>
+                        <tr>
+                            <td><strong>核心能力</strong></td>
+                            <td>数学学科竞赛能力</td>
+                            <td>编程与算法能力</td>
+                            <td>绘画等艺术技能 + 文化课成绩</td>
+                        </tr>
+                        <tr>
+                            <td><strong>家庭投入</strong></td>
+                            <td>竞赛培训费用</td>
+                            <td>编程培训费用</td>
+                            <td>艺术培训费用，经济条件要求较高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>最终指向</strong></td>
+                            <td>优质高中录取</td>
+                            <td>优质高中录取</td>
+                            <td>清北路线 → 清美班</td>
+                        </tr>
+                        <tr>
+                            <td><strong>发展态势</strong></td>
+                            <td>长期稳定</td>
+                            <td>长期稳定</td>
+                            <td>近年新兴趋势，值得关注</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ═══ 页脚 ═══ -->
+        <footer class="footer">
+            <p>以上内容基于原始发言记录整理，仅供参考。具体升学政策请以各校官方招生简章为准。</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信息学竞赛学习经验分享 — 清华大学王子山专访</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== HEADER ===== */
+.hero {
+  background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #b8860b 100%);
+  color: #fff;
+  padding: 64px 0 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(184,134,11,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+}
+.hero .subtitle {
+  font-size: 1.05rem;
+  opacity: 0.9;
+  margin-bottom: 20px;
+  position: relative;
+}
+.hero .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  position: relative;
+}
+
+/* ===== TAG ===== */
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.tag-purple { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.tag-gold { background: rgba(184,134,11,0.2); color: #fff; border: 1px solid rgba(184,134,11,0.4); }
+.tag-white { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+
+/* ===== NAV ===== */
+.nav-section {
+  padding: 32px 0;
+}
+.nav-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  position: relative;
+}
+.nav-card::before {
+  content: '目录';
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 16px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  margin-top: 8px;
+}
+.nav-grid a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.2s ease;
+}
+.nav-grid a:hover { color: var(--accent); }
+.nav-grid a .num {
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 6px;
+  font-family: 'Noto Serif SC', serif;
+}
+
+/* ===== SECTION ===== */
+.content-section {
+  padding: 40px 0 20px;
+}
+.section-header {
+  border-left: 4px solid var(--accent);
+  padding-left: 16px;
+  margin-bottom: 24px;
+}
+.section-header .section-num {
+  font-size: 0.78rem;
+  color: var(--accent-light);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.section-header h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+.section-header-gold {
+  border-left-color: var(--gold);
+}
+.section-header-gold .section-num { color: var(--gold); }
+.section-header-green {
+  border-left-color: var(--success);
+}
+.section-header-green .section-num { color: var(--success); }
+.section-header-red {
+  border-left-color: var(--danger);
+}
+.section-header-red .section-num { color: var(--danger); }
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* ===== ALERT ===== */
+.alert {
+  padding: 18px 22px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  border-left: 4px solid;
+}
+.alert-gold { background: var(--highlight); border-left-color: var(--gold); }
+.alert-success { background: #eaf5ed; border-left-color: var(--success); }
+.alert-danger { background: #fdf0ec; border-left-color: var(--danger); }
+.alert-info { background: #eaf2f8; border-left-color: var(--info); }
+.alert-purple { background: var(--accent-bg); border-left-color: var(--accent); }
+.alert strong { font-weight: 700; }
+
+/* ===== TWO-COL ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ===== FLOW / TIMELINE ===== */
+.flow {
+  position: relative;
+  padding-left: 32px;
+  margin-bottom: 20px;
+}
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+.flow-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--accent-bg);
+}
+.flow-item-gold::before { background: var(--gold); border-color: var(--highlight); }
+.flow-item-green::before { background: var(--success); border-color: #eaf5ed; }
+.flow-item-red::before { background: var(--danger); border-color: #fdf0ec; }
+.flow-item h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+.flow-item p {
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+}
+
+/* ===== DIFF BAR ===== */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.diff-bar .label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  min-width: 100px;
+  text-align: right;
+}
+.diff-bar .track {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.diff-bar .fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+.fill-purple { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+.fill-gold { background: linear-gradient(90deg, #b8860b, #d4a017); }
+.fill-green { background: linear-gradient(90deg, #2d6b3f, #3d9b5a); }
+.fill-red { background: linear-gradient(90deg, #8b2500, #c0392b); }
+.fill-blue { background: linear-gradient(90deg, #1a5276, #2e86c1); }
+
+/* ===== TABLE ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 0.93rem;
+}
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr:hover { background: var(--accent-bg); }
+
+/* ===== UL/OL ===== */
+.content-section ul, .content-section ol {
+  margin: 8px 0 16px 20px;
+}
+.content-section li {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+.content-section li strong {
+  color: var(--text-primary);
+}
+
+/* ===== P ===== */
+.content-section p {
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 36px 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .hero { padding: 40px 0 32px; }
+  .hero h1 { font-size: 1.55rem; }
+  .nav-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+  .section-header h2 { font-size: 1.25rem; }
+  .card { padding: 18px; }
+  .diff-bar .label { min-width: 72px; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="hero">
+  <div class="container">
+    <h1>信息学竞赛学习经验分享</h1>
+    <p class="subtitle">清华大学王子山同学专访 — 从零基础到银牌保送的完整路径</p>
+    <div class="tags">
+      <span class="tag tag-purple">直播访谈整理</span>
+      <span class="tag tag-gold">信息学竞赛</span>
+      <span class="tag tag-white">清华大学</span>
+      <span class="tag tag-white">强基计划</span>
+      <span class="tag tag-gold">NOI 银牌</span>
+    </div>
+  </div>
+</header>
+
+<!-- ========== NAV ========== -->
+<nav class="nav-section">
+  <div class="container">
+    <div class="nav-card">
+      <div class="nav-grid">
+        <a href="#s1"><span class="num">01</span>嘉宾简介与背景</a>
+        <a href="#s2"><span class="num">02</span>学习历程总览</a>
+        <a href="#s3"><span class="num">03</span>家庭支持的关键作用</a>
+        <a href="#s4"><span class="num">04</span>费用与资源投入</a>
+        <a href="#s5"><span class="num">05</span>文化课与竞赛的平衡</a>
+        <a href="#s6"><span class="num">06</span>弯路反思与训练方法</a>
+        <a href="#s7"><span class="num">07</span>心态管理与抗压建议</a>
+        <a href="#s8"><span class="num">08</span>天赋认知与自我定位</a>
+        <a href="#s9"><span class="num">09</span>集训建议与学生画像</a>
+        <a href="#s10"><span class="num">10</span>家长常见问题解答</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+
+<!-- ===== 01 嘉宾简介 ===== -->
+<section id="s1" class="content-section">
+  <div class="section-header">
+    <div class="section-num">Section 01</div>
+    <h2>嘉宾简介与背景</h2>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>项目</th><th>内容</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>姓名</strong></td><td>王子山</td></tr>
+        <tr><td><strong>现就读</strong></td><td>清华大学致理书院 · 信息与计算科学专业（2024级新生）</td></tr>
+        <tr><td><strong>竞赛成绩</strong></td><td>NOI 银牌（全国决赛），获清华大学强基一等约（满分）</td></tr>
+        <tr><td><strong>高中</strong></td><td>山东省东营市胜利第一中学（信息学强校）</td></tr>
+        <tr><td><strong>起点</strong></td><td>中考后零基础起步，学竞赛前无任何信息学经历</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>背景补充：</strong>胜利一中为信息学传统强校，曾培养出杜胜权（NOI 金牌）、杜元旭、王一策（山东省第一）等多位竞赛优秀选手。
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 02 学习历程 ===== -->
+<section id="s2" class="content-section">
+  <div class="section-header">
+    <div class="section-num">Section 02</div>
+    <h2>学习历程总览</h2>
+  </div>
+
+  <p>以下按时间线梳理王子山从零基础到进入清华大学的关键节点与阶段特征。</p>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>中考后暑假 — 零基础入组</h4>
+      <p>高中举办信息学讲座后产生兴趣，以中考数学、物理成绩较高为优势入选学校信息小组。同批约二三十名同学，均为零基础，经不到一个月学习后多数退出，最终仅剩五人。</p>
+    </div>
+
+    <div class="flow-item">
+      <h4>语法阶段 → 搜索算法</h4>
+      <p>语法学习约半个月至一个月即进入算法阶段，先学 DFS 和 BFS。初期感到困难，经母亲鼓励后坚持学习，至开学前基本理解搜索算法，并在同级测试中取得较好成绩。</p>
+    </div>
+
+    <div class="flow-item flow-item-gold">
+      <h4>CSP 提高组一等奖（学习仅三个多月）</h4>
+      <p>因 NOIP 暂停，仅参加 CSP。考前一晚偶然接触到一道 DP 题，次日考试恰好考到该题部分内容，侥幸多得 64 分，最终以极短学习时间获得提高组一等奖。此成绩为后续学习提供了重要信心。</p>
+    </div>
+
+    <div class="flow-item">
+      <h4>高一省选 — 全省 30 至 40 名</h4>
+      <p>继续深入学习，参加多个竞赛培训机构的课程。期间存在"好高骛远"问题——以提高组入门水平去听省选课程，效果不佳，浪费部分时间。</p>
+    </div>
+
+    <div class="flow-item">
+      <h4>高二 NOIP — 挂分失利</h4>
+      <p>赛前模拟成绩良好，信心充足。但正式考试第一题挂掉 90 分（总分仅 400 分），排名从省前十跌至近百名。冬令营表现中规中矩，省选前一度被认为无望进入省队。</p>
+    </div>
+
+    <div class="flow-item">
+      <h4>高二省选 — 全省第 20 名出头</h4>
+      <p>在家长鼓励下坚持备战省选，结果出乎意料地取得全省 20 名出头的成绩。此时学习竞赛仅约一年半，产生不甘心继续深造的想法。</p>
+    </div>
+
+    <div class="flow-item flow-item-gold">
+      <h4>留级一年 — NOIP 全省第 4，省选全省第 4，进入省队</h4>
+      <p>经与家长商量后决定留级一年再冲。此年间家长未施加任何压力，学习状态轻松。最终 NOIP 与省选均取得全省第 4 名，顺利进入省队。国赛发挥中规中矩，获 NOI 银牌。</p>
+    </div>
+
+    <div class="flow-item flow-item-red">
+      <h4>回归文化课 — 高考差清华强基线 2 分</h4>
+      <p>竞赛期间完全未接触文化课（中考后至高考前无文化课学习）。因疫情等因素，高考前有效复习时间仅约三个月。高考发挥不理想，数学丢分较多，最终以 2 分之差未达清华强基线。</p>
+    </div>
+
+    <div class="flow-item flow-item-green">
+      <h4>复读一年 — 考入清华大学</h4>
+      <p>经慎重考虑后选择复读。家长全力支持，无任何责备。经过一年文化课复习，最终稳过清华强基线，顺利进入清华大学致理书院。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>关键数据：</strong>从零基础到 NOI 银牌约耗时三年；高考前有效文化课复习时间仅约三个月；复读后成功跨入清华强基线。整体竞赛+文化课学习周期约五年。
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 03 家庭支持 ===== -->
+<section id="s3" class="content-section">
+  <div class="section-header section-header-gold">
+    <div class="section-num">Section 03</div>
+    <h2>家庭支持的关键作用</h2>
+  </div>
+
+  <p>王子山在多次关键节点上，家长的态度和决策对其最终走向产生了决定性影响。以下梳理家庭支持的具体表现：</p>
+
+  <div class="two-col">
+    <div class="card">
+      <h4 style="color:var(--accent); margin-bottom:8px;">入门阶段的坚持鼓励</h4>
+      <p style="font-size:0.93rem;">初学 DFS/BFS 算法时感到困难，向母亲表示"我是不是不适合学"。母亲回应：既然选择了就坚持，别人能学会，你只要投入更多时间，也一定能学会。</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--accent); margin-bottom:8px;">失利后的情绪托底</h4>
+      <p style="font-size:0.93rem;">每次考试失利后，家长反复传达核心观点：<strong>考试证明不了什么</strong>——考好了不代表人生从此顺遂，考差了也不意味着整个人生被否定。关键在于从错题中吸取教训。</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--accent); margin-bottom:8px;">留级决策的无条件支持</h4>
+      <p style="font-size:0.93rem;">高二省选后王子山提出留级再冲一年，家长经考虑后支持，并明确表示：无论最终是否进省队，家里都全力支持。</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--accent); margin-bottom:8px;">复读决策的完全信任</h4>
+      <p style="font-size:0.93rem;">高考失利后，母亲明确表态：无论选择中游 985 还是复读冲清北，家里都无条件支持，"将来的路是你自己选的"。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心启示：</strong>家长在竞赛学习过程中最重要的角色不是施压和监督，而是在关键节点提供<strong>情绪支持</strong>和<strong>决策信任</strong>，帮助孩子在压力下保持稳定心态。
+  </div>
+
+  <div class="alert alert-success">
+    <strong>王子山原话：</strong>"家长从来没有给我上过什么压力。他们就说，你就算再没进省队，也能从文化课考进很好的大学。所以我那一整年都学得非常轻松。"
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 04 费用 ===== -->
+<section id="s4" class="content-section">
+  <div class="section-header section-header-green">
+    <div class="section-num">Section 04</div>
+    <h2>费用与资源投入</h2>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>项目</th><th>费用情况</th><th>备注</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>文化课补课</strong></td><td>0 元</td><td>学校单独为竞赛生安排补课一个月，之后回班正常跟课</td></tr>
+        <tr><td><strong>模拟赛</strong></td><td>约 200-300 元/场</td><td>累计参加 100 至 200 多场</td></tr>
+        <tr><td><strong>外出集训</strong></td><td>较少</td><td>受疫情影响外出集训次数有限</td></tr>
+        <tr><td><strong>总计</strong></td><td><strong>约 7-8 万元</strong></td><td>含模拟赛和集训全部费用</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>行业规律：</strong>信息学竞赛领域存在"反直觉"现象——越优秀的孩子花费反而越少。以杜胜权（NOI 金牌）为例，其总花费甚至低于王子山。此外，"梦熊"平台的模拟赛资源能够为学员提供更密集的训练机会，降低了寻找合适模拟赛的成本。
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 05 文化课 ===== -->
+<section id="s5" class="content-section">
+  <div class="section-header">
+    <div class="section-num">Section 05</div>
+    <h2>文化课与竞赛的平衡</h2>
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--info); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--info);">5.1</div>
+    <h2 style="font-size:1.2rem;">三个月复习冲刺清华强基线的方法</h2>
+  </div>
+
+  <ul>
+    <li><strong>主动总结套路</strong>——文化课学习与 OI 学习本质相通，都需要自主摸索和总结解题套路，而非依赖老师讲解。</li>
+    <li><strong>数学</strong>——高考反而发挥不理想，丢分较多。</li>
+    <li><strong>英语</strong>——底子较好，阅读理解靠大量阅读积累；作文采用"套路句子"策略，将 100 多个模板句排列组合套用，获得较好分数。高考要求的 3000 词仅背过约 1500 个。</li>
+    <li><strong>语文</strong>——从小积累较好。</li>
+  </ul>
+
+  <div class="section-header" style="border-left-color:var(--info); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--info);">5.2</div>
+    <h2 style="font-size:1.2rem;">算法学习对文化课的反哺</h2>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>值得注意：</strong>近年高考数学压轴题已明显偏向算法竞赛风格（如 2023-2024 年高考），算法思维对数学学科具有直接帮助。
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--info); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--info);">5.3</div>
+    <h2 style="font-size:1.2rem;">大学阶段的文化课体验</h2>
+  </div>
+
+  <p>进入清华大学后，大学课程压力相比高中反而更小——高中需同时应对六门高强度科目，而大学专业课数量相对较少，加之算法基础扎实，在编程相关课程中优势明显。</p>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 06 弯路反思 ===== -->
+<section id="s6" class="content-section">
+  <div class="section-header section-header-red">
+    <div class="section-num">Section 06</div>
+    <h2>弯路反思与训练方法</h2>
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--danger); margin-top: 20px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--danger);">6.1</div>
+    <h2 style="font-size:1.2rem;">最遗憾的弯路：基础未牢即冲高阶</h2>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>核心教训：</strong>获得提高组一等奖后，提高组算法仅学了不到一半，却急于学习省选算法，导致"往上够不着、往下回不去"的尴尬局面，浪费大量时间。<strong>正确的做法是先将基础打扎实，再逐步过渡到下一阶段。</strong>
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--danger); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--danger);">6.2</div>
+    <h2 style="font-size:1.2rem;">高二推倒重来：进步最显著的阶段</h2>
+  </div>
+
+  <p>NOIP 失利后，决定将此前浮于表面的省选算法全部推倒，从头系统复习提高组内容。仅用三至四个月时间，进步极其明显，模拟赛成绩显著提升。王子山认为这是一段"厚积薄发"的过程。</p>
+
+  <div class="section-header" style="border-left-color:var(--danger); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--danger);">6.3</div>
+    <h2 style="font-size:1.2rem;">省选阶段的训练方法</h2>
+  </div>
+
+  <ul>
+    <li><strong>自我认知</strong>——明确自身薄弱环节，针对性补强。</li>
+    <li><strong>专项题单</strong>——找到对应薄弱算法的题目集中训练。</li>
+    <li><strong>大量模拟赛</strong>——见识提高阶段未曾接触的技巧和思路。</li>
+    <li><strong>避免"只练会的，逃避不会的"</strong>——需要有人引导识别薄弱点并进行针对性训练。</li>
+  </ul>
+
+  <div class="section-header" style="border-left-color:var(--danger); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--danger);">6.4</div>
+    <h2 style="font-size:1.2rem;">省选至国赛阶段的时间分配</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h4 style="color:var(--accent);">模拟赛</h4>
+      <p style="font-size:0.93rem;">约 50% 时间。赛前节奏从一周两场逐步加至一周三场，国赛前连续模拟赛。帮助适应考试节奏，积累赛场经验。</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--accent);">专项刷题</h4>
+      <p style="font-size:0.93rem;">约 50% 时间。针对自身薄弱算法，选取对应难度区间的题目集中突破。可自行调整比例。</p>
+    </div>
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--danger); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--danger);">6.5</div>
+    <h2 style="font-size:1.2rem;">日常训练节奏</h2>
+  </div>
+
+  <div class="diff-bar">
+    <span class="label">每日强度</span>
+    <div class="track"><div class="fill fill-purple" style="width:85%;"></div></div>
+  </div>
+  <ul>
+    <li>工作日：早上 6:30 到校，晚上 10:20 回家。上午打模拟赛，下午改题 + 自主练习。</li>
+    <li>周末：两周放一天。放假当天仍用半天训练，半天休息。</li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 07 心态管理 ===== -->
+<section id="s7" class="content-section">
+  <div class="section-header section-header-gold">
+    <div class="section-num">Section 07</div>
+    <h2>心态管理与抗压建议</h2>
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--gold); margin-top: 20px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--gold);">7.1</div>
+    <h2 style="font-size:1.2rem;">家长的心态引导</h2>
+  </div>
+
+  <ul>
+    <li><strong>"考试证明不了什么"</strong>——无论竞赛还是高考，一次考试的结果不应被过度放大。</li>
+    <li><strong>与自己比较</strong>——不与他人比，只与上一次的自己比。只要错题搞明白了、下次不犯同样错误，就是进步。</li>
+    <li><strong>不过度干预</strong>——家长在平常学习中不做太多干涉，"一步一个脚印，踏踏实实学就行"。</li>
+    <li><strong>最坏打算已锚定</strong>——复读前已评估：最差也能考上前一年的成绩（中游 985），追求清北的风险完全可控。</li>
+  </ul>
+
+  <div class="alert alert-success">
+    <strong>心态效果：</strong>上述引导使王子山能够轻松看待各种挫折，即使离开家长独立后仍保持稳定心态。主持人评价其"具备特别好的创业者潜力，因为心力足够强大"。
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--gold); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--gold);">7.2</div>
+    <h2 style="font-size:1.2rem;">面对失利的自我调节</h2>
+  </div>
+
+  <ul>
+    <li>每次失利后会有一段情绪低落期（"emo一会儿"），属正常反应。</li>
+    <li>关键步骤：消化情绪 → 分析丢分原因 → 吸取教训 → 下次改进。</li>
+    <li>不隐藏成绩，主动找他人讨论不会的题目，将问题暴露出来而非藏着。</li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 08 天赋认知 ===== -->
+<section id="s8" class="content-section">
+  <div class="section-header">
+    <div class="section-num">Section 08</div>
+    <h2>天赋认知与自我定位</h2>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>王子山的自我评价：</strong>"我觉得自己是没那么优秀的，就是一个正常人的水平。可能在高中的时候多比别人努力一些，就能取得一个比别人好点的成绩。但上了大学之后，确实觉得会被一些人天赋碾压。"
+  </div>
+
+  <p>王子山特别强调这不是"凡尔赛"——在清华大学，确实存在很多从小学/初中就开始学习、基础打得极好、大学阶段依然轻松自如的同学。相比之下，他的优势更多来自于<strong>起步后的高强度投入和坚持</strong>，而非先天天赋。</p>
+
+  <div class="diff-bar">
+    <span class="label">自评天赋</span>
+    <div class="track"><div class="fill fill-gold" style="width:45%;"></div></div>
+  </div>
+  <div class="diff-bar">
+    <span class="label">自评努力</span>
+    <div class="track"><div class="fill fill-purple" style="width:88%;"></div></div>
+  </div>
+  <div class="diff-bar">
+    <span class="label">大学竞争压力</span>
+    <div class="track"><div class="fill fill-red" style="width:82%;"></div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 09 集训建议 ===== -->
+<section id="s9" class="content-section">
+  <div class="section-header section-header-green">
+    <div class="section-num">Section 09</div>
+    <h2>集训建议与学生画像</h2>
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--success); margin-top: 20px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--success);">9.1</div>
+    <h2 style="font-size:1.2rem;">适合集训的学生画像</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card" style="border-color: var(--success);">
+      <h4 style="color: var(--success); margin-bottom:8px;">✓ 适合集训的特征</h4>
+      <ul>
+        <li><strong>能坐得住</strong>——可在电脑前连续工作一整个上午或下午，中间仅起身喝水。</li>
+        <li><strong>真正热爱算法</strong>——解出题目后有明显的兴奋状态，内驱力充足。</li>
+        <li><strong>心性够好、抗压能力强</strong>——模拟赛爆零时不隐藏成绩，主动向他人请教。</li>
+        <li><strong>上课认真听讲</strong>——能够集中注意力，不过于活泼散漫。</li>
+        <li><strong>目标感明确</strong>——将集训视为与全国高手竞争、提升自我的机会，而非娱乐放松。</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: var(--danger);">
+      <h4 style="color: var(--danger); margin-bottom:8px;">✗ 不适合集训的特征</h4>
+      <ul>
+        <li>学习过程中"三天打鱼两天晒网"，缺乏持续性。</li>
+        <li>训练时偷偷看视频、聊天，无法全身心投入。</li>
+        <li>并非学不会，而是未将全部精力投入。</li>
+        <li>过于活泼，集训中与同伴打成一片、聊天玩游戏，将集训视为花钱放松的地方。</li>
+        <li>自觉性较差（尤其是四年级及以下学生，集训效果微乎其微）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--success); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--success);">9.2</div>
+    <h2 style="font-size:1.2rem;">集训管理的尺度把握</h2>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>选手视角 vs 回顾视角：</strong>作为学生时希望"管得松一点"，但回顾来看，严格管理无论对学生的进步还是对家长、学校都是更好的选择。上课和比赛过程中必须管控学生，避免聊天影响他人。
+  </div>
+
+  <div class="section-header" style="border-left-color:var(--success); margin-top: 24px; margin-bottom:12px;">
+    <div class="section-num" style="color:var(--success);">9.3</div>
+    <h2 style="font-size:1.2rem;">梦熊集训安排</h2>
+  </div>
+
+  <ul>
+    <li>分班体系：<strong>A、B、C、D、E</strong> 五个班型。A 班由唐明玉亲自带教；B、C 班使用金牌教练；D、E 班使用银牌教练。</li>
+    <li>集训地点：北京（已确定）、成都、上海、广州（近期发布通告）。</li>
+    <li>模拟赛节奏：赛前一周两场 → 六月份加至一周三场 → 国赛前连续模拟赛。</li>
+    <li>管理措施：晚上收手机，每天约一小时手机使用时间。</li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- ===== 10 常见问题 ===== -->
+<section id="s10" class="content-section">
+  <div class="section-header section-header-gold">
+    <div class="section-num">Section 10</div>
+    <h2>家长常见问题解答</h2>
+  </div>
+
+  <!-- Q1 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q1：银牌是否可以保留一年强基破格资格？</h4>
+    <p>王子山表示不清楚当前具体政策。他当时的情况是：同校有学长以银牌复读后上了清北，且他有信心即使政策变化，凭高考分也能进入华五甚至裸分上清北，因此不介意多上一年高三。<strong>建议直接咨询清华、清北招生办获取官方答案。</strong></p>
+  </div>
+
+  <!-- Q2 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q2：脱产学习是在学校上课吗？</h4>
+    <p>脱产期间在学校机房训练。疫情封控在家训练时状态很差——提不起精神、缺乏竞争环境，学习效率很低。</p>
+  </div>
+
+  <!-- Q3 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q3：提高组长期无法突破，如何迈过瓶颈？</h4>
+    <p>本质方法：加大训练量 + 增加模拟赛次数。核心理念是<strong>"厚积薄发"</strong>——前期踏踏实实打基础，突破时进步会很快。切忌急躁，越着急越容易打乱学习节奏。</p>
+  </div>
+
+  <!-- Q4 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q4：思维题如何训练？</h4>
+    <p>多做 AtCoder 平台的题目。思维能力难以教授，更多依赖天分和灵机一动，需要通过大量练习来培养。</p>
+  </div>
+
+  <!-- Q5 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q5：紫题（难题）如何突破？</h4>
+    <p>以蓝题为基础，大量练习后自然水到渠成。不要过度关注题目颜色和难度标签，选择对自己收获更大的题目优先练习。不建议一上来就追求紫题和黑题。</p>
+  </div>
+
+  <!-- Q6 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q6：NOIP 省一对强基有用吗？</h4>
+    <p>没有用。强基破格主要看 NOI 全国决赛奖牌。</p>
+  </div>
+
+  <!-- Q7 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q7：IOI 赛制成绩好但 OI 赛制差，如何调整？</h4>
+    <p>减少 IOI 赛事训练时间，将精力转投 OI 形式模拟赛。日常训练中刻意练习写暴力、写对拍等 OI 赛制必备技能。省选和 NOIP 均为 OI 赛制。</p>
+  </div>
+
+  <!-- Q8 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q8：如何找适合自己的题单？</h4>
+    <p>首先确认薄弱算法，然后选取该算法对应难度区间的题目全部做一遍。即使题目之间有相似性，重复练习也不会太浪费时间。</p>
+  </div>
+
+  <!-- Q9 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q9：遇到不会的题目，死磕还是看题解？</h4>
+    <p>一道题最多想 1-2 小时，想不明白就看题解。但看题解后<strong>习惯性记录思路</strong>，过一到两周后回去复习笔记，巩固理解。</p>
+  </div>
+
+  <!-- Q10 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q10：初中生需要提前学高中数学吗？</h4>
+    <p>王子山未提前学过，学习信息学时数学知识均为现学。未感觉到有非常大的提前学习需求。</p>
+  </div>
+
+  <!-- Q11 -->
+  <div class="card" style="margin-bottom:12px;">
+    <h4 style="color:var(--accent); margin-bottom:8px;">Q11：四年级及以下的孩子是否适合外出集训？</h4>
+    <p>不太适合。这个年龄段的孩子自觉性较差，集训对其作用微乎其微。梦熊在招生时对太小年龄的学生也不太愿意招收。</p>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>总结：</strong>王子山的整个经历核心可归纳为三个关键词——<strong>坚持</strong>（从零基础到银牌）、<strong>家庭信任</strong>（无条件支持与情绪托底）、<strong>厚积薄发</strong>（基础扎实后自然突破）。对于正在走竞赛道路的家庭，最重要的启示是：认清孩子的实际水平，一步一个脚印，不急于求成，同时给予充分的情感支持。
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>本文根据直播访谈内容整理，仅供学习参考。</p>
+    <p>信息学竞赛相关信息请以各校官方发布为准。</p>
+  </div>
+</footer>
+
+</body>
+</html>

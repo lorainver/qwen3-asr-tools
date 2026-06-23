@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重庆初升高全攻略 — 指标到校·自招签约·备考规划</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --accent: #6b2d5b;
+    --accent-light: #8e4585;
+    --accent-bg: #f5eef3;
+    --gold: #b8860b;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #7a7570;
+    --border: #e2ddd6;
+    --highlight: #fff3cd;
+    --success: #2d6b3f;
+    --danger: #8b2500;
+    --info: #1a5276;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  /* ===== Page Header ===== */
+  .header {
+    background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #a855a0 70%, #b8860b 100%);
+    color: #fff;
+    padding: 64px 32px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gold);
+  }
+  .header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.4em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .header .subtitle {
+    font-size: 1.05em;
+    opacity: 0.9;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+  .tag-bar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 0.82em;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .tag-purple { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+  .tag-gold { background: rgba(184,134,11,0.25); color: #ffe8a0; border: 1px solid rgba(184,134,11,0.4); }
+
+  /* ===== Main Container ===== */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ===== Table of Contents ===== */
+  .toc-section {
+    margin: -32px auto 40px;
+    position: relative;
+    z-index: 2;
+  }
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .toc-label {
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    background: var(--accent);
+    color: #fff;
+    padding: 4px 18px;
+    border-radius: 20px;
+    font-size: 0.82em;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .toc-card h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1em;
+    color: var(--accent);
+    margin-bottom: 16px;
+    margin-top: 4px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 32px;
+  }
+  .toc-grid a {
+    display: block;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.92em;
+    transition: background 0.2s, color 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .toc-grid a:hover {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .toc-grid a .toc-num {
+    display: inline-block;
+    width: 24px;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.88em;
+  }
+
+  /* ===== Section ===== */
+  section {
+    margin-bottom: 48px;
+  }
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--accent);
+    padding-left: 16px;
+  }
+  .section-header .sec-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.78em;
+    color: var(--accent-light);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+  }
+  .section-header h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.45em;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.12em;
+    color: var(--accent);
+    margin: 28px 0 12px;
+    font-weight: 600;
+  }
+  h4 {
+    font-size: 1em;
+    color: var(--text-secondary);
+    margin: 16px 0 8px;
+    font-weight: 600;
+  }
+
+  p { margin-bottom: 12px; }
+
+  ul, ol {
+    margin: 8px 0 16px 20px;
+  }
+  li {
+    margin-bottom: 6px;
+  }
+  li strong { color: var(--accent); }
+
+  /* ===== Alert Boxes ===== */
+  .alert {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 0.93em;
+    line-height: 1.7;
+  }
+  .alert-gold {
+    background: var(--highlight);
+    border-left: 4px solid var(--gold);
+  }
+  .alert-success {
+    background: #eaf5ed;
+    border-left: 4px solid var(--success);
+  }
+  .alert-danger {
+    background: #fdf0ec;
+    border-left: 4px solid var(--danger);
+  }
+  .alert-info {
+    background: #eaf2f8;
+    border-left: 4px solid var(--info);
+  }
+  .alert-purple {
+    background: var(--accent-bg);
+    border-left: 4px solid var(--accent);
+  }
+  .alert strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+
+  /* ===== Two Column ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  /* ===== Table ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.92em;
+  }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.92em;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; }
+  tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr:hover {
+    background: var(--accent-bg);
+  }
+
+  /* ===== Diff Bar ===== */
+  .diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+    font-size: 0.9em;
+  }
+  .diff-bar .label {
+    min-width: 80px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.88em;
+  }
+  .diff-bar .bar {
+    flex: 1;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .diff-bar .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent-bg), var(--accent));
+  }
+  .diff-bar .value {
+    min-width: 40px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.88em;
+  }
+
+  /* ===== Flow Timeline ===== */
+  .flow {
+    margin: 16px 0;
+    position: relative;
+    padding-left: 32px;
+  }
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--border);
+  }
+  .flow-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 8px;
+  }
+  .flow-item::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 0 2px var(--accent-bg);
+  }
+  .flow-item h4 {
+    margin: 0 0 4px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .flow-item p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.93em;
+  }
+
+  /* ===== Separator ===== */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    text-align: center;
+    padding: 32px 24px;
+    color: var(--text-muted);
+    font-size: 0.82em;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 700px) {
+    .header { padding: 40px 20px 32px; }
+    .header h1 { font-size: 1.6em; }
+    .container { padding: 0 16px 48px; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .section-header h2 { font-size: 1.2em; }
+    .card { padding: 16px; }
+    table { font-size: 0.82em; }
+    thead th, tbody td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <h1>重庆初升高全攻略</h1>
+  <div class="subtitle">指标到校 · 自主招生 · 签约策略 · 备考规划 · 语文早培</div>
+  <div class="tag-bar">
+    <span class="tag tag-purple">升学政策解读</span>
+    <span class="tag tag-purple">自招签约体系</span>
+    <span class="tag tag-gold">备考真题资源</span>
+    <span class="tag tag-purple">学科早培规划</span>
+    <span class="tag tag-gold">会员服务体系</span>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="container">
+
+<!-- TOC -->
+<div class="toc-section">
+  <div class="toc-card">
+    <span class="toc-label">目 录</span>
+    <h3>内容导航</h3>
+    <div class="toc-grid">
+      <a href="#sec1"><span class="toc-num">01</span>指标到校机制与选区策略</a>
+      <a href="#sec2"><span class="toc-num">02</span>中考对不同层次学生的意义</a>
+      <a href="#sec3"><span class="toc-num">03</span>出分填志愿与估分填志愿之争</a>
+      <a href="#sec4"><span class="toc-num">04</span>自招名额压缩与教共体机制</a>
+      <a href="#sec5"><span class="toc-num">05</span>签约类型详解：死约、套餐约、降分约</a>
+      <a href="#sec6"><span class="toc-num">06</span>自招比武时间轴与备考节奏</a>
+      <a href="#sec7"><span class="toc-num">07</span>自招考试内容与难度解析</a>
+      <a href="#sec8"><span class="toc-num">08</span>选校策略：三类值得关注的学校</a>
+      <a href="#sec9"><span class="toc-num">09</span>真题卷资源介绍</a>
+      <a href="#sec10"><span class="toc-num">10</span>语文早培与学习方法</a>
+      <a href="#sec11"><span class="toc-num">11</span>会员服务体系与权益</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 1 ===== -->
+<section id="sec1">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 01</div>
+      <h2>指标到校机制与选区策略</h2>
+    </div>
+  </div>
+
+  <h3>1.1 指标到校基本机制</h3>
+  <p>指标到校是区级中考分配机制，每年<strong>三四月份</strong>启动，与所在区直接挂钩。其核心逻辑为：</p>
+  <ul>
+    <li><strong>龙珠校向区内释放名额</strong>：如坡区（九龙坡区）的优质龙珠校会将 B 区名额拿出来参与指标到校，既方便留人，也受区级压力推动。</li>
+    <li><strong>覆盖范围广泛</strong>：渝中区、九龙坡区在指标到校方面最为优厚，区内学生初升高的压力显著较小。</li>
+    <li><strong>大规模升学路径</strong>：区域内大多数孩子通过指标到校完成初升高，这是主流通道。</li>
+  </ul>
+
+  <div class="alert alert-gold">
+    <strong>关键提醒</strong>
+    普娃（普通学生）一定要优先选区。如果手上有渝中区或九龙坡区的升学门票，应优先考虑，因为初升高的压力会非常小。
+  </div>
+
+  <h3>1.2 指标到校的锁定效应</h3>
+  <p>指标到校具有<strong>法律效力</strong>，一旦签署即锁定就读学校：</p>
+  <ul>
+    <li>已签约保送内迁的学生参加指标到校后，即便中考成绩优异（如 700 分），也只能就读签约学校。</li>
+    <li>该锁定具有法律意义，即使通过诉讼也无法更改。</li>
+    <li>指标到校实质上是区内"留娃"的工具，学校优先锁定本校优生。</li>
+  </ul>
+
+  <div class="alert alert-danger">
+    <strong>警示</strong>
+    部分学生在获得保送/内迁资格后被要求参加区内指标到校。签约后即被锁定，无法反悔，需谨慎决策。
+  </div>
+</section>
+
+<!-- ===== SECTION 2 ===== -->
+<section id="sec2">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 02</div>
+      <h2>中考对不同层次学生的意义</h2>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h4>对牛娃（前10%优生）</h4>
+      <ul>
+        <li>可走<strong>自招、内迁保送</strong>，不受学区限制</li>
+        <li>中考的核心作用是<strong>确定班型</strong>：有条件约或无条件约</li>
+        <li>决定能否参加<strong>夏令营</strong>（早培性质），中考分越高越有利</li>
+        <li>本质上是防止签约优生放松备考</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>对中等学生（普娃）</h4>
+      <ul>
+        <li><strong>指标到校</strong>是最优选择</li>
+        <li>需重点关注所在区的指标到校名额分配</li>
+        <li>选区直接决定升学路径的难易程度</li>
+        <li>大规模孩子通过此通道升学</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>补充说明</strong>
+    夏令营（早培）在初升高阶段极为重要。失去参加夏令营的资格，相当于在高中起跑线上落后。中考成绩是获得夏令营入场券的关键。
+  </div>
+</section>
+
+<!-- ===== SECTION 3 ===== -->
+<section id="sec3">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 03</div>
+      <h2>出分填志愿与估分填志愿之争</h2>
+    </div>
+  </div>
+
+  <h3>3.1 重庆中考三大变革</h3>
+  <p>2024年提出的三大变革方向及其落地情况：</p>
+  <table>
+    <thead>
+      <tr><th>变革措施</th><th>状态</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>出分填志愿</td><td><strong>未落地</strong>（2025年重新讨论中）</td><td>市教委已开会讨论，尚未正式实施</td></tr>
+      <tr><td>人脸识别</td><td>已落地</td><td>考试防作弊措施</td></tr>
+      <tr><td>自招比例降至15%→5%</td><td>已落地</td><td>分步压缩自主招生名额</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 估分填志愿的困境</h3>
+  <p>当前重庆实行估分填志愿，各层次学生估分误差差异显著：</p>
+  <div class="diff-bar">
+    <span class="label">优生</span>
+    <div class="bar"><div class="bar-fill" style="width:10%"></div></div>
+    <span class="value">≈5分</span>
+  </div>
+  <div class="diff-bar">
+    <span class="label">中等偏上</span>
+    <div class="bar"><div class="bar-fill" style="width:30%"></div></div>
+    <span class="value">10~20分</span>
+  </div>
+  <div class="diff-bar">
+    <span class="label">偏弱学生</span>
+    <div class="bar"><div class="bar-fill" style="width:80%"></div></div>
+    <span class="value">50~60分</span>
+  </div>
+  <p>误差主要集中在<strong>文科</strong>科目，导致志愿填报如同"开盲盒"。</p>
+
+  <h3>3.3 出分填志愿为何难以推行</h3>
+  <div class="alert alert-danger">
+    <strong>关键判断</strong>
+    出分填志愿几乎遭到除一所以外所有学校的反对。核心原因：信息差消失后，优生将集中涌向最顶尖学校（如南开、巴蜀），其他龙珠校及区重点将完全失去优质生源。
+  </div>
+  <p>出分填志愿的潜在影响：</p>
+  <ul>
+    <li><strong>短期利好</strong>：家长和学生无需承受估分误差带来的焦虑。</li>
+    <li><strong>长期隐忧</strong>：头部学校虹吸效应加剧，优生内卷程度升级，好学校门槛被进一步推高。</li>
+    <li><strong>连锁反应</strong>：四大金刚本部及分校分数线均将水涨船高。</li>
+    <li><strong>区域不公</strong>：北区等教育资源薄弱区域的学校将更加被动。</li>
+  </ul>
+
+  <div class="alert alert-purple">
+    <strong>核心观点</strong>
+    若出分填志愿真正落地，解决强者恒强的唯一办法是<strong>强化指标到校的锁定力度</strong>，以制度约束生源流向。
+  </div>
+</section>
+
+<!-- ===== SECTION 4 ===== -->
+<section id="sec4">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 04</div>
+      <h2>自招名额压缩与教共体机制</h2>
+    </div>
+  </div>
+
+  <h3>4.1 自招名额变化及影响</h3>
+  <p>以"阳光招生"政策为分界线，自招名额经历了大幅压缩：</p>
+  <table>
+    <thead>
+      <tr><th>时间节点</th><th>自招比例</th><th>影响</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2023年之前</td><td>学校自主控制</td><td>部分学校自招名额远超联招名额</td></tr>
+      <tr><td>2024年</td><td>压缩至15%</td><td>联招名额被迫增加，多校分数线暴跌30~70分</td></tr>
+      <tr><td>2025年</td><td>压缩至10%</td><td>继续缩减，自招竞争更加激烈</td></tr>
+      <tr><td>2026年（预期）</td><td>压缩至5%</td><td>自招名额进一步收紧</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-gold">
+    <strong>关键数据</strong>
+    2024年因名额变化，杨中、铁中、一史、科八、鲁巴等校分数线分别暴跌30~70分。其中璧山中学跌幅最大，达70分。核心原因：联招名额增加导致参与人数增多，分数线自然下降。
+  </div>
+
+  <h3>4.2 教共体与人籍分离</h3>
+  <p>教共体是四大金刚本部扶持分校/关联校的机制，其运作逻辑如下：</p>
+  <ul>
+    <li><strong>资源交换模式</strong>：本部提供师资培养、教研一体、分数线推动等支持，换取分校承接签约但未达线的学生。</li>
+    <li><strong>人籍分离</strong>：学生学籍挂在教共体学校，实际在本部或核心分校就读。此现象在内签保送和自招学生中普遍存在。</li>
+    <li><strong>名额承接</strong>：当学校自招名额不足时，教共体学校承担"蓄水池"功能，保证签约学生的就读权益。</li>
+  </ul>
+
+  <div class="alert alert-success">
+    <strong>正面结论</strong>
+    只要教共体机制存在，死约和套餐约就不会消失。学校为留住优生，必须提供有吸引力的签约条件，否则无法确保第一志愿填报率。
+  </div>
+</section>
+
+<!-- ===== SECTION 5 ===== -->
+<section id="sec5">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 05</div>
+      <h2>签约类型详解</h2>
+    </div>
+  </div>
+
+  <h3>5.1 死约（中考无条件约）</h3>
+  <div class="card">
+    <p><strong>定义</strong>：无论中考成绩如何，只要达到联招线即可就读签约学校及班型。</p>
+    <div class="alert alert-success">
+      <strong>典型案例</strong>
+      某会员孩子在初三上学期获得科八清北班和一季清北班的死约。中考估分仅660分（科八录取线674.5分），住院一个月未正常备考，但凭死约仍进入科八清北班就读。
+    </div>
+    <p><strong>适用对象</strong>：</p>
+    <ul>
+      <li>B等靠前、偶尔能上A的学生（八系A等约为年级前900名，对应中考680~690分）</li>
+      <li>希望锁定优质班型、规避中考风险的家庭</li>
+    </ul>
+  </div>
+
+  <h3>5.2 套餐约</h3>
+  <div class="card">
+    <p><strong>定义</strong>：以分校无条件死约为主体，搭配本部班型的"愿景"，并要求第三志愿填写教共体学校保底。</p>
+    <p><strong>典型结构</strong>：</p>
+    <ol>
+      <li>分校无条件死约（如一季清北班）</li>
+      <li>本部降分约（如上一中线10分可读清北班）——需中考达标</li>
+      <li>第三志愿填写教共体学校保底（如天星桥中学）</li>
+    </ol>
+    <div class="alert alert-info">
+      <strong>实际案例</strong>
+      某学生签约一季清北班（无条件），中考成绩662~663分，未达一季线（668分），最终被天星桥中学录取。大量类似情况的学生汇聚，推高了天星桥的分数线。
+    </div>
+  </div>
+
+  <h3>5.3 降分约与班型约</h3>
+  <p>降分约指在中考分数线上给予一定降幅的承诺；班型约则承诺特定班型。对于660分以上的优生，仅凭降分约或班型约不足以促使其填写第一志愿，通常需要搭配死约或套餐约才有吸引力。</p>
+</section>
+
+<!-- ===== SECTION 6 ===== -->
+<section id="sec6">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 06</div>
+      <h2>自招比武时间轴与备考节奏</h2>
+    </div>
+  </div>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>初一升初二暑假 — 转学考</h4>
+      <p>非免试区学生可通过转学考进入七龙珠、四大金刚体系。2+4项目（初中直升高中）也在该阶段招生。</p>
+    </div>
+    <div class="flow-item">
+      <h4>初二升初三暑假 — 比武启动</h4>
+      <p>正式的"翻墙考"（跨校自招考试）从2+4项目开始。暑假考试难度偏高。</p>
+    </div>
+    <div class="flow-item">
+      <h4>国庆节 — 小高峰</h4>
+      <p>自招比武的第一个集中期，部分学生可在国庆期间参加6~7场考试。</p>
+    </div>
+    <div class="flow-item">
+      <h4>寒假前 — 最高峰期</h4>
+      <p>自招比武的<strong>黄金期</strong>。四大金刚及分校在寒假前集中放约，错过此窗口，后续机会大幅减少。</p>
+    </div>
+    <div class="flow-item">
+      <h4>初三下学期（3月起）</h4>
+      <p>比武基本结束，学校仅接受面谈。指标到校启动。未提前签约的学生需家长自行到校协商，条件更为苛刻。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>关键警示</strong>
+    鲁巴等校在寒假后即停止比武，仅接受680分以上学生面谈并给予降分。初三是最焦虑的阶段，但提前在初三上焦虑的家长到初三下反而不焦虑——焦虑只是早晚的问题。
+  </div>
+</section>
+
+<!-- ===== SECTION 7 ===== -->
+<section id="sec7">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 07</div>
+      <h2>自招考试内容与难度解析</h2>
+    </div>
+  </div>
+
+  <h3>7.1 考试形式</h3>
+  <ul>
+    <li><strong>90%为校内考试</strong>，少数在校外进行</li>
+    <li><strong>必考四科</strong>：数学、物理、语文、英语（初试和复试均需完成全部四科）</li>
+    <li>部分学校只有大题，无选择题和填空题（如八中系）</li>
+    <li>竞赛教练出题，难度显著高于校内考试</li>
+  </ul>
+
+  <h3>7.2 各科难度特点</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>数学与物理</h4>
+      <ul>
+        <li><strong>数学</strong>：几何与函数为主，需辅助线（线与线的关系）；高难度涉及引圆问题（需画辅助圆解几何题）</li>
+        <li><strong>物理</strong>：自招考试中60%~70%为力学，电学占20%~30%；力学涵盖整体法、隔离法等高级方法</li>
+        <li>八中系和巴蜀系校内学习难度本身较大，自招卷难度更高</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>语文与英语</h4>
+      <ul>
+        <li><strong>英语</strong>：偏新中考方向，涉及首字母填空、翻译题等，接近上海题型</li>
+        <li><strong>语文</strong>：包含古诗词鉴赏等高中难度内容；卷子由高中竞赛教练或高中教师出题</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>重要提示</strong>
+    <strong>初二内容在自招中占比最高</strong>。数学的几何和函数、物理的力学均在初二阶段完成。四大金刚在初二即基本结束初中数学教学，初三以总复习为主。初二被称为"分水岭"，其重要性超过初三。
+  </div>
+
+  <h3>7.3 难度参照标准</h3>
+  <div class="diff-bar">
+    <span class="label">二星难度</span>
+    <div class="bar"><div class="bar-fill" style="width:50%"></div></div>
+    <span class="value">90分以上</span>
+  </div>
+  <p style="font-size:0.9em;color:var(--text-muted);margin-top:-8px">需达到90分以上，考四大金刚本部才有把握。如某西附2+4学生仅做八十多分，因高中知识挤压导致初中知识遗忘。</p>
+</section>
+
+<!-- ===== SECTION 8 ===== -->
+<section id="sec8">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 08</div>
+      <h2>选校策略：三类值得关注的学校</h2>
+    </div>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>核心策略</strong>
+    自招名额压缩后，选校需更加精准。应优先关注以下三类学校，而非盲目报考所有龙珠校。
+  </div>
+
+  <h3>第一类：无联招代码的新校</h3>
+  <div class="card">
+    <p>如<strong>红八、南渝、两江八中、两江巴蜀</strong>——明年大概率仍无联招代码，招生全走自招名额，无指标到校。</p>
+    <p>假设招6个班300人，则300人全部为自招名额，机会远多于有联招代码的学校。</p>
+  </div>
+
+  <h3>第二类：教共体资源丰富的学校</h3>
+  <div class="card">
+    <p>如<strong>朝阳中学</strong>：拥有教共体的普高学校（即使未达联招线，四五百分也能就读），可提供无下限的分数承接。</p>
+    <p>朝阳今年给区内重点学生降分幅度达<strong>30~40分</strong>，底气来自教共体内的普高学校兜底能力。</p>
+  </div>
+
+  <h3>第三类：自招名额多的学校</h3>
+  <div class="card">
+    <p>各校自招名额差异巨大：</p>
+    <table>
+      <thead>
+        <tr><th>学校</th><th>自招名额</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>鲁巴</td><td><strong>1055人</strong></td><td>自招名额最多，签约最为慷慨</td></tr>
+        <tr><td>巴蜀</td><td>约为一中、三中、八中的3倍</td><td>历史遗留问题导致需大量投放联招</td></tr>
+        <tr><td>其他龙珠校</td><td>一般100人以内</td><td>名额有限，竞争更为激烈</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-success">
+      <strong>建议</strong>
+      同类型学校中，自招名额多的学校（如鲁巴）更容易获得死约。会员中国庆节校外考试100人不到即签约30余人，鲁巴签约率显著高于其他学校。
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 9 ===== -->
+<section id="sec9">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 09</div>
+      <h2>真题卷资源介绍</h2>
+    </div>
+  </div>
+
+  <h3>9.1 真题卷概况</h3>
+  <div class="card">
+    <ul>
+      <li><strong>数量</strong>：38套真题卷，约700余页</li>
+      <li><strong>构成</strong>：以四大金刚及分校为主（14套区重点/龙珠，其余均为四大金刚体系）</li>
+      <li><strong>科目覆盖</strong>：数学19套、物理、英语4篇、语文1篇</li>
+      <li><strong>题型特点</strong>：全部为大题，无选择题和填空题（部分学校除外），卷面无分值标注</li>
+      <li><strong>答案解析</strong>：每套解析比试题本身更厚（如第16题解析长达5页）</li>
+      <li><strong>配套服务</strong>：专属答疑群（涛神团队，北大数院背景，原"火光"创始人之一）</li>
+    </ul>
+  </div>
+
+  <h3>9.2 适用人群</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>初三学生</h4>
+      <ul>
+        <li>目标参加自招比武</li>
+        <li>校内数学+物理得分率<strong>≥90%</strong>：用于了解题型和考查方向</li>
+        <li>得分率<strong>&lt;90%</strong>：用于发现知识盲区，针对性补强</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>初二优生</h4>
+      <ul>
+        <li>已在培优体系中（竞赛方向或校内拔尖）</li>
+        <li>可挑战二星难度真题进行自我检验</li>
+        <li>因初二内容在自招中占比最高，提前熟悉题型价值显著</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>警示</strong>
+    部分机构存在"组装假题"现象——将简单题拼凑后冒充四大金刚真题。因区县教师水平有限，无法教授真正难度的题目，遂降级出题给家长制造"正在备考四大金刚"的假象。辨别方法：对比真题卷即可明确真实难度。
+  </div>
+</section>
+
+<!-- ===== SECTION 10 ===== -->
+<section id="sec10">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 10</div>
+      <h2>语文早培与学习方法</h2>
+    </div>
+  </div>
+
+  <h3>10.1 语文阅读理解三大思维</h3>
+  <p>阅读理解的高分核心在于<strong>三种思维的融会贯通</strong>：</p>
+
+  <div class="card">
+    <h4>一、出题思维</h4>
+    <p>识别题目考查的知识点，掌握<strong>13个答题公式</strong>（文章主要内容、中心思想、词语赏析、句子赏析、标题作用题、人物形象分析、写A为什么写B、环境描写的作用等）。答题时必须覆盖所有得分点，遗漏任何一点即扣分。</p>
+
+    <h4>二、阅卷思维</h4>
+    <p>了解阅卷老师寻找的得分点，确保答案结构完整，不遗漏关键要素。</p>
+
+    <h4>三、作者思维</h4>
+    <p>读懂文章、共情作者情感，是最难也是最核心的能力。需要长期训练和阅读积累。</p>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>策略建议</strong>
+    对于普娃，先背公式入门（掌握出题思维和阅卷思维），再通过大量阅读逐步提升作者思维。公式是"保底工具"——即使共情不到位，也能通过公式覆盖得分点，减少不必要的失分。
+  </div>
+
+  <h3>10.2 文言文早培路径</h3>
+  <div class="flow">
+    <div class="flow-item">
+      <h4>1~2年级：小古文100篇</h4>
+      <p>建立基础文言词汇认知（如"汝"=你，"吾"=我，"走"=跑）。每天诵读5分钟以内，轻松积累语感。</p>
+    </div>
+    <div class="flow-item">
+      <h4>3~4年级：《世说新语》（平哥版）</h4>
+      <p>每天5分钟听力+做题，训练实词翻译和断句能力。完成约100讲后，可独立翻译未见过的文言文。</p>
+    </div>
+    <div class="flow-item">
+      <h4>5~6年级：《斗神归来》</h4>
+      <p>初中必考文言文的提前学习。涵盖古文翻译、字词句段理解、语法体系。提前完成后，初中背诵效率极大提升。</p>
+    </div>
+  </div>
+
+  <h3>10.3 七天重复记忆法</h3>
+  <div class="card">
+    <p><strong>原理</strong>：基于大脑认知规律，通过简单重复将短期记忆转化为长期记忆。</p>
+    <p><strong>操作方法</strong>：</p>
+    <ul>
+      <li>每篇文章每天读一遍，持续5~6天（以一周为单位）</li>
+      <li>每天花<strong>5分钟以内</strong>，像读"望天书"一样轻松诵读</li>
+      <li>第7天开个头，孩子自然能顺畅背诵</li>
+      <li>隔段时间复习一次，即可形成长期记忆</li>
+    </ul>
+    <p><strong>节奏参考</strong>：每周两篇古诗词+一篇文言文，以周为单位滚动推进。</p>
+  </div>
+
+  <h3>10.4 名著阅读规划</h3>
+  <ul>
+    <li>初中必考名著<strong>36本</strong>，其中<strong>12本为必读必考</strong>（如《朝花夕拾》《西游记》等）</li>
+    <li><strong>1~3年级</strong>：通过"听"完成泛听（如喜马拉雅听书），建立故事梗概认知</li>
+    <li><strong>4~5年级</strong>：通过沪江大语文等课程拓展经典名著，培养阅读兴趣；开始购买原著（非青少年版）</li>
+    <li><strong>小升初阶段</strong>：初中名著精讲课——训练精读和刷题能力</li>
+  </ul>
+
+  <div class="alert alert-gold">
+    <strong>关键数据</strong>
+    八中A线语文约110分（年级前900名）。通过系统早培，语文可达130分以上，比A线高出20余分。语文提分以<strong>年</strong>为单位而非以月为单位，需持续积累。语文从二类文提升到一类文可快速提分5~8分（初三最见效的路径）。
+  </div>
+
+  <h3>10.5 各学科早培核心原则</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>数学</h4>
+      <ul>
+        <li>利用网课资源自学（如学而思朱涛老师课程）</li>
+        <li>目标：提前学完初二内容，能做八中卷120+分</li>
+        <li>策略：会的题全部做扎实，压轴题最后一问可放弃</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>物理</h4>
+      <ul>
+        <li>力学占自招70%，需提前复习</li>
+        <li>利用网课资源（如"财商物理"）查漏补缺</li>
+        <li>初二阶段力学、电学需系统学习</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 11 ===== -->
+<section id="sec11">
+  <div class="section-header">
+    <div>
+      <div class="sec-num">SECTION 11</div>
+      <h2>会员服务体系与权益</h2>
+    </div>
+  </div>
+
+  <h3>11.1 会员核心权益</h3>
+  <table>
+    <thead>
+      <tr><th>权益项目</th><th>内容说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>一对一陪跑</strong></td><td>为期一年，专属小群（含主讲人、王老师、刘老师），每日20:00~22:00答疑</td></tr>
+      <tr><td><strong>推优与比武活动</strong></td><td>两年内免费参加所有探校、讲座、比武、志愿填报活动</td></tr>
+      <tr><td><strong>上岸指南</strong></td><td>政策解读手册（含招生计划表、内迁汇总表、面试题型等），实时更新</td></tr>
+      <tr><td><strong>资源包</strong></td><td>幼小或初高中资源包二选一，含语数英物化生全套视频课程及学习方法</td></tr>
+      <tr><td><strong>点对点推优</strong></td><td>基于对孩子情况的长期了解，精准推荐匹配学校</td></tr>
+    </tbody>
+  </table>
+
+  <h3>11.2 会员服务活动一览</h3>
+  <div class="card">
+    <ul>
+      <li><strong>探校活动</strong>：红八高中、朝阳中学、璧山巴蜀、科一外、李家中学、求精中学、南开五云、大三中（南渝B区）、数据谷、鲁巴、一史等数十所学校</li>
+      <li><strong>讲座活动</strong>：每月一场线下见面会（强基计划、中外双升学、美术特长生、小升初/初升高早培等主题），邀请清北学生分享学习方法</li>
+      <li><strong>志愿填报</strong>：中考加油站现场活动，8所学校（含两个一中系、两个巴蜀系、区重点及四小金刚）到场提供套餐约/降分约/班型约</li>
+      <li><strong>比武活动</strong>：2025年已举办近80场，高峰期一周3~4场</li>
+    </ul>
+  </div>
+
+  <h3>11.3 上岸指南内容</h3>
+  <div class="card">
+    <p>手册内容包括但不限于：</p>
+    <ul>
+      <li>中考六百家数据（沙八+渝八共1177人等）、屏蔽生数据、清北人数</li>
+      <li>2025年联招计划表（各校自招/联招/指标到校名额分配）</li>
+      <li>七龙珠内迁汇总表（各校签约规则）</li>
+      <li>区内推优政策</li>
+      <li>面试题型汇总</li>
+      <li>龙珠校版图及教材信息</li>
+    </ul>
+    <div class="alert alert-info">
+      <strong>说明</strong>
+      部分数据为独家信息（如联招计划表），仅在中考志愿填报前对会员核心老师开放，填志愿结束后才更新至手册。
+    </div>
+  </div>
+
+  <h3>11.4 资源包内容</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>初高中资源包</h4>
+      <ul>
+        <li>初高中衔接全套语数英物化生视频课</li>
+        <li>各科学习方法及工具</li>
+        <li>七天重复记忆法、错题整理法等实战方法</li>
+        <li>适用于五年级以上学生</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>幼小资源包</h4>
+      <ul>
+        <li>适用于五年级以下学生</li>
+        <li>侧重早培衔接与习惯养成</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  本文档根据讲座/直播内容整理，仅供升学规划参考。具体政策以各校官方发布为准。<br>
+  信息整理时间：2025年度
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

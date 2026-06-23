@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bandicam 2025-12-29 19-06-17-039</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>bandicam 2025-12-29 19-06-17-039</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>那么我们做填空题就要求你的准确率</li>
+                <li>要求一个数的百分之五十，我得先知道这个数</li>
+                <li>所以这个地方算出来是八分之一，OK，这是第一题</li>
+                <li>好，第二题，两个数的商是三点一四</li>
+                <li>两个数相除，如果被除数变成原来的两倍，的商也应该变成原来的两倍</li>
+                <li>被除数变成原来的两倍，商就应该乘以二</li>
+                <li>好，接下来第三题毕桂敏，我还是请大家互动一下吧</li>
+                <li>好像十四个，十四个哈，那你最后算出来含七的数一共有多少个</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、第一题</a></li>
+                <li><a href="#section2">二、第二题</a></li>
+                <li><a href="#section3">三、第三题</a></li>
+                <li><a href="#section4">四、第三题</a></li>
+                <li><a href="#section5">五、第四题</a></li>
+                <li><a href="#section6">六、第四题</a></li>
+                <li><a href="#section7">七、第四题</a></li>
+                <li><a href="#section8">八、第五题</a></li>
+                <li><a href="#section9">九、第六题</a></li>
+                <li><a href="#section10">十、第六题</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>第一题</h2>
+            </section>
+            <section id="section2">
+                <h2>第二题</h2>
+                <p>现在把被除数乘以二，除数的小数点向左移动两位。边读要边去分析，例如这个被除数乘以二，。两个数相除，如果被除数变成原来的两倍，的商也应该变成原来的两倍。</p>
+                <p>被除数变成原来的两倍，商就应该乘以二。小数点向左移动，意味着这个什么除数。成了百分之一，也说除数缩小了一百。</p>
+                <p>那么它的商也会增变成原来的一百，所以这个地方填六百二十八这个比较简单，我们就直接讲了。</p>
+            </section>
+            <section id="section3">
+                <h2>第三题</h2>
+                <p>第三题毕桂敏，我还是请大家互动一下吧。</p>
+            </section>
+            <section id="section4">
+                <h2>第三题</h2>
+                <p>百分之二十乘一加百分之二十，OK，吃掉百分之二十，那就意味着剩下只有百分之八十。再装进余下的百分之二十，此时是以谁为单位一。OK 哈，那乘以一加百分之二十，所以结果得四百八十，。</p>
+            </section>
+            <section id="section5">
+                <h2>第四题</h2>
+            </section>
+            <section id="section6">
+                <h2>第四题</h2>
+                <p>第四题，我请许俊浩哈，很久没看到许俊浩了，我看到你在举手。</p>
+            </section>
+            <section id="section7">
+                <h2>第四题</h2>
+                <p>第四题我等于二十二，等于二十二，这个属于校内也会考到的题型，。在一个减法运算中，被减数、减数、差的和是八十。被减数、减数差的和是八十，这句话意味着什么。</p>
+                <p>因为我们知道被减数等于减数加差，那被减数、减数、差的和是八十。四十被减数四十，OK，因为这是一个填空题，。好，我们直接就写出被减数是四十，那被减数就等于减数，也就告诉你减数和。</p>
+                <p>差的和是四十，这地方又告诉你减数和差的这个减数比差小。好，地方相当于就转化成一个和差问题，差是这个当中大的数，那么四十加四。</p>
+            </section>
+            <section id="section8">
+                <h2>第五题</h2>
+                <p>它一到九十，我们先看它一位数中有多少个。数字包含了七，然后发现只有七一个数字，然后我们再来看。它第它两位数中包含了七的有多少个。</p>
+                <p>好像十四个，十四个哈，那你最后算出来含七的数一共有多少个。你看一下，你从两位数上面去找，有点麻烦。OK，两位数如果一定要找，那上也是看个位上为七的，那一十七到多少七。</p>
+                <p>七十，那十位上是七的，七十到七十九有多少个。那但是我们要注意，这个地方我们找的是个位上为七的，。这地方找的十位上为七的，有没有找重。</p>
+                <p>个位上和十位上都为七的七十七，对吗。所以为期有还有数字七的有十八个，理解不。OK哈，这样子做呢，始终有一点点绕，。</p>
+                <p>你们分成一位、两位的，通常我们是怎么分的。我们分量比较多的你想一下，这个七它出现在数位上，它能出现在哪些位置。个位上，我们直接就去找个位上为七的，理解吗。</p>
+                <p>理解，理解，个位上为七的，这个一到九，它个位上的数成什么规律。我们只看个位的话，这些数成周期性的。个位接下来这个十，其实个位为零，接下来零。</p>
+            </section>
+            <section id="section9">
+                <h2>第六题</h2>
+            </section>
+            <section id="section10">
+                <h2>第六题</h2>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

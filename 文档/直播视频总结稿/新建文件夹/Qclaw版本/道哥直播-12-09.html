@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>道哥直播-12-09</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>道哥直播-12-09</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>第一个部分，把这两天可能有一些家长朋友们没有听着说这个竞赛教练的一个选择策略，包括说一些教练的推荐，我们来聊一聊</li>
+                <li>这周五之前应该要出来，但是说实话，来各位，那不用太纠结攀登的公告的事儿</li>
+                <li>我看有不少家长朋友们在问攀登应该是已经拿奖的</li>
+                <li>应该是不卡的，如果卡的话就退出重进一下，退出重进一下基本就好了</li>
+                <li>想要听到的东西，现在核心关注的点也不一样</li>
+                <li>那包括犹豫加自学，来，我们首先先聊小段的内容</li>
+                <li>来，首先问各位家长朋友们一个问题</li>
+                <li>来，首先我们跟大家讲你学没学过小</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>第一个部分，把这两天可能有一些家长朋友们没有听着说这个竞赛教练的一个选择策略，包括说一些教练的推荐，我们来聊一聊。我们来聊一聊，在强省和弱省，我们在小数高的这个竞赛规划的路线上面，我们的目标呀，我们的各阶段的选择的策略有什么样的不同。第三个部分跟大家去聊一聊，那金牌包括省奖的这个升学红利我们去讲一讲，在各个阶段应该怎么去利用它。</p>
+                <p>这周五之前应该要出来，但是说实话，来各位，那不用太纠结攀登的公告的事儿。你看，清北两家的这个关系，基本上你怎么办，我也赶紧去跟进不会有特别大的差别。你就该怎么准备怎么准备怎么准准备怎么准备卓越，你就怎么准备攀登， 好，来我们先跟大家去过一过现在内容。</p>
+                <p>我看有不少家长朋友们在问攀登应该是已经拿奖的。我们看看大家目前的阶段如果现在是还没开始竞赛的。应该是不卡的，如果卡的话就退出重进一下，退出重进一下基本就好了。</p>
+                <p>看，如果各位家长你还在犹豫要不要进入的你打个犹豫；如果你是说我已经在开始竞赛攀登的过程中的你打一个这个学习中。如果你是已经得奖的，你可以把你目前的奖打一打，因为不同的阶段的家长朋友。你例如，还在犹豫的家长，肯定在纠结，说：“呀，我现在到底该选谁。</p>
+                <p>那已经在学的过程中呢，肯定在想：我现在到底这个节奏是快还是慢。我现在有这个奖了，怎么能够最大化的利用它，。今天讲的内容呢，肯定各个阶段都会覆盖到包括福梅说我们六年级不知道怎么办，那你就重点来听我给大家讲的这个小初高的一个规划的思路。</p>
+                <p>那包括犹豫加自学，来，我们首先先聊小段的内容。在这个内容中，我会给大家讲，你现在如果纠结应该怎么办，你的目标是什么，以及你开始想要学小奥之后，你应该是什么的思路来学。我知道有的家长朋友们年级可能已经到初段、到高段或者更高了有的家长朋友们可能年级比较小。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>为了第一，满足初升高 的这个台阶的跨越，能更好的适应高中内容；第二，叫做通过初联的学习来搞定当地的自主招生。小蓝本很难全刷完很难全刷完，因为说实话，中的小蓝本其实有一些题很难。马小玲记得点个关注然后像马小玲一样还没有关注的家长朋友们，可以给道哥点个关注。</p>
+                <p>关注之后，我们这个直播的时候也会有提醒，你就不会错过后面的内容了。然后像之前的直播，包括今天的直播，都会把回放生成之后放在咱们的群里面。你如果还不在群里面，那就你就自己去添加就好了。</p>
+                <p>好到这儿为止，来各位初联看你的扎实程度，我我不是特别建议大家用这种普适的一轮两轮去说。因为一般来说，第一轮是带你把知识过一遍，第二轮是带你刷题，把你的这个基础夯实一下。当然，也有一些教练选择边学边刷题所以一轮过去，基础就很扎实，。</p>
+                <p>在我我们跟大家做一个科普你在整个高考的过程中，你考的其实都是立体几何包括解析几何，但是你在。高联中在竞赛中考的是平面几何，平面几何的东西基本上是在初中再学完的，所以此时是要刷一刷几何，而几何又是能够通过努力来保证你的应试水平的。各个奖项其实都有自己的应对的方向只不过会有人觉得双银现在这个可能性价比没有原来高。</p>
+                <p>我们一会儿把各个奖项你在未来怎么用，会在第三部分给大家讲清楚。我知道咱直播间大部分的家长孩子应该都是比较优秀的因为如果你现在在现阶段实力不优秀的话，你应该也不会来听我讲竞赛的东西。那这种情况下，包括木渊包括小朋友们，包括各位家长朋友们，一定记住一件事儿：你必须有自己的节奏。</p>
+                <p>我原来老让大家打节奏，但后来发现节奏是不够的因为很多家长喜欢跟别人的节奏。包括在群里面有家长说：“老师，我们六年级一试刷完了。”好多家长就焦虑起来了，说：“老师，我们没有刷完怎么办。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>这都是非常经典的一些数论方面讲的比较好的老师。二试的第一轮学完去外培，基本是，基本是二试的一轮学完。那当然，有可能你们学校的教练说，我们本身这个板块的讲解，我们去外培里面去做也有可能带着你们直接去外培，。</p>
+                <p>那除了我们刚刚所说的这些大神之外什么邹璟这些人之外包括我们所说的陈晓敏老师。陈晓敏老师之前其实是做计算机方面的，然后现在也会在半圆俱乐部里面去开一开这个组合的课。陈晓敏老师的这个上课方式是公开的，你直接去搜“半圆”你就可以搜到。</p>
+                <p>这个这个公众号回头我放到这个这个群里面我们在这儿也没有办法，没有办法给大家打出来，我回头放到群里面。陈晓敏老师的组合讲的非常的好包括任寒老师的组合也都讲得很好。然后这些老师呢，他们往往都有自己的一个正职，例如我是学大学的教授，或者某个。</p>
+                <p>然后在一些假期的时候会邀请他们到各个地方去上课。你例如，我知道傅云浩和李先颖两位老师今年的寒假在成都在成都开课，但是应该已经爆满了。好，宽广提了个问题在高一上学期，现在学校给安排的文化课周期这段时间，还有必要搞竞赛吗。</p>
+                <p>来，各位来，各位这个其实涉及到一个问题，到了高中之后你的一个问题。我我们回头把我们收集到的一些这些老师今年的代课的信息给大家放到群里面，。如果你知道某个老师今年的课在哪儿上，也可以在群里面去交流一下。</p>
+                <p>不是在成都哪个机构，是在成成都找的地点找的地点。好，然后我们在这儿其实就有一个核心的问题，。有一个核心的问题，叫做你怎么去平衡你的校内和你自己的竞赛的内容，。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>加入方式放在这儿了放在这儿了联系方式放在这儿了。然后截图，一会儿直播完了之后扫码去添加就可以了，。包括说在一些地区性的新某星、国某学这几个，包括半圆这些，其实都是现在比较出成绩的一些机构。</p>
+                <p>初联的高初联的和小奥的东西，其实你当地选择就行了。这个是我们第一部分讲的，没听到的家长，你回头去听回放就可以了。会让你填信息Mrs.罗会让你填信息，然后填信息，你把生物填好了，到时候就会把你拉生物群。</p>
+                <p>因为生物群比较少，所以现在是生化信，大家在一个群里面在交流，。弱省缺同学，就教练你可以出来请，你可以出来听，。你像今年掉冰山不靠某尖子，然后给他做了八个月的集训，然后跑出来的吗。</p>
+                <p>第二个其实是缺同学，那同学这个东西对，万山是这个。陈晓明老师在半圆当然现在他开课不是特别的规律 你要解决信息的问题，当然还有钱的问题。你在你你就举个例子举一个特别简单的例子，例如你在上海，你在上中。</p>
+                <p>那你你听到这个级别的老师的培训，那你学校天然自带的资源，但是你出去要听，可能就要花三千，花五千。你你在若省若校，你就得拿这个资源去补，那家长多了解信息。而第二个，我们说缺的同学，第一你在群里面交流，有一些当地的家长，你互相能够了解一下情况。</p>
+                <p>你去外培的时候，有很多时候外培其实不是冲着说老师讲的多好，要么是冲着这个题出的好去的，要么是冲着跟自己的小伙伴交流。去的就这事儿不能闭门造车，要出去多交流所以会有出于这个考虑去选择外培。我们到时候会跟大家说，有一些这个这个这个这个培训它的核心的点它的题特别好。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>区别核心，第一个叫做北大招一百个，清华招三十个。明白吧，各位，一个是名额的区别北大招一百个，清华招三十个。北大更看重奖牌，清华更看重你的这个，在初审的时候更看重你的一些其他的综合的能力，例如你要是拿了这一段时间青领军的，丘成桐科学奖。</p>
+                <p>然后刚刚如果大家我讲讲过的东西，大家要又忘了或者没赶上的话，你就回头去看回放。回放我大概明天后天会放在咱们群里面，你就直接去看回放就好了。我的学生们写过两篇，卓越的成功笔记和失败经验都在公众号里面。</p>
+                <p>然后你还没有关注公众号的你可以回头在这个头像里面去点一下公众号的关注。然后回头我会把这两篇卓越的准备经验帖发到我们的物理群里面。北英现在不一定要金牌，但是他喜欢金牌银牌也能报，银牌也能报。</p>
+                <p>然后还有一个家长问过我一个问题，就前两天在群里问的，叫做从来没有打过竖镜。有这个疑问的家长 又没打过数据没搞过这些东西，我适不适合走银财。不是你的实力的问题，来各位请你告诉我，什么东西能够向清北直接证明你有数学上的潜力。</p>
+                <p>各位，你们觉得什么东西能直接向清北证明你有数学上的能力和潜力。你总不能空口白牙跟北大说我特有天赋然后北大说你给我个证明，有论文吗。你说我校内考的挺好的，那校内跟你考的好的也很多呀。</p>
+                <p>他现在想招的特殊的数学人才，各位就记住这一点，。如果例如你发了什么数学论文，你没有奖，你发了一个影响力比较大的论文，也有机会也有机会。但是如果你发论文的话， 老师一定会面试的时候问你你的论文的情况，所以最好是你真的写的论文，最好是你真的输出的这样的一篇研究的文章。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

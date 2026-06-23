@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆小学编程学习与CSP-J备考规划报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background-color: #FFFFFF;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1.25rem; /* 20px */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .highlight-gradient-blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.05));
+        }
+        .highlight-gradient-green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0), rgba(16, 185, 129, 0.05));
+        }
+        .highlight-gradient-purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.05));
+        }
+        .highlight-gradient-orange {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0), rgba(249, 115, 22, 0.05));
+        }
+        .highlight-gradient-red {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0), rgba(239, 68, 68, 0.05));
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+            <!-- 主标题卡片 -->
+            <div class="card md:col-span-4 p-8 flex flex-col justify-center items-center text-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4">重庆小学编程学习</h1>
+                <h2 class="text-3xl md:text-5xl font-bold text-blue-600 mb-6">暨CSP-J入门级备考规划</h2>
+                <p class="text-lg text-gray-500 max-w-3xl">从五年级开始，抢占数字时代先机，培养未来核心竞争力</p>
+            </div>
+
+            <!-- 必要性分析 -->
+            <div class="card md:col-span-2 md:row-span-2 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-flag-checkered text-3xl text-green-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">学习编程的必要性</h3>
+                </div>
+                <div class="space-y-4 text-gray-600 flex-grow">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p><span class="font-bold text-gray-700">政策导向：</span>重庆自2016年起将编程纳入小学必修课，拥有75所市级编程教育试点示范学校。</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p><span class="font-bold text-gray-700">升学优势：</span>CSP-J证书是重庆重点中学科技特长生选拔的核心资质，含金量高。</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p><span class="font-bold text-gray-700">能力培养：</span>锻炼逻辑思维、系统思维和问题解决能力，是未来的核心基础技能。</p>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <p><span class="font-bold text-gray-700">语言选择：</span>C++是信息学奥赛唯一指定语言，能实现学习-竞赛-升学全链路匹配。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 时间规划 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-calendar-days text-3xl text-purple-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">五年级起步：黄金时间</h3>
+                </div>
+                <p class="text-gray-600 mb-4">从五年级上学期开始，到初一年级参赛，拥有12-18个月完整学习周期，从容完成备考。</p>
+                <div class="text-center">
+                    <div class="text-6xl font-bold text-purple-600">12-18</div>
+                    <div class="text-lg text-gray-500">个月完整周期</div>
+                </div>
+            </div>
+
+            <!-- C++ vs Scratch -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-code text-3xl text-orange-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">为什么选择C++？</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="bg-orange-50 p-3 rounded-lg">
+                        <h4 class="font-bold text-orange-700 mb-2">C++优势</h4>
+                        <ul class="space-y-1 text-gray-600">
+                            <li>• 信息学奥赛唯一指定语言</li>
+                            <li>• 培养严谨规范的编程习惯</li>
+                            <li>• 性能高效，适合算法实现</li>
+                            <li>• 与升学路径无缝衔接</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <h4 class="font-bold text-gray-700 mb-2">Scratch局限</h4>
+                        <ul class="space-y-1 text-gray-600">
+                            <li>• 无法承载复杂算法表达</li>
+                            <li>• 不匹配竞赛考核标准</li>
+                            <li>• 仅适合低龄兴趣启蒙</li>
+                            <li>• 存在重复学习成本</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学习进度规划 -->
+            <div class="card md:col-span-4 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="flex items-center mb-6">
+                    <i class="fa-solid fa-road-spikes text-3xl text-blue-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">学习进度规划 (五年级至初中)</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- 阶段一 -->
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="text-center mb-3">
+                            <div class="inline-block bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">1</div>
+                        </div>
+                        <h4 class="font-bold text-blue-700 text-center mb-2">五年级学年</h4>
+                        <h5 class="text-sm font-semibold text-gray-600 mb-2">筑基启蒙阶段</h5>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• C++基础语法学习</li>
+                            <li>• 计算机系统基础</li>
+                            <li>• 标准输入输出操作</li>
+                            <li>• 目标：GESP C++1-4级</li>
+                        </ul>
+                    </div>
+                    <!-- 阶段二 -->
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="text-center mb-3">
+                            <div class="inline-block bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">2</div>
+                        </div>
+                        <h4 class="font-bold text-blue-700 text-center mb-2">六年级学年</h4>
+                        <h5 class="text-sm font-semibold text-gray-600 mb-2">算法进阶阶段</h5>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• C++高级语法与STL</li>
+                            <li>• 基础数据结构</li>
+                            <li>• 核心算法模块学习</li>
+                            <li>• 目标：GESP C++5-8级</li>
+                        </ul>
+                    </div>
+                    <!-- 阶段三 -->
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="text-center mb-3">
+                            <div class="inline-block bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">3</div>
+                        </div>
+                        <h4 class="font-bold text-blue-700 text-center mb-2">小升初暑假</h4>
+                        <h5 class="text-sm font-semibold text-gray-600 mb-2">竞赛实战阶段</h5>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• CSP-J真题专题训练</li>
+                            <li>• 复赛代码实现强化</li>
+                            <li>• 赛场策略与错题复盘</li>
+                            <li>• 目标：熟悉竞赛节奏</li>
+                        </ul>
+                    </div>
+                    <!-- 阶段四 -->
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="text-center mb-3">
+                            <div class="inline-block bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">4</div>
+                        </div>
+                        <h4 class="font-bold text-blue-700 text-center mb-2">初一上学期</h4>
+                        <h5 class="text-sm font-semibold text-gray-600 mb-2">冲刺应考阶段</h5>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• 历年真题完整套卷模拟</li>
+                            <li>• 薄弱环节针对性强化</li>
+                            <li>• 竞赛状态调整与心理建设</li>
+                            <li>• 目标：CSP-J二等奖及以上</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSP-J1考核内容 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-list-check text-3xl text-green-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">CSP-J1 考核内容</h3>
+                </div>
+                <div class="space-y-3 text-gray-600">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-microchip text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-700">计算机基础及软硬件知识</h4>
+                            <p class="text-sm">计算机组成、操作系统、网络基础、数制转换、逻辑运算</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-calculator text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-700">数学基础</h4>
+                            <p class="text-sm">排列组合、数论基础（质数、整除、同余、最大公约数）</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-file-code text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-700">程序阅读与算法分析</h4>
+                            <p class="text-sm">C++基础语法、程序结构、数组、函数、枚举、贪心、递推、排序、二分查找</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 教学方法 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-chalkboard-user text-3xl text-purple-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">科学教学方法</h3>
+                </div>
+                <div class="space-y-3 text-gray-600">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-lightbulb text-purple-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-700">算法理解优先，上机操作后置</h4>
+                            <p class="text-sm">先通过生活案例、逻辑游戏、纸笔练习搞懂算法逻辑，再编写代码实现。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-layer-group text-purple-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-700">分阶段各有侧重</h4>
+                            <p class="text-sm">语法奠基 → 思维核心 → 实战突破，循序渐进。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-puzzle-piece text-purple-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-700">学练结合，科学匹配</h4>
+                            <p class="text-sm">学习内容与认知难度、校内课时双向适配，避免负担过重。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 本地资源 -->
+            <div class="card md:col-span-4 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="flex items-center mb-6">
+                    <i class="fa-solid fa-map-location-dot text-3xl text-orange-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">重庆本地优质资源</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-orange-700 mb-2 flex items-center"><i class="fa-solid fa-school mr-2"></i>校内资源</h4>
+                        <p class="text-sm text-gray-600 mb-2">75所市级编程教育试点示范学校，开设信奥赛C++选修课程和竞赛训练社团。</p>
+                        <p class="text-xs text-gray-500">优势：体系标准、权威、免费</p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-orange-700 mb-2 flex items-center"><i class="fa-solid fa-building-columns mr-2"></i>校外培训</h4>
+                        <p class="text-sm text-gray-600 mb-2">选择专注信奥赛C++教学的头部机构，如萌萌码、小赛码等，课程体系完全匹配竞赛标准。</p>
+                        <p class="text-xs text-gray-500">优势：专业教练、竞赛导向、成绩突出</p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-orange-700 mb-2 flex items-center"><i class="fa-solid fa-book-open-reader mr-2"></i>推荐教材</h4>
+                        <p class="text-sm text-gray-600 mb-1">《小学生C++趣味编程》（第二版）</p>
+                        <p class="text-sm text-gray-600 mb-1">《信息学奥赛一本通》</p>
+                        <p class="text-sm text-gray-600 mb-2">CSP-J历年真题集</p>
+                        <p class="text-xs text-gray-500">配合NOI官方在线评测平台</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关键数据 -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-red"></div>
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-chart-line text-3xl text-red-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">关键数据</h3>
+                </div>
+                <div class="h-64">
+                    <canvas id="achievementChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 总结 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-graduation-cap text-3xl text-blue-500 mr-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">总结</h3>
+                </div>
+                <p class="text-gray-600 mb-4">五年级开始系统学习C++，备考CSP-J，是重庆小学生顺应本地教育政策、强化升学竞争力、培养未来核心能力的科学选择。</p>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-blue-600 mb-2">提前布局</div>
+                    <div class="text-lg text-gray-500">赢得未来</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // 关键数据图表
+    const ctx = document.getElementById('achievementChart').getContext('2d');
+    const achievementChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['五年级结束', '六年级结束', '小升初暑假', '初一竞赛前'],
+            datasets: [{
+                label: '目标能力等级 (GESP)',
+                data: [3, 7, 8, 9],
+                backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                borderColor: 'rgba(59, 130, 246, 1)',
+                borderWidth: 1
+            }, {
+                label: '竞赛目标 (CSP-J)',
+                data: [0, 0, 2, 3], // 0:未参赛, 1:三等奖, 2:二等奖, 3:一等奖
+                backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                borderColor: 'rgba(16, 185, 129, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '等级/奖项'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: '学习进度与目标能力达成'
+                }
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码部落-1030</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>代码部落-1030</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>报上的这个情况，除了报名没报上的还有一种没，我之前往年遇到过一个情况</li>
+                <li>报名也报上了，然后准考证也下载了，结果记错了考试时间的，他把考试的上下午记错了，再加上这个家长可能属于比较自信的那种类型</li>
+                <li>家长版，它入门组的考试继承了下午</li>
+                <li>哦，我我我我听你说这个，准考证上会写，是的，其实你考试的时间一般准考证上会写，但有的人他准考证懒得看</li>
+                <li>好，我看咱们人数陆续上来了，我们也来分享一下，最后两天</li>
+                <li>其实最后两天你光学知识已经没有太大必要了</li>
+                <li>一般我跟我就我自己跟学生说的，就作为老师我们跟学生说的最多一句话，或者跟家长说的最后一句话，你最后两天，你先把赛制</li>
+                <li>考试注意要点，你先提前给他搞明白，能够有效的避免那种意外暴零这种情况</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>你例如，你在信号这一块比较领先的一些学校，他们对这个比赛关注度是非常高的。所以，我们家长们就，如果刚好，如果刚好咱们在在我们代码部落直播间，。如果恰好在代码部落直播间，然后恰好听到小黑老师讲这个东西，那你最起码你对下半年度你就多了一个比赛的认知。</p>
+                <p>报上的这个情况，除了报名没报上的还有一种没，我之前往年遇到过一个情况。咱们直播间应该比较少，就我往年有遇到过这样的情况，什么样的，有孩子。报名也报上了，然后准考证也下载了，结果记错了考试时间的，他把考试的上下午记错了，再加上这个家长可能属于比较自信的那种类型。</p>
+                <p>就家长也属于比较自信的那种类型，他一他一一般，我们作为老师。我们说，一般复赛的话，入门组是上午八点半到十二点，。结果中中途可能也因为什么原因吧，或者比较忙，。</p>
+                <p>哦，我我我我听你说这个，准考证上会写，是的，其实你考试的时间一般准考证上会写，但有的人他准考证懒得看。对，这种也会有的，所以我们说为什么每年的考试不，我觉得这个不只是说 CSP 这种比赛包括各种比赛，我觉得，确实像我刚刚讲的，什么样的马大哈都会出现。好，我看咱们人数陆续上来了，我们也来分享一下，最后两天。</p>
+                <p>就根据我们这这个主题，最后两天咱们的复赛怎么去提分，。你光盲目的追求知识，其实已经帮助不是特别大了，也不说没有帮助只是说帮助没有特别大了。那如果说最后这一两天，我们怎么去怎么去准备。</p>
+                <p>一般我跟我就我自己跟学生说的，就作为老师我们跟学生说的最多一句话，或者跟家长说的最后一句话，你最后两天，你先把赛制。因为你此时，你算法能力提高，你可能说，你提高不能特别明显，但是你把。考试注意要点，你先提前给他搞明白，能够有效的避免那种意外暴零这种情况。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>他这个文件完完整整在这个文件夹里面，但是因为这个文件的读取不到，所以他四道题也全部爆里了。这就为什么，我跟大家讲，每年的 CSP 的复赛，会有很多学生就因为各种原因。明明他有这个拿多少分多少分的能力，但是意外暴零这种，就这种情况也是就也是一个非常小的一个细节。</p>
+                <p>就但凡孩子有点经验，我觉得大部分正常的孩子他都是能规避的。但是我这个讲的这个坑，也是学生实际翻车过的。就我们一般就你像代码部落，我们经常会跟学生说一句什么话。</p>
+                <p>就我们跟学生讲，你在比赛，你的文件名一定要干嘛。题目里面用复制粘贴的方式，你给它粘贴到文件夹里面，我们叫做C V大法，。就我们开玩笑的时候叫C V大法，Control C嘛，Control C Control V，我们一般开玩笑叫C V大法。</p>
+                <p>我不会跟学生讲，你最好是给他复制粘贴成你这个比赛的文件名，这样就一般不会出错，。就那就我们说叫你可执行文件，点c p p，他提交的不是点e x e，你点e x e文件我们叫可执行文件。就有的学生他他是偶尔被扣掉一百分是没有原因的，第一，让他复制文件名，他可能不知道，可能老师没有讲。</p>
+                <p>他就把文件名自己敲，然后出了某一个字符的错，OK，导致整个这这一个题目的文件读取不到，报了零分。可能是马马大哈或者什么样的一个性格，他可能对保留文件不是那么懂。我们让他保留点C P P，叫做可执，我们就代代码文件。</p>
+                <p>就这种人也会出现的，但这种错误就也是我刚刚讲的，属于。看似非常低级，但是每年都有学生会犯的那种坑，。你会发现，其实单纯一个副赛，就单纯我们说一个CSP这个副赛，它里面还是有挺多的这种，学生容易犯的这些低级错误的一个点。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>你稍微多写一个点号，或者一个小小的字符，或者你多写一个空格，那你这道题零分。所以，我们经常跟学生说，跟学生说的最多的一句话：严格按照比赛的文件的要求去做，不要去自作聪明，或者说不要去画蛇添足。他这个题目的文件让你怎么保存，你就怎么保存；他的这个题目的文件让你怎么命名。</p>
+                <p>切忌自作聪明，哪怕是一个小一个百分号，哪怕是一个点，你可能觉得要求很高，。你按照人家的要求做，我我觉得不很正常的一个事情吗。我我我我们这样讲的，就就我们说生活当中有很多的例子，。</p>
+                <p>你像如果生活当中，就好比排队吧，人家说每个人按照这个顺序排好队，。一个人忙完下一个人，但是总是会有些那种大聪明，觉得反正我插到前面也没关系，。那你生活当中，可能说我们现实生活当中睁只眼闭只眼，。</p>
+                <p>但是在信号比赛里面不是这样的，信号比赛它一一，二二，他说什么你就必须得按照做，你要不就零分。你接受不了你就零分，你觉得无所谓你就零分，。程序没有老师会去看你的试卷的，他没有评卷老师的。</p>
+                <p>我再强调一下，这是信奥赛的一个特色，信奥的所有的比赛，他没有评测老师的。他没有老师去改卷的，他一个程序去给你改，你程序能给你改多少分，你就多少分。我告诉我给大家讲一下，我之前有参与过的，申诉他就把你代码给你再拉出来。</p>
+                <p>他他所谓的申诉，把你的代码给给你拉出来，然后再到评测机去跑一遍。所以为什么我经常给大家讲， C S P 它这个比赛你的申诉是没有太大意义的。我给大家讲个非常残酷的现实，你的申诉没有那么大的意义的，包括初赛申诉和复赛申诉。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>这一个点，因为哪怕你像主办方老师也看不到你的试卷，那如果你有偏分的这个能力的话，你可以通过一定的手段，你可以在系统里面，。你可以骗到一部一部分分数，这个也是规则范围内允允许的。就片分这个事情，在规则范围内是允许的，他他没有算是违规的，。</p>
+                <p>关于片分这一点，其实刚好家长也在问片分这一点。以前，你像在整个新奥的早期的时候，骗分这种情况还是比较多的。这是以前时候，就就我们作为老师，我们也会教学生怎么骗分，这实话但是。</p>
+                <p>真的少了呢，因为后面站在出题老师的角度，他们现在也会也开始越来越防这一手了。你为什么说你像经常很多出题的老师会出什么呢。给的实际测试样例一般都不会，一般都不考你这种什么。</p>
+                <p>一般都不考你这个，就不考，基本给的那压力，这也是为了防。防止篇幅，我们说，题目里面给的这个标准，在十。实际的测试样例里面，一般基本上是没有的，这个吧。</p>
+                <p>然后呢，现在输出基本上都是很多组的数据，数据输出不会只输出一个字符，一般是输出好，输出好多组，好多个数据。以前你像早期的时候，会有这种输出题目，输出什么。输出那种 yes 和 no 的，我我只打个比方就输出非常简单那种东西，或者输出 yes 和 no 的，这种就哪怕学生不会做这道题，他就只单纯的输出一个 yes，他都能骗到。</p>
+                <p>这两年基本上没有了，以前哪怕这道题你不会做，你只要会输C二的一个，。我们说C二的一个yes，你把yes这个字符输出，OK，那你就有多少多少分了，或者是你输掉的一个负一，你就有三十分了，这个在以 以前我很多学生也不是我很多学生吧，就我觉得考CSP的应该学生应该都知道吧。以前会有这种骗分的情况，或者说有有这种红利现在基本上没有了，因为现在都已经。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>所以，这是我我给家人们分享，最后两天，我给大家建议的先尽可能想方设法确保。不会因为种种原因，然后拿不到，就或者说会的题不会做错。这是我今天在直播间给大家分享最多的一个点，就我觉得这也是我觉得最有价值的一个点，就不是说让你尽可能拿高分，。</p>
+                <p>不要得，不要得不到他自己本应该得到的分数，。例如我刚刚说的意外暴零，除了意外暴零以外，还有一些技巧，一些本来你应该拿满分的题。但凡有一点点算法积累，注意，但凡有一点点算法积累，理论上来说，它应该是都能拿一等奖的。</p>
+                <p>我我以入门组为例就入门组其实一等奖还是比较好拿的。就如果你是第一次参加复赛哦，我这给大家一个数据。就如果第一次参加复赛，你能够真正把自己能力完整的发挥出来的孩子，我估计占比百分之三十都到到不了。</p>
+                <p>一点都没有夸张，有百分之七十左右的学生，他进了复赛，他也是。他也是，就做不到把自己的能力完整的发挥出来的。他肯定会说：“我就说，例如，我能力是有三百分的能力。</p>
+                <p>” 他可能也就发挥一一两百分，这是很正常的，这不是个例，这很正常的一个情况，。你像你像我们直播间这位家长说的，他是想了想三年，也学了不少算法了，很有感慨，是的。所所以，我这样讲，对于咱们大部分的这个，就大部分的孩子来说吧，就我们需要的能把能在复赛把自己的能力。</p>
+                <p>就确保，我就说了简单一句话，会做的题全拿满分，就很简单一句话，能确保把自己的会做的题拿满分。你能做完整的做到我这说的这两句，孩子就一等两句很好拿。入门组、提高组有，提高组还还还得另外说，因为提高组还是比较看能力的。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

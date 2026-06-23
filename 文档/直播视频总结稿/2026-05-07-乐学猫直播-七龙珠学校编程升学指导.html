@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编程升学：以信息学竞赛冲刺七龙珠——直播文字稿（续）</title>
+  <style>
+    :root {
+      --bg: #fafaf8;
+      --surface: #ffffff;
+      --accent: #5b3a8c;
+      --accent-light: #f0eaf8;
+      --text-primary: #1a1a1a;
+      --text-muted: #6b6b6b;
+      --border: #e2e0dc;
+      --highlight: #fff3cd;
+      --green: #2d6a4f;
+      --green-light: #eaf5ef;
+      --red: #9b2226;
+      --red-light: #fdf0f0;
+      --blue: #1a5276;
+      --blue-light: #eaf2f8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", Georgia, serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.9;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 3rem 3.5rem;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.6rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.04em;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 2.4rem;
+      margin-bottom: 1rem;
+      padding-left: 0.75rem;
+      border-left: 4px solid var(--accent);
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #333;
+      margin-top: 1.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    p {
+      margin-bottom: 0.8rem;
+      text-align: justify;
+    }
+
+    ul, ol {
+      padding-left: 1.6rem;
+      margin-bottom: 1rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    strong {
+      color: var(--accent);
+    }
+
+    .meta {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .note {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 0.8rem 1rem;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .highlight-box {
+      background: var(--highlight);
+      padding: 1rem 1.2rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      border-left: 3px solid #d4a017;
+    }
+
+    .green-box {
+      background: var(--green-light);
+      padding: 1rem 1.2rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      border-left: 3px solid var(--green);
+    }
+
+    .red-box {
+      background: var(--red-light);
+      padding: 1rem 1.2rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      border-left: 3px solid var(--red);
+    }
+
+    .blue-box {
+      background: var(--blue-light);
+      padding: 1rem 1.2rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      border-left: 3px solid var(--blue);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.55rem 0.8rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--accent-light);
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 2rem 0;
+    }
+
+    .continuation-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 1.2rem;
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      margin-bottom: 2rem;
+      background: #f9f9f7;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<h1>编程升学：以信息学竞赛冲刺七龙珠——直播文字稿（续）</h1>
+
+<div class="meta">
+  <strong>来源：</strong>周老师直播间（信息学竞赛/科技特长升学方向博主）<br>
+  <strong>主题：</strong>编程升学的优势与劣势、各校考察侧重、跟训机制、区县学生升学路径、训练规划<br>
+  <strong>性质说明：</strong>本稿内容为培训机构负责人的个人观点与经验分享，<strong>不代表任何官方机构立场</strong>，信息仅供参考。
+</div>
+
+<div class="continuation-note">
+  本文为系列直播文字稿的第三部分。上篇涵盖巴蜀中学升学规划，中篇涵盖渝中区热门学校与政策解读，本篇聚焦于<strong>以编程/信息学竞赛为路径冲击七龙珠本部竞赛班</strong>的策略分析。
+</div>
+
+<div class="note">
+  以下内容已去除直播中的寒暄、过渡词、重复插话及无关闲聊，按逻辑主线分类归纳，转为书面语体。分享人以重庆本地视角为主，部分内容带有地方方言特征，已转化为通用书面表达。
+</div>
+
+<!-- ==================== 板块一 ==================== -->
+<h2>一、本次直播内容概要与前情回顾</h2>
+
+<h3>1.1 前次直播已覆盖内容</h3>
+<ul>
+  <li>七龙珠体系中有哪些学校在招收信息学竞赛方向学生。</li>
+  <li>各校主要考察哪些能力证书（考级等级）。</li>
+  <li>各校分别设有哪些竞赛相关班型。</li>
+</ul>
+
+<h3>1.2 本次直播聚焦内容</h3>
+<ul>
+  <li>依靠编程升学的<strong>优势与劣势</strong>全面分析。</li>
+  <li>各目标校的<strong>考察重点与流程差异</strong>。</li>
+  <li>针对不同目标校的<strong>训练策略与准备方式</strong>。</li>
+  <li>区县学生的<strong>升学机会与路径</strong>。</li>
+  <li>编程学习的<strong>起步时间与进度建议</strong>。</li>
+</ul>
+
+<div class="note">
+  <strong>分享人身份说明：</strong>周老师自我定位为"科技特长、信息学竞赛方向的规划老师"，非文化课小升初博主。其业务范围专注于信息学竞赛赛道的升学规划与培训。分享人明确表示："术业有专攻"，文化课升学方向请咨询其他专业人士。
+</div>
+
+<hr>
+
+<!-- ==================== 板块二 ==================== -->
+<h2>二、编程升学的优势与劣势</h2>
+
+<h3>2.1 核心优势</h3>
+
+<div class="green-box">
+  <strong>最大优势：编程达到一定水平（四级/五级左右）的学生，可以获得远超纯文化课路径的学校考试机会。</strong>
+</div>
+
+<ul>
+  <li><strong>考试机会充足：</strong>编程五级以上的学生，"基本上每一个娃儿都是把七龙珠挨着考了一遍"，只有少数学校未参加。学生"不缺考试机会"。</li>
+  <li><strong>突破文化课考试机会稀缺的瓶颈：</strong>当前政策环境下，纯文化课考核的考试机会"非常少"。大部分学习奥数的学生"没得机会进入这些学校的选拔范围"，而编程五级水平即可获得这些学校的考核资格。</li>
+  <li><strong>考核内容与最终轮次等效：</strong>编程考试获得的考核机会，与进入最终轮次的文化课考核"没啥子区别的"。</li>
+  <li><strong>录取通道更直接：</strong>以一中为例，通过编程路径只需关注"编程加数学两科"，即可在一轮考核中锁定本部班型，流程远少于纯文化课路径。</li>
+</ul>
+
+<h3>2.2 核心劣势</h3>
+
+<div class="red-box">
+  <strong>最大劣势：学习习惯不达标的学生，即使编程能力很强，也可能在"跟训"环节被淘汰。</strong>
+</div>
+
+<ul>
+  <li><strong>跟训淘汰机制严格：</strong>除一中以外，几乎所有目标校（育才、南开、八系、西附、一外等）都设有跟训环节。跟训期间会综合考察学生的<strong>学习习惯</strong>和<strong>家长的配合度</strong>。</li>
+  <li><strong>家长因素直接影响结果：</strong>存在"孩子打五分，家长被打负分"而被剔除的案例。学校在跟训环节"也是在面试家长"，通情达理、配合度高的家长更受认可。</li>
+  <li><strong>能力与习惯缺一不可：</strong>"你但凡学习习惯偏一点，是没得办法拿到签约机会的。"</li>
+</ul>
+
+<h3>2.3 编程升学的双面性总结</h3>
+<table>
+  <thead>
+    <tr>
+      <th>维度</th>
+      <th>优势面</th>
+      <th>劣势面</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>考试机会</strong></td>
+      <td>机会充足，七龙珠几乎全覆盖</td>
+      <td>考核标准高，需要真正达到相应水平</td>
+    </tr>
+    <tr>
+      <td><strong>录取通道</strong></td>
+      <td>流程更短、更直接</td>
+      <td>部分学校仍需加考文化课</td>
+    </tr>
+    <tr>
+      <td><strong>签约保障</strong></td>
+      <td>考核通过即可锁定班型</td>
+      <td>跟训环节存在淘汰风险</td>
+    </tr>
+    <tr>
+      <td><strong>家庭投入</strong></td>
+      <td>竞赛路径可避开纯文化课的激烈竞争</td>
+      <td>学习习惯培养极其"费家长"</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ==================== 板块三 ==================== -->
+<h2>三、各目标校的选拔流程与考察侧重</h2>
+
+<h3>3.1 总体说明</h3>
+<p>各校在编程升学考核中的<strong>考察方向、流程安排、文化课权重</strong>均存在差异。家长需根据目标校的不同，有针对性地调整训练重心。</p>
+
+<div class="highlight-box">
+  <strong>重要提示：</strong>"你不能说考了几级几级就怎样怎样，它不一样的，针对不同学校，你就得去准备。"
+</div>
+
+<h3>3.2 各校选拔流程与考察偏好</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>目标校</th>
+      <th>选拔流程</th>
+      <th>考察偏好</th>
+      <th>文化课考核</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>一中（本部前班）</strong></td>
+      <td>编程考核 → 定班型</td>
+      <td><strong>算法模板</strong>类题目（具体考题不公开）</td>
+      <td>部分环节涉及，但流程相对精简</td>
+    </tr>
+    <tr>
+      <td><strong>南开（三系）</strong></td>
+      <td>数学思维测评 → 编程考核/跟训 → 签约</td>
+      <td><strong>数学底层逻辑思维</strong>（非小奥刷题方向），编程应用能力要求高</td>
+      <td>有数学思维测评（现学现考形式）</td>
+    </tr>
+    <tr>
+      <td><strong>八中（八系）</strong></td>
+      <td>跟训 + 文化课 + 现学现考</td>
+      <td><strong>综合考察</strong>，思维体（含递推、二分、贪心/限享策略）为重点</td>
+      <td>有文化课考核，侧重现学现考</td>
+    </tr>
+    <tr>
+      <td><strong>育才</strong></td>
+      <td>编程考核 → 跟训（时间较长）→ 签约</td>
+      <td><strong>纯思维题</strong>，无专门文化课考试</td>
+      <td>无专门文化课考核，主要依据编程跟训反馈</td>
+    </tr>
+    <tr>
+      <td><strong>西附 / 一外</strong></td>
+      <td>编程考核 + 算法考核 → 跟训（2025年新增）→ 签约</td>
+      <td><strong>算法水平</strong>（建议普及组学完）</td>
+      <td>有跟训环节（2025年新增）</td>
+    </tr>
+    <tr>
+      <td><strong>鲁巴（原鲁巴）</strong></td>
+      <td>过五级 → 通知考文化课</td>
+      <td>编程过级即可获得文化课考试资格</td>
+      <td>以文化课考核为主</td>
+    </tr>
+    <tr>
+      <td><strong>两江一外</strong></td>
+      <td>过五级 → 通知考文化课</td>
+      <td>编程过级即可获得文化课考试资格</td>
+      <td>以文化课考核为主</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>3.3 各校考察内容分类</h3>
+
+<h4>思维类考察（南开三系、八系）</h4>
+<ul>
+  <li>重点考察<strong>数学底层逻辑思维</strong>，与小奥刷题关联不大。</li>
+  <li>包含内容：递推、二分、贪心（限享策略）等思维体的综合训练。</li>
+  <li>南开特别强调<strong>数学逻辑能力</strong>，"跟刷小奥没得关系"，建议提前学习初联内容。</li>
+</ul>
+
+<h4>算法类考察（一中、西附、一外）</h4>
+<ul>
+  <li>侧重<strong>算法模板</strong>的掌握与应用。</li>
+  <li>建议算法水平达到<strong>六级</strong>，将整个普及组学完较为稳当。</li>
+</ul>
+
+<h4>纯思维类考察（育才）</h4>
+<ul>
+  <td>考察<strong>纯思维题</strong>，不设文化课考试，主要根据编程跟训表现签约。</li>
+  <td>跟训签约周期相对较长。</li>
+</ul>
+
+<hr>
+
+<!-- ==================== 板块四 ==================== -->
+<h2>四、跟训机制详解</h2>
+
+<h3>4.1 跟训的本质</h3>
+<p>"跟训"是多数七龙珠学校在编程考核通过后设置的<strong>综合考察环节</strong>，本质上是学校对学生和家庭的进一步筛选。</p>
+
+<h3>4.2 跟训考察的两个维度</h3>
+<ol>
+  <li><strong>学生维度——学习习惯：</strong>
+    <ul>
+      <li>即使编程能力很强，学习习惯不好也会被刷掉。</li>
+      <li>存在"资质较好但因学习习惯卡在跟训环节被踢掉"的案例。</li>
+      <li>学校非常看重学生的自主学习能力、作业完成质量、课堂表现等。</li>
+    </ul>
+  </li>
+  <li><strong>家长维度——配合度与沟通能力：</strong>
+    <ul>
+      <li>学校会在跟训环节与家长沟通，实质上"也是在面试家长"。</li>
+      <li>"听话的家长"更受欢迎；提出过多不合理要求的家长可能影响孩子录取。</li>
+      <li>极端案例："孩子打五分，家长被打负分，然后就被剔除掉了。"</li>
+    </ul>
+  </li>
+</ol>
+
+<h3>4.3 各校跟训情况对比</h3>
+<table>
+  <thead>
+    <tr>
+      <th>学校</th>
+      <th>是否有跟训</th>
+      <th>备注</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>一中</td>
+      <td>有</td>
+      <td>也有跟训环节，并非例外</td>
+    </tr>
+    <tr>
+      <td>南开三系</td>
+      <td>有</td>
+      <td>数学思维测评 + 编程跟训</td>
+    </tr>
+    <tr>
+      <td>八系</td>
+      <td>有</td>
+      <td>跟训 + 文化课 + 现学现考，考察最全面</td>
+    </tr>
+    <tr>
+      <td>育才</td>
+      <td>有</td>
+      <td>无文化课考核，但跟训时间相对最长</td>
+    </tr>
+    <tr>
+      <td>西附</td>
+      <td>有（2025年新增）</td>
+      <td>此前无跟训，今年新增</td>
+    </tr>
+    <tr>
+      <td>一外</td>
+      <td>有（2025年新增）</td>
+      <td>此前无跟训，今年新增</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>趋势观察：</strong>越来越多的学校在编程升学路径中增设跟训环节，这意味着即便编程能力达标，学生的<strong>综合学习习惯</strong>和<strong>家庭配合度</strong>已成为不可忽视的硬性门槛。
+</div>
+
+<hr>
+
+<!-- ==================== 板块五 ==================== -->
+<h2>五、训练策略与准备方式</h2>
+
+<h3>5.1 针对不同目标校的训练重点</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>目标校</th>
+      <th>训练重点</th>
+      <th>具体建议</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>一中</strong></td>
+      <td>算法模板</td>
+      <td>可压缩校内时间，集中精力在编程加数学两科；进入竞赛体系后，竞赛和文化课均需校外预习</td>
+    </tr>
+    <tr>
+      <td><strong>南开</strong></td>
+      <td>数学底层思维 + 高水平编程</td>
+      <td>编程达六级以上；数学建议提前学习初联（替代小奥刷题）；核心看逻辑思维能力</td>
+    </tr>
+    <tr>
+      <td><strong>八系</strong></td>
+      <td>思维体综合训练</td>
+      <td>需专项训练递推、二分、贪心（限享策略与优化能力）；考察最全面</td>
+    </tr>
+    <tr>
+      <td><strong>育才</strong></td>
+      <td>纯思维题</td>
+      <td>可甩掉校内负担，全力投入编程训练；进入竞赛体系后需校外预习</td>
+    </tr>
+    <tr>
+      <td><strong>西附 / 一外</strong></td>
+      <td>算法水平</td>
+      <td>算法水平建议达到六级，学完整个普及组</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>5.2 思维训练补充方案</h3>
+<p>若学生所在机构未提供专门的思维训练课程，分享人建议通过以下方式进行补充：</p>
+
+<h4>AtCoder Beginner Contest（ABC）训练</h4>
+<ul>
+  <li><strong>频率：</strong>每周六晚上进行。</li>
+  <li><strong>适用水平：</strong>考级达到四级即可开始ABC训练。</li>
+  <li><strong>补题要求：</strong>"不补题、不写总结，是永远不会进步的。"只能做三题的学生，需要通过题解将剩余题目补完，最好有老师讲解思路。</li>
+  <li><strong>推优门槛：</strong>ABC Rating达到<strong>1000以上</strong>，可获得向金刚校推优的机会。</li>
+</ul>
+
+<h4>ABC翻译工具</h4>
+<ul>
+  <li>分享人推荐使用特定翻译工具（由合作老师开发），具备<strong>后台人工审核</strong>机制，翻译准确度高于AI自动翻译。</li>
+  <li>该翻译网站同时提供<strong>当周ABC题解</strong>，便于学生补题学习。</li>
+</ul>
+
+<h4>思维板块专项课程</h4>
+<ul>
+  <li>分享人所在机构设有专门的思维板块专项训练课程。</li>
+  <li>课程性质为<strong>"方法课"</strong>而非知识点课，教授内容包括：如何写题解与总结、如何手推样例、如何用数学方法解决算法性问题等。</li>
+</ul>
+
+<h3>5.3 编程与数学的时间分配建议</h3>
+
+<div class="blue-box">
+  <strong>核心建议：数学与编程"五五开"。</strong>
+</div>
+
+<ul>
+  <li><strong>理想状态：</strong>数学和编程水平都强，兼顾发展。</li>
+  <li><strong>时间不足时：</strong>压缩校内时间，优先保障编程和数学训练。</li>
+  <li><strong>走单科路线：</strong>若完全放弃文化课路径、单攻编程方向，编程水平需达到<strong>七八级</strong>。</li>
+  <li><strong>数学对编程的重要性：</strong>"学数学对于编程很重要"，但不建议盲目刷小奥题。数学训练应有"方式方法"，注重底层思维而非题量。</li>
+  <li><strong>关于现学现考：</strong>编程水平高的学生在现学现考中"不太怕"，因为他们的学习内容本身就很超前，思维调用率高。</li>
+</ul>
+
+<hr>
+
+<!-- ==================== 板块六 ==================== -->
+<h2>六、南开三系竞赛班体系详解</h2>
+
+<h3>6.1 三系竞赛梯队构成</h3>
+<table>
+  <thead>
+    <tr>
+      <th>校区</th>
+      <th>班型</th>
+      <th>人数规模</th>
+      <th>状态</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>南开本部</strong></td>
+      <td>秋班（竞赛班）</td>
+      <td>约30人/班</td>
+      <td>成熟运行</td>
+    </tr>
+    <tr>
+      <td><strong>南渝</strong></td>
+      <td>竞赛行政班</td>
+      <td>约40–50人/班</td>
+      <td>成熟运行（含竞赛生 + 综合优秀生）</td>
+    </tr>
+    <tr>
+      <td><strong>融侨</strong></td>
+      <td>信竞行政班</td>
+      <td>约40–50人/班</td>
+      <td>成熟运行</td>
+    </tr>
+    <tr>
+      <td><strong>两江南开</strong></td>
+      <td>竞赛班型</td>
+      <td>待定</td>
+      <td><strong>体系正在建设中</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>6.2 秋班选拔机制</h3>
+<ul>
+  <li><strong>选拔时间：</strong>六年级的<strong>七、八月份</strong>（即将升入初一阶段）。</li>
+  <li><strong>考核内容：</strong>数学（初联难度）+ 编程。</li>
+  <li><strong>人员来源：</strong>所有分校竞赛生均需通过此最终考核，才能进入本部秋班。</li>
+  <li><strong>留存机制：</strong>未进入秋班的学生，回到学籍所在地的分校竞赛班。</li>
+</ul>
+
+<h3>6.3 竞赛班总体规模</h3>
+<p>南开三系整个竞赛体系的学生总量约为<strong>120–150人</strong>。值得注意的是，"整个重庆能达到人家那个标准的学生，五十人都没得"，因此学校常出现<strong>招不满</strong>的情况，很多文化课上岸的学生后续转入编程竞赛方向。</p>
+
+<h3>6.4 内招与外招</h3>
+<ul>
+  <li><strong>外招：</strong>通过编程考核直接招收的学生（名额有限）。</li>
+  <li><strong>内招：</strong>文化课上岸后，参加学校编程零基础培训，再进入竞赛班。</li>
+  <li>内招存在的原因："外招招不起那么多人"，全市达到标准的学生总量不足，无法满足学校招生体量。</li>
+</ul>
+
+<hr>
+
+<!-- ==================== 板块七 ==================== -->
+<h2>七、区县学生升学机会</h2>
+
+<h3>7.1 区县学生的优势</h3>
+<div class="green-box">
+  重庆主城各校（尤其是金刚校）对区县学生<strong>"非常喜欢"</strong>。区县学生由于未经历主城小奥的过度开发，往往处于"比较原始的状态"，许多学校偏好这种"原始的牛娃"。
+</div>
+
+<h3>7.2 区县学生的限制</h3>
+<ul>
+  <li><strong>跨区难度增大：</strong>"现在重庆主城要跨区，都需要做实质性的贡献才行了。"学校想要，但教委政策限制。</li>
+  <li><strong>编程水平门槛：</strong>区县学生需达到一定的竞赛层次才能获得跨区机会。</li>
+  <li><strong>资源有限：</strong>区县编程培训资源相对匮乏，学生编程水平可能受限于学习环境。</li>
+</ul>
+
+<h3>7.3 区县学生的机会判断</h3>
+<p>分享人提供了一个评估路径：</p>
+<ol>
+  <li><strong>思维卷测试：</strong>通过内测思维卷评估学生的底层数学思维能力。</li>
+  <li><strong>推优门槛：</strong>思维卷得分达到<strong>70分以上</strong>，可获得推优至金刚校的机会。</li>
+  <li><strong>编程考级辅助：</strong>若编程水平暂未达标，但思维能力突出，仍有机会。</li>
+  <li><strong>备选方案：</strong>若无法走金刚校路径，可冲刺"4SP"（信息学竞赛）的<strong>普及组一等</strong>成绩，获得翻墙考的机会。</li>
+</ol>
+
+<h3>7.4 区县学生的翻墙机会</h3>
+<p>若区县学生想通过三系（南开体系）翻墙，只有一次机会：在六年级升初一阶段，4SP（信息学竞赛）达到<strong>普及组一等</strong>以上成绩，学校可能给予一次"反抢考"机会。但"必须达到这个层次才行，没有这个层次的话是没有学校给机会的"。</p>
+
+<hr>
+
+<!-- ==================== 板块八 ==================== -->
+<h2>八、编程学习起步时间与进度规划</h2>
+
+<h3>8.1 建议起步时间</h3>
+<table>
+  <thead>
+    <tr>
+      <th>时间节点</th>
+      <th>建议</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>最佳启蒙期</strong></td>
+      <td><strong>一年级下学期</strong>（时间最充裕）</td>
+    </tr>
+    <tr>
+      <td><strong>最晚进入期</strong></td>
+      <td><strong>不晚于四年级</strong>（最迟不超过五年级）</td>
+    </tr>
+    <tr>
+      <td><strong>小升初集中冲刺期</strong></td>
+      <td><strong>五年级下册</strong>至<strong>六年级上册</strong>（机会最集中的阶段）</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>8.2 各年级进度参考</h3>
+<ul>
+  <li><strong>一年级：</strong>启蒙阶段，培养兴趣与基础认知。</li>
+  <li><strong>二年级下学期：</strong>优秀学生可完成算法课储备，进入C++学习。</li>
+  <li><strong>四年级：</strong>考级达到四级后，可开始ABC（AtCoder）训练。</li>
+  <li><strong>五年级寒假起：</strong>升学机会开始增多，编程五级可获得大量考试资格。</li>
+  <li><strong>五年级下册–六年级上册：</strong>上岸的"比较集中的时间"。</li>
+  <li><strong>六年级：</strong>冲刺阶段，南开秋班考核在六年级七八月份。</li>
+</ul>
+
+<h3>8.3 进度追赶建议</h3>
+<p>对于起步较晚的学生（如五年级才过二级）：</p>
+<ul>
+  <li>利用暑假"拉一拉进度"。</li>
+  <li>六年级参加考试。</li>
+  <li>不必过度焦虑，编程考试主要看数学现学现考成绩，"现学现考，你这个小娃子再飞起来也没用"，编程水平高的学生在此环节有天然优势。</li>
+</ul>
+
+<hr>
+
+<!-- ==================== 板块九 ==================== -->
+<h2>九、家长配合的关键要素</h2>
+
+<h3>9.1 家长配合度的核心价值</h3>
+<div class="highlight-box">
+  分享人以一个成功案例说明：<strong>家长"非常听话"</strong>是关键因素。该学生家长在周老师安排课程时，从不质疑决策（如被建议学习斯库奇算法课时，未提出"这是不是智商税"的疑问），严格执行规划，最终该学生二年级下学期通过算法课储备进入C++学习，一路升入金刚校全托班。
+</div>
+
+<h3>9.2 家长常见问题</h3>
+<ul>
+  <li><strong>过度质疑规划：</strong>"家长天天质疑你的决策，那就没法玩了。"家长信息不全面，而规划老师信息更全面，若不信任专业判断，将错失机会。</li>
+  <li><strong>不重视学习习惯：</strong>学习习惯的培养"非常费家长"，"很多妈经不起费"。若家长不重视，孩子的习惯提升将停滞。</li>
+  <li><strong>提出不合理要求：</strong>"不要提些奇奇怪怪的要求"，通情达理是基本要求。</li>
+</ul>
+
+<h3>9.3 学习习惯的培养</h3>
+<p>分享人明确指出：学习习惯的调整<strong>不是培训机构能单独解决的</strong>，它与家庭环境和家长要求高度相关。孩子的学习习惯可能要到<strong>初三之后</strong>才能定型。</p>
+<ul>
+  <li>编程作业需要动用大脑<strong>80%–100%</strong>的调用率，而校内作业仅需约50%。</li>
+  <li>若不持续督促，孩子的思维调用率会迅速回落至50%的"舒适区"。</li>
+  <li>"你不激他，他都马上掉回百分之五十。"</li>
+</ul>
+
+<hr>
+
+<!-- ==================== 板块十 ==================== -->
+<h2>十、编程学习的延伸价值</h2>
+
+<h3>10.1 升学之外的长远价值</h3>
+<p>分享人强调，编程学习的作用远不止于小升初升学：</p>
+<ul>
+  <li><strong>AI与大模型学习：</strong>分享人正在学习AI智能体课程，发现"没有编程基础学那个大模型的课，学不懂"，有编程基础的学生在理解大模型相关课程时明显更具优势。</li>
+  <li><strong>理科能力培养：</strong>编程特长生的理科能力普遍较强，这也是各校愿意招收编程方向学生的原因之一——学校选拔编程特长生"不是为了让你去搞竞赛，也是为了让你去搞综合"。</li>
+</ul>
+
+<hr>
+
+<!-- ==================== 板块十一 ==================== -->
+<h2>十一、常见问题解答（精选）</h2>
+
+<h3>Q1：编程几级可以开始考学校？</h3>
+<p>四级/五级左右即可获得大量考试机会。五级以上基本可以"把七龙珠挨着考一遍"。</p>
+
+<h3>Q2：编程考级等级是否等同于思维赛水平？</h3>
+<p>不一定。考级等级（六级、七级、八级）反映的是知识体系掌握程度，而思维赛（如ABC）的Rating反映的是<strong>解题能力</strong>，两者衡量维度不同。</p>
+
+<h3>Q3：如何判断孩子是否适合走编程升学？</h3>
+<ul>
+  <li>需具备一定的<strong>数学底层思维能力</strong>（可通过内测思维卷评估，70分以上为及格线）。</li>
+  <li><strong>学习习惯</strong>必须达标（跟训环节的硬性门槛）。</li>
+  <li>家长需具备<strong>配合度</strong>与<strong>信任度</strong>。</li>
+</ul>
+
+<h3>Q4：文化课和编程如何平衡？</h3>
+<p>建议"五五开"。若时间不够，压缩校内时间，优先保障编程和数学。对于有志于竞赛班的学生，分享人建议"小学下午就不要上了，把时间拿出来冲班"。</p>
+
+<h3>Q5：区县学生如何获得机会？</h3>
+<p>三条路径：</p>
+<ol>
+  <li>通过内测思维卷（70分以上）获得推优资格。</li>
+  <li>通过4SP普及组一等成绩获得翻墙考机会。</li>
+  <li>持续提升编程水平，等待学校主动邀约。</li>
+</ol>
+
+<h3>Q6：沙巴（沙坪坝八中）如何进入？</h3>
+<p>需先进入<strong>红巴（宏巴）的竞赛班</strong>，在其中的优秀学生可提前进入三系竞赛体系。沙巴的竞赛班主要面向初中生，选拔后可直接衔接八中竞赛梯队。</p>
+
+<hr>
+
+<!-- ==================== 附录 ==================== -->
+<h2>附录：关键术语释义</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>术语</th>
+      <th>释义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>七龙珠</strong></td>
+      <td>重庆最顶尖七所中学的统称（巴蜀、南开、一中、八中、西大附中、外国语、育才）</td>
+    </tr>
+    <tr>
+      <td><strong>金刚校</strong></td>
+      <td>七龙珠中以竞赛培养见长的学校，通常指一中、南开、八中等</td>
+    </tr>
+    <tr>
+      <td><strong>三系</strong></td>
+      <td>南开体系，包含南开本部、南渝、融侨、两江南开等校区</td>
+    </tr>
+    <tr>
+      <td><strong>秋班</strong></td>
+      <td>南开本部的竞赛班，约30人/班，通过六年级统一考核选拔</td>
+    </tr>
+    <tr>
+      <td><strong>跟训</strong></td>
+      <td>学校在正式签约前设置的综合考察环节，考察学生学习习惯和家长配合度</td>
+    </tr>
+    <tr>
+      <td><strong>现学现考</strong></td>
+      <td>学校现场教授新知识后立即考核的测试方式，考察学生的即时学习能力和思维调用率</td>
+    </tr>
+    <tr>
+      <td><strong>翻墙</strong></td>
+      <td>非目标校体系的学生通过竞赛成绩等渠道获得选拔机会</td>
+    </tr>
+    <tr>
+      <td><strong>ABC</strong></td>
+      <td>AtCoder Beginner Contest，日本举办的在线算法竞赛，用于训练思维与算法能力</td>
+    </tr>
+    <tr>
+      <td><strong>Rating</strong></td>
+      <td>ABC竞赛的积分排名系统，反映选手的解题能力水平</td>
+    </tr>
+    <tr>
+      <td><strong>4SP / 普及组</strong></td>
+      <td>全国青少年信息学奥林匹克竞赛（NOI）系列中的入门级别赛事</td>
+    </tr>
+    <tr>
+      <td><strong>初联</strong></td>
+      <td>初中数学联赛，难度高于小奥，建议目标南开的学生提前学习</td>
+    </tr>
+    <tr>
+      <td><strong>内招 / 外招</strong></td>
+      <td>"外招"指通过编程考核直接录取；"内招"指文化课上岸后转入编程竞赛体系</td>
+    </tr>
+    <tr>
+      <td><strong>红巴 / 沙巴</strong></td>
+      <td>八中体系的分校，红巴（宏巴）设有竞赛班，沙巴为主要竞赛衔接校区</td>
+    </tr>
+    <tr>
+      <td><strong>两江一外</strong></td>
+      <td>两江新区的重庆一外分校，设有编程特长生招生</td>
+    </tr>
+    <tr>
+      <td><strong>鲁巴</strong></td>
+      <td>鲁能巴蜀中学，编程过五级即可获得文化课考试资格</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+<p style="text-align:center; color: var(--text-muted); font-size: 0.85rem; margin-top: 2rem;">
+  本稿为直播内容的结构化整理，所有信息基于分享人个人观点与经验，不代表任何学校或机构官方立场。<br>
+  具体升学政策与学校招生安排请以各校最新公告为准。
+</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆中考志愿填报直播答疑实录</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --surface: #ffffff;
+            --accent: #8b4513;
+            --accent-light: #d4a574;
+            --text-primary: #2c2420;
+            --text-muted: #7a7068;
+            --border: #e8e0d8;
+            --highlight: #fdf6ee;
+            --tag-bg: #f0e6d8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Serif SC', 'Songti SC', serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 2;
+            font-size: 17px;
+        }
+
+        .article-header {
+            background: linear-gradient(135deg, #2c2420 0%, #4a3728 50%, #6b4c3a 100%);
+            color: #f0e6d8;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .article-header .label {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 12px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--accent-light);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .article-header h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+        }
+
+        .article-header .subtitle {
+            font-size: 16px;
+            color: #c4b8a8;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .meta-bar {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 28px;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 13px;
+            color: #a89888;
+        }
+
+        .meta-bar span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 32px 36px;
+            margin: 48px auto;
+            max-width: 780px;
+        }
+
+        .toc h3 {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .toc ol {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+
+        .toc ol li {
+            counter-increment: toc-counter;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border);
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .toc ol li:last-child { border-bottom: none; }
+
+        .toc ol li::before {
+            content: counter(toc-counter, cjk-ideographic);
+            color: var(--accent);
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .toc ol li a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .toc ol li a:hover { color: var(--accent); }
+
+        article {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        .chapter {
+            margin-top: 56px;
+        }
+
+        .chapter-number {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 36px 0 12px;
+            line-height: 1.6;
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: var(--highlight);
+            border-left: 3px solid var(--accent);
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 16px;
+        }
+
+        .highlight-box strong {
+            color: var(--accent);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+        }
+
+        .data-table thead {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .data-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: var(--highlight);
+        }
+
+        .data-table tbody tr:hover {
+            background: #f5ebe0;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 48px 0;
+            color: var(--accent-light);
+            font-size: 20px;
+            letter-spacing: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            display: inline-block;
+            width: 80px;
+            height: 1px;
+            background: var(--border);
+            vertical-align: middle;
+            margin: 0 16px;
+        }
+
+        .case-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 28px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .case-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 8px 8px 0 0;
+        }
+
+        .case-tag {
+            display: inline-block;
+            background: var(--tag-bg);
+            color: var(--accent);
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .case-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .case-card .score {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .case-card .score-label {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .advice-list {
+            list-style: none;
+            margin: 16px 0;
+        }
+
+        .advice-list li {
+            padding: 8px 0 8px 24px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .advice-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .quote-box {
+            background: #f8f4ef;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin: 24px 0;
+            font-style: italic;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 48px;
+            color: var(--accent-light);
+            position: absolute;
+            top: -8px;
+            left: 16px;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .quote-box .quote-text {
+            padding-left: 24px;
+            color: var(--text-muted);
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .score-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .score-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .score-card .school-name {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .score-card .score-value {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .score-card .score-note {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #fdf8f0, #f8f0e4);
+            border: 1px solid var(--accent-light);
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin: 28px 0;
+        }
+
+        .tip-box .tip-title {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .course-card {
+            background: linear-gradient(135deg, #2c2420, #4a3728);
+            color: #f0e6d8;
+            border-radius: 12px;
+            padding: 36px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .course-card h3 {
+            color: var(--accent-light);
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .course-card .price {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            margin: 16px 0;
+        }
+
+        .course-card .details {
+            font-size: 15px;
+            line-height: 2;
+            color: #c4b8a8;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-item h5 {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        @media (max-width: 600px) {
+            .article-header { padding: 48px 16px 40px; }
+            .comparison-row { grid-template-columns: 1fr; }
+            .score-grid { grid-template-columns: 1fr 1fr; }
+            .toc { padding: 24px; margin: 32px 16px; }
+            article { padding: 0 16px 60px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="article-header">
+    <div class="header-content">
+        <div class="label">直播答疑实录</div>
+        <h1>重庆中考志愿填报<br>深度答疑与策略解析</h1>
+        <p class="subtitle">涵盖分数预估、梯度志愿策略、各校招生动态与初升高衔接指导</p>
+        <div class="meta-bar">
+            <span>整理自直播连线答疑</span>
+            <span>约 30 组家庭咨询</span>
+        </div>
+    </div>
+</header>
+
+<nav class="toc container">
+    <h3>目 录</h3>
+    <ol>
+        <li><a href="#ch1">教育变革背景与升学政策</a></li>
+        <li><a href="#ch2">各校预估分数线一览</a></li>
+        <li><a href="#ch3">高分段志愿策略（690+）</a></li>
+        <li><a href="#ch4">中高分段志愿策略（660–690）</a></li>
+        <li><a href="#ch5">中分段志愿策略（640–660）</a></li>
+        <li><a href="#ch6">中低分段志愿策略（610–640）</a></li>
+        <li><a href="#ch7">志愿填报核心原则与避坑指南</a></li>
+        <li><a href="#ch8">初升高语文衔接课程介绍</a></li>
+    </ol>
+</nav>
+
+<article>
+
+    <!-- 第一章 -->
+    <section class="chapter" id="ch1">
+        <div class="chapter-number">第一章</div>
+        <h2>教育变革背景与升学政策</h2>
+
+        <p>当前重庆教育正面临两大关键变革，对家长的升学决策产生深远影响：</p>
+
+        <h3>一、"阳光招生"全面收紧</h3>
+        <p>过去存在的跨区择校、私下违规录取等现象已被全面叫停。招生更加透明化、规范化，意味着家长必须更加重视志愿填报策略，不能再依赖"非常规渠道"。</p>
+
+        <h3>二、招生人数与政策调整</h3>
+        <p>多所学校的联招人数、指标到校名额出现显著变化，直接影响各校分数线的波动。例如一中系的联招人数分布发生结构性变化——一中本部（一记、一双）的联招人数远超一十，这将对各校录取线产生直接冲击。</p>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 第二章 -->
+    <section class="chapter" id="ch2">
+        <div class="chapter-number">第二章</div>
+        <h2>各校预估分数线一览</h2>
+
+        <p>以下为直播中多次提及的各校 2025 年中考预估录取分数线（非官方，基于米妈团队及多方信息综合研判）：</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>学校</th>
+                    <th>预估分数线</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>巴蜀本部（沙八/黄八）</td>
+                    <td>690 以上</td>
+                    <td>黄八对外校生估分偏松，实际可能更低</td>
+                </tr>
+                <tr>
+                    <td>南开本部</td>
+                    <td>685–690</td>
+                    <td>高分段选手较多</td>
+                </tr>
+                <tr>
+                    <td>一中本部</td>
+                    <td>680–685</td>
+                    <td>清北班上限十分约普遍</td>
+                </tr>
+                <tr>
+                    <td>八中本部</td>
+                    <td>680–690</td>
+                    <td>数据股/沙八本部</td>
+                </tr>
+                <tr>
+                    <td>西附本部</td>
+                    <td>670–675</td>
+                    <td>可能比去年略高</td>
+                </tr>
+                <tr>
+                    <td>育才本部</td>
+                    <td>670 左右</td>
+                    <td>去年 671，今年变化不大</td>
+                </tr>
+                <tr>
+                    <td>一外本部</td>
+                    <td>670 左右</td>
+                    <td>中央公园校区可走读</td>
+                </tr>
+                <tr>
+                    <td>两江巴蜀</td>
+                    <td>665–670</td>
+                    <td>今年本部全力扶持，分可能上涨</td>
+                </tr>
+                <tr>
+                    <td>两江南开</td>
+                    <td>660–665</td>
+                    <td>名额增多，但无本部捆绑拉分</td>
+                </tr>
+                <tr>
+                    <td>科学城八中</td>
+                    <td>655–660</td>
+                    <td>搬新校区，招生发力，分数可能走高</td>
+                </tr>
+                <tr>
+                    <td>一中双碑（一双）</td>
+                    <td>660 左右</td>
+                    <td>联招 200+ 人，分可能上不了 660</td>
+                </tr>
+                <tr>
+                    <td>一中寄宿（一十）</td>
+                    <td>660 以上</td>
+                    <td>联招仅 90 人，分可能比一双高</td>
+                </tr>
+                <tr>
+                    <td>求精中学</td>
+                    <td>650–655</td>
+                    <td>今年扩招，人数增加</td>
+                </tr>
+                <tr>
+                    <td>十一中</td>
+                    <td>650 左右</td>
+                    <td>保班型需第一志愿</td>
+                </tr>
+                <tr>
+                    <td>十八中</td>
+                    <td>650 左右</td>
+                    <td>与十一中分差较小</td>
+                </tr>
+                <tr>
+                    <td>巴蜀八中（B八）</td>
+                    <td>655 左右</td>
+                    <td>今年基本招满，自信到 660</td>
+                </tr>
+                <tr>
+                    <td>西附大渡口</td>
+                    <td>650 左右</td>
+                    <td>师资团队原大竹林创校班底</td>
+                </tr>
+                <tr>
+                    <td>西附大竹林</td>
+                    <td>660–665</td>
+                    <td>今年人数减少，分可能上涨</td>
+                </tr>
+                <tr>
+                    <td>华岩一外</td>
+                    <td>645–650</td>
+                    <td>今年扩招，分可能略降</td>
+                </tr>
+                <tr>
+                    <td>华师附中</td>
+                    <td>630–640</td>
+                    <td>新校招生猛，师资吸引牛娃</td>
+                </tr>
+                <tr>
+                    <td>七中</td>
+                    <td>645–650</td>
+                    <td>联招仅增 6 人，与去年持平</td>
+                </tr>
+                <tr>
+                    <td>渝北中学</td>
+                    <td>640–650</td>
+                    <td>位置偏但出口可以</td>
+                </tr>
+                <tr>
+                    <td>朝阳中学</td>
+                    <td>630 左右</td>
+                    <td>顶班出口很好，位置远</td>
+                </tr>
+                <tr>
+                    <td>杨家坪中学</td>
+                    <td>610–620</td>
+                    <td>名额多，保底稳妥</td>
+                </tr>
+                <tr>
+                    <td>南坪中学</td>
+                    <td>610–620</td>
+                    <td>南岸区兜底选择</td>
+                </tr>
+                <tr>
+                    <td>璧山中学</td>
+                    <td>610 左右</td>
+                    <td>今年扩至 1900+ 人</td>
+                </tr>
+                <tr>
+                    <td>广益中学</td>
+                    <td>600–610</td>
+                    <td>南岸区，增加 7 个名额</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="tip-box">
+            <div class="tip-title">特别提示</div>
+            <p>以上分数线为非官方预估，米妈团队表示将在志愿填报期间持续更新调整。家长应以最新版本为准，并密切关注学校招办的动态变化。</p>
+        </div>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 第三章 -->
+    <section class="chapter" id="ch3">
+        <div class="chapter-number">第三章</div>
+        <h2>高分段志愿策略（690+）</h2>
+
+        <div class="case-card">
+            <span class="case-tag">案例一</span>
+            <div class="score">694–708</div>
+            <div class="score-label">巴蜀本部竞赛生，估分区间 694–708</div>
+            <h4>核心情况</h4>
+            <p>孩子为竞赛生（初二下退出竞赛），政治历史仅突击一两个月。在米妈处估分 694，黄八估分比米妈处高出约 8–10 分。手握南开、一中多个约。</p>
+
+            <h4>各方给出的条件</h4>
+            <ul class="advice-list">
+                <li><strong>南开：</strong>上限十分一清（清北班），加五分一二清</li>
+                <li><strong>一中：</strong>上限十分一清；六百九以上随便选班型</li>
+                <li><strong>巴蜀：</strong>上线实验班，可选两江清北班，但未承诺本部清北</li>
+            </ul>
+
+            <h4>米妈建议</h4>
+            <p>强烈推荐争取<strong>一中三加三体系</strong>。理由如下：</p>
+            <ul class="advice-list">
+                <li>三加三到高二可追平二加四的孩子，有竞赛+强基双轨培养</li>
+                <li>孩子有竞赛背景，走强基有天然优势</li>
+                <li>南开没有综合类二加四和强基体系</li>
+                <li>建议争取任选三加三的承诺，若能达成则优先选择一中</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例二</span>
+            <div class="score">685–693</div>
+            <div class="score-label">鲁巴体系，学校估分 688，米妈处估分 687</div>
+            <h4>米妈建议</h4>
+            <ul class="advice-list">
+                <li>有鲁巴业主班兜底，志愿可大胆填写</li>
+                <li>可选四大金刚校：渝八/一中/巴蜀，加上七龙珠本部（如西附/育才），再加一个四小金刚保底</li>
+                <li>若更在意班型，可不填分校占名额，多拿一个志愿冲四大金刚</li>
+                <li>班型只是学校"唯一可以诱惑高分选手的诱饵"，实力够强进校后可调班</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例三</span>
+            <div class="score">692–702</div>
+            <div class="score-label">巴蜀体系，学校估分 695，米妈处估分 692</div>
+            <h4>手握约的对比</h4>
+            <div class="comparison-row">
+                <div class="comparison-item">
+                    <h5>一中</h5>
+                    <p>上限十分清北班，或六百九十直接清北。清北班五个（二加四走后），三加三夏令营可申请。</p>
+                </div>
+                <div class="comparison-item">
+                    <h5>南开</h5>
+                    <p>上限五分二清，上限十分一清。清北班六到八个，约更有保障。</p>
+                </div>
+            </div>
+
+            <h4>米妈建议</h4>
+            <p>若走综合方向（无竞赛背景），<strong>南开的约更有吸引力</strong>。但若孩子对三加三夏令营感兴趣，可再与一中沟通争取入营资格，再做决定。核心是"抛开二加四，一中和南开的清北班是对标的"。</p>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例四</span>
+            <div class="score">695</div>
+            <div class="score-label">八系孩子，平时成绩一般，本次估分 692–701</div>
+            <h4>特殊情况分析</h4>
+            <p>孩子一模二模仅 650 多（加体育），但中考后状态极佳，政治提高显著。属于典型的"黑马型"选手。</p>
+
+            <h4>米妈建议</h4>
+            <ul class="advice-list">
+                <li>若在三中和一中之间做选择，可与一中沟通争取三加三夏令营资格</li>
+                <li>若想保班型，三系的约（二清直接签约）更有优势</li>
+                <li>三系管理较自由，但手机管理不会像外界传言那么夸张——"哪个学校都有带手机的"</li>
+                <li>高中整体靠自觉，初高中管理体系不同，家长要有心理准备</li>
+            </ul>
+        </div>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 第四章 -->
+    <section class="chapter" id="ch4">
+        <div class="chapter-number">第四章</div>
+        <h2>中高分段志愿策略（660–690）</h2>
+
+        <div class="case-card">
+            <span class="case-tag">案例五</span>
+            <div class="score">660–665</div>
+            <div class="score-label">鲁巴体系，米妈处估分 665</div>
+            <h4>方案对比</h4>
+
+            <p><strong>方案一（米妈推荐）：</strong></p>
+            <ul class="advice-list">
+                <li>第一志愿：育才（有约，上线清北班）</li>
+                <li>第二志愿：西附大渡口</li>
+                <li>第三志愿：两南 或 一双</li>
+                <li>第四志愿：十一中</li>
+                <li>第五志愿：渝北中学</li>
+            </ul>
+
+            <p><strong>米妈关键判断：</strong>一师今年联招仅 90 人，预估分可能比一双还高，放第三志愿属于浪费。两南和一双分差小，赌一个更低的即可。</p>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例六</span>
+            <div class="score">665</div>
+            <div class="score-label">鲁巴体系，米妈处估分 665，学校估分 680</div>
+            <h4>分差矛盾</h4>
+            <p>学校估分 680 与米妈处 665 差 15 分。米妈团队评分标准极其严格——古诗默写不达标不给分、侧面描写缺失扣分、作文按最严标准给分（46–48 分为主）。</p>
+
+            <h4>米妈建议</h4>
+            <ul class="advice-list">
+                <li>按 665 计算，可冲一中系分校（一双、一十），但需去谈班型</li>
+                <li>科八（科学城八中）预估 660 左右，可作为选项</li>
+                <li>第一志愿选谁取决于：谁给最高班型的约</li>
+                <li>"四大金刚分校的头部班型，享受的是四大金刚体系的教研和师资"</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例七</span>
+            <div class="score">671–675</div>
+            <div class="score-label">八系，米妈处估分 671</div>
+            <h4>志愿方案</h4>
+            <ul class="advice-list">
+                <li>第一志愿：一双（有约，上线清北）</li>
+                <li>第二志愿：西附大竹林</li>
+                <li>第三志愿：两南</li>
+                <li>第四志愿：十一中</li>
+                <li>第五志愿：李家</li>
+            </ul>
+            <p>米妈评价："没问题，没毛病。"虽然竹林可能分更高，但为保一双的班型约，把竹林放第二是合理的。</p>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例八</span>
+            <div class="score">654–663</div>
+            <div class="score-label">八系，米妈处估分 654，签约求精三年弘志班</div>
+            <h4>最终方案</h4>
+            <ul class="advice-list">
+                <li>第一志愿：求精（保三年弘志班）</li>
+                <li>第二志愿：华岩一外（走读，实验班）</li>
+                <li>第三志愿：华师附中（华一班）</li>
+                <li>第四志愿：朝阳中学（顶班，生活补贴）</li>
+                <li>第五志愿：（兜底）</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>朝阳中学亮点：</strong>顶班平均分 633.8，很多七龙珠普通班都做不到。位置虽远，但出口优秀、硬件好，且如果不填就降分录取。对 650+ 的考生，朝阳肯定保顶班。
+            </div>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例九</span>
+            <div class="score">663–685</div>
+            <div class="score-label">巴蜀体系，手握八本和一中约</div>
+            <h4>核心纠结：是否填巴蜀</h4>
+            <p>八系孩子纠结是否要填巴蜀本部。米妈指出关键点：巴蜀系的线通常比其他三大金刚高约 10 分，孩子在八中可能选不了好班，但在其他体系可以。</p>
+
+            <h4>米妈建议</h4>
+            <ul class="advice-list">
+                <li>若不在意班型：渝八/一中/巴蜀 + 育才/西附 + 四小金刚保底</li>
+                <li>若更看重班型：可一中第一（保实验），然后三中、西附，不填巴蜀</li>
+                <li>"四大金刚本部的招办一般不会乱来，对你们这种孩子杀伤力太强了"</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十</span>
+            <div class="score">651</div>
+            <div class="score-label">巴蜀体系，八本估分 661，米妈处估分 649–655</div>
+            <h4>三种方案对比</h4>
+
+            <div class="comparison-row">
+                <div class="comparison-item">
+                    <h5>方案一（稳妥）</h5>
+                    <p>十八中 → B八 → 复旦 → 朝阳 → 两江育才</p>
+                </div>
+                <div class="comparison-item">
+                    <h5>方案二（冲高）</h5>
+                    <p>一十 → 十八中 → B八 → 朝阳 → 两江育才</p>
+                </div>
+            </div>
+
+            <p>米妈判断：按 649 分算方案一更稳；若想冲则方案二。B八今年预计 655 分，第一志愿才能拿最佳班型。</p>
+        </div>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 第五章 -->
+    <section class="chapter" id="ch5">
+        <div class="chapter-number">第五章</div>
+        <h2>中分段志愿策略（640–660）</h2>
+
+        <div class="case-card">
+            <span class="case-tag">案例十一</span>
+            <div class="score">650</div>
+            <div class="score-label">南岸区，住弹子石片区</div>
+            <h4>纠结焦点</h4>
+            <p>第一志愿填十一中，纠结第二志愿选渝北（远）、科一外（远）还是其他。</p>
+
+            <h4>米妈建议</h4>
+            <ul class="advice-list">
+                <li>南岸区除了十一中就是二外，剩下的可用南坪中学兜底</li>
+                <li>"不能只找南岸的学校，有点吃亏"</li>
+                <li>第二志愿建议填四大金刚分校或七龙珠分校</li>
+                <li>推荐方案：十一中 → 二十九中 → 复旦 → 南坪 → 广益</li>
+                <li>二十九和十一"赌谁的分更低，四小金刚能中一个"</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十二</span>
+            <div class="score">648</div>
+            <div class="score-label">八系，住中央公园</div>
+            <h4>米妈推荐方案</h4>
+            <ul class="advice-list">
+                <li>第一志愿：求精（有约）</li>
+                <li>第二志愿：十一中</li>
+                <li>第三志愿：七中</li>
+                <li>第四志愿：渝北中学</li>
+                <li>第五志愿：两江育才</li>
+            </ul>
+            <div class="highlight-box">
+                <strong>关键原则：</strong>"不想去的地方不要填"——孩子高中三年会因此抱怨。华岩一外虽可填但位置远，孩子若不想去就别填。
+            </div>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十三</span>
+            <div class="score">640</div>
+            <div class="score-label">新城片区，有鲁巴业主班保底</div>
+            <h4>特殊情况</h4>
+            <p>孩子不愿去区重点，也不想读四小金刚。有鲁巴业主班兜底的情况下，志愿可以填高。</p>
+
+            <h4>米妈判断</h4>
+            <ul class="advice-list">
+                <li>"说实话，六百四五的孩子要进四小金刚以上，我真的找不出来"</li>
+                <li>建议：志愿填高，冲高滑档后回鲁巴业主班</li>
+                <li>"不如就把志愿填高一点，就等他滑档"</li>
+                <li>鲁巴业主班按分分层，孩子在这个段位不算差</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十四</span>
+            <div class="score">657–663</div>
+            <div class="score-label">八系，米妈处估分 657</div>
+            <h4>纠结：西附大渡口 vs 华岩一外</h4>
+
+            <div class="comparison-row">
+                <div class="comparison-item">
+                    <h5>西附大渡口</h5>
+                    <p>师资强（原大竹林创校团队），但可能保不了班型。预计 650+，踩线进可能分到最差班。</p>
+                </div>
+                <div class="comparison-item">
+                    <h5>华岩一外</h5>
+                    <p>今年扩招，分可能略降。实验班可保。距离更近，可走读。</p>
+                </div>
+            </div>
+
+            <p>米妈建议：若追求稳和保班型，选华岩一外；若想冲新学校和更好师资，可赌大渡口。"求稳就是华安意外，OK的。"</p>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十五</span>
+            <div class="score">649–665</div>
+            <div class="score-label">八系，手握一双和西附竹林约</div>
+            <h4>纠结：一外 vs 西附</h4>
+            <p>孩子更喜欢一外（中央公园校区可走读），但米妈判断今年西附分应该比一外高。</p>
+
+            <h4>米妈建议</h4>
+            <ul class="advice-list">
+                <li>若孩子坚持喜欢一外，尊重孩子意愿</li>
+                <li>一外上线清北班的约有价值</li>
+                <li>西附竹林也给了上线十分清北的约，可保底</li>
+                <li>两江巴蜀今年预估 665–670，本部在全力扶持</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十六</span>
+            <div class="score">651</div>
+            <div class="score-label">估分 651，求精给保三年弘志班</div>
+            <h4>方案</h4>
+            <ul class="advice-list">
+                <li>第一志愿：求精（保三年弘志班）</li>
+                <li>第二志愿：华岩一外（实验班）</li>
+                <li>第三志愿：华师附中（华一班）</li>
+                <li>第四志愿：朝阳中学</li>
+                <li>第五志愿：大竹中学（回老家）</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十七</span>
+            <div class="score">640–650</div>
+            <div class="score-label">一双体系，估分约 630–639</div>
+            <h4>纠结：璧山中学名校班 vs 渝北中学</h4>
+
+            <h4>米妈分析</h4>
+            <ul class="advice-list">
+                <li>璧山中学承诺第一志愿 630 以上保名校班，但第二志愿要加 10 分</li>
+                <li>"不要因为一个班型而放弃一片森林"</li>
+                <li>孩子很有潜力，后劲足，"应该去到前三的学校去"</li>
+                <li>推荐方案：华师附中 → 朝阳 → 璧山中学兜底</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>孩子通透语录：</strong>"如果璧山中学填第二志愿，那还不如华师附中"——现在的孩子比家长想得更清楚，家长应尊重孩子的判断。
+            </div>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十八</span>
+            <div class="score">656</div>
+            <div class="score-label">一双体系，综合分 656</div>
+            <h4>纠结：冲哪个学校</h4>
+            <p>孩子想去一中系，但分数可能不够。B八有约（上线十分清北），一双没约。</p>
+
+            <h4>米妈建议</h4>
+            <ul class="advice-list">
+                <li>B八给的约更有保障（上线十分清北，六百六以上强基）</li>
+                <li>"一双一十都没约，B八反而更稳"</li>
+                <li>但 B八说的"第二志愿录了其他学校可以借读"这个方案太野，容易出问题</li>
+                <li>推荐：B八 → 一双 → 西附大渡口 → 四小金刚 → 朝阳</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例十九</span>
+            <div class="score">649–665</div>
+            <div class="score-label">手握一双和西附竹林约</div>
+            <h4>纠结：第三志愿选谁</h4>
+            <p>米妈核心建议：你这个分段 655–660 的学校太集中了，应该填一个 650 左右的来拉开梯度。</p>
+            <ul class="advice-list">
+                <li>推荐组合：一双 → 两南 → 求精 → 七中/渝北 → 保底</li>
+                <li>或者：一双 → 两南 → 求精 → 华师附中 → 杨中（最稳保底）</li>
+                <li>杨中保底最稳，610–620 水平，"肯定兜得住"</li>
+            </ul>
+        </div>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 第六章 -->
+    <section class="chapter" id="ch6">
+        <div class="chapter-number">第六章</div>
+        <h2>中低分段志愿策略（610–640）</h2>
+
+        <div class="case-card">
+            <span class="case-tag">案例二十</span>
+            <div class="score">620</div>
+            <div class="score-label">住南坪，老家渝北</div>
+            <h4>米妈规划方案</h4>
+            <ul class="advice-list">
+                <li>第一志愿：华师附中（630–640 预估）</li>
+                <li>第二志愿：杨家坪中学（610–620）</li>
+                <li>第三志愿：广益中学 / 南坪中学</li>
+                <li>第四志愿：季华中学（593 左右）</li>
+                <li>第五志愿：南华中学 / 两江中学</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>华师附中提醒：</strong>今年首次招生，师资吸引牛娃，预估分可能达到 630–640。建议去学校谈班型，把分数说高一点争取更好条件。天桥一中今年预计 660（一中内部学生兜底），不建议填。
+            </div>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">案例二十一</span>
+            <div class="score">620</div>
+            <div class="score-label">早上已规划，最后志愿需补充</div>
+            <h4>最终方案</h4>
+            <ul class="advice-list">
+                <li>第一志愿：朝阳中学</li>
+                <li>第二志愿：杨家坪中学</li>
+                <li>第三志愿：璧山中学</li>
+                <li>第四志愿：三十七中（今年扩招 150 人，联招增 50 人）</li>
+                <li>第五志愿：季华中学</li>
+            </ul>
+
+            <p>米妈特别指出：三十七中今年巴蜀在带，但扩招幅度大，分数可能维持或略降。季华比南华好，季华增加 24 个名额。</p>
+        </div>
+
+        <div class="highlight-box">
+            <strong>关于第二批次志愿：</strong>米妈明确表示——"不想去的学校就别填。你这种六百二的，不至于到那个份上。"如果实在要填第二批次，选择家乡附近的学校即可。
+        </div>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 第七章 -->
+    <section class="chapter" id="ch7">
+        <div class="chapter-number">第七章</div>
+        <h2>志愿填报核心原则与避坑指南</h2>
+
+        <h3>一、"冲稳保"梯度原则</h3>
+        <p>志愿应形成清晰的分数梯度：</p>
+        <ul class="advice-list">
+            <li><strong>冲：</strong>第一志愿填比估分高 5–10 分的学校</li>
+            <li><strong>稳：</strong>第二、三志愿填与估分接近的学校</li>
+            <li><strong>保：</strong>第四、五志愿填比估分低 10–20 分的学校</li>
+        </ul>
+
+        <h3>二、高分选手做选择题</h3>
+        <p>对于 680+ 的高分选手：</p>
+        <ul class="advice-list">
+            <li>"你不存在保底的问题，就算滑档了都很多学校要你"</li>
+            <li>不要像普通分数段的孩子那样填志愿</li>
+            <li>"你有跟学校谈任何条件的资本，就不要像他们那样填志愿"</li>
+            <li>核心是"选择这三个选哪个"的问题</li>
+        </ul>
+
+        <h3>三、班型与学校的取舍</h3>
+        <p>这是贯穿全场的核心纠结点：</p>
+        <ul class="advice-list">
+            <li><strong>保班型</strong>：第一志愿填目标学校，争取最好的班</li>
+            <li><strong>冲学校</strong>：第一志愿填更高目标，接受可能分到平行班</li>
+            <li>"平行班在四大金刚和七龙珠都是凤尾"</li>
+            <li>米妈观点："到了高中，很多学校半期或期末就调班了"</li>
+            <li>"班型是现在学校唯一可以诱惑高分选手的诱饵"</li>
+        </ul>
+
+        <h3>四、约的可靠性</h3>
+        <ul class="advice-list">
+            <li><strong>本部签约 > 分校签约</strong>：四大金刚本部招办一般不会乱来</li>
+            <li><strong>第一志愿约 > 第二志愿约</strong>：多数学校只保第一志愿</li>
+            <li>注意约的附加条件——有的要求绑定分校、有的要求截图证明</li>
+            <li>"签了约不代表万无一失，班型只是诱饵"</li>
+        </ul>
+
+        <h3>五、分校与本部的关系变化</h3>
+        <div class="highlight-box">
+            <strong>2025 年重要变化：</strong>四大金刚本部不再强制捆绑分校。例如一中：第一志愿填一中给实验班，但第二、三志愿可随便填其他学校。这意味着分校没有本部拉分，<strong>今年很多分校分数线可能下降</strong>。
+        </div>
+
+        <h3>六、估分差异应对</h3>
+        <p>不同机构和学校估分差异可达 10–30 分，米妈建议：</p>
+        <ul class="advice-list">
+            <li>以最严格的估分为基准填志愿（"按最严的来"）</li>
+            <li>米妈团队语文评分标准与四大金刚校内一致甚至更严</li>
+            <li>"在我这儿估 125 分的孩子，不可能再往下走了"</li>
+            <li>作文按 46–48 分给，不给 50 分以上（除非特别优秀）</li>
+        </ul>
+
+        <h3>七、常见误区</h3>
+        <ul class="advice-list">
+            <li><strong>误区一：</strong>只看人数不看比例——求精一个年级 620 人，十一中 1240 人，不能只看六百分以上人数</li>
+            <li><strong>误区二：</strong>觉得区重就不行——朝阳顶班出口不输七龙珠普通班</li>
+            <li><strong>误区三：</strong>忽略距离因素——"孩子高中要在那里三年，距离是大问题"</li>
+            <li><strong>误区四：</strong>最后一个志愿随便填——米妈记录中有高分选手因前面填太高，最后滑档去区县</li>
+        </ul>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 第八章 -->
+    <section class="chapter" id="ch8">
+        <div class="chapter-number">第八章</div>
+        <h2>初升高语文衔接课程介绍</h2>
+
+        <p>米妈在直播中多次推荐了一门针对初升高语文衔接的线上课程，以下为核心信息：</p>
+
+        <div class="course-card">
+            <h3>初升高语文衔接课</h3>
+            <p style="color:#d4a574; font-size:14px; letter-spacing:2px;">四大金刚清北班老师亲授</p>
+            <div class="price">¥599</div>
+            <div class="details">
+                9 次课 · 每次 2 小时 · 共 18 课时<br>
+                线上直播 · 三个月回看<br>
+                7 月 5 日下午 2:00 开课
+            </div>
+        </div>
+
+        <h3>课程三大模块</h3>
+
+        <div class="case-card">
+            <span class="case-tag">模块一</span>
+            <h4>文言文与古诗词鉴赏（3 次课 / 6 小时）</h4>
+            <ul class="advice-list">
+                <li>高中文言文分值从初中的 15 分增至 <strong>34 分</strong></li>
+                <li>增加古诗词鉴赏——"诗词不像文言文是叙事的，它有缺需要你补全"</li>
+                <li>文言文阅读量增加一倍</li>
+                <li>赠送《高考必备古诗文七十二篇》（小黑本）</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">模块二</span>
+            <h4>文学类文本赏析（3 次课 / 6 小时）</h4>
+            <ul class="advice-list">
+                <li>两到三篇阅读，每篇 1900 字</li>
+                <li>初中人物形象"非黑即白"，高中是"灰色的"</li>
+                <li>需要更高阶的美学鉴赏能力</li>
+            </ul>
+        </div>
+
+        <div class="case-card">
+            <span class="case-tag">模块三</span>
+            <h4>非连续性文本阅读（3 次课 / 6 小时）</h4>
+            <ul class="advice-list">
+                <li>分值 19 分，字数翻倍</li>
+                <li>涉及社科类论文和科普文本，学科门槛高</li>
+                <li>"阅卷一难，就在非连上拿差距"</li>
+                <li>需要句群赏析能力，不能只在句子里找原句</li>
+            </ul>
+        </div>
+
+        <h3>为什么需要这门课？</h3>
+        <div class="quote-box">
+            <div class="quote-text">
+                "中考 125 分的孩子到了高中，语文可能直接掉到 90–100 分。因为中考是套路化答题，达到一个点就给一分；但高中需要真正的赏析能力和文学素养。"
+            </div>
+        </div>
+
+        <ul class="advice-list">
+            <li>四大金刚的孩子基础扎实，答题套路精准，"接近标准答案"</li>
+            <li>区重点孩子语文思维好但套路化不够，"吃亏在答题上"</li>
+            <li>高中语文是"拉学校档次"的关键——理科牛娃可能因语文差十多分从北大掉到哈工大</li>
+            <li>提前背完七十二篇古诗文 = 高考先拿 6 分默写分</li>
+        </ul>
+
+        <h3>课程安排</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>项目</th>
+                    <th>详情</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>上课时间</td><td>7 月 5 日起，每天下午 2:00</td></tr>
+                <tr><td>课时</td><td>连续 9 天，每次 2 小时，共 18 小时</td></tr>
+                <tr><td>形式</td><td>线上直播课，可互动，可回看（3 个月）</td></tr>
+                <tr><td>授课老师</td><td>四大金刚清北班老师 / 夏令营带教老师</td></tr>
+                <tr><td>平台</td><td>ClassIn</td></tr>
+                <tr><td>赠品</td><td>《高考必备古诗文七十二篇》（限前 30 名）</td></tr>
+            </tbody>
+        </table>
+
+        <div class="divider">◆ ◆ ◆</div>
+    </section>
+
+    <!-- 结语 -->
+    <section class="chapter">
+        <div class="chapter-number">结 语</div>
+        <h2>写在志愿填报之前</h2>
+
+        <p>整场直播中，米妈反复强调几个核心理念：</p>
+
+        <ul class="advice-list">
+            <li><strong>尊重孩子的选择</strong>——不想去的学校不要填，"孩子高中要在那里读三年"</li>
+            <li><strong>梯度要合理</strong>——每个志愿之间拉开 5–10 分的差距，不要集中在同一分数段</li>
+            <li><strong>估分要保守</strong>——"今年不管机构还是学校，大家都在压着估分"</li>
+            <li><strong>班型不是全部</strong>——"到了高中会调班，班型只是诱饵"</li>
+            <li><strong>距离很重要</strong>——"同等出口差不多的学校，距离是大问题"</li>
+            <li><strong>主动沟通学校</strong>——多联系招办，争取最好的条件</li>
+        </ul>
+
+        <div class="quote-box">
+            <div class="quote-text">
+                "希望大家都能够一举夺魁，金榜题名，超常发挥，最后都能被自己喜欢的学校录取。"
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-note">
+        <p>本文整理自中考志愿填报直播答疑实录</p>
+        <p>文中预估分数线及建议仅供参考，请以学校官方公告为准</p>
+        <p>如有疑问，建议直接联系目标学校招生办公室</p>
+    </footer>
+
+</article>
+
+</body>
+</html>

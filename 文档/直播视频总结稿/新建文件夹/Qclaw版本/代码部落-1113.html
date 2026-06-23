@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码部落-1113</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>代码部落-1113</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>我们说，每年提高组参加提高组复赛就第二轮考试的学生里面，都会有将近百分之二十五，就四分之一以上的学生</li>
+                <li>然后参加人数最多的应该是这个复赛人数，第二轮第二轮人数最多的</li>
+                <li>入门组的第二轮的话，也都是在三万多一点吧</li>
+                <li>第二轮主要的入门组和提高组最大的差别是在第一轮</li>
+                <li>就说很多学生他会在第一轮被筛掉，其实到真正到了第二轮的话，两个组别人数相差不会很大的，这个大家明白</li>
+                <li>你到真正到第二轮的话，两个组别他这他的人数相差不会说特别特别大的</li>
+                <li>这种情况其实我们之前的时候是给过一套这个建议，就如果说就目前的提高组的整个的竞赛环境下，或者说整个的一个难度下</li>
+                <li>想要从这个一百多分跳到两百多分，很重要的一个点你要去，我我我们说去保证难难题</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、第一题</a></li>
+                <li><a href="#section2">二、第一题</a></li>
+                <li><a href="#section3">三、第一题</a></li>
+                <li><a href="#section4">四、第一题</a></li>
+                <li><a href="#section5">五、第一题</a></li>
+                <li><a href="#section6">六、第一题</a></li>
+                <li><a href="#section7">七、第一题</a></li>
+                <li><a href="#section8">八、第一题</a></li>
+                <li><a href="#section9">九、第一题</a></li>
+                <li><a href="#section10">十、第一题</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>第一题</h2>
+            </section>
+            <section id="section2">
+                <h2>第一题</h2>
+            </section>
+            <section id="section3">
+                <h2>第一题</h2>
+                <p>第一题可能说没有拿多少分，后面几道题都拿到分数了。那你就三等奖，我觉得还比较好拿到。NOYP三等奖分数线没有你想的那么高。</p>
+                <p>一般来说的话，我们一般讲，一等奖的分数线会稍微高点。一等奖它的分数线会高点，你像一般来说二三等奖NYP的话，它的分数线绝大部分都是在这个。你除了极个别比较特殊的，就如果你考 NYP，绝绝大部分都在一百分左右，这跟提高组是差不多的， NYP 来的二等奖的分数线都在一百分左右。</p>
+                <p>你有你高低，你提高，你考S组，你有个一百五十分。你往下，我假如说你实际到NYP，前提是你先满高中。你除了极个别省份，你比如你比如像重庆，重庆属于比较特殊的。</p>
+                <p>它属于比较特殊，其他的省份，你哪怕像像一些所谓的强省，它的二等奖的分数线基本上在一百出头，或者是撑死了一百二的分数分数，。所以你此时，你二等奖太看不起自己了。这个三等奖我觉得有点太看不及自己了，因为三等奖它是全国线，去年的全国线，NOIP，我觉得去年的三等奖全国线是这个四十分，我我应该没有记错的话，应该是四十分你不可能说你提高组。</p>
+                <p>你不能讲你CSP杠S，你今年考了一百五，然后你跟我说你提高组，你去考哦，你去考NYP，你连四十分都考不到。一般不现实的呀，这个我觉得不太可能的。就你正常发挥，你二等奖肯定比较稳的，甚至你要发挥的好一点，。</p>
+                <p>你不要觉得说今年的难度已经说你考VIP会比往年低多少分，我觉得未必。就说今年你我我甚至觉得就今年你例如你CSP杠S，你考了一百五十分，我觉得只要咱们但凡孩子发挥的稳定一点。我我觉得你也是有机会可以去考到这个对应的这个一百五十分的，可以吧。</p>
+            </section>
+            <section id="section4">
+                <h2>第一题</h2>
+                <p>请问明年高一想混个NOIP三等奖，比较怎怎么规划。</p>
+            </section>
+            <section id="section5">
+                <h2>第一题</h2>
+                <p>第一题混到六十加，说明我我这样讲吧，就第一个NYP它的。</p>
+            </section>
+            <section id="section6">
+                <h2>第一题</h2>
+            </section>
+            <section id="section7">
+                <h2>第一题</h2>
+                <p>第一题会给给你那么容易混分的，能明白吧。说你想明年就想拿个NYP三等以上吧，。你这个目标很容易实现的，就你这个目标很容易实现，因为你第一，你今年钩组你有二两百一，证明你还是有基础的，你之后只要跟着老师。</p>
+                <p>有，但有有一个点但有个点，我可能要给你一个建议，你有个点是什么样的一个情况。咱们孩子初三了，今年估计升学压力比较大，就没有时间，可能不多。我给他规划的比较合理的时间是初初三中考完之后，然后从应该中考完是暑假暑假嘛，。</p>
+                <p>就狠狠地把提高组内容学一下，因为对他的新高一的学生来说，学一波提高组内容，我觉得还是比较轻松的，相对进度会比较快。到高新高一开学的时候，你就冲一波N Y P。我觉得甚至都有可能，如果孩子能力非常强的话，一个暑假有他有基础，在一个暑假冲一个这个一等奖都都有可能，。</p>
+                <p>像因为你这个目标很低的你这个目标N Y P三等。因为 NYP 三等式做难听点，只要你不暴零，你能做一道题都行。但唯一可能 N Y D 它没有水提，这点可能是比较就不是很友好的一个点， N Y D 它没有水提，你懂吧。</p>
+                <p>所所以，你像你这样的情况，我的建议：第一，你先看咱们这一年初三升学压力大不大。如果升学压力大，我建议咱们先以中考为主。然后，然后利用好就中考完了的这一年的暑假，咱们暑假狠狠的就集中冲刺一下。</p>
+                <p>就你可以了解代码部落，我们每年暑假会有专门的提高组的冲刺班。这个提高组冲刺班也可以面向这个NYP的。你通过这个班，例如暑假你可能的训训练十多天，我然后再让自己平时再练一个月。</p>
+            </section>
+            <section id="section8">
+                <h2>第一题</h2>
+                <p>第一题可能会跟入门组的三四题会重叠，就大概就这样子。</p>
+            </section>
+            <section id="section9">
+                <h2>第一题</h2>
+                <p>第一题，他会，他会跟这个提高组这个三四题会重叠。</p>
+            </section>
+            <section id="section10">
+                <h2>第一题</h2>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

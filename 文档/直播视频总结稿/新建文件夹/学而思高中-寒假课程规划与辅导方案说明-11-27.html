@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>寒假课程规划与一对一辅导说明</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --accent: #6b2d5b;
+    --accent-light: #8e4585;
+    --accent-bg: #f5eef3;
+    --gold: #b8860b;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #7a7570;
+    --border: #e2ddd6;
+    --highlight: #fff3cd;
+    --success: #2d6b3f;
+    --danger: #8b2500;
+    --info: #1a5276;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #b8860b 100%);
+    padding: 56px 0 48px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 2.2em;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .subtitle {
+    font-size: 1.05em;
+    opacity: 0.9;
+    font-weight: 300;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .header .tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== TAGS ===== */
+  .tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.82em;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .tag-purple { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+  .tag-gold { background: rgba(184,134,11,0.25); color: #fff; border: 1px solid rgba(184,134,11,0.5); }
+  .tag-green { background: rgba(45,107,63,0.2); color: #fff; border: 1px solid rgba(45,107,63,0.4); }
+  .tag-red { background: rgba(139,37,0,0.2); color: #fff; border: 1px solid rgba(139,37,0,0.35); }
+
+  /* ===== NAV ===== */
+  .nav-section {
+    padding: 32px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    position: relative;
+  }
+  .nav-card .nav-label {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--accent);
+    color: #fff;
+    padding: 2px 12px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    margin-top: 8px;
+  }
+  .nav-grid a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9em;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+  }
+  .nav-grid a:hover { color: var(--accent); }
+  .nav-grid a .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-size: 0.78em;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ===== SECTION ===== */
+  .content-section {
+    padding: 40px 0 24px;
+  }
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.35em;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding-left: 16px;
+    border-left: 4px solid var(--accent);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .section-title .sec-num {
+    font-size: 0.6em;
+    color: var(--accent-light);
+    font-weight: 400;
+    display: block;
+    font-family: 'Noto Sans SC', sans-serif;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+  }
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 0.9em;
+    margin-bottom: 24px;
+    padding-left: 16px;
+  }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card h4 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.05em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .card ul li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    color: var(--text-secondary);
+    font-size: 0.93em;
+  }
+  .card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-light);
+  }
+
+  /* ===== ALERTS ===== */
+  .alert {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 0.92em;
+    line-height: 1.7;
+  }
+  .alert-gold {
+    background: var(--highlight);
+    border-left: 4px solid var(--gold);
+    color: #664d03;
+  }
+  .alert-success {
+    background: #eaf5ed;
+    border-left: 4px solid var(--success);
+    color: #1a4d2e;
+  }
+  .alert-danger {
+    background: #fdf0ec;
+    border-left: 4px solid var(--danger);
+    color: #6b1d00;
+  }
+  .alert-info {
+    background: #eaf2f8;
+    border-left: 4px solid var(--info);
+    color: #0e3a5c;
+  }
+  .alert-purple {
+    background: var(--accent-bg);
+    border-left: 4px solid var(--accent);
+    color: #4a1942;
+  }
+
+  /* ===== TWO COLUMN ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== TABLE ===== */
+  .table-wrap {
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 16px;
+    font-weight: 500;
+    text-align: left;
+    font-size: 0.9em;
+  }
+  tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  tbody tr:hover { background: var(--accent-bg); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ===== DIFF BAR ===== */
+  .diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .diff-bar .label {
+    font-size: 0.82em;
+    color: var(--text-muted);
+    min-width: 70px;
+    text-align: right;
+  }
+  .diff-bar .track {
+    flex: 1;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .diff-bar .fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .fill-high { background: linear-gradient(90deg, #8b2500, #d4442a); }
+  .fill-med { background: linear-gradient(90deg, #b8860b, #daa520); }
+  .fill-low { background: linear-gradient(90deg, #2d6b3f, #4caf50); }
+
+  /* ===== FLOW ===== */
+  .flow {
+    position: relative;
+    padding-left: 32px;
+    margin-bottom: 16px;
+  }
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--accent-bg);
+  }
+  .flow-item {
+    position: relative;
+    padding-bottom: 20px;
+  }
+  .flow-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--accent-bg);
+  }
+  .flow-item h4 {
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+  .flow-item p {
+    font-size: 0.88em;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ===== HIGHLIGHT TEXT ===== */
+  strong { color: var(--accent); font-weight: 600; }
+
+  .text-gold { color: var(--gold); font-weight: 600; }
+  .text-success { color: var(--success); font-weight: 600; }
+  .text-danger { color: var(--danger); font-weight: 600; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    font-size: 0.82em;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 700px) {
+    .header h1 { font-size: 1.6em; }
+    .container { padding: 0 16px; }
+    .nav-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .section-title { font-size: 1.15em; }
+    .header { padding: 40px 0 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="container">
+    <h1>寒假课程规划与辅导方案说明</h1>
+    <p class="subtitle">涵盖高一/高二化学寒假课程解读、班型差异分析、一对一辅导模式介绍及福利活动</p>
+    <div class="tags">
+      <span class="tag tag-purple">寒假课程</span>
+      <span class="tag tag-gold">化学专题</span>
+      <span class="tag tag-green">一对一辅导</span>
+      <span class="tag tag-purple">班型说明</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NAV ===== -->
+<div class="nav-section">
+  <div class="container">
+    <div class="nav-card">
+      <span class="nav-label">目 录</span>
+      <nav class="nav-grid">
+        <a href="#sec1"><span class="num">1</span>课程报名与插班须知</a>
+        <a href="#sec2"><span class="num">2</span>高一寒假化学课程规划</a>
+        <a href="#sec3"><span class="num">3</span>高二寒假化学课程规划</a>
+        <a href="#sec4"><span class="num">4</span>S+/A+/S 班型差异说明</a>
+        <a href="#sec5"><span class="num">5</span>一对一辅导模式介绍</a>
+        <a href="#sec6"><span class="num">6</span>课程形式与服务体系</a>
+        <a href="#sec7"><span class="num">7</span>福利活动与兑奖须知</a>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== 1. 报名须知 ===== -->
+  <section class="content-section" id="sec1">
+    <h2 class="section-title"><span class="sec-num">PART 01</span>课程报名与插班须知</h2>
+    <p class="section-desc">关于线下/线上插班、试听安排及回放机制的统一说明。</p>
+
+    <div class="card">
+      <h4>插班政策</h4>
+      <ul>
+        <li><strong>线下课程：</strong>支持插班，但建议先联系顾问老师预约试听，确认当前内容进度与学校的匹配程度，选择合适的班次。</li>
+        <li><strong>线上课程：</strong>随时可加入，线上本身支持观看回放。</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>回看建议：</strong>若此前学习内容掌握一般，建议将前期课程一并学习。课程内容针对考试题型设计，前期基础对后续学习具有重要支撑作用。
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>线上课程核心优势：</strong>节省时间成本，支持回放反复学习，便于查漏补缺。
+    </div>
+  </section>
+
+  <!-- ===== 2. 高一化学 ===== -->
+  <section class="content-section" id="sec2">
+    <h2 class="section-title"><span class="sec-num">PART 02</span>高一寒假化学课程规划</h2>
+    <p class="section-desc">高一化学寒假课程涵盖两大核心板块：元素化学与化学反应原理。</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h4>板块一：元素化学（前七讲）</h4>
+        <ul>
+          <li>知识点极为密集，需大量记忆</li>
+          <li>方程式数量多，需系统梳理</li>
+          <li>开学后时间紧张，无法完成大规模记忆任务</li>
+          <li>寒假是打牢基础的关键窗口期</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>板块二：化学反应原理（后五讲）</h4>
+        <ul>
+          <li>高中化学难度最高的部分</li>
+          <li>核心内容：平衡移动、转化率、反应速率</li>
+          <li>强调对原理的深入理解和逻辑分析</li>
+          <li>直接衔接高二"水溶液"板块</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>关键警示：</strong>化学反应原理若在寒假学习模糊，不仅影响本部分内容，还将直接制约高二"水溶液"板块的学习——水溶液的基础知识即为化学平衡与原理。
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>寒假核心目标：</strong>元素化学重在掌握<strong>记忆方法</strong>（非死记硬背），化学反应原理重在<strong>理解知识本质</strong>与<strong>逻辑分析方法</strong>。
+    </div>
+
+    <h3 style="font-family:'Noto Serif SC',serif; font-size:1.05em; margin:20px 0 12px; color:var(--text-primary);">两大学习挑战</h3>
+    <div class="diff-bar">
+      <span class="label">元素化学</span>
+      <div class="track"><div class="fill fill-high" style="width:85%;"></div></div>
+      <span class="text-danger" style="font-size:0.82em;">记忆量大</span>
+    </div>
+    <div class="diff-bar">
+      <span class="label">反应原理</span>
+      <div class="track"><div class="fill fill-high" style="width:90%;"></div></div>
+      <span class="text-danger" style="font-size:0.82em;">理解难度高</span>
+    </div>
+
+    <div class="alert alert-success">
+      <strong>正面结论：</strong>高一寒假需攻克两大难关——"难记"与"难理解"，分别对应不同学习能力类型的学生。课程设计将针对性地提供方法支持。
+    </div>
+  </section>
+
+  <!-- ===== 3. 高二化学 ===== -->
+  <section class="content-section" id="sec3">
+    <h2 class="section-title"><span class="sec-num">PART 03</span>高二寒假化学课程规划</h2>
+    <p class="section-desc">高二化学聚焦两大模块：选择性必修二（晶体结构）与选择性必修三（有机化学），均为高考高频考点。</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h4>模块一：晶体结构</h4>
+        <ul>
+          <li>属选择性必修二（高中最难的原理书）的收尾内容</li>
+          <li>高考常考3道选择题（约9分）</li>
+          <li>部分大题中亦会涉及</li>
+          <li>需较强空间想象能力</li>
+          <li>计算复杂，需掌握核心模型</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>模块二：有机化学</h4>
+        <ul>
+          <li>属选择性必修三</li>
+          <li>高考四大固定题型之一</li>
+          <li>有机兼具"难记"与"难理解"双重特征</li>
+          <li>学习方法与无机化学有本质差异</li>
+          <li>近年高考中有机考点呈扩展趋势</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Noto Serif SC',serif; font-size:1.05em; margin:20px 0 12px; color:var(--text-primary);">高考化学四大必考题型</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>题型</th>
+            <th>难度定位</th>
+            <th>特点说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>实验题</td>
+            <td>中高</td>
+            <td>近年出现与有机交叉命题趋势，难度提升</td>
+          </tr>
+          <tr>
+            <td>工业流程</td>
+            <td>中高</td>
+            <td>固定形式考查</td>
+          </tr>
+          <tr>
+            <td>化学反应原理</td>
+            <td><strong>最高</strong></td>
+            <td>综合逻辑分析能力要求最高</td>
+          </tr>
+          <tr>
+            <td>有机化学</td>
+            <td><strong>第二高</strong></td>
+            <td>通常为最后一道大题，考试时间紧迫（化学仅75分钟）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>晶体结构应试策略：</strong>化学考试仅75分钟，无时间逐一向量计算。课程重点教授<strong>几个关键基础模型</strong>（母题），所有复杂晶体均由基础模型发散而来，掌握模型即可高效解题。
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>有机化学备考警示：</strong>高考中有机不仅出现在最后一道大题，选择题及实验题中亦有涉及。实验题考查有机时<strong>难度显著提升</strong>。需要将基础物质（如烃、烯烃、烷烃等）的性质如积木般逐个掌握，再具备拼装整合能力以应对同分异构体和有机推断。
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>寒假有机学习核心任务：</strong><br>
+      （1）牢固记忆基础物质性质，教授记忆方法；<br>
+      （2）构建有机学习框架，为春季突破难点做好准备。
+    </div>
+
+    <div class="alert alert-info">
+      <strong>学科关联提示：</strong>晶体结构与数学立体几何存在知识交叉，学科间相互影响。高一学生提前了解高二化学内容，有助于理解寒假课程的重要性。
+    </div>
+  </section>
+
+  <!-- ===== 4. 班型说明 ===== -->
+  <section class="content-section" id="sec4">
+    <h2 class="section-title"><span class="sec-num">PART 04</span>S+/A+/S 班型差异说明</h2>
+    <p class="section-desc">三种班型在讲次安排、内容深度和节奏上存在差异，适配不同基础的学生。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>班型</th>
+            <th>元素化学</th>
+            <th>原理/深入内容</th>
+            <th>特点与要求</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>S 班</strong></td>
+            <td>前7讲</td>
+            <td>后5讲</td>
+            <td>标准进度，节奏适中</td>
+          </tr>
+          <tr>
+            <td><strong>S+ 班</strong></td>
+            <td>前5讲（较少）</td>
+            <td>后7讲（更多深入内容）</td>
+            <td>节奏更快，内容更深，要求学生具备较好基础</td>
+          </tr>
+          <tr>
+            <td><strong>A+ 班</strong></td>
+            <td>讲次更多（多讲一些）</td>
+            <td>后4.5讲</td>
+            <td>知识拆解更细致，注重脉络梳理与方法传授</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>重要提醒：</strong>并非学得越快、内容越难就越好。若课程进度过快而掌握不牢固，高二将需要回头补漏洞，反而浪费时间。选择班型时务必匹配学生实际基础水平。
+    </div>
+
+    <div class="card">
+      <h4>S+ 班特别说明</h4>
+      <ul>
+        <li>本轮S+难度较高</li>
+        <li><strong>高二S+可完成高中全部新课</strong>，为春季复习腾出更多精力攻克难点</li>
+        <li>高中化学知识点繁多，后续复习需大量时间，寒假提前完成新课具有重要战略意义</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>定制班</h4>
+      <ul>
+        <li>根据学校实际教学进度灵活调整</li>
+        <li>若学校已学过某一元素，将跳过并调整至对应内容</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 5. 一对一 ===== -->
+  <section class="content-section" id="sec5">
+    <h2 class="section-title"><span class="sec-num">PART 05</span>一对一辅导模式介绍</h2>
+    <p class="section-desc">针对自觉性不足、基础薄弱或偏科的学生，提供个性化强监督式辅导。</p>
+
+    <h3 style="font-family:'Noto Serif SC',serif; font-size:1.05em; margin:16px 0 12px; color:var(--text-primary);">核心适配人群</h3>
+    <div class="two-col">
+      <div class="alert alert-purple">
+        <strong>自觉性较差的学生</strong><br>
+        类比健身房私教模式——有专业老师定期督促、追踪，解决自主学习中"缺乏自律"的核心问题。包括每日单词打卡、作业催交、知识点专项监督等。
+      </div>
+      <div class="alert alert-purple">
+        <strong>校内进度跟不上的学生</strong><br>
+        进入高一高二后，物理、数学等科目难度显著上升，学校进度快导致部分学生出现知识断层，产生焦虑情绪。一对一可针对性弥补。
+      </div>
+    </div>
+
+    <h3 style="font-family:'Noto Serif SC',serif; font-size:1.05em; margin:20px 0 12px; color:var(--text-primary);">辅导流程</h3>
+    <div class="flow">
+      <div class="flow-item">
+        <h4>问题诊断</h4>
+        <p>与学生深入沟通，收集试卷、错题本、周测作业，由专业教师进行系统分析，定位核心问题。</p>
+      </div>
+      <div class="flow-item">
+        <h4>专属课程设计</h4>
+        <p>根据诊断结果定制课程内容，包含知识点讲解、相似题拓展、例题剖析等环节。</p>
+      </div>
+      <div class="flow-item">
+        <h4>即时效果反馈</h4>
+        <p>当堂解决知识点问题，学生可获得实打实的进步体验，增强学习信心。</p>
+      </div>
+      <div class="flow-item">
+        <h4>课后跟踪</h4>
+        <p>每节课后提供详细反馈：课堂表现、知识掌握情况、考试占比分析、后续课程调整建议，并布置个性化学习任务。</p>
+      </div>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>核心原则："错啥练啥，考啥练啥"</strong><br>
+      大考前根据往年校内考试进行组卷模拟；日常课程根据学生错题与薄弱知识点进行针对性练习。做到问题<strong>日日清、周周清</strong>，不遗留至期末或下学期。
+    </div>
+
+    <div class="alert alert-success">
+      <strong>课程灵活性：</strong>非固定大纲授课。若学生某板块掌握良好可适当放慢，薄弱板块则集中2-3节课突击强化。课程安排随学生实际吸收情况实时调整。
+    </div>
+  </section>
+
+  <!-- ===== 6. 服务体系 ===== -->
+  <section class="content-section" id="sec6">
+    <h2 class="section-title"><span class="sec-num">PART 06</span>课程形式与服务体系</h2>
+    <p class="section-desc">涵盖上课形式、科目覆盖、课程类型及考后诊断服务。</p>
+
+    <div class="card">
+      <h4>上课形式</h4>
+      <ul>
+        <li><strong>在线课与面授课</strong>均提供</li>
+        <li>高中校区：沙坪坝·崇师教学点</li>
+        <li>覆盖科目：语文、数学、物理、化学、英语（初高中均含）</li>
+      </ul>
+    </div>
+
+    <h3 style="font-family:'Noto Serif SC',serif; font-size:1.05em; margin:20px 0 12px; color:var(--text-primary);">课程类型</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>课程类型</th>
+            <th>说明</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>长期课</strong></td>
+            <td>截止1月中旬可报秋季课</td>
+            <td>期中复习或下学期预习</td>
+          </tr>
+          <tr>
+            <td><strong>模块课</strong></td>
+            <td>针对特定知识模块</td>
+            <td>某一知识板块薄弱</td>
+          </tr>
+          <tr>
+            <td><strong>题型课</strong></td>
+            <td>针对特定题型，2-3节定量提升</td>
+            <td>某类题型掌握不佳</td>
+          </tr>
+          <tr>
+            <td><strong>考前冲刺</strong></td>
+            <td>短期集训</td>
+            <td>大考前突击</td>
+          </tr>
+          <tr>
+            <td><strong>假期集训</strong></td>
+            <td>元旦等小假期集中上课</td>
+            <td>假期强化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>零元考后诊断：</strong>期中考后可领取零元试卷诊断（原价9.9元），由一对一教师提供系统诊断报告及改进方案。每科考试的核心价值不在考试本身和分数，而在考后分析与改进方向。限时限量，先到先得。
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>关于寒假课的定位：</strong>寒假课程不仅是下学期的简单预习，更涵盖下学期月考、半期、期末中的<strong>基础题和中档题</strong>。以往半期考试中的多部分内容均在暑假课程中提前讲授。假期学习的收获远超"预习"本身。
+    </div>
+  </section>
+
+  <!-- ===== 7. 福利 ===== -->
+  <section class="content-section" id="sec7">
+    <h2 class="section-title"><span class="sec-num">PART 07</span>福利活动与兑奖须知</h2>
+    <p class="section-desc">直播期间设置多轮抽奖及专属福利，涵盖课程优惠券与诊断服务。</p>
+
+    <div class="card">
+      <h4>抽奖轮次</h4>
+      <ul>
+        <li><strong>第一至三轮：</strong>50元、100元、200元课程优惠券</li>
+        <li><strong>第四轮（特别奖）：</strong>一对一专属 <strong class="text-gold">900元</strong> 优惠券，共抽30个名额，分两轮进行</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>兑奖方法：</strong><br>
+      （1）点击活动流程，前往同意；<br>
+      （2）填写地址（可随意填写）；<br>
+      （3）收货人建议填写报名者姓名（如孩子姓名）；<br>
+      （4）<strong class="text-danger">电话号码务必准确填写</strong>。
+    </div>
+
+    <div class="alert alert-success">
+      <strong>零元考后诊断福利：</strong>限时20个名额，先到先得。扫码添加顾问老师即可领取，适用于期中考后需要问题定位与改进方案的学生。
+    </div>
+
+    <div class="card">
+      <h4>咨询方式</h4>
+      <ul>
+        <li>扫描直播间二维码添加顾问老师</li>
+        <li>课程安排、时间协调、学科咨询均可对接</li>
+        <li>初中、高中一对一咨询均可用</li>
+        <li>直播视频提供回放，可随时回顾内容</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <div class="container">
+    <p>本文档根据直播课程说明整理，内容仅供参考。具体课程安排以实际咨询为准。</p>
+    <p style="margin-top:6px;">如有疑问，请联系顾问老师获取详细信息。</p>
+  </div>
+</div>
+
+</body>
+</html>

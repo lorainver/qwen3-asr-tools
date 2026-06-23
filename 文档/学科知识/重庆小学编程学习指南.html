@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆小学编程学习指南 | 五年级至小升初CSP-J备考全规划</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        main: '#1976D2',
+                        accent: '#FF7043',
+                        lightBg: '#F0F7FF',
+                        darkText: '#263238'
+                    },
+                    fontFamily: {
+                        yahei: ['Microsoft YaHei', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+            .card-hover { transition: all 0.3s ease; }
+            .card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: "Microsoft YaHei", sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-darkText">
+    <!-- 顶部固定导航栏 -->
+    <header class="fixed w-full top-0 left-0 bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 text-main text-xl md:text-2xl font-bold">
+                <i class="fa-solid fa-code"></i>
+                <span>重庆小学编程学习指南</span>
+            </a>
+            <!-- 桌面端导航 -->
+            <nav class="hidden md:flex items-center gap-6 text-gray-600">
+                <a href="#part1" class="hover:text-main transition-colors">学习必要性</a>
+                <a href="#part2" class="hover:text-main transition-colors">阶段进度规划</a>
+                <a href="#part3" class="hover:text-main transition-colors">CSP-J教学任务</a>
+                <a href="#part4" class="hover:text-main transition-colors">教学实施细则</a>
+                <a href="#part5" class="hover:text-main transition-colors">常见问题</a>
+            </nav>
+            <!-- 移动端菜单按钮 -->
+            <button class="md:hidden text-gray-700 text-xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主内容区 顶部留白适配导航 -->
+    <main class="container mx-auto px-4 pt-28 pb-16">
+        <!-- 首页横幅 -->
+        <section class="bg-gradient-to-r from-main to-blue-400 rounded-2xl p-6 md:p-10 text-white my-8 text-shadow">
+            <div class="md:flex items-center gap-8">
+                <div class="md:w-1/2">
+                    <h1 class="text-[clamp(1.7rem,4vw,2.6rem)] font-bold leading-tight">
+                        重庆小学阶段学习编程，很有必要
+                    </h1>
+                    <p class="mt-5 text-lg opacity-95 leading-relaxed">
+                        面向重庆五至六年级小学生家长<br>
+                        专业规划：五年级起步 → 小升初进阶 → 初一冲刺 CSP-J 入门级<br>
+                        全程采用 C++ 教学，拒绝图形化编程，先理解算法再上机实操
+                    </p>
+                    <div class="mt-7 flex flex-wrap gap-3">
+                        <span class="bg-white/25 px-4 py-1.5 rounded-full text-sm"><i class="fa-solid fa-check mr-1"></i>专用C++ 不学Scratch</span>
+                        <span class="bg-white/25 px-4 py-1.5 rounded-full text-sm"><i class="fa-solid fa-check mr-1"></i>算法优先 纸笔先行</span>
+                        <span class="bg-white/25 px-4 py-1.5 rounded-full text-sm"><i class="fa-solid fa-check mr-1"></i>对接本地升学竞赛</span>
+                    </div>
+                </div>
+                <div class="md:w-1/2 mt-8 md:mt-0 flex justify-center">
+                    <img src="https://picsum.photos/id/180/620/360" alt="小学生编程学习" class="rounded-xl w-full max-w-lg shadow-lg">
+                </div>
+            </div>
+        </section>
+
+        <!-- 第一部分：学习必要性 -->
+        <section id="part1" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">一、重庆小学阶段学习编程的必要性分析</h2>
+            </div>
+
+            <!-- 政策板块 -->
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-6 card-hover">
+                <h3 class="text-xl font-semibold text-main mb-4"><i class="fa-solid fa-school-flag mr-2"></i>1.1 顺应重庆本地教育政策导向</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    重庆是全国编程教育先行城市，早在2016年就将编程教育纳入全市小学必修课程体系，2023年进一步升级配套教材，覆盖小学三至六年级。全市现有75所市级编程教育试点示范学校，对小学3-6年级编程课时、教学目标均有明确标准。小学高年级以代码编程与逻辑理解为核心，初中衔接C++高阶内容，形成完整的教学梯度，系统学习编程完全贴合校内教学安排。
+                </p>
+            </div>
+
+            <!-- 升学板块 -->
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-6 card-hover">
+                <h3 class="text-xl font-semibold text-main mb-4"><i class="fa-solid fa-trophy mr-2"></i>1.2 抢占升学新通道，提升小升初竞争力</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    CSP-J/S（非专业级软件能力认证）是全国权威编程赛事，也是重庆重点中学科技特长生选拔的核心参考证书。南开中学、巴蜀中学等直属名校，均将CSP-J复赛奖项纳入特长生报名资质。同等升学条件下，持有CSP-J证书的学生具备明显优势，同时小学阶段打下的编程基础，可无缝衔接初中信息学竞赛培养体系。
+                </p>
+            </div>
+
+            <!-- 能力培养板块 -->
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-6 card-hover">
+                <h3 class="text-xl font-semibold text-main mb-4"><i class="fa-solid fa-brain mr-2"></i>1.3 培养终身受益的逻辑思维能力</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    五至六年级是孩子从具象思维转向抽象逻辑思维的黄金阶段。编程的核心是拆解问题、梳理逻辑、严谨推演，能够有效锻炼计算思维、问题分析能力，直接助力数学、理科等学科学习。这种思维能力不受学科限制，会伴随孩子整个学习与成长阶段。
+                </p>
+            </div>
+
+            <!-- 语言选择说明 -->
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-6 card-hover border-l-4 border-accent">
+                <h3 class="text-xl font-semibold text-accent mb-4"><i class="fa-solid fa-code mr-2"></i>1.4 选择C++，坚决不学Scratch图形化编程</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    Scratch等图形化编程仅适用于低龄儿童兴趣启蒙，语法与逻辑体系和专业竞赛完全脱节，中途转换语言会造成大量重复学习。而C++是信息学奥赛、CSP-J官方指定唯一主流语言，语法严谨、算法表现力强，五年级直接从C++起步，一步对接校内高阶课程、竞赛体系与初中学习内容，是备战竞赛最高效的选择。
+                </p>
+            </div>
+
+            <!-- 起步时间说明 -->
+            <div class="bg-lightBg rounded-xl p-6 md:p-8 shadow-md card-hover">
+                <h3 class="text-xl font-semibold text-main mb-4"><i class="fa-solid fa-calendar-days mr-2"></i>1.5 五年级：备战CSP-J的黄金起步时间</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    从五年级上学期启动学习，至初一参加CSP-J考试，拥有12-18个月完整备赛周期。编程涉及的进制转换、逻辑运算、基础算法等知识点，与小学五六年级数学知识高度适配，学习内容相辅相成。该时间线也是重庆本地专业竞赛培养机构、重点中学信奥后备生源的标准培养节奏。
+                </p>
+            </div>
+        </section>
+
+        <!-- 第二部分：五年级至小升初进度规划 -->
+        <section id="part2" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">二、五年级至小升初编程学习进度规划<br>
+                <span class="text-base font-normal text-gray-500">整体目标：初一顺利通过 CSP-J 入门级认证</span>
+                </h2>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md">
+                <div class="bg-blue-50 p-4 rounded-lg mb-6 border-l-4 border-main">
+                    <p class="text-gray-700"><strong>整体规划理念：</strong>先理解算法逻辑，后开展上机实操；分阶段循序渐进，每周合理分配学习时长，不占用校内文化课学习时间。全周期分为四大阶段，层层递进。</p>
+                </div>
+
+                <!-- 进度总表 -->
+                <div class="overflow-x-auto mb-8">
+                    <table class="w-full border-collapse text-sm md:text-base">
+                        <thead>
+                            <tr class="bg-main text-white">
+                                <th class="border border-gray-200 p-3 text-left w-1/6">学习阶段</th>
+                                <th class="border border-gray-200 p-3 text-left w-1/6">时间区间</th>
+                                <th class="border border-gray-200 p-3 text-left w-1/6">核心目标</th>
+                                <th class="border border-gray-200 p-3 text-left w-1/4">学习重点</th>
+                                <th class="border border-gray-200 p-3 text-left w-1/6">学习形式</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">阶段一<br>筑基启蒙</td>
+                                <td class="border border-gray-200 p-3">五年级全学年</td>
+                                <td class="border border-gray-200 p-3">掌握C++基础语法，建立标准编程逻辑</td>
+                                <td class="border border-gray-200 p-3">计算机基础、数据类型、变量、顺序/分支/循环结构、数组、输入输出</td>
+                                <td class="border border-gray-200 p-3">纸笔推演为主，后期少量上机</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">阶段二<br>算法进阶</td>
+                                <td class="border border-gray-200 p-3">六年级全学年</td>
+                                <td class="border border-gray-200 p-3">掌握CSP-J核心基础算法与数据结构</td>
+                                <td class="border border-gray-200 p-3">函数、递归、结构体、枚举/贪心/排序/二分/搜索、基础数论</td>
+                                <td class="border border-gray-200 p-3">逻辑拆解+流程图，逐步增加上机练习</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">阶段三<br>竞赛实战</td>
+                                <td class="border border-gray-200 p-3">小升初暑假</td>
+                                <td class="border border-gray-200 p-3">适配竞赛节奏，真题专项训练</td>
+                                <td class="border border-gray-200 p-3">CSP-J历年真题、代码模板、错题复盘、考场策略</td>
+                                <td class="border border-gray-200 p-3">全真模考+精讲复盘，全上机训练</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">阶段四<br>考前冲刺</td>
+                                <td class="border border-gray-200 p-3">初一上学期<br>赛前阶段</td>
+                                <td class="border border-gray-200 p-3">查漏补缺，稳定应试状态</td>
+                                <td class="border border-gray-200 p-3">薄弱点强化、限时套卷训练、心态调整</td>
+                                <td class="border border-gray-200 p-3">模拟考试+一对一专项补漏</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 分阶段详细说明 -->
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-main mb-2">🔹 阶段一：五年级学年 · 筑基启蒙阶段</h4>
+                        <p class="text-gray-700 leading-relaxed">
+                            核心完成计算机基础概念、C++全套基础语法学习。以生活案例、流程图、纸笔练习理解逻辑，<strong>初期不上机</strong>。每一个知识点吃透后，再进行简短代码编写练习。阶段目标：可独立阅读、编写基础程序，同步完成GESP C++1-2级认证。
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-main mb-2">🔹 阶段二：六年级学年 · 算法进阶阶段</h4>
+                        <p class="text-gray-700 leading-relaxed">
+                            主攻C++高阶语法、基础数据结构与CSP-J必考算法。延续“先逻辑后代码”模式，结合重庆本地生活场景讲解算法原理。配套专项习题训练，阶段性参加GESP高阶认证，积累竞赛解题能力。
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-main mb-2">🔹 阶段三：小升初暑假 · 竞赛实战阶段</h4>
+                        <p class="text-gray-700 leading-relaxed">
+                            进入集训模式，以CSP-J初赛、复赛真题为核心，完全模拟考场时间与规则。重点训练代码熟练度、排错能力、时间分配技巧，建立错题本分类复盘，完成从“学知识点”到“赛场解题”的转变。
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-main mb-2">🔹 阶段四：初一上学期 · 考前冲刺阶段</h4>
+                        <p class="text-gray-700 leading-relaxed">
+                            不再学习新知识点，专注套卷模拟、薄弱点补强。调整作息与应试心态，优化答题细节，确保正式参赛时稳定发挥，冲刺CSP-J复赛二等奖及以上奖项。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三部分：CSP-J1 考级对应教学任务 -->
+        <section id="part3" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">三、对照 CSP-J1 考级 · 详细教学任务安排</h2>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md">
+                <p class="text-gray-700 mb-6">
+                    CSP-J1 为初赛笔试环节，是进入复赛的必备门槛，考核分为计算机基础、数学基础、程序阅读、算法分析四大模块。下表结合考级考点、学习阶段，明确对应教学任务与备考要点：
+                </p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-main text-white">
+                                <th class="border border-gray-200 p-3 text-left">考核模块</th>
+                                <th class="border border-gray-200 p-3 text-left">核心考级知识点</th>
+                                <th class="border border-gray-200 p-3 text-left">对应学习阶段</th>
+                                <th class="border border-gray-200 p-3 text-left">教学任务与备考要点</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">计算机基础知识</td>
+                                <td class="border border-gray-200 p-3">硬件组成、操作系统、网络常识、信息安全、数制转换</td>
+                                <td class="border border-gray-200 p-3">五年级上学期</td>
+                                <td class="border border-gray-200 p-3">掌握二/八/十/十六进制互转，理解计算机工作原理，与校内信息技术课同步学习，强化进制换算熟练度。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">逻辑运算</td>
+                                <td class="border border-gray-200 p-3">与、或、非、异或、复杂逻辑表达式计算</td>
+                                <td class="border border-gray-200 p-3">五年级下学期</td>
+                                <td class="border border-gray-200 p-3">熟记逻辑运算真值表，手工演算表达式，结合生活条件场景理解判断逻辑。</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">数学基础</td>
+                                <td class="border border-gray-200 p-3">质数、合数、最大公约数、同余、排列组合</td>
+                                <td class="border border-gray-200 p-3">五年级下~六年级上</td>
+                                <td class="border border-gray-200 p-3">结合小学数学拓展学习，掌握辗转相除法、计数原理，为算法学习打好数学基础。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 p-3 font-medium">程序阅读</td>
+                                <td class="border border-gray-200 p-3">C++语法、三大程序结构、数组、字符串、函数</td>
+                                <td class="border border-gray-200 p-3">五年级下~六年级上</td>
+                                <td class="border border-gray-200 p-3">手工模拟代码运行、跟踪变量变化、推导运行结果，专项训练代码阅读能力。</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-200 p-3 font-medium">基础算法</td>
+                                <td class="border border-gray-200 p-3">枚举、贪心、递推、排序、二分查找</td>
+                                <td class="border border-gray-200 p-3">六年级全学年</td>
+                                <td class="border border-gray-200 p-3">理解算法思想，绘制流程图，背诵标准代码模板，区分不同算法的适用场景。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四部分：教学原则与实施细则 -->
+        <section id="part4" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">四、核心教学原则与实施详细设计</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- 四大教学原则 -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                    <h3 class="text-lg font-semibold text-main mb-4"><i class="fa-solid fa-list-check mr-2"></i>4.1 四大核心教学原则</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex gap-2">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                            <span><strong>纯C++教学</strong>，全程不使用Scratch等图形化编程工具</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                            <span><strong>算法理解优先</strong>，先吃透逻辑，再上机编写代码</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                            <span>训练难度对标CSP-J真题，不使用低难度趣味习题</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                            <span>教学案例结合重庆本地生活场景，降低理解门槛</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 三阶段实施流程 -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                    <h3 class="text-lg font-semibold text-main mb-4"><i class="fa-solid fa-stairs mr-2"></i>4.2 三段式教学实施流程</h3>
+                    <ul class="space-y-4 text-gray-700">
+                        <li>
+                            <p class="font-medium">① 算法理解 & 纸笔演练（占比30%）</p>
+                            <p class="text-sm mt-1">案例讲解、绘制流程图、伪代码推演，<strong>全程不上机</strong>，夯实逻辑基础。</p>
+                        </li>
+                        <li>
+                            <p class="font-medium">② 语法结合代码实现（占比50%）</p>
+                            <p class="text-sm mt-1">学习C++语法，纸上构思代码，再上机编译调试，打通逻辑与代码的衔接。</p>
+                        </li>
+                        <li>
+                            <p class="font-medium">③ 真题实战模拟（占比20%）</p>
+                            <p class="text-sm mt-1">限时模考、试卷精讲、错题分类复盘，全面适配竞赛模式。</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 学习工具与资源推荐 -->
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md mb-8">
+                <h3 class="text-lg font-semibold text-main mb-4"><i class="fa-solid fa-book-open mr-2"></i>4.3 推荐学习工具与配套资源</h3>
+                <div class="grid md:grid-cols-2 gap-4 text-gray-700">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-laptop-code text-main text-xl mt-1"></i>
+                        <div>
+                            <p class="font-medium">编程软件</p>
+                            <p class="text-sm">Dev-C++（CSP-J官方指定环境，免费使用）</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-book text-main text-xl mt-1"></i>
+                        <div>
+                            <p class="font-medium">配套教材</p>
+                            <p class="text-sm">《小学生C++趣味编程》、《信息学奥赛一本通》</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-globe text-main text-xl mt-1"></i>
+                        <div>
+                            <p class="font-medium">在线练习平台</p>
+                            <p class="text-sm">洛谷、NOI官方在线评测平台</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-file-pdf text-main text-xl mt-1"></i>
+                        <div>
+                            <p class="font-medium">核心资料</p>
+                            <p class="text-sm">近3-5年CSP-J初赛、复赛真题及解析</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 本地学习渠道建议 -->
+            <div class="bg-lightBg rounded-xl p-6 md:p-8 shadow-md">
+                <h3 class="text-lg font-semibold text-main mb-4"><i class="fa-solid fa-map-location-dot mr-2"></i>4.4 重庆本地学习渠道选择建议</h3>
+                <p class="text-gray-700 leading-relaxed mb-3">
+                    1. <strong>校内资源优先</strong>：优先参加市级编程示范校的编程选修课、信息学竞赛社团，课程体系贴合重庆官方标准，师资正规且免费。
+                </p>
+                <p class="text-gray-700 leading-relaxed">
+                    2. <strong>校外机构筛选</strong>：若校内资源不足，选择专注C++信息学竞赛的本地机构；<strong>规避以Scratch图形化编程为主的培训机构</strong>，优先查看往届学员CSP-J竞赛真实成绩。
+                </p>
+            </div>
+        </section>
+
+        <!-- 第五部分：常见问题解答 -->
+        <section id="part5" class="my-14">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-10 bg-main rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold">五、家长常见疑问解答</h2>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 md:p-8 shadow-md space-y-6">
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">Q1：零基础直接学C++，难度太高，孩子会不会学不懂？</h4>
+                    <p class="text-gray-700 mt-2 leading-relaxed">
+                        我们采用“先逻辑、后代码”的教学模式，用生活案例、流程图拆解抽象知识点，完全匹配五六年级学生的认知水平。该阶段孩子数学思维已达标，循序渐进学习，能够平稳入门。
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">Q2：不学Scratch图形化编程，孩子会缺少学习兴趣吗？</h4>
+                    <p class="text-gray-700 mt-2 leading-relaxed">
+                        本次学习目标明确为备战CSP-J竞赛，图形化编程与竞赛体系脱节，转语言反而增加负担。我们通过逻辑游戏、趣味算法案例保持学习趣味性，无需依靠Scratch启蒙。
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">Q3：每周需要投入多少时间，会不会影响文化课学习？</h4>
+                    <p class="text-gray-700 mt-2 leading-relaxed">
+                        日常每周2-3次，每次1-2小时；寒暑假适度加强。编程锻炼逻辑思维，对数学学习有正向促进作用，合理规划时间不会影响校内课业。
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">Q4：孩子五年级零基础，现在开始备赛初一CSP-J来得及吗？</h4>
+                    <p class="text-gray-700 mt-2 leading-relaxed">
+                        完全来得及。五六年级两年系统学习+小升初暑假集训，是行业标准备赛周期，按照规划稳步推进，初一参赛成功率极高。
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">Q5：CSP-J证书在重庆小升初阶段有什么实际作用？</h4>
+                    <p class="text-gray-700 mt-2 leading-relaxed">
+                        CSP-J奖项是重庆重点中学科技特长生选拔的核心资质，复赛奖项在直属中学、优质初中的招生选拔中具备明显优势，是本地认可度极高的竞赛证书。
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg text-gray-800">Q6：即便没有拿到理想奖项，前期学习投入是否白费？</h4>
+                    <p class="text-gray-700 mt-2 leading-relaxed">
+                        不会。编程训练的逻辑思维、专注力、问题拆解能力，会长期赋能各科学习。同时小学打下的C++基础，可延续至初中继续参赛，学习积累终身受用。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部版权区域 -->
+    <footer class="bg-darkText text-white py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-xl font-semibold mb-3">重庆小学编程学习与CSP-J备考指导</h3>
+            <p class="text-gray-400 mb-4">面向重庆五~六年级小学生家长 | 专注C++信息学编程教育</p>
+            <p class="text-gray-500 text-sm">
+                咨询方向：小学C++教学 · CSP-J竞赛规划 · 小升初科技特长培养
+            </p>
+            <div class="border-t border-gray-700 w-4/5 mx-auto mt-6 pt-6">
+                <p class="text-gray-500 text-xs">
+                    Copyright © 2026 重庆中小学编程学习指南 版权所有
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

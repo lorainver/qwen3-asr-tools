@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>米妈直播-1030</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>米妈直播-1030</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>小升初的真题，我快速跟你们说一下哈，有有需要上小升初真题的我来快速跟你们说一下哈，小升初的这个真题</li>
+                <li>他想，他应该我跟我要真题它里面就都有，而且里面的涉及的题型，给大家看一下哈，呦，我这前面东西太多了，来给大家看一下</li>
+                <li>然后书的这个收到书以后，书的第二页你可以进到我们的群</li>
+                <li>一定要你们拍了的，我的书的都要看一下东西哈，要不在书后面，要不在要不在第二页都有这个东西</li>
+                <li>会员送的那本书是上岸指南，这本书哈是关于政策的书</li>
+                <li>讲我的会员权益，第一个我的核心权益</li>
+                <li>最后我推他去一中去一中，然后呢，在一中第一次没过，第二次现学现考，你看寒假</li>
+                <li>给他一中一中给他签了不三系跟他签的降分约，八十元给了他死约，然后呢最后他去了一中</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>个国庆节和九月份的这这期间的，好，凑成了这三十八套。其实上届的和这一届的，我觉得差别不是特别大。就近两年的差别不大，但是我们看了下五年前的，我手上有五年前的真题就出升高的，二零二零年的二零二零年的。</p>
+                <p>就差别就很大了命题思路就很大了所以说你们这两年的，差别不大这两年的差别都不大，。小升初的真题，我快速跟你们说一下哈，有有需要上小升初真题的我来快速跟你们说一下哈，小升初的这个真题。小升初呢是有三百套真题加答案，它是电子版然后呢。</p>
+                <p>有有六套真题的讲解和视频，而且呢，我们的讲解呢是也是每道题上面是给你们标了那种东西的，等一下我来给你找一找。这小珍珠这蒸汽裤，这里有六套，然后六套的话呢，它也是。有我们的二星二点五星三星三三三点五星四星五星的题都是经典题型都是二。</p>
+                <p>零五年左右的题型有三百多套，而且每周都会给你们更新新的，而且呢，我们有答案的详细的讲解有答案的详细讲点，给大家看一下。果妈帮你们做的讲解，每道题跟你讲考什么板块儿什么什么星级难度。这个东西我觉得也是在市面上我觉得做的很细致的一个产品这是果妈的产品，我跟你就帮他卖帮他卖，然后我觉得因为我们很多会员喜欢。</p>
+                <p>他想，他应该我跟我要真题它里面就都有，而且里面的涉及的题型，给大家看一下哈，呦，我这前面东西太多了，来给大家看一下。是有，你看，都是八中系、巴蜀系、西府育才以外这些各种的题型。各各一，也三百套，到九月份的收集三百套，然后国庆节现在已经收集了三百多套了明白了吧。</p>
+                <p>就这样子的，OK，来，我就跟大家继续讲干货了有没有要连线的亲。目前囤着研究，好，你们喜欢买买买的家长，我不，我不组织你们。对的，如果说你你的目标现在想什么初一、初二，初二就考二加四呀，或怎么怎么样，你可以研究。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>你看一下，我们去毕山巴蜀，你看去帮毕山巴蜀做了宣传，很多人就发现这个学校还不错，。而且那天我们去探校了，还有两个区前区里面前二十的学校就抓住了流亡。原来我们是没有推优的，我跟大家讲，原来我们是不做推，我们原来的会员是不做推考奖。</p>
+                <p>推考的只有讲座，只有探校，但后来发现学校发现，我这个留娃，你帮我推嘛，推推推就越来越多。在外面去参加机构的也好，还包括那些串出的也好，别人两百三百一场那不说了嘛，还要还有假考。我在这个平台上也活跃了五年在这上面有很多昙花一现的，搞飞机票死了的，然后呢，搞假考也也也也被也挂了的多得很。</p>
+                <p>不是因为我年龄大，因为我还是比较爱惜自己的羽毛，我不会乱染。从上到下，不管是学校还是那些领导们，都还是比较相信我的这个底线，OK所以说你如果说你觉得。初升高是这样子的，初升高的话查重，是本本部七龙珠的本部必查重，然后呢，但是七龙珠的分校。</p>
+                <p>有些学校它查重没那么严你别考完，你隔个两个月你再去考，两三个月再去考，应该没问题，但是。本部是必查重，然后所以说我跟大家讲本本部怎么查重。例如像一中，我们之前考了，校校先校校，他二加四那天讲座完了，他就下午就进校考了，考了以后没隔多久，那前两天我一中。</p>
+                <p>内测就当时国庆节参加我内测，我们是一号内测，然后七八号进校，然后进校七号那天需要跟他打电话进校，然后呢，结果。”然后就就就说你不能难，然后就然后我又去帮他去问，就说：“呀，你别给那么紧嘛，你说寒假再说嘛，就这种情况，你懂了噻。” 就这种情况哈，所以说亲们说，还是要谨慎的。</p>
+                <p>一中的时候，大家要求我内测因为一中每次进校准几十个，这第一个，第二个一中你万一自己觉得没准备好。你自己觉得没准备好，然后，然后，然后你去考了，然后你就浪费了机会了。我另外一个我小生初的一个老会员老铁这次居然初试没过去参加一中，我内测过了，然后初试没过。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>一一搞就一出事儿所以说现在都都都都是这样子的，而且可能以后这个政策越紧。越会向这种去收紧，我就跟你讲，别人别人的饭碗资源别人吃的是资源饭。当然，上课的老师也不错，因为很多都是校内老师在上课。</p>
+                <p>其实小升初的话呢，他们还得外聘，初升高 的那种坑班，坑班一样的，初升高的一样的都是校内老师上课，而且。像我的，像我的老师，我家孩子的数学老师，今天早上一个一个在问。原来都不在外面机构上课，现在被迫在机构上课，叫听懂我听我讲清楚是被迫。</p>
+                <p>我知道的，有一个四大金刚的一个一个机构你可以理解为它是坑班儿到什么地步呢。可以做到他的机构的学生，他的机构的学生到了高中是跟金刚校的一起考试，一起排名。你看我都很隐晦，都没说哪个学校，我怎么怎么样。</p>
+                <p>哇塞，我跟你讲，这个太敏感了，一一直一我我我在直播间告诉你是哪个，我跟你讲，我就不要想在在这个平台上活了。难，我很我跟大家讲，我的会员信息差，我的会员信息差，因为我必须的帮助你们上岸。你所说你们会员，就说你必须把你的孩子学籍、户籍，你在你的校历的成绩，以及你现在在哪个机构、什么班型、你的目标校是哪里，这些东西讲清楚，我们再帮你做规划，。</p>
+                <p>我就跟大家讲，我现在发现了，包括我当年，如果说我我如果说不是圈内人搞到坑班儿，我我，而且我为什么做家长圈。我做家长圈的目的，因为我突然发现，连我这个圈内人士小升初。然后，而且而且不是说每个人，不是说让你们不去学某司这种机构哈，错了，牛娃要去学某司。</p>
+                <p>比，例如，我再给大家举个反例，那像我们王老师家。王老师家的二娃，他们家儿子二娃数学思维特别好的那种，因为王老师呢，他你们进来主要是我王老师、刘老师三个人给你规划，但是王老师是主力。因为他是一个学霸家长，他家老大当时是我的第一第一批会员，然后呢是在考上了西府小七，然后呢就然后就没去考四大金刚，然后呢现在初在初三。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>我们这初中的公式，例如词语赏析、句子赏析、人物形象分析，。环境描写的作用，标题的作用等等这些他们都是有固定的答题模板。有些老师，你看那天，昨天有一个什么于老师在那儿说：“不要听我怎么怎么样。</p>
+                <p>例如像我师兄是提分型的老师，我家按照他的去走，例如他跟我推荐绍兴阅读课，我家在早培就开始学到了初二暑假，我觉得有问没问题。但是我们我例如，我现在我当时我家孩子初中校内的语文老师，他就特别强调要读懂文章，要拓展要积累。那我家这种，因为我家是因为他在小学的时候，他就一直看沪江大语文、看名著，怎么样。</p>
+                <p>他其实他的整个的共情能力、泛读能力和他的积累是够了的，他就需要技巧。而且你们很多孩子现在到了早培，到了初中阶段，他没有时间去搞那么多的，就积累了。例如，你看，我跟大家讲，昨天就前天，我就跟两班孩子分析卷子的时候，我就发现，例如他写奶奶，他答题明显答漏点。</p>
+                <p>他只达到了一个，例如这道题一看词语赏析，他问你这个加点的词语在文章中有什么作用。公式应该答浅层义、深层义用了什么修辞，在文章中有什么作用，然后呢，表达了什么情感。但孩子达到了前面，他但是他修辞答错了，扣了一分；修辞答错了，扣了一分。</p>
+                <p>然后呢，表达了什么情感没达到，然后那道那道题还扣了两分。你看老师阅卷看关键词、看这个点来给你打分的。表现了奶奶的气质，但是没有表达了对奶奶的什么什么什么感激之情呢。</p>
+                <p>好，那地方他就被扣分儿，所以你们一般阅读理解下来，就这里扣一分，那里扣一分那就叫一错错参次，就十多二十分就没了。你们很多正常的语文阅读理解，两篇文章一般算下来二十多分就没了。但像我到了我们家到了初三，基本上扣十分以内。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>他当时跟我说过一句话，他说：“如果说现在郭华翠还在，那那。” 大宇的天下绝对姓郭，因为郭华翠是伦敦大学毕业，但是英年早逝，三十多岁就挂了，所以说他当时都很伤心，他最喜欢的一个老师。他说我他的目标，他的下线，UCL，郭华翠的母校。</p>
+                <p>伦敦大学，他说我我他说我我去不了帝国理工，去不了剑桥，我就去郭华翠的母校，真的原话。在初中的时候，在在四年级的时候，主动让我跟他买买，《昆虫记》《鲁滨逊漂流记》挨着挨着买什么《哈姆雷特》，包括现在在看《哈姆雷特》的原版，因为因为郭浩秋的影响。他会跟他讲故事，讲的很有趣，把这些名著讲的很有趣。</p>
+                <p>然后呢，讲完以后，然后呢，就说你让你你让你妈妈自己给你买这本书，自己看，要看原版，不要看青少年版。那孩子就喜欢听这种话，不看low的，不看幼稚的。那四年级就要看成熟的，就硬啃哈，硬啃《哈利波特》，硬啃《昆虫记》。</p>
+                <p>其实我当时知道，他其实看起来很吃力，但是他硬啃把中文版啃完了。而且还作为奖励给他，我说哈利波特太贵了然后我说你OK了，我再给你买英文版，因为时候英文他英文已经开始起来了，但是他的英文当时只是这个这个的水平。硬啃了这本书，这本书其实当时的词汇量是要求是六七千的，它其实只有四五千的词汇，然后就挨着你看勾了好多生词这样啃下来，但是后面后面就勾的就少了，为什么。</p>
+                <p>魔法呀，药那些那些那种那种的生词他搞定了，他后面就轻松了。然后这本书啃完以后，哈利波特的后面的那些，包括后面的很多初章、书章、中章书的英文版，他看起来就毫毫不费力。好，而且而且，当时我来跟大家讲讲，说，文学对一个孩子的影响有多大。</p>
+                <p>当时我记得他当时去参加八场的面试的时候，因为当时我们走国际方向，我们又去八场和德普都都去考了，两个学校都给了我们全免的奖学金，省了五十个W吧。当时英文面试，英文面试的时候，他就跟老师两个英文在聊这本书。然后因为因为面试他的老师英文名跟他一模一样的，叫Tracy，然后而且呢，两个人又共同的爱好，然后他就因为老师就选择了八场。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

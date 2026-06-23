@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-12-23-道哥直播-初级数学考试试卷分析与学习指导</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2025-12-23-道哥直播-初级数学考试试卷分析与学习指导</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>非常直观的这种感觉呀，建议这是今天我想去聊的</li>
+                <li>我们来聊一下这次出卷的整个考试情况</li>
+                <li>比如我们今天应该很多广东的家长吧，</li>
+                <li>其实我们线上这种考的初级一、初级二包括中级的考试</li>
+                <li>以及我们线下会有一些针对初联一试的考试，在这些考试当中都能够发现这种特点，好多孩子对于基础的知识</li>
+                <li>在座应该有其他城市的家长朋友们，</li>
+                <li>如果说发现有，就例如所谓的我学完了初中，学完了初连，但是一考考试发现不会做</li>
+                <li>你有一些大除法的认知，那第一题你会不会把这大除法给它除掉呀</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、第一题</a></li>
+                <li><a href="#section2">二、第一题</a></li>
+                <li><a href="#section3">三、第一题</a></li>
+                <li><a href="#section4">四、第二题</a></li>
+                <li><a href="#section5">五、第二题</a></li>
+                <li><a href="#section6">六、第三题</a></li>
+                <li><a href="#section7">七、第三题</a></li>
+                <li><a href="#section8">八、第三题</a></li>
+                <li><a href="#section9">九、第三题</a></li>
+                <li><a href="#section10">十、第三题</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>第一题</h2>
+                <p>很多初一二的孩子都同步在学着初连。</p>
+            </section>
+            <section id="section2">
+                <h2>第一题</h2>
+                <p>第一题你会不会把这大除法给它除掉呀。f(n)给它化简，那肯定可以吧，。你化简完之后呢，哦，就变成了一个特定要求下的一个求和。</p>
+                <p>要求的是无整数f n，所以你需要对于模五的情况做一个分析那由此呢发现n。某五元二或者某五元三，然后这样的话，你看前一百零二个，你能干什么呢。三零做一个配对，然后再到相加，最终得到结果是幺三零零五。</p>
+                <p>当我把这几步结合到一块儿的时候，你看，首先大招法，然后呢，对整除的分析。然后最后一个求和，求和里面又涉及到一个我们对于一个配对思想的使用也一个题嵌到了三到嵌套了三到四层。我们说你做每一层都可能犯着小错，。</p>
+                <p>那实际上当你全部搞到最后，你会发现，坏了。这几层错误一迭代，但凡中间某这地方出小问题，那最终呢一分得不到。对这种基础概念的认知对这种基础运算的这种准确度的要求，是我们应该从小就练起的从小就关注掉，关注。</p>
+                <p>先简单互动一下吧老师，初一二考上学高联吗。不是学高联你学的是，你这个考上初一二，你寒假课、寒春课学的是对于。这个整个初联的sorry是是对于高联组合的一个一个新修知识那你会有很多的这种比较有难度的组合的问题，一些高压论证。</p>
+                <p>一些讨论有关思想的问题，我就学它，OK。所以白子是一套纯静态体系纯二式的静态体系，不是我们传统认知的一个什么初连也好，高连也好它不能那么去对应的。那么高联，我们最终是以高联一个为学习目标、学习方向。</p>
+            </section>
+            <section id="section3">
+                <h2>第一题</h2>
+                <p>各位家长那孩子对于基础知识的概念掌握非常重要。</p>
+            </section>
+            <section id="section4">
+                <h2>第二题</h2>
+            </section>
+            <section id="section5">
+                <h2>第二题</h2>
+                <p>第二题我们之前其实出过一个同类题那给的是一个这种矩阵的一个形式给的是一个矩阵的一个形式。那么在那种状态之下，你去找应该是找正方的形式。你会有正向的跟斜向的这种分类，那这里也是一样，你的分类是围绕着正三角形来进行的，所以这也是一个。</p>
+                <p>我们常见的思想的一个转化一个应用，OK，互动互动，看看是什么。没开初联考初级二初联是这个样子的初联只是说你的再付能力你有一定的这个提升然后。会对于你去学初阶二这种非常前置化的数论组合知识会有帮助这是它的一个关系。</p>
+                <p>今天讲出价，题目肯定是一样的题目。</p>
+            </section>
+            <section id="section6">
+                <h2>第三题</h2>
+            </section>
+            <section id="section7">
+                <h2>第三题</h2>
+                <p>并影响你之后做的这个结果都是一个东西都是一个东西。</p>
+            </section>
+            <section id="section8">
+                <h2>第三题</h2>
+            </section>
+            <section id="section9">
+                <h2>第三题</h2>
+                <p>我在这里也是简单去聊一下有关的思想。</p>
+            </section>
+            <section id="section10">
+                <h2>第三题</h2>
+                <p>第三题呢，首先对于前面的这个计数同学们要对排列组合要很了解。另外，在这个题目当中，我们也是把它的一些，这种。你该如何去使用它的这种组合数这这种操作，把它给埋的很隐晦，OK，所以你需要把题目给做一个翻译，那到。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

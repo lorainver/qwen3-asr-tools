@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>道哥直播-北大物院-12-11</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>道哥直播-北大物院-12-11</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>C C晚上好，影子晚上好，川晚上好，好，那看来大家应该都能听见，也能够看见</li>
+                <li>第一个部分，我们会跟李新良先来聊一聊他的这个学习的经历</li>
+                <li>第二个部分跟大家聊一聊这个关于悟净、关于学习的一些学习方法的一些经验，然后会给大家留下比较充分的答疑的时间你们就可以在评论区去提问我们来跟大家答疑，</li>
+                <li>来，我们开始今天的第一个部分，先跟大家聊聊信良的这个学习的经历</li>
+                <li>就我第一次发现自己喜欢物理，还是在初二的时候</li>
+                <li>初中的时候就，比较努力的学习物理，最后的物理成绩呢也比较不错，所以在高中的时候就选择了学习物理竞赛然后</li>
+                <li>也非常的幸运嘛，最后取得了一个很不错的成绩</li>
+                <li>听到了柳斌教授分享的家长朋友应该知道，在柳斌教授的建议中如果你在前期不太确定自己喜欢数学的话，你可以去读一读数学史</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>让我们看有多少朋友之前是认识良仔的是知道良仔的。C C晚上好，影子晚上好，川晚上好，好，那看来大家应该都能听见，也能够看见。然后也提醒一下，如果咱还不在群里面的家长朋友们，还没有跟良仔做过沟通的。</p>
+                <p>一会儿我会把这个我们的联系方式放在这个屏幕上面你可以自己去截一下，然后去交流，。然后，如果你的一会儿你看我们一会儿再跟大家说怎么加群的事情。Hello，大家好，我是李新良，然后呢是第四十届全国中学生物理竞赛的金牌，现在在北京大学物理学院读大二。</p>
+                <p>可以把上北大打在评论区，我们来沾一沾两仔的这个欧气。都会在我们的群里面去分享给大家所有的回放都会在群里面分享给大家。所以你如果在群里面的话，你就自己到时候就收到了。</p>
+                <p>我们一会儿会给大家往这个屏幕上面放一个这个加群的方式。然后你就自己去截一下，你去联系，你去加就好了。然后，如果你发现这个屏幕上面没有这个东西的话，你就点头像。</p>
+                <p>头像里面会有一个加群在里面我再发给大家怎么去加群，。好，今天呢，跟大家说说，我们会分几个部分来讲。第一个部分，我们会跟李新良先来聊一聊他的这个学习的经历。</p>
+                <p>我跟梁仔很熟所以我知道他的这个学习经历跟现在的很多家长朋友的这个认知和共识可能不太一样。第二个部分跟大家聊一聊这个关于悟净、关于学习的一些学习方法的一些经验，然后会给大家留下比较充分的答疑的时间你们就可以在评论区去提问我们来跟大家答疑，。好，我看晚意还没有关注没关注的家长朋友们记得点个关注还没有关注的记得点个关注，就开始。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>泛函的课程，泛函的课程，我觉得你就直接跟，大学的，对，这种来来，各位家长，有多少家长说我想学大学的课程。有的话，你可以把大学打出来，或者你具体想学哪门课可以打出来。你所说的大学课程，有一个特别好获得的方式就例如慕课平台。</p>
+                <p>M O C例如我们所说的这个小破站上面其实有非常多的这样的大学的课程，所以。真正的难搞的其实是说，我有一些这个小初高的一些针对性的训练，我比较难找。但是你真想听大学内容，其实就非常的公开，有非常的多。</p>
+                <p>好，大家的这个问题，我们一会儿在答疑的时候集中给大家回答。我觉得在这儿其实要给大家插一句，因为刚刚讲的时候，信良其实是比较。来，各位家长朋友们，你们家孩子现在一天学习多长时间。</p>
+                <p>物竞生在物院可以考普物免修，对，普物可以不用学，对。但是你也得考过了才能不用学，然后我就没考过，我就得再学一遍。就你你在听他刚刚讲的时候，觉得简单的说，呀，我学学这个，哥也学学竞赛。</p>
+                <p>来，谢良，你可以跟大家说一下，你当时高中一天要学多长时间。对你，你你可以给大家一个概念，就基本你是几点起床。对，过程中，你例如在高二的时候，你不是重点其实放到了这个物镜上面吗。</p>
+                <p>我我们刚刚跟大家说过，你在前期学习和后期学习的事儿我们可以大家选一选，你是希望早培，把你的例如高中一些课内课呀，课内内容呀，都提前，例如小学、初中学完。选择早培的可以打早培，选择后培的可以打后培，就好多人问老师时间来不来得及。例如刚刚说老师我初三开始来不来得及，或者初二开始来不来得及。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>如果没看过的话，我晚上让这个潘潘再给大家往群里面发一遍，再发一遍大家去重点看一下。在在我的公众号里面公众号也是叫这个“道哥聊学习”，。因为这个东西说白了我给你们讲，脑子里面一过哈，一过之后就结束了。</p>
+                <p>知名的这些老师和机构，来，各位再跟大家说一遍。因为很多时候我们在平台上面去说什么机构老师会相对比较敏感所以呢，给大家整理好了有哪些教的比较好的老师，以及大家注意好的老师基本不会把自己固定在一个机构里面。那基本上是各个机构邀请他去讲课然后这个内容我也给大家整理了一下放在我们的群里面，你到时候自己去看。</p>
+                <p>我今天会发在群里面到时候你自己去看推荐的老师和推荐的课程，。物理的话，可能天赋也是需要一些的，但是它可能不是决定性因素。有说这个钟礼华语文大提奖，语文的这个东西，我还之前真的找了一个语文老师帮我写过两篇这个文章，你也是自己去看。</p>
+                <p>回头这些内容我在群里面都给大家发一遍，那回头都发一遍，因为我发现最早的我一批的老粉都是从公众号来的。然后现在呢，有好多人没看过，我们就把文章发给大家，再看一看。还有松茸说智商测试一百四以上，你测过智商吗。</p>
+                <p>就我们我们跟大家讲智商这个东西，我我之前很久之前跟大家聊过这件事儿。因为我们现在其实没有一个明确的方式，能够把你的整体的能力做量化。所以这种情况下，你你说的所谓的智商，可能是你的图形方面的智商可能是你的其他方面的一些智商，但不能全面的给你概括。</p>
+                <p>你只要在学的过程中你觉得还能学得下去，还能学得动，还能坚持。其实就算你是能够能够跟这个阶段匹配得到的，对对，是的，无法后期通过努力改变的，都算天赋吧。大家一定把这四个字儿记住，哪个字儿都少不了，叫做初始效率。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>会把它发到我们的群里面所以你就直接在群里面去看就行了。那老朋友在群里就知道，我知道在天天催我出这个东西今天肯定给大家。那如果你发现屏幕上看不着的话竖镜也有，竖镜也有你就点头像。</p>
+                <p>就我我老本还是竖镜，各位为什么物镜我一定是请人来讲。然后，如果你看不到中间这个进群方式的，你就点头像然后在头像里面可以进群在群里面我们再跟大家说， 好，我看到大家有一些提问我们简单回答两个问题，然后再接着往下走。一直都是需要的，对，因为今年是全国全国统一考实验题，对，成立沉淀只做习题嘛，例题都要做，都要做，都要做，对，就各位例题是。</p>
+                <p>而且例题例题的质量比习题要高，对，它是经典中的经典，你肯定优先要把例题吃透，优先做例题，而且例题有答案。对，来，所有的家长朋友们我不管你是学竞赛的还是学什么的，在所有的学习领域里面，你一定记住，例题往往是。最为经典的、最为有效的，直击这个部分内容核心的东西，所以大家把例题打在评论区。</p>
+                <p>不管你学什么，啃例题，例题是质量最高的，千万不容错过。应对今年的复赛难度，传统备考方式要怎么调整。来一这个问题这个问题一看你就没有听上个月的陈教授的讲座。</p>
+                <p>来听了上个月陈教授的讲座的人可以告诉我，明年会更简单还是更难。上个月我想想应该是二十二十几号的时候邀请的陈小林教授我们现在的这个物理学会的秘书长来给大家做的分享。如果你没听过的话，你就记得一定要进群，别错过下一轮的。</p>
+                <p>在讲的时候，其实说的很简单你想，陈教授本身是学会里面的人给他的判断这两年方向有点太难了。所以，接下来的方向一定是回归到正统回归到正统。他也参与了我们的试题的解析今年的试题解析也参与了，大家也可以看看，回头回头可以看一看信良给的瑞评也是很有意思的。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>你看着身边的同伴陆陆续续都退出去去去做综合了，你很难坚持下去。包括说有着各种资源，像刚刚我们所说的机构机构题。你只能要么到处去收集，要么你就只能去自己去上那机构去，。</p>
+                <p>如果你在平台校的话，其实你的教练就会帮你搞定这个问题。只有金牌不够保送金牌你可以先试一下卓越和攀登，然后卓越攀登没过的话，可以走强基破格 好，然后如果你不知道你们本省有什么样的平台校的话，我之前根据近三年的竞赛的成绩。给大家拉过一个平台校的榜单和一个黑马校的榜单。</p>
+                <p>平台校的榜单它在稳定的产出，哪怕这两年有所。黑马校是近些年来在竞赛上面有了越来越多的投入请老师也好越来越多。那这些平台校和我们所说的黑马校，给大家列了这样的一个单子。</p>
+                <p>那如果你不知道你该去什么学校的话， 你就在群里面再再再去看一下，再去对一下，。再去看一下，我们就不一个一个说学校了学校有点太多了，你就自自己去看。如果你不在社群里面的话，在社群的朋友肯定看了很多遍了，因为基本上每过一段时间有新朋友来，我就会再发一遍。</p>
+                <p>不在群里面的朋友的话，你就今天今天进去，然后我们再给你发。四大线学完热桶，年后有必要停课，全力出国去。应该也是那几所平台校他他就在群里面信良就在群里面你有问题就可以在群里面跟他交流，。</p>
+                <p>谢良就在群里面，有问题可以在里面跟他互动，。辣椒炒肉说，老师目前初二怎么判断以后数镜物镜。各位核心上就说白了，有一件事儿，如果新良就问你一个问题：，如果你其实本身并不喜欢物理的话。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

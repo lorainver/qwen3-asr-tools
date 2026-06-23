@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白子数学竞赛课程体系 — 直播整理</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --surface: #ffffff;
+            --surface-alt: #f5f0ea;
+            --purple-deep: #2d1854;
+            --purple-mid: #4a2c7a;
+            --purple-light: #6b42a0;
+            --purple-faint: #ede5f7;
+            --gold: #c9a84c;
+            --gold-light: #e8d48b;
+            --gold-bg: #fdf6e3;
+            --text-primary: #1a1a2e;
+            --text-body: #3a3546;
+            --text-muted: #7a7280;
+            --border: #e0d8e8;
+            --shadow: rgba(45, 24, 84, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-body);
+            line-height: 1.8;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(135deg, var(--purple-deep) 0%, #1a0e33 40%, #2a1548 100%);
+            color: #fff;
+            padding: 80px 40px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.6rem;
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 8px;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            margin: 24px 0;
+            border-radius: 2px;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.75);
+            max-width: 700px;
+            line-height: 1.9;
+        }
+
+        /* Navigation / TOC */
+        .toc-wrapper {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px var(--shadow);
+        }
+
+        .toc {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .toc::-webkit-scrollbar {
+            display: none;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 14px 18px;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s ease;
+        }
+
+        .toc a:hover {
+            color: var(--purple-mid);
+            border-bottom-color: var(--gold);
+        }
+
+        /* Main Content */
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 40px 80px;
+        }
+
+        /* Section styling */
+        .section {
+            margin-bottom: 56px;
+            opacity: 0;
+            transform: translateY(24px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.05s; }
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.15s; }
+        .section:nth-child(4) { animation-delay: 0.2s; }
+        .section:nth-child(5) { animation-delay: 0.25s; }
+        .section:nth-child(6) { animation-delay: 0.3s; }
+        .section:nth-child(7) { animation-delay: 0.35s; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-number {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 6px;
+        }
+
+        .section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--purple-deep);
+            margin-bottom: 20px;
+            line-height: 1.4;
+            position: relative;
+            padding-bottom: 14px;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .section h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--purple-mid);
+            margin: 32px 0 12px;
+            line-height: 1.5;
+        }
+
+        .section p {
+            margin-bottom: 14px;
+            font-size: 0.96rem;
+        }
+
+        .section ul, .section ol {
+            margin: 12px 0 20px 20px;
+            font-size: 0.94rem;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .section li strong {
+            color: var(--purple-mid);
+        }
+
+        /* Course Cards */
+        .course-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 16px var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .course-card:hover {
+            box-shadow: 0 6px 28px rgba(45, 24, 84, 0.12);
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--purple-mid), var(--gold));
+            border-radius: 2px 0 0 2px;
+        }
+
+        .course-tag {
+            display: inline-block;
+            background: var(--purple-faint);
+            color: var(--purple-mid);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .course-tag.gold {
+            background: var(--gold-bg);
+            color: #8a6d20;
+        }
+
+        .course-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--purple-deep);
+            margin: 0 0 6px;
+        }
+
+        .course-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .course-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .detail-item {
+            background: var(--surface-alt);
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+
+        .detail-item .label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+
+        .detail-item .value {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Prerequisite Table */
+        .prereq-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .prereq-table thead th {
+            background: var(--purple-deep);
+            color: #fff;
+            font-weight: 600;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+        }
+
+        .prereq-table tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .prereq-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .prereq-table tbody tr:nth-child(even) {
+            background: var(--surface-alt);
+        }
+
+        .prereq-table tbody td:first-child {
+            font-weight: 600;
+            color: var(--purple-mid);
+            white-space: nowrap;
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--gold-bg), #fff9ed);
+            border: 1px solid var(--gold-light);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '!';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--gold);
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Info callout */
+        .callout {
+            background: var(--purple-faint);
+            border-left: 3px solid var(--purple-mid);
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            margin: 18px 0;
+            font-size: 0.9rem;
+        }
+
+        .callout strong {
+            color: var(--purple-mid);
+        }
+
+        /* Flowchart */
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin: 28px 0;
+            overflow-x: auto;
+            padding: 12px 0;
+        }
+
+        .flow-node {
+            background: var(--purple-deep);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .flow-node.alt {
+            background: var(--gold);
+            color: var(--purple-deep);
+        }
+
+        .flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            padding: 0 6px;
+            flex-shrink: 0;
+        }
+
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-q {
+            font-weight: 600;
+            color: var(--purple-deep);
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .faq-q::before {
+            content: 'Q';
+            background: var(--purple-mid);
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-a {
+            padding-left: 30px;
+            font-size: 0.9rem;
+            color: var(--text-body);
+        }
+
+        /* Registration Box */
+        .reg-box {
+            background: linear-gradient(135deg, var(--purple-deep), #1a0e33);
+            border-radius: 14px;
+            padding: 36px;
+            color: #fff;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .reg-box h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .reg-box p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .reg-steps {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .reg-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reg-step-num {
+            width: 40px;
+            height: 40px;
+            background: var(--gold);
+            color: var(--purple-deep);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .reg-step-text {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.8);
+            max-width: 120px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero { padding: 48px 20px 40px; }
+            .hero h1 { font-size: 1.8rem; }
+            .content { padding: 24px 20px 60px; }
+            .course-card { padding: 24px 20px; }
+            .course-detail-grid { grid-template-columns: 1fr 1fr; }
+            .flow { flex-wrap: wrap; gap: 6px; }
+            .toc { padding: 0 16px; }
+            .toc a { padding: 12px 12px; font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+    <div class="hero-inner">
+        <h1>白子数学竞赛<span>课程体系</span>全解析</h1>
+        <div class="hero-divider"></div>
+        <p>本文档整理自直播讲解，系统梳理白子（平行线）面向数学竞赛的六大课程，涵盖课程定位、入学基础、课时安排与常见问题，帮助家长与学生清晰选择适合的学习路径。</p>
+        <div class="hero-meta">
+            <span>整理来源：直播口语转书面</span>
+            <span>适用对象：竞赛学生及家长</span>
+            <span>课程周期：2025 暑秋</span>
+        </div>
+    </div>
+</header>
+
+<!-- Navigation -->
+<nav class="toc-wrapper">
+    <div class="toc" id="toc">
+        <a href="#overview">体系总览</a>
+        <a href="#courses">六大课程</a>
+        <a href="#prereq">模块基础要求</a>
+        <a href="#path">学习路径</a>
+        <a href="#tips">选课建议</a>
+        <a href="#faq">常见问题</a>
+        <a href="#register">报名方式</a>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="content">
+
+    <!-- Section 1: Overview -->
+    <section class="section" id="overview">
+        <div class="section-number">壹</div>
+        <h2>白子与数学竞赛体系总览</h2>
+
+        <p>国内最正统、认可度最高的数学类赛事路径为：</p>
+
+        <div class="flow">
+            <div class="flow-node">全国中学生数学联赛（高联）</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">CMO（全国决赛）</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node alt">IMO（国际数学奥林匹克）</div>
+        </div>
+
+        <p>白子（平行线）的整套课程体系和学习规划，均围绕<strong>高中数学联赛（高联）</strong>展开，按四大模块——代数、平面几何、数论、组合——逐层拆分，构建从小学到高联二试的完整培养路径。</p>
+
+        <div class="highlight-box">
+            <p><strong>核心定位：</strong>白子体系的所有课程（包括初中速通、初联、高中速通等），本质上都服务于高联竞赛的学习需要，是高联路径上的知识铺垫与能力构建。</p>
+        </div>
+    </section>
+
+    <!-- Section 2: Course Overview -->
+    <section class="section" id="courses">
+        <div class="section-number">贰</div>
+        <h2>六大课程详解</h2>
+
+        <!-- Course 1 -->
+        <div class="course-card">
+            <span class="course-tag">高联二试</span>
+            <h3>一、高联二试专题贯通班</h3>
+            <p class="course-subtitle">系统学习高联二试四大模块内容，与白子中阶课程互为平替</p>
+
+            <div class="course-detail-grid">
+                <div class="detail-item">
+                    <div class="label">课时</div>
+                    <div class="value">每个模块 29 次课<br>（暑期14次 + 秋季15次）</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">单次时长</div>
+                    <div class="value">3 小时 / 次</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">授课形式</div>
+                    <div class="value">线上直播（保留回放）</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">四大模块</div>
+                    <div class="value">代数 / 平面几何 / 数论 / 组合</div>
+                </div>
+            </div>
+
+            <h3>课程定位</h3>
+            <p>本课程是白子中阶课程的<strong>平替方案</strong>，主要面向以下学生：</p>
+            <ul>
+                <li>错过白子遴选考试（每年两次，固定时间）的学生</li>
+                <li>遴选未发挥理想、希望仍跟白子体系学习的学生</li>
+                <li>对白子教练团队与体系认可、希望系统学习二试的学生</li>
+            </ul>
+
+            <h3>各模块难度说明</h3>
+            <ul>
+                <li><strong>平面几何：</strong>覆盖二试第一、第二题难度</li>
+                <li><strong>代数：</strong>覆盖第二题难度，部分内容涉及第三题</li>
+                <li><strong>数论与组合：</strong>覆盖二试第三、第四题难度</li>
+            </ul>
+
+            <h3>师资团队</h3>
+            <p>包含魏轩老师、贾雨欣老师等白子中阶体系的资深教练，以及刘少明老师等 CMO 金牌/银牌获得者，均为科班出身、教学经验丰富。</p>
+
+            <div class="callout">
+                <strong>学习节奏提示：</strong>暑期每模块 14 次课，上四休一，非连续满课，确保学生有消化时间。秋季每周一次，共 15 次课。半年为一轮，循环开课，不必急于一次报多个模块。
+            </div>
+        </div>
+
+        <!-- Course 2 -->
+        <div class="course-card">
+            <span class="course-tag gold">进阶</span>
+            <h3>二、高联二试进阶强化班</h3>
+            <p class="course-subtitle">面向已完成二试系统学习的学生，衔接 CMO 竞赛水平</p>
+
+            <div class="course-detail-grid">
+                <div class="detail-item">
+                    <div class="label">难度定位</div>
+                    <div class="value">二试拔高 + 衔接 CMO</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">模块划分</div>
+                    <div class="value">代数 / 平面几何 / 组合 / 数论</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">授课形式</div>
+                    <div class="value">线上直播（保留回放）</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">师资</div>
+                    <div class="value">罗伟老师 / 夏老师 / 王老师</div>
+                </div>
+            </div>
+
+            <h3>课程特点</h3>
+            <ul>
+                <li><strong>综合讲评式教学：</strong>不再逐一讲解基础知识点与定理证明，侧重定理的综合运用与解题策略</li>
+                <li><strong>按模块独立报名：</strong>哪个模块的二试系统课学完，即报对应的强化模块</li>
+                <li><strong>不设集中测试：</strong>部分班级有简单入班测，咨询班主任了解</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p><strong>量力而行：</strong>本课程适合二试某模块系统学习已完成的学生。若基础尚不扎实，建议先在贯通班夯实后再进阶，避免听课吃力、效率低下。</p>
+            </div>
+        </div>
+
+        <!-- Course 3 -->
+        <div class="course-card">
+            <span class="course-tag">初中</span>
+            <h3>三、初中数学速通班</h3>
+            <p class="course-subtitle">半年快速完成初中数学全部重难点知识</p>
+
+            <div class="course-detail-grid">
+                <div class="detail-item">
+                    <div class="label">课时</div>
+                    <div class="value">27 次课<br>（暑期 + 秋季）</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">周期</div>
+                    <div class="value">半年</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">难度</div>
+                    <div class="value">中考难度</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">授课形式</div>
+                    <div class="value">线上直播</div>
+                </div>
+            </div>
+
+            <h3>入学条件</h3>
+            <p>小学课程学完即可报名，不限年级。</p>
+
+            <h3>课程说明</h3>
+            <ul>
+                <li>完整覆盖初中数学重难点知识体系</li>
+                <li>定位为竞赛路径上的初中知识快速过关</li>
+                <li>学完后可衔接初联课程，学习将更加轻松</li>
+                <li>由初中竞赛教学经验丰富的全职老师授课</li>
+            </ul>
+        </div>
+
+        <!-- Course 4 -->
+        <div class="course-card">
+            <span class="course-tag">初联</span>
+            <h3>四、初联课程（初联先修）</h3>
+            <p class="course-subtitle">为高联二试的代数与几何打底子</p>
+
+            <div class="course-detail-grid">
+                <div class="detail-item">
+                    <div class="label">课时</div>
+                    <div class="value">约 49 次课（一年制）<br>暑秋 + 寒春</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">周期</div>
+                    <div class="value">一年</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">内容模块</div>
+                    <div class="value">代数 + 几何（不含数论组合）</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">入学条件</div>
+                    <div class="value">初中学完</div>
+                </div>
+            </div>
+
+            <h3>课程说明</h3>
+            <ul>
+                <li>2018 年后初中联赛已取消，初联课程当前主要作用是<strong>为高联二试的几何与代数铺垫</strong></li>
+                <li>仅讲授代数和几何两个模块（数论与组合不在初联阶段学习）</li>
+                <li>对高联目标而言，初联<strong>够用即可</strong>，不必耗费过多精力追求极致</li>
+                <li>初联与小奥的数论组合无直接关联</li>
+            </ul>
+
+            <div class="callout">
+                <strong>进度说明：</strong>初联课程无法压缩至半年，一年制为合理安排。线上模式下，初中速通 + 初联合计约一年半。
+            </div>
+        </div>
+
+        <!-- Course 5 -->
+        <div class="course-card">
+            <span class="course-tag">高中</span>
+            <h3>五、高中数学速通班</h3>
+            <p class="course-subtitle">半年快速完成高中数学重难点，为一试打基础</p>
+
+            <div class="course-detail-grid">
+                <div class="detail-item">
+                    <div class="label">课时</div>
+                    <div class="value">30 次课<br>（暑期 + 秋季）</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">周期</div>
+                    <div class="value">半年</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">入学条件</div>
+                    <div class="value">初中学完即可</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">授课形式</div>
+                    <div class="value">线上直播</div>
+                </div>
+            </div>
+
+            <h3>课程说明</h3>
+            <ul>
+                <li>系统覆盖高中数学竞赛生需要掌握的课内重难点知识</li>
+                <li>由具备竞赛背景的教练授课，明确竞赛视角下的重难点</li>
+                <li>完成本课程后可衔接高联一试系统课</li>
+                <li>适合全国各地区学生</li>
+            </ul>
+        </div>
+
+        <!-- Course 6 -->
+        <div class="course-card">
+            <span class="course-tag">高联一试</span>
+            <h3>六、高联一试系统课</h3>
+            <p class="course-subtitle">系统学完高联一试所需的全部知识与解题技巧</p>
+
+            <div class="course-detail-grid">
+                <div class="detail-item">
+                    <div class="label">课时</div>
+                    <div class="value">一年制<br>暑秋寒春完整覆盖</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">入学条件</div>
+                    <div class="value">具备高中知识基础</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">涵盖内容</div>
+                    <div class="value">集合、向量、三角函数、<br>解析几何、立体几何等</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">出路衔接</div>
+                    <div class="value">高联一试 / 强基计划</div>
+                </div>
+            </div>
+
+            <h3>课程说明</h3>
+            <ul>
+                <li>从基础概念到解题技巧，全面系统地完成一试学习</li>
+                <li>一试内容与强基计划覆盖约 85%，另有部分内容涉及高等数学相关知识</li>
+                <li>学完一试后可继续学习二试各模块</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Section 3: Prerequisites -->
+    <section class="section" id="prereq">
+        <div class="section-number">叁</div>
+        <h2>四大模块入学基础要求</h2>
+
+        <p>高联二试各模块对前置知识的要求各不相同，以下按<strong>基础要求从低到高</strong>排列：</p>
+
+        <table class="prereq-table">
+            <thead>
+                <tr>
+                    <th>模块</th>
+                    <th>建议基础</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>数论</td>
+                    <td>小奥数论学好即可</td>
+                    <td>入门门槛最低，但模块本身难度不低</td>
+                </tr>
+                <tr>
+                    <td>平面几何</td>
+                    <td>初联几何已掌握</td>
+                    <td>初联几何知识是学习二试几何的必要前提</td>
+                </tr>
+                <tr>
+                    <td>组合</td>
+                    <td>高中必修数学基本学完</td>
+                    <td>组合本身难度较大，建议放到后面学习</td>
+                </tr>
+                <tr>
+                    <td>代数</td>
+                    <td>高中必修 + 高联一试基本学完</td>
+                    <td>当前代数题趋向多元融合，需扎实基础</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <strong>代数模块特别提示：</strong>近五年来，高联二试代数题已很少出现单一标准不等式题型，而是趋向多模块融合。因此建议代数学习者务必先掌握高中课内不等式知识和高联一试不等式相关内容。
+        </div>
+    </section>
+
+    <!-- Section 4: Learning Path -->
+    <section class="section" id="path">
+        <div class="section-number">肆</div>
+        <h2>推荐学习路径</h2>
+
+        <p>以下为白子体系下典型的竞赛学习路径，具体需根据个人进度调整：</p>
+
+        <h3>路径一：完整体系（从小奥开始）</h3>
+        <div class="flow">
+            <div class="flow-node">小奥</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">初中速通</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">初联</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node alt">高中速通</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">高联一试</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node alt">高联二试</div>
+        </div>
+
+        <h3>路径二：已具备初中学业基础</h3>
+        <div class="flow">
+            <div class="flow-node">初中已学完</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">初联 + 高中速通<br><small>（可同时进行）</small></div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node alt">高联一试 + 二试数论/几何</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">强化 / CMO</div>
+        </div>
+
+        <h3>路径三：已学完高联一试</h3>
+        <div class="flow">
+            <div class="flow-node">高联一试完成</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node alt">二试贯通班各模块</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node">进阶强化班</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node alt">CMO / IMO</div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>关键原则：</strong>不要跨阶段追赶进度。每个阶段都有对应的知识储备要求，基础未达标就进入下一阶段，会导致听课吃力、效率低下。</p>
+        </div>
+    </section>
+
+    <!-- Section 5: Tips -->
+    <section class="section" id="tips">
+        <div class="section-number">伍</div>
+        <h2>选课与学习建议</h2>
+
+        <h3>如何判断孩子的学习水平？</h3>
+        <p>最简单的方式：<strong>做题检验</strong>。</p>
+        <ul>
+            <li>学完一个模块后，做 10-20 套该模块的模拟题或真题</li>
+            <li>解题率达到 50%-60% 以上，说明该模块掌握较好</li>
+            <li>学完高联一试就去做一试套卷；学完高中就做高考题；学完初中就做中考题</li>
+            <li>也可使用专项题集（如几何100题、代数100题）进行集中检验</li>
+        </ul>
+
+        <h3>线下优先原则</h3>
+        <ul>
+            <li>有线下营的城市，<strong>优先选择线下</strong>上课，效果普遍优于线上</li>
+            <li>线上课程定位为<strong>补充方案</strong>，解决当地无合适线下资源的问题</li>
+            <li>线上课程同样配备作业批改、课后答疑，授课老师在班级群内直接沟通</li>
+        </ul>
+
+        <h3>学习节奏把控</h3>
+        <ul>
+            <li>不要贪多——半年一轮循环开课，学当下能掌握的、适合的模块</li>
+            <li>不要冒然报进阶班——基础未扎实就上强化课会非常吃力</li>
+            <li>二试各模块可独立选择，根据自身擅长与兴趣报考</li>
+            <li>线上课程尽量不要全程只看回放，效果会打折扣</li>
+        </ul>
+
+        <h3>补充资料</h3>
+        <ul>
+            <li><strong>赛题汇编：</strong>白子每年整理前一年国内外数学赛事真题汇编，通过公众号活动免费发放</li>
+            <li><strong>高联必刷200题：</strong>每个模块45-50题，四个模块共约200题，预计暑期印制发放</li>
+            <li>练习资料还包括市面上的高联模拟题、近年真题、数之谜小程序等</li>
+        </ul>
+    </section>
+
+    <!-- Section 6: FAQ -->
+    <section class="section" id="faq">
+        <div class="section-number">陆</div>
+        <h2>常见问题精选</h2>
+
+        <div class="faq-item">
+            <div class="faq-q">贯通班的内容与中阶是否一致？</div>
+            <div class="faq-a">知识体系从程度层面与中阶一致，讲义题目可能有个别差异。授课教练大部分为中阶原班师资。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">贯通班与市面其他二试课有何区别？</div>
+            <div class="faq-a">市面部分机构一个模块仅15-16次课、一年四个模块全部讲完，进度过快导致学生解题率低。白子贯通班每个模块29次课、87正课课时，覆盖所需全部知识、定理、技巧和模型，强调扎实掌握。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">二试学了一遍但做题吃力，应该怎么办？</div>
+            <div class="faq-a">两种选择：一是回炉重造，重新系统学习；二是先查漏补缺再回炉。建议通过做题检验（真题或专项题集）找出薄弱点，再针对性学习。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">初联是否需要学得非常强？</div>
+            <div class="faq-a">如果目标是高联，初联够用即可，不必耗费过多精力。初联代数和几何对二试有价值，但数论组合在当前阶段不需学习。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">初中速通与初联能否同时学？</div>
+            <div class="faq-a">不建议。初中速通是初联的前置基础，应先完成初中速通再学初联，否则知识衔接会出现问题。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">高联一试学完了，能否同时学二试？</div>
+            <div class="faq-a">可以。一试学完后，二试的数论、几何模块可以同步开始学习，但需合理分配时间精力。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">线上课有回放吗？作业如何批改？</div>
+            <div class="faq-a">所有线上课程均保留回放。作业由授课老师亲自批改，学生课后可直接在班级群与授课老师沟通答疑。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">是否需要参加集中遴选/测试才能报名？</div>
+            <div class="faq-a">今天介绍的六门课程均不需要参加白子集中遴选，通过简单的入班测（散测形式）即可报名。遴选仅针对白子等级课程。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">北京地区有线下课吗？</div>
+            <div class="faq-a">北京线下营暑期开始正式上课。预计六月中旬公布具体课程安排，包含初中初联系列和高中一试系列两套课程，上课时间大概率在八月份。另有广州、深圳、西安、郑州等城市线下营。</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">如何检验二试学习效果？</div>
+            <div class="faq-a">做近五年高联真题或高质量模拟题，10-20套后观察解题率。若达50%-60%以上，说明掌握较好。也可参考田开斌老师的专项题集（几何100题、代数100题等）。</div>
+        </div>
+    </section>
+
+    <!-- Section 7: Registration -->
+    <section class="section" id="register">
+        <div class="section-number">柒</div>
+        <h2>报名方式</h2>
+
+        <div class="reg-box">
+            <h3>统一报名通道</h3>
+            <p>所有课程均通过以下方式报名</p>
+            <div class="reg-steps">
+                <div class="reg-step">
+                    <div class="reg-step-num">1</div>
+                    <div class="reg-step-text">扫描白子公众号二维码</div>
+                </div>
+                <div class="reg-step">
+                    <div class="reg-step-num">2</div>
+                    <div class="reg-step-text">关注公众号</div>
+                </div>
+                <div class="reg-step">
+                    <div class="reg-step-num">3</div>
+                    <div class="reg-step-text">私信发送"报名"</div>
+                </div>
+                <div class="reg-step">
+                    <div class="reg-step-num">4</div>
+                    <div class="reg-step-text">联系班主任完成报名</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>提醒：</strong>课程名额有限，可能随时封班。确定适合的课程后请尽早报名，预留上课时间。具体课次、课表、费用等详细信息，均可通过班主任咨询获取。已考上白子等级课程的学生，请直接咨询所在营地的负责老师。</p>
+        </div>
+
+        <h3>北京家长专项提示</h3>
+        <p>北京线下营课程预计六月中旬公布。在北京的家长可关注公众号获取最新信息，届时将有专门的初中初联系列和高中一试系列课程。</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>本文档根据直播内容整理，仅供参考。具体课程信息以白子官方公布为准。</p>
+    <p style="margin-top: 6px;">关注白子公众号，获取最新课程动态与报名通道。</p>
+</footer>
+
+<script>
+    // Smooth scroll offset for sticky nav
+    document.querySelectorAll('.toc a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const offset = document.querySelector('.toc-wrapper').offsetHeight + 16;
+                const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top: top, behavior: 'smooth' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

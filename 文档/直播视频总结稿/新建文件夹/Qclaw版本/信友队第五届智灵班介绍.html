@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信友队第五届智灵班介绍</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>信友队第五届智灵班介绍</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>好，我们这次的话第五届知音班选拔，在过</li>
+                <li>一天、两天、三天、四天、五天，五天就要是的线下第二轮笔试就要开始了</li>
+                <li>然后我们今天直播主题的话呢，也是针对我们第五届知灵班选拔的线下攻略</li>
+                <li>我们在十月一的时候的话呢，三号跟四号在我们新火队这边的话呢，会举行我们的这个笔试还有面试所以这些流程的话呢，我们今天也是第一天在直播间给大家去说也希望家长们的话呢，</li>
+                <li>我问一下，直播间有多少有多少人是进入到我们第二轮线下笔试的</li>
+                <li>对，首先的话是关于信友队，信友队的话大家应该都知道的，我们是由徐老师创建的信息学竞赛团队，大家也是对信友队有所了解，所以说来报名我们的一个志灵班选拔</li>
+                <li>这里面的话，就有一个，我们这一次智能班选拔的话，会有就选拔出来会有二十五名的一个免费培养名额</li>
+                <li>比赛的话是我线上是第一轮，然后线下的话是在杭州</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>欢迎所有来到我们信我队官方直播间的家长朋友们。好的那如果能听得到声音的话呢，麻烦在公屏上给我们扣个一。欢迎所有来到我们信我队官方直播间的家长朋友们。</p>
+                <p>大家呢，如果能听得到声音的话，那麻烦请在公屏上给我们扣个一。一天、两天、三天、四天、五天，五天就要是的线下第二轮笔试就要开始了。决定今天给大家提前预告一下，以及过来的一些路线。</p>
+                <p>那今天的话呢，非常开心，让我隆重的为大家去介绍一下今天我们的直播主题，还有我们的请到的我们新舞队的王老师。然后我们今天直播主题的话呢，也是针对我们第五届知灵班选拔的线下攻略。我们在十月一的时候的话呢，三号跟四号在我们新火队这边的话呢，会举行我们的这个笔试还有面试所以这些流程的话呢，我们今天也是第一天在直播间给大家去说也希望家长们的话呢，。</p>
+                <p>去准备一下然后我们各方面细节在直播间跟家长去说一下。那今天也非常开心，邀请到的是我们本次我们志林班的这个项目的这个负责人我们的王老师。来给我们去说一下第五届知林班我们总体的一些流程，还有我们的一些计划规划还有我们家长的一些攻略 还没有点关注的家长朋友们，可以点点关注。</p>
+                <p>我问一下，直播间有多少有多少人是进入到我们第二轮线下笔试的。我看一下有多少家长在听，对的是进入到我们线下来进入笔试的家长有没有。慧慧慧，还有洛奇小张，哇，好好多好，好，那接下去的话我讲讲一下我们志玲班的一个相关的介绍。</p>
+                <p>对，首先的话是关于信友队，信友队的话大家应该都知道的，我们是由徐老师创建的信息学竞赛团队，大家也是对信友队有所了解，所以说来报名我们的一个志灵班选拔。有七次的I O I冠世界冠军，然后六枚I O I国际金牌，然后四枚I S I J的国际金牌，还有亚太地区的国，国。星耀金牌，是的，对，然后再往下的话，我们志灵班的一个培养模式。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>对，有其实不沟通为主，其实沟通为主跟考察知识点为主其实都不对，只有是。是有个题目让孩子去解，然后去表达，也看孩子一个是表达能力，还有一个孩子还还有一个孩子的一个思维能力。对，主要看他的一个表达、跟思维、跟反应能力面对面，然后具体这种专业的事情交给专业的人，具体的这种情况是交给我们专业现有的专业的这种老师去。</p>
+                <p>好，接下去的话，我们就继续讲，我们下载完整考证之后，那么我们在十月三号的时候是第二轮的一个现场笔试。应该是属于有三场，那么一场的话是在，九点半到十一点半，我们是在东部软件园校区。然后上午还有一场是在未来科技城校区，都是九点半到十一点半。</p>
+                <p>的一个笔试，那么在当天晚上，我们就会通知现场面试的一个结果，哪些人能进入到现场的，能能进入到我们的面试。所以说家长的话需要关注手，关注短信，关注群消息，然后以及我们也会给经验的家长打电话。那么我们面试面试结果结束之后，那么大概在十个工作日。</p>
+                <p>我们会公布名单，那么中间的话可能会穿插一个第二轮的一个面试沟通，第二轮的一个面试沟通的话，就例如针对于不太确定的小朋友，我们可能还会再联系家长。然后进行第二轮的一个面试跟沟通，是的，是的。然后那么后续的话，大概在十月十九日的时候，我们会公布一下我们最终的二十五个名单。</p>
+                <p>对，然后有家长说我们打印准考证了，忘了点点点了，确认。如果说如果说已经到了打印准考证那一步的话，那肯定是点了确认的，因为你只有点了确认，然后系统才会锁定座位。东站过来的话，东站我们会会有直达的十九号线，大概三站三三站的路是能到沈塘桥，沈塘桥到公司到我们这个校区的话是。</p>
+                <p>等一下的话，我们也会有一个图片图解，然后给大给家长拍下来了。初试，初试的话，一个是分数分数不一样，还有一个的话是难度也会不一样，题型也会不一样。因为针对于线上的话，我们线上的一个监考还是。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>我们这一次的话是针对我们不是这一次，是我们精英班选拔是针对于四年级到初二的孩子。地铁到校区的一个位置，我们地铁未来科技城永福路A口出来之后，这张图。那么我们右转，右转就能看到我们的水煮活鱼这个招牌。</p>
+                <p>这个招牌看到之后，我们左转，左转就能一直走，走走走走走走，大概一两百米就能看到我们的新奥。对，卫科校区，那么我们也有上面也有贴横幅，大家长转过去往前走就能看到了，就不用担心，很隐蔽。记住这个，出来右转，然后水煮活鱼左转，然后就能看到我们的这个校区了。</p>
+                <p>那么自驾的话也是一样的，自驾的话到我们新荣区的未来科技城校区。然后可以把车停在这这边空余的一个地方，然后停好之后也是一样的路线，然后走到我们的卫科校区。对家长，如果有什么疑问和问题，在我们直播间都是可以直接去提的。</p>
+                <p>另外的话呢，我们下方小黄车的话呢，给大家去上了我们新五队的这个试听课。如果说像我们的江群还有其他家长错过了我们选拔的这个时间。这个视频课的话呢，不管您孩子目前是在二年级，可以学习我们的AI课程；三年级可以学习我们的Python课程；四年级以上直接可以学四加加。</p>
+                <p>去试听一个小时的时间，只要你九块九，是给到家长是有这个试做成本的并且的话呢，在试听之前，我们也会给到家长们去做一个免费的这个测评。然后今天班的家长的话呢，不管您后期有什么时候有时间。如果说不喜欢了，不想听了，随时都可以退，同样可以享受七天无理由的。</p>
+                <p>所以家长们可以直接去拍下这个试听课因为我们这一届至第五届至零班选拔的话呢。我们的话呢，第一轮线上的这个考试的话已经过掉了。呢，我们是在九月十二号的时候，第一轮的线上已经做完。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>我们线下的话，其实，因为分班出的比较，虽然出的比较晚，但是我们像提高还有普及，提高已经满了。对，提如果说是参加提高的家长的话，就只能参加线线上了。找我们的课程老师再问一下，目前还有几个名额。</p>
+                <p>我跟我们冬令营、夏令营是一样的一个住宿环境，还是比较，呦，还是比较大的，是的，是的，然后以及独独独立的一个卫生间，然后洗漱台。然后我们营地条件的话，餐饮餐饮的话，我们是三餐一点，两荤两素，然后早餐、晚餐加上下午还有小食。那么每天的话都会安排水果、牛奶，然后保证选手的一个营养。</p>
+                <p>到状元提供的，也是一个比较大的一个连锁餐饮嘛，。我们其实是在营地是以学校的一个形式展展现的。然后学生讨论这样的一个情景，然后这个是我们的一个课程安排，我们是分为线上班和线下班，然后线。</p>
+                <p>例如，我们的普及段线下班是会开两个班，提高段开两个班。然后，那么线上的话也是一样的，是一号到七号。的安排的话，上午是八点半到十二点是模考，是全真 的。</p>
+                <p>六点半到八点半是补题加答疑，然后全天都是有老师在的，如果有什么问题都可以及时答疑掉。然后这个话我们的一个费用，我们七天的费用是能讲，可以讲的，没关系的。寄件费用的话是五千六，那么我们的小黄车二号链接去上这个，好的，的老师安排的话，我们每个班都会有一个授课老师，然后一个助教老师，还有一个。</p>
+                <p>我们的生活班主任，还有我们的一个教学班主任，孩子的生活都是事，生活学习都是事无巨细的会。像普确确实我们安排会比较细一些我也我也体会到了。特别像我们暑期集训营的时候，特意还安排带一个OK镜的，我们老师要去看孩子有没有带OK镜有因为有些孩子他现在视力不太好，然后家长是有给孩子配OK镜的。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>然后也是针对我们志玲班的这个选拔嘛，刚好能能有个由头，可以带着孩子来杭州玩一趟然后顺便可以参加我们志玲班的这个选拔，。酒家楼外楼外婆家新白鹿绿茶，然后这些都是比较有名的。像后面两家的话，杭州酒家跟楼外楼非常贵哦，不要去哦。</p>
+                <p>那后面的话，然后也是刚刚马老师提到的，杭州这边的话，尤其是雨季，我们降雨确实是一块。也是，一会儿下雨，一会儿下雨所以说来的家长还是要备好雨具的。然后还有的话关于住宿这一块的话，我周边也是。</p>
+                <p>选了两个比较近的酒店，然后质量还也还可以，一个亚朵的一个轻旅酒店，这个酒店的话离我们。东软的这个校区的话，大概五十五十也是差不多一百米左右，很比较。对，例如我我们我们在这里，他就在这里，一点点的距离。</p>
+                <p>所以说，家长有的话也可以去，也可以去青居酒店看一下。如果说对外国庆，我看了一下是真的很贵哦，全季、青居我看了一下都要七八百的一个。还是对，如果说家长家长有想要想要住酒店的话，可以。</p>
+                <p>比一下，然后青居那边的话，目前对外价格应该都是七百多。那如果说有想想要去青居酒店的话，可以说是金友队这一块的，那么。他可以给套五五百多跟六百多的价格，但是我估计房房也比较有限的。</p>
+                <p>哦哦，行行行，是的，是的，是的家长可以去做一下这个，。可以考虑一下，没关系，性价比，搜索一下，性价比哪里高，去去哪里就好了。是的，只是说你这家酒店，你报你你说一下信用的，因为它是比较新的，然后我们有很多学生。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

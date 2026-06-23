@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>果妈数学课堂笔记</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --surface: #ffffff;
+            --accent: #c0392b;
+            --accent-light: #fdecea;
+            --accent-secondary: #2c3e50;
+            --text-primary: #2d2d2d;
+            --text-muted: #6b6b6b;
+            --border: #e8e4df;
+            --highlight: #fff3cd;
+            --green: #27ae60;
+            --green-light: #eafaf1;
+            --blue: #2980b9;
+            --blue-light: #ebf5fb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--accent-secondary) 0%, #1a252f 100%);
+            color: #fff;
+            padding: 60px 40px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #e67e22, var(--accent));
+        }
+
+        .page-header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.4em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+        }
+
+        .page-header .subtitle {
+            font-size: 1em;
+            opacity: 0.7;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .page-header .meta {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 0.85em;
+            opacity: 0.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px 35px;
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .toc h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2em;
+            color: var(--accent-secondary);
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        .toc ol {
+            padding-left: 24px;
+        }
+
+        .toc li {
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        .toc li a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .toc li a:hover {
+            color: var(--accent);
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 35px 40px;
+            position: relative;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        section:nth-child(2) { animation-delay: 0.05s; }
+        section:nth-child(3) { animation-delay: 0.1s; }
+        section:nth-child(4) { animation-delay: 0.15s; }
+        section:nth-child(5) { animation-delay: 0.2s; }
+        section:nth-child(6) { animation-delay: 0.25s; }
+        section:nth-child(7) { animation-delay: 0.3s; }
+        section:nth-child(8) { animation-delay: 0.35s; }
+        section:nth-child(9) { animation-delay: 0.4s; }
+        section:nth-child(10) { animation-delay: 0.45s; }
+        section:nth-child(11) { animation-delay: 0.5s; }
+        section:nth-child(12) { animation-delay: 0.55s; }
+        section:nth-child(13) { animation-delay: 0.6s; }
+        section:nth-child(14) { animation-delay: 0.65s; }
+        section:nth-child(15) { animation-delay: 0.7s; }
+        section:nth-child(16) { animation-delay: 0.75s; }
+        section:nth-child(17) { animation-delay: 0.8s; }
+        section:nth-child(18) { animation-delay: 0.85s; }
+
+        section::before {
+            content: attr(data-number);
+            position: absolute;
+            top: -1px;
+            left: 24px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 0 0 6px 6px;
+            letter-spacing: 0.05em;
+        }
+
+        section.no-badge::before {
+            display: none;
+        }
+
+        h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--accent-secondary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 22px 0 12px;
+            padding-left: 12px;
+            border-left: 3px solid var(--accent);
+        }
+
+        h4 {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--accent-secondary);
+            margin: 16px 0 8px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        strong {
+            color: var(--accent-secondary);
+            font-weight: 700;
+        }
+
+        ul, ol {
+            padding-left: 24px;
+            margin-bottom: 14px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .key-point {
+            background: var(--highlight);
+            border-left: 4px solid #e67e22;
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.93em;
+        }
+
+        .key-point::before {
+            content: '⚠ 关键点';
+            display: block;
+            font-weight: 700;
+            color: #d35400;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+
+        .formula {
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 6px 6px 0;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .formula::before {
+            content: '📐 公式';
+            display: block;
+            font-weight: 700;
+            color: var(--blue);
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+
+        .method {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .method::before {
+            content: '💡 方法';
+            display: block;
+            font-weight: 700;
+            color: var(--green);
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+
+        .warning {
+            background: #fef5f5;
+            border-left: 4px solid #e74c3c;
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .warning::before {
+            content: '❌ 易错提醒';
+            display: block;
+            font-weight: 700;
+            color: #c0392b;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+
+        .dialogue {
+            background: #f5f3f0;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin: 12px 0;
+            font-size: 0.93em;
+            color: var(--text-muted);
+            border: 1px dashed var(--border);
+        }
+
+        .dialogue .teacher {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .dialogue .student {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .difficulty {
+            display: inline-block;
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 12px;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        .difficulty.hard {
+            background: #fce4ec;
+            color: #c0392b;
+        }
+
+        .difficulty.medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty.easy {
+            background: #d5f5e3;
+            color: #1e8449;
+        }
+
+        .badge-must {
+            display: inline-block;
+            font-size: 0.72em;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #fff;
+            margin-left: 6px;
+            vertical-align: middle;
+            letter-spacing: 0.05em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.93em;
+        }
+
+        th {
+            background: var(--accent-secondary);
+            color: #fff;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover td {
+            background: #f9f7f4;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, var(--accent-secondary), #1a252f);
+            color: #fff;
+            padding: 30px 35px;
+            border-radius: 8px;
+            margin-top: 30px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+            animation-delay: 0.9s;
+        }
+
+        .summary-box h2 {
+            color: #fff;
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+
+        .summary-box li {
+            color: rgba(255,255,255,0.85);
+        }
+
+        .summary-box strong {
+            color: #e67e22;
+        }
+
+        .summary-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .summary-box ul li::before {
+            content: '▸ ';
+            color: #e67e22;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-header {
+                padding: 40px 20px 35px;
+            }
+            .page-header h1 {
+                font-size: 1.6em;
+            }
+            .container {
+                padding: 20px 14px 60px;
+            }
+            section {
+                padding: 24px 20px;
+            }
+            .page-header .meta {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="page-header">
+    <h1>果妈数学课堂笔记</h1>
+    <p class="subtitle">计算 · 数论 · 几何 · 工程 · 排列组合 · 材料阅读</p>
+    <div class="meta">
+        <span>授课：果妈</span>
+        <span>内容：综合复习卷讲解</span>
+        <span>对象：小升初冲刺班</span>
+    </div>
+</header>
+
+<main class="container">
+
+    <nav class="toc">
+        <h2>目 录</h2>
+        <ol>
+            <li><a href="#s1">分数运算与约分</a></li>
+            <li><a href="#s2">整数列项与拆分技巧（第4题）</a></li>
+            <li><a href="#s3">列差与等比数列（第3题）</a></li>
+            <li><a href="#s4">连续奇数与连续偶数求和公式</a></li>
+            <li><a href="#s5">整数乘积求和——差相同与和相同（第4题）</a></li>
+            <li><a href="#s6">放缩法与平方倒数求和（第4题拓展）</a></li>
+            <li><a href="#s7">比例与差倍问题（第5题）</a></li>
+            <li><a href="#s8">连续自然数的和与积（第6题）</a></li>
+            <li><a href="#s9">找规律——图形数列（第7题）</a></li>
+            <li><a href="#s10">数论：乘方的余数（第8题）</a></li>
+            <li><a href="#s11">最大值与最小值——拆数问题（第9题）</a></li>
+            <li><a href="#s12">三角形计数（第10题）</a></li>
+            <li><a href="#s13">竖式谜与位置原理（第11题）</a></li>
+            <li><a href="#s14">找规律与余数（第12题）</a></li>
+            <li><a href="#s15">时钟追及问题（第14题）</a></li>
+            <li><a href="#s16">工程问题——分干合想与差倍（第20题）</a></li>
+            <li><a href="#s17">排列组合——放棋子问题（第23题）</a></li>
+            <li><a href="#s18">材料阅读题选做（第24题）</a></li>
+        </ol>
+    </nav>
+
+    <!-- 第1部分 -->
+    <section id="s1" data-number="第一部分">
+        <h2>分数运算与约分</h2>
+
+        <h3>题目回顾</h3>
+        <p>计算：3 − 8分之3 = 2又8分之5，即 8分之24 − 8分之3 = <strong>8分之21</strong>。</p>
+
+        <div class="key-point">
+            算出 8分之21 后，需要进行<strong>约分</strong>。约分后最终答案为 <strong>9分之25</strong>。
+        </div>
+
+        <div class="warning">
+            不要忘记约分！分数运算的最后一步往往是约分，许多错误来源于计算正确但未约分。
+        </div>
+    </section>
+
+    <!-- 第2部分 -->
+    <section id="s2" data-number="第4题">
+        <h2>整数列项与拆分技巧</h2>
+        <p><span class="badge-must">必掌握</span></p>
+
+        <h3>题目要点</h3>
+        <p>对形如 <strong>四分之三 × 一百二十四分之三</strong> 的算式进行约分简化，再加上五分之三十一。</p>
+
+        <h3>拆分思路</h3>
+        <div class="method">
+            <p><strong>技巧一：小数拆分法</strong></p>
+            <p>将五分之四 × 五十又四分之五改写为小数：</p>
+            <ul>
+                <li>0.8 × 50 + 0.8 × 1.25</li>
+                <li>= 40 + 1 = 41</li>
+            </ul>
+        </div>
+
+        <div class="method">
+            <p><strong>技巧二：利用约分简化</strong></p>
+            <p>将六十乘以六分之五拆分为：</p>
+            <ul>
+                <li>60 × 5/6 + 1.2 × 5/6</li>
+                <li>数字与分母容易约分，计算更简便</li>
+            </ul>
+        </div>
+
+        <div class="dialogue">
+            <span class="teacher">果妈：</span>零点八乘以五十等于多少？四十。零点八乘一点二五呢？是一。加上一点二乘六分之五，你看我好约分嘛？
+        </div>
+
+        <h3>最终计算</h3>
+        <p>三十一 + 四十 + 一 + 五十一的一半…… 合计为 <strong>一百二十三</strong>。</p>
+
+        <div class="key-point">
+            果妈强调：觉得好约就大意了，后面容易算错。<strong>每一步都要扎实</strong>。
+        </div>
+    </section>
+
+    <!-- 第3部分 -->
+    <section id="s3" data-number="第3题">
+        <h2>列差与等比数列</h2>
+
+        <h3>一、列差法</h3>
+        <p>题目：一个标准的列差问题，结果为 <strong>九十九分之十</strong>。没什么好讲的，关键是熟练掌握列差的基本形式。</p>
+
+        <h3>二、平方差与连续偶数求和</h3>
+        <p>相邻偶数的平方差：利用公式 <strong>a² − b² = (a − b)(a + b)</strong>。</p>
+
+        <div class="formula">
+            <p>相邻偶数之差恒为 2，提取公因数 2 后：</p>
+            <p>2 × (20 + 18 + 16 + … + 2)</p>
+            <p>= 2 × 等差数列求和</p>
+            <p>= 2 × (首项 + 末项) × 项数 ÷ 2</p>
+        </div>
+
+        <h3>三、等比数列公式</h3>
+        <p><span class="badge-must">建议记忆</span></p>
+
+        <div class="formula">
+            <p><strong>等比数列求和公式：</strong></p>
+            <p>S = (末项 × 公比 − 首项) ÷ (公比 − 1)</p>
+            <p>或者：S = 首项 × (公比ⁿ − 1) ÷ (公比 − 1)</p>
+        </div>
+
+        <div class="method">
+            <p>公比的确定：后一项与前一项的比值。例如 −1/3 × 1/3 = 1/9，所以公比为 <strong>−1/3</strong>。</p>
+            <p>若不习惯分数作公比，可以<strong>倒过来看</strong>，将公比视为 −3。</p>
+        </div>
+
+        <div class="key-point">
+            果妈建议：虽然原本不要求记等比数列公式，但<strong>错位相消</strong>在考试中频繁出现，建议把公式记住。
+        </div>
+
+        <h3>四、通分法（备选方案）</h3>
+        <p>当看不出方法时，尝试<strong>直接运算</strong>——通分。本题分母都是 3 的幂次，通分为 243 后反而比较简单：</p>
+        <ul>
+            <li>分子：243 − 81 + 27 − 9 + 3 − 1 = 182</li>
+            <li>分母：243</li>
+            <li>约分得 <strong>一百四十六分之九十一</strong></li>
+        </ul>
+    </section>
+
+    <!-- 第4部分 -->
+    <section id="s4" data-number="拓展">
+        <h2>连续奇数与连续偶数求和公式</h2>
+        <p><span class="badge-must">必掌握</span></p>
+
+        <h3>一、连续奇数求和</h3>
+
+        <div class="formula">
+            <p><strong>1 + 3 + 5 + 7 + … + (2n−1) = n²</strong></p>
+            <p>即：连续奇数之和等于<strong>项数的平方</strong>。</p>
+            <p>例：1 + 3 + 5 + 7 + … + 19 = 10² = 100</p>
+        </div>
+
+        <h4>图形理解——方阵点阵</h4>
+        <p>用 4×4 的方阵点来理解：</p>
+        <ul>
+            <li><strong>方法一（逐行数）：</strong>4 × 4 = 16</li>
+            <li><strong>方法二（斜着数）：</strong>1 + 2 + 3 + 4 + 3 + 2 + 1 = 16（对称数列）</li>
+            <li><strong>方法三（拐弯数）：</strong>1 + 3 + 5 + 7 = 16（连续奇数）</li>
+        </ul>
+
+        <div class="dialogue">
+            <span class="teacher">果妈：</span>同一个方阵，从三个不同角度去数，暗含了三个我们应该掌握的公式。你懂得越多，经常能用，就会感觉自己很棒！
+        </div>
+
+        <h3>二、连续偶数求和</h3>
+
+        <div class="formula">
+            <p><strong>2 + 4 + 6 + 8 + … + 2n = n² + n</strong></p>
+            <p>推导：每个偶数比对应的奇数多 1，n 个偶数就比 n 个奇数多 n。</p>
+            <p>即：n² + n</p>
+        </div>
+
+        <div class="key-point">
+            果妈指出：数学中很多公式<strong>不需要死记</strong>，通过观察和推理可以自然得出。从连续奇数的 n² 推出连续偶数的 n² + n，感受其中的关联性，比硬背公式更有效。
+        </div>
+
+        <div class="method">
+            <p><strong>学习建议：</strong></p>
+            <ul>
+                <li>掌握等差数列基本求和公式（首项加末项乘以项数除以二）</li>
+                <li>进一步掌握特殊等差数列：连续自然数、连续奇数、连续偶数</li>
+                <li>对特殊数列要有<strong>敏感性</strong>——看到连续偶数或连续奇数能立刻反应</li>
+                <li>通过图形理解公式来源，便于记忆和推导</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 第5部分 -->
+    <section id="s5" data-number="第4题续">
+        <h2>整数乘积求和——差相同与和相同</h2>
+        <p><span class="badge-must">必掌握</span></p>
+
+        <h3>差相同的情况</h3>
+        <p>题目形如：1×5 + 2×6 + 3×7 + … + 15×19</p>
+        <p>特征：每组中两数之差<strong>恒为 4</strong>。</p>
+
+        <div class="method">
+            <p><strong>解题步骤：</strong></p>
+            <ol>
+                <li>把后一个数用前一个数表达：6 = 2 + 4，7 = 3 + 4，…，19 = 15 + 4</li>
+                <li>展开后出现两组：</li>
+                <ul>
+                    <li>连续自然数的平方和：1² + 2² + … + 15²</li>
+                    <li>四倍的连续自然数和：4 × (1 + 2 + … + 15)</li>
+                </ul>
+                <li>分别用公式计算，相加得 <strong>1720</strong></li>
+            </ol>
+        </div>
+
+        <div class="formula">
+            <p><strong>连续自然数平方和公式：</strong></p>
+            <p>1² + 2² + … + n² = n(n+1)(2n+1) ÷ 6</p>
+        </div>
+
+        <h3>和相同的情况（拓展）</h3>
+        <p>题目形如：1×19 + 2×18 + 3×17 + … + 9×11</p>
+
+        <div class="method">
+            <p><strong>类似处理：</strong>将后一个数用 20 减去前一个数来表达。</p>
+            <p>1×(20−1) + 2×(20−2) + … + 9×(20−9)</p>
+            <p>同样可以构造出连续自然数的平方和。</p>
+        </div>
+
+        <div class="dialogue">
+            <span class="teacher">果妈：</span>这次差相同，下次和相同，你会不会做？学习一定要有举一反三的能力。一道题可以变成两道题、很多张卷子来做，把题做透。
+        </div>
+    </section>
+
+    <!-- 第6部分 -->
+    <section id="s6" data-number="拓展题">
+        <h2>放缩法与平方倒数求和</h2>
+        <p><span class="difficulty hard">难度较高</span></p>
+
+        <h3>题目分析</h3>
+        <p>比较 7²分之1 + 8²分之1 + 9²分之1 + … + 60²分之1 与 六分之一 的大小关系。</p>
+
+        <h3>放缩思路</h3>
+
+        <div class="method">
+            <p><strong>放大的方向：</strong></p>
+            <p>将 7² 放大为 6 × 7（使分母变小，分数变大）：</p>
+            <p>7²分之1 &lt; 6×7分之1 = 6分之一 − 7分之一</p>
+            <p>同理：8²分之1 &lt; 7×8分之1 = 7分之一 − 8分之一</p>
+            <p>……</p>
+            <p>60²分之1 &lt; 59×60分之1 = 59分之一 − 60分之一</p>
+        </div>
+
+        <div class="formula">
+            <p>列差后：A &lt; 6分之一 − 60分之一 &lt; 6分之一</p>
+            <p>因此结果<strong>小于六分之一</strong>。</p>
+        </div>
+
+        <h3>一般规律</h3>
+        <div class="key-point">
+            <p><strong>结论：</strong>对任意正整数 n，有：</p>
+            <p>n²分之一 + (n+1)²分之一 + (n+2)²分之一 + … &lt; n−1分之一</p>
+            <p>无论后面加多少项，都小于这个上界。</p>
+        </div>
+
+        <h3>缩小方向（拓展）</h3>
+        <p>如果需要把分数<strong>缩小</strong>，则往后乘更大的数：</p>
+        <p>7²分之一 &gt; 7×8分之一（将分母放大，分数变小）</p>
+    </section>
+
+    <!-- 第7部分 -->
+    <section id="s7" data-number="第5题">
+        <h2>比例与差倍问题</h2>
+
+        <h3>已知条件</h3>
+        <ul>
+            <li>已知两数的<strong>比</strong>（7.5 : 5）</li>
+            <li>已知两数的<strong>差</strong>（18）</li>
+            <li>求的是<strong>短的那份</strong>（即 5 份对应多少）</li>
+        </ul>
+
+        <div class="formula">
+            <p>18 ÷ (7.5 − 5) = 18 ÷ 2.5 = 9 厘米</p>
+            <p>9 × 5 = <strong>45 厘米</strong></p>
+        </div>
+
+        <div class="method">
+            已知比和差，求各数：先用差除以份数差得到每份的值，再乘以所求的份数。<strong>属于送分题型</strong>。
+        </div>
+    </section>
+
+    <!-- 第8部分 -->
+    <section id="s8" data-number="第6题">
+        <h2>连续自然数的和与积</h2>
+
+        <h3>审题关键</h3>
+        <p>两个<strong>连续</strong>自然数 m 和 n，它们的<strong>和</strong>与它们的<strong>差</strong>的乘积是 33。</p>
+
+        <div class="warning">
+            <strong>关键在"连续"二字！</strong>连续自然数的差一定是 1。
+        </div>
+
+        <div class="method">
+            <ol>
+                <li>差 = 1（连续自然数）</li>
+                <li>和 × 差 = 33 → 和 = 33</li>
+                <li>知道和为 33，差为 1 → 两个数为 <strong>16 和 17</strong></li>
+                <li>两数的乘积 = 16 × 17 = <strong>272</strong></li>
+            </ol>
+        </div>
+
+        <div class="dialogue">
+            <span class="teacher">果妈：</span>如果题目没有"连续"二字，你的做法是对的。但加上"连续"，差就是 1，只有一种情况。审题重在"连续自然数"上。
+        </div>
+    </section>
+
+    <!-- 第9部分 -->
+    <section id="s9" data-number="第7题">
+        <h2>找规律——图形数列</h2>
+
+        <h3>观察规律</h3>
+        <p>第二个图形：2 × (2 + 1) + 2</p>
+        <p>第三个图形：3 × (3 + 1) + 2</p>
+
+        <div class="formula">
+            <p><strong>通项公式：第 n 个图形 = n × (n + 1) + 2</strong></p>
+            <p>也可写成 n² + n + 2</p>
+        </div>
+
+        <p>第十个图形：10 × 11 + 2 = <strong>112</strong></p>
+
+        <div class="method">
+            找规律的关键：<strong>先写出前几项的数值</strong>，再观察项数与数值之间的关系，尝试写出通项公式。注意图形中哪些部分是变化的，哪些是不变的。
+        </div>
+    </section>
+
+    <!-- 第10部分 -->
+    <section id="s10" data-number="第8题">
+        <h2>数论：乘方的余数</h2>
+        <p><span class="badge-must">必掌握</span> <span class="difficulty hard">难度较高</span></p>
+
+        <h3>核心性质</h3>
+        <div class="formula">
+            <p><strong>乘方的余数 = 余数的乘方</strong></p>
+            <p>即：a^n 除以 m 的余数 = (a 除以 m 的余数)^n 除以 m 的余数</p>
+        </div>
+
+        <h3>例题一：30³² 除以 13 的余数</h3>
+        <div class="method">
+            <ol>
+                <li>30 除以 13 余 <strong>4</strong>，所以 30³² ≡ 4³² (mod 13)</li>
+                <li>计算 4 的幂次除以 13 的余数，找周期：</li>
+            </ol>
+            <table>
+                <thead>
+                    <tr><th>幂次</th><th>计算</th><th>余数</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>4¹</td><td>4</td><td><strong>4</strong></td></tr>
+                    <tr><td>4²</td><td>4 × 4 = 16</td><td><strong>3</strong></td></tr>
+                    <tr><td>4³</td><td>3 × 4 = 12</td><td><strong>12</strong></td></tr>
+                    <tr><td>4⁴</td><td>12 × 4 = 48</td><td><strong>9</strong></td></tr>
+                    <tr><td>4⁵</td><td>9 × 4 = 36</td><td><strong>10</strong></td></tr>
+                    <tr><td>4⁶</td><td>10 × 4 = 40</td><td><strong>1</strong> ← 周期结束</td></tr>
+                </tbody>
+            </table>
+            <ol start="3">
+                <li>周期为 <strong>6</strong>，32 ÷ 6 = 5 余 2</li>
+                <li>所以 4³² 除以 13 的余数与 4² 相同 = <strong>3</strong></li>
+            </ol>
+        </div>
+
+        <h3>例题二：31³³ 除以 13 的余数</h3>
+        <div class="method">
+            <ol>
+                <li>31 除以 13 余 <strong>5</strong>，所以 31³³ ≡ 5³³ (mod 13)</li>
+                <li>找 5 的幂次除以 13 的余数：</li>
+            </ol>
+            <table>
+                <thead>
+                    <tr><th>幂次</th><th>余数</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>5¹</td><td><strong>5</strong></td></tr>
+                    <tr><td>5²</td><td><strong>12</strong>（25÷13）</td></tr>
+                    <tr><td>5³</td><td><strong>8</strong>（60÷13）</td></tr>
+                    <tr><td>5⁴</td><td><strong>1</strong>（40÷13）← 周期结束</td></tr>
+                </tbody>
+            </table>
+            <ol start="3">
+                <li>周期为 <strong>4</strong>，33 ÷ 4 = 8 余 1</li>
+                <li>所以 5³³ 除以 13 的余数与 5¹ 相同 = <strong>5</strong></li>
+            </ol>
+            <p>最终结果：3 + 5 = <strong>8</strong></p>
+        </div>
+
+        <div class="key-point">
+            <p>操作要点：</p>
+            <ul>
+                <li>先将底数化简为<strong>小于除数的余数</strong></li>
+                <li>然后用余数的幂次去乘，不断求余，找到<strong>周期</strong></li>
+                <li>周期一定存在，计算过程要简便，否则容易算错</li>
+                <li>学会后，题目稍微改动一下也要会做——这才能真正掌握</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 第11部分 -->
+    <section id="s11" data-number="第9题">
+        <h2>最大值与最小值——拆数问题</h2>
+
+        <h3>求最大值</h3>
+        <p>五个自然数乘积为 2007，求它们之和的<strong>最大值</strong>。</p>
+
+        <div class="method">
+            <ol>
+                <li>要使和最大 → 各数<strong>相差尽可能大</strong></li>
+                <li>拆分 2007 = 1 × 1 × 1 × 1 × 2007</li>
+                <li>五个数为 1, 1, 1, 1, 2007</li>
+                <li>和 = 1 + 1 + 1 + 1 + 2007 = <strong>2011</strong></li>
+            </ol>
+        </div>
+
+        <h3>求最小值（拓展）</h3>
+        <div class="method">
+            <ol>
+                <li>要使和最小 → 各数<strong>尽可能接近</strong></li>
+                <li>对 2007 分解质因数：2007 = 3 × 3 × 223</li>
+                <li>223 是质数，无法再分</li>
+                <li>五个数为 1, 1, 3, 3, 223</li>
+                <li>和 = 1 + 1 + 3 + 3 + 223 = <strong>231</strong></li>
+            </ol>
+        </div>
+
+        <div class="key-point">
+            <p>做题时养成习惯：题目问了最大值，就想想如果改成最小值该怎么做。一道题变成两道题，把题做透。</p>
+            <p>如果允许负数参与，拆法更灵活——例如 9 = 9 × (−3) × 1 × (−1)，可以凑出四个不同的整数。</p>
+        </div>
+    </section>
+
+    <!-- 第12部分 -->
+    <section id="s12" data-number="第10题">
+        <h2>三角形计数</h2>
+
+        <h3>分层计数法</h3>
+        <p>按三角形的边长从小到大计数，利用<strong>打点辅助</strong>。</p>
+
+        <table>
+            <thead>
+                <tr><th>边长</th><th>数量</th><th>计数方法</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td><strong>16</strong></td><td>4² = 16（连续奇数求和）</td></tr>
+                <tr><td>2</td><td><strong>6</strong></td><td>1 + 2 + 3 = 6</td></tr>
+                <tr><td>3</td><td><strong>3</strong></td><td>1 + 2 = 3</td></tr>
+                <tr><td>4</td><td><strong>1</strong></td><td>1</td></tr>
+            </tbody>
+        </table>
+
+        <p>正向合计：16 + 6 + 3 + 1 = 26</p>
+
+        <div class="warning">
+            <strong>不要忘记倒过来数！</strong>倒过来还有 1 个边长为 2 的三角形。最终答案：<strong>27 个</strong>。
+        </div>
+
+        <div class="method">
+            <p>这种题的要点：</p>
+            <ul>
+                <li>用<strong>打点法</strong>辅助计数：在顶点处标记，快速判断三角形数量</li>
+                <li>边长为 n 的三角形：底边固定，顶点的可选位置形成等差数列</li>
+                <li><strong>务必检查倒放的三角形</strong>——这是最常见的遗漏</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 第13部分 -->
+    <section id="s13" data-number="第11题">
+        <h2>竖式谜与位置原理</h2>
+
+        <h3>题目</h3>
+        <p>新七位数比原七位数大 3726234，求原七位数。</p>
+
+        <h3>方法一：竖式推理（加法）</h3>
+        <div class="method">
+            <p>将减法转化为<strong>加法竖式</strong>更易推理：</p>
+            <p>原七位数 + 3726234 = 新七位数</p>
+            <p>从个位开始，逐位推算：</p>
+            <ol>
+                <li>个位：某数 + 4 = 末位为 3 → 该数为 <strong>9</strong>，进 1</li>
+                <li>十位：某数 + 3 + 1 = 末位为 5 → 该数为 <strong>1</strong>…</li>
+                <li>依次类推，逐位求解</li>
+            </ol>
+        </div>
+
+        <h3>方法二：位置原理方程</h3>
+        <div class="formula">
+            <p>设六位数 ABCDEF 为 x，则：</p>
+            <p>新七位数 = x × 10 + 3</p>
+            <p>原七位数 = 3 × 10⁶ + x</p>
+            <p>列方程：(10x + 3) − (3000000 + x) = 3726234</p>
+            <p>解得 x，进而得到原七位数。</p>
+        </div>
+
+        <div class="key-point">
+            <p>两种方法对比：</p>
+            <ul>
+                <li><strong>竖式法</strong>：直观，本题更快</li>
+                <li><strong>位置原理方程</strong>：通用性强，适合更复杂的情况</li>
+                <li>加法竖式比减法竖式更容易推理——养成习惯</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 第14部分 -->
+    <section id="s14" data-number="第12题">
+        <h2>找规律与余数</h2>
+
+        <h3>数列分析</h3>
+        <p>数列：1, 2, 4, 7, 11, 16, 22, 29, …</p>
+        <p>规律：从第 2 项起，每次增加的数依次为 1, 2, 3, 4, 5, …</p>
+
+        <div class="formula">
+            <p>第 n 个数 = 1 + (1 + 2 + 3 + … + (n−1))</p>
+            <p>= 1 + n(n−1)/2</p>
+        </div>
+
+        <h3>第 2025 个数除以 5 的余数</h3>
+        <div class="method">
+            <ol>
+                <li>第 2025 个数 = 1 + 2024 × 2025 ÷ 2</li>
+                <li>= 1 + 1012 × 2025</li>
+                <li>1012 × 2025 一定是 5 的倍数（含因子 2025 = 5 × 405）</li>
+                <li>所以余数 = <strong>1</strong></li>
+            </ol>
+        </div>
+
+        <div class="key-point">
+            <p>两种方法：</p>
+            <ul>
+                <li><strong>方法一：</strong>写出通项公式，直接计算</li>
+                <li><strong>方法二：</strong>分别列出前几项除以 5 的余数，找周期规律</li>
+            </ul>
+            <p>果妈特别指出：做题时一定要<strong>仔细</strong>，她自己也差点把起始的 "1" 漏掉。</p>
+        </div>
+    </section>
+
+    <!-- 第15部分 -->
+    <section id="s15" data-number="第14题">
+        <h2>时钟追及问题</h2>
+        <p><span class="badge-must">必掌握</span></p>
+
+        <h3>题目</h3>
+        <p>甲钟每 24 小时快 2 分钟，乙钟每 24 小时慢 1 分钟。下午 4 点调准后，下次两钟同时显示同一时间需多少天？</p>
+
+        <h3>解题思路</h3>
+        <div class="method">
+            <p>把两个时钟看成<strong>两根针</strong>在环形跑道上运动：</p>
+            <ul>
+                <li>两钟显示同一时间 → 两针<strong>重合</strong></li>
+                <li>快针比慢针多走了<strong>一整圈</strong>（12 小时 = 720 分钟）</li>
+                <li>速度差 = 2 + 1 = <strong>3 分钟/天</strong>（一个快 2 分，一个慢 1 分）</li>
+            </ul>
+            <div class="formula">
+                <p>时间 = 720 ÷ 3 = <strong>240 天</strong></p>
+            </div>
+        </div>
+
+        <div class="key-point">
+            两钟问题统一建模为<strong>环形追及</strong>：快的比慢的多走一圈（12小时对应的分钟数），用多走的距离除以速度差即可。
+        </div>
+    </section>
+
+    <!-- 第16部分 -->
+    <section id="s16" data-number="第20题">
+        <h2>工程问题——分干合想与差倍</h2>
+        <p><span class="badge-must">必学必考必会</span></p>
+
+        <h3>题目</h3>
+        <p>王师傅和张师傅共同加工零件，合作完成需 15 天。王师傅先干 11 天，两人合作 6 天，张师傅单独干 8 天完成。王师傅每天比张师傅少加工 10 个。求王师傅共做了多少个零件。</p>
+
+        <h3>方法一：常规解法（分干合想）</h3>
+        <div class="method">
+            <ol>
+                <li>张师傅单独干 8 天 + 王师傅单独干 11 天 + 合作 6 天</li>
+                <li>其中张的 8 天可以和王的 8 天合看 → 合作 8 + 6 = <strong>14 天</strong>，王单独 3 天</li>
+                <li>王的功效 = (1 − 14/15) ÷ 3 = <strong>1/45</strong></li>
+                <li>张的功效 = 1/15 − 1/45 = <strong>2/45</strong></li>
+                <li>差 = 2/45 − 1/45 = 1/45，对应 10 个 → 总数 = 10 ÷ (1/45) = <strong>450 个</strong></li>
+                <li>王做的 = 450 × 1/45 × 17 = <strong>170 个</strong></li>
+            </ol>
+        </div>
+
+        <h3>方法二：对比法（更快）</h3>
+        <div class="method">
+            <p><strong>核心观察：</strong></p>
+            <ul>
+                <li>合作完成：王干 15 天 + 张干 15 天 = 全部完成</li>
+                <li>实际情况：王干 17 天 + 张干 14 天 = 全部完成</li>
+            </ul>
+            <p>对比发现：张少干 1 天，王多干 2 天 → <strong>2 × 王 = 1 × 张</strong></p>
+            <p>即张的功效是王的 2 倍，差 10 个 → 王每天做 <strong>10 个</strong></p>
+            <p>王共做 17 天 → 10 × 17 = <strong>170 个</strong></p>
+        </div>
+
+        <div class="key-point">
+            方法二利用<strong>对比思想</strong>，将工程问题转化为差倍问题，大大简化计算。核心是理解"合作 15 天"意味着每人各干 15 天。
+        </div>
+    </section>
+
+    <!-- 第17部分 -->
+    <section id="s17" data-number="第23题">
+        <h2>排列组合——放棋子问题</h2>
+        <p><span class="badge-must">必掌握</span></p>
+
+        <h3>题目</h3>
+        <p>将 5 个不同的棋子放入 5×5 方格中，使每行每列恰好有一个棋子，求方案数。</p>
+
+        <h3>解题思路</h3>
+        <div class="method">
+            <p><strong>分两步完成：</strong></p>
+            <ol>
+                <li><strong>选格子：</strong>在 5×5 方格中选 5 个格子，使每行每列恰好一个</li>
+                <ul>
+                    <li>第一行有 5 个格子可选</li>
+                    <li>第二行有 4 个格子可选（排除已选列）</li>
+                    <li>第三行有 3 个，第四行有 2 个，第五行有 1 个</li>
+                    <li>选格子方案数 = 5 × 4 × 3 × 2 × 1 = <strong>A₅₅</strong></li>
+                </ul>
+                <li><strong>放棋子：</strong>将 5 个不同的棋子放入 5 个已选格子</li>
+                <ul>
+                    <li>5 个不同棋子放入 5 个位置 = <strong>A₅₅</strong></li>
+                </ul>
+            </ol>
+            <div class="formula">
+                <p>总方案数 = A₅₅ × A₅₅ = 120 × 120 = <strong>14400</strong></p>
+            </div>
+        </div>
+
+        <h3>排列 vs 组合</h3>
+        <div class="key-point">
+            <p><strong>A（排列）</strong>= 选取 + 排序（两个不同：人选不同，位置/顺序不同）</p>
+            <p><strong>C（组合）</strong>= 仅选取（一个不同：人选不同，但不做后续操作）</p>
+            <p>例如：A₆₃ = 从 6 人中选 3 人并安排职务/排队</p>
+            <p>C₆₃ = 从 6 人中仅选出 3 人，不做任何安排</p>
+        </div>
+
+        <div class="dialogue">
+            <span class="teacher">果妈：</span>要想学好排列组合，一定要去体会排列和组合之间的区别。不仅仅是说这道题用 C、那道题用 A，你要真正感受出区别来，才能应付变化后的题目。
+        </div>
+    </section>
+
+    <!-- 第18部分 -->
+    <section id="s18" data-number="第24题">
+        <h2>材料阅读题选做</h2>
+        <p><span class="badge-must">复试必突破</span></p>
+
+        <h3>A 题：十加数问题</h3>
+
+        <h4>定义</h4>
+        <p>三位数 ABC，若十位数字 B = A + C（百位 + 个位），则称该数为"十加数"。</p>
+
+        <h4>第一问</h4>
+        <p>最大的十加数：百位最大填 8（因为 A + C 中 C ≥ 1），个位填 1，十位 = 9。</p>
+        <p>答案：<strong>891</strong></p>
+
+        <h4>第二问</h4>
+        <div class="method">
+            <ol>
+                <li>设 N = ABC，其中 B = A + C</li>
+                <li>交换百位数字得到 K = BAC</li>
+                <li>K 的某种操作得到 P，再操作得到 Q</li>
+                <li>要求 P − Q 能被 11 整除，求最小的 N</li>
+            </ol>
+            <p>利用<strong>位置原理</strong>展开后，结合整除特征，用<strong>丢倍法</strong>：</p>
+            <p>将 909C − 10A − 1 写成十一的倍数的整数部分 + 余数形式</p>
+            <p>最终条件化为 <strong>4C + A + 1 是 11 的倍数</strong></p>
+            <p>要使 N 最小 → A = 1，解得 C = 6，B = 7</p>
+            <p>最小 N = <strong>176</strong></p>
+        </div>
+
+        <h3>B 题：环形取卡片</h3>
+
+        <div class="method">
+            <p>1 到 150 张卡片排成一圈，每次取走最上面一张，将下一张放到最下面，求最后剩下的数。</p>
+            <p><strong>分析过程：</strong></p>
+            <ol>
+                <li>第一轮：留下 4 的倍数（公差为 4）</li>
+                <li>第二轮：留下除以 8 余 4 的数（公差为 8）</li>
+                <li>第三轮：公差变为 16</li>
+                <li>第四轮：公差变为 32</li>
+                <li>以此类推，逐步缩小范围</li>
+            </ol>
+            <p>关键是<strong>定位每次留下什么、结尾剩什么</strong>，最后几个数可以手动列举。</p>
+        </div>
+
+        <div class="warning">
+            这类环形操作题<strong>逻辑不难，但操作上容易出错</strong>。需要非常仔细地跟踪每一轮的变化。
+        </div>
+
+        <div class="key-point">
+            <p>果妈建议：</p>
+            <ul>
+                <li><strong>优先选做 A 类（数论/材料阅读）</strong>，掌握后成功率高</li>
+                <li>B 类有时简单但随机性强，不太稳定</li>
+                <li>材料阅读题在复试中<strong>分值很大</strong>，一定要突破</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="summary-box">
+        <h2>课堂总结——必学必考必会清单</h2>
+        <ul>
+            <li><strong>分数运算</strong>：不要忘记约分，每一步都要扎实</li>
+            <li><strong>整数列项</strong>：差相同、和相同的拆分技巧</li>
+            <li><strong>连续奇数/偶数求和</strong>：n² 和 n² + n，通过图形理解</li>
+            <li><strong>等比数列公式</strong>：建议记忆，错位相消常用</li>
+            <li><strong>乘方的余数</strong>：余数的乘方性质，找周期</li>
+            <li><strong>工程问题</strong>：分干合想 + 对比转化差倍</li>
+            <li><strong>排列组合</strong>：理解 A 和 C 的本质区别</li>
+            <li><strong>材料阅读题</strong>：复试中的大分值题型，必须突破</li>
+            <li><strong>时钟追及</strong>：建模为环形追及问题</li>
+            <li><strong>三角形计数</strong>：分层打点 + 别忘倒数</li>
+        </ul>
+    </div>
+
+</main>
+
+</body>
+</html>

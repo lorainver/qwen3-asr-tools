@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重庆小学编程学习指南 | C++起步·初一冲刺CSP-J</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Nunito', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+          },
+          colors: {
+            cream: '#FFFBF5',
+            coral: { 50: '#FFF3E0', 100: '#FFE0B2', 500: '#FF7043', 600: '#F4511E', 700: '#D84315' },
+            sea:   { 50: '#E0F2F1', 100: '#B2DFDB', 500: '#26A69A', 600: '#00897B' },
+            gold:  { 50: '#FFFDE7', 100: '#FFF9C4', 400: '#FFCA28', 500: '#FFB300' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-padding-top: 80px; }
+
+    /* ---- animations ---- */
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)} }
+    @keyframes float    { 0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)} }
+    @keyframes floatR   { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(6deg)} }
+    @keyframes gradient { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+    @keyframes pulseDot { 0%{box-shadow:0 0 0 0 rgba(255,112,67,.6)}70%{box-shadow:0 0 0 12px rgba(255,112,67,0)}100%{box-shadow:0 0 0 0 rgba(255,112,67,0)} }
+
+    .a-fu        { animation: fadeUp .6s ease-out forwards; opacity:0 }
+    .d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}
+    .fl1         { animation: float 6s ease-in-out infinite }
+    .fl2         { animation: floatR 8s ease-in-out infinite 1s }
+    .fl3         { animation: float 7s ease-in-out infinite 2s }
+
+    .hero-bg {
+      background: linear-gradient(-45deg,#FF7043,#FFB74D,#FFCA28,#26A69A,#4DB6AC);
+      background-size: 400% 400%;
+      animation: gradient 14s ease infinite;
+    }
+
+    .dot-pulse { animation: pulseDot 2s infinite }
+
+    /* card hover */
+    .card-h { transition: transform .3s, box-shadow .3s }
+    .card-h:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,.1) }
+
+    /* nav glass */
+    .glass { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px) }
+
+    /* code theme */
+    .cblk { background:#1e1e2e; border-radius:14px; padding:1.25rem 1.5rem;
+             font-family:'Fira Code','Consolas','Courier New',monospace;
+             color:#cdd6f4; font-size:.82rem; line-height:1.85; overflow-x:auto }
+    .cblk .kw  { color:#cba6f7 } .cblk .ty  { color:#89b4fa }
+    .cblk .str { color:#a6e3a1 } .cblk .cm  { color:#6c7086; font-style:italic }
+    .cblk .num { color:#fab387 } .cblk .fn  { color:#89dceb }
+
+    /* table */
+    .tbl-stripe tr:nth-child(even){background:#FFF5EE}
+    .tbl-stripe tr:hover{background:#FFE8D6}
+    .tbl-stripe th{position:sticky;top:0}
+
+    /* scrollbar */
+    ::-webkit-scrollbar{width:7px}
+    ::-webkit-scrollbar-track{background:#f5f5f5}
+    ::-webkit-scrollbar-thumb{background:#FF7043;border-radius:4px}
+
+    /* wave bottom of hero */
+    .wave-bot{position:absolute;bottom:-1px;left:0;width:100%}
+  </style>
+</head>
+
+<body class="bg-cream text-gray-800 font-sans antialiased">
+
+<!-- ===================== 固定导航栏 ===================== -->
+<nav id="topNav" class="fixed top-0 w-full z-50 glass bg-white/80 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2 select-none">
+      <span class="text-2xl">🚀</span>
+      <span class="font-black text-lg text-coral-600 tracking-tight">编程小达人</span>
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-sm font-bold text-gray-600">
+      <a href="#why"  class="hover:text-coral-500 transition-colors">为什么学</a>
+      <a href="#cpp"  class="hover:text-coral-500 transition-colors">学 C++</a>
+      <a href="#plan" class="hover:text-coral-500 transition-colors">学习规划</a>
+      <a href="#csp"  class="hover:text-coral-500 transition-colors">CSP-J 攻略</a>
+      <a href="#tips" class="hover:text-coral-500 transition-colors">家长须知</a>
+    </div>
+    <button id="menuBtn" class="md:hidden text-2xl text-gray-600" aria-label="菜单">☰</button>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden bg-white/95 glass border-t border-gray-100 px-6 pb-3">
+    <a href="#why"  class="block py-2.5 text-sm font-bold text-gray-700 hover:text-coral-500">为什么学</a>
+    <a href="#cpp"  class="block py-2.5 text-sm font-bold text-gray-700 hover:text-coral-500">学 C++</a>
+    <a href="#plan" class="block py-2.5 text-sm font-bold text-gray-700 hover:text-coral-500">学习规划</a>
+    <a href="#csp"  class="block py-2.5 text-sm font-bold text-gray-700 hover:text-coral-500">CSP-J 攻略</a>
+    <a href="#tips" class="block py-2.5 text-sm font-bold text-gray-700 hover:text-coral-500">家长须知</a>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero-bg relative min-h-[580px] md:min-h-[640px] flex items-center justify-center pt-20 pb-28 overflow-hidden">
+  <!-- 浮动装饰 -->
+  <span class="absolute top-[12%] left-[8%]  text-white/15 text-5xl md:text-7xl font-black fl1 select-none">&lt;/&gt;</span>
+  <span class="absolute top-[22%] right-[12%] text-white/10 text-4xl md:text-6xl font-black fl2 select-none">{ }</span>
+  <span class="absolute bottom-[28%] left-[15%] text-white/10 text-3xl md:text-5xl font-black fl3 select-none">int</span>
+  <span class="absolute top-[55%] right-[8%]  text-white/10 text-4xl md:text-5xl font-black fl1 select-none">for</span>
+  <span class="absolute bottom-[12%] left-[38%] text-white/8  text-5xl md:text-7xl font-black fl2 select-none">++</span>
+  <span class="absolute top-[8%]  left-[45%] text-white/8  text-3xl md:text-4xl font-black fl3 select-none">#include</span>
+
+  <div class="relative z-10 text-center px-4 max-w-3xl mx-auto">
+    <div class="a-fu">
+      <span class="inline-block bg-white/20 backdrop-blur text-white text-xs md:text-sm font-bold px-4 py-1.5 rounded-full mb-5">
+        📍 重庆 · 小学生家长专属指南
+      </span>
+    </div>
+    <h1 class="a-fu d1 text-4xl md:text-6xl font-black text-white leading-tight mb-5 drop-shadow-lg">
+      小学学编程<br class="md:hidden"> 赢在起跑线
+    </h1>
+    <p class="a-fu d2 text-base md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+      从<strong>五年级</strong>起步，直接学 <strong>C++</strong>，<br class="hidden md:inline">
+      用两年时间稳步进阶——<br class="hidden md:inline">
+      初一冲刺 <strong>CSP-J 入门级</strong>认证。
+    </p>
+    <a href="#plan" class="a-fu d3 inline-block bg-white text-coral-600 font-black text-base md:text-lg px-8 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+      查看完整学习规划 ↓
+    </a>
+  </div>
+
+  <!-- wave -->
+  <div class="wave-bot">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-[50px] md:h-[70px]">
+      <path d="M0 35 C360 75 720 0 1080 35 C1260 52 1380 38 1440 35 L1440 80 L0 80Z" fill="#FFFBF5"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ===================== 为什么要学编程 ===================== -->
+<section id="why" class="py-16 md:py-24">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-coral-100 text-coral-700 text-xs font-bold px-3 py-1 rounded-full mb-3">PART 1</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900">小学阶段为什么要学编程？</h2>
+      <p class="mt-3 text-gray-500 text-base md:text-lg max-w-2xl mx-auto">不是跟风，而是为孩子打开一扇<strong>逻辑思维</strong>和<strong>未来竞争力</strong>的大门。</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- 卡片 1 -->
+      <div class="card-h bg-white rounded-2xl shadow-md p-6 border-t-4 border-coral-500">
+        <div class="w-12 h-12 rounded-xl bg-coral-50 flex items-center justify-center text-2xl mb-4">🧠</div>
+        <h3 class="font-bold text-lg mb-2">锻炼逻辑思维</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">编程的核心是"拆解问题 → 设计步骤 → 验证结果"。这个思维训练对<strong>数学、物理</strong>等学科的学习都有显著提升。</p>
+      </div>
+      <!-- 卡片 2 -->
+      <div class="card-h bg-white rounded-2xl shadow-md p-6 border-t-4 border-sea-500">
+        <div class="w-12 h-12 rounded-xl bg-sea-50 flex items-center justify-center text-2xl mb-4">🏆</div>
+        <h3 class="font-bold text-lg mb-2">竞赛升学加分</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">CSP-J/S 认证和 NOIP 获奖在<strong>小升初、初升高</strong>自主招生中含金量极高。重庆多所名校重视信息学特长生。</p>
+      </div>
+      <!-- 卡片 3 -->
+      <div class="card-h bg-white rounded-2xl shadow-md p-6 border-t-4 border-gold-500">
+        <div class="w-12 h-12 rounded-xl bg-gold-50 flex items-center justify-center text-2xl mb-4">⏰</div>
+        <h3 class="font-bold text-lg mb-2">越早起步越从容</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">五年级开始学 C++，到初一正好两年。初中课业压力大，<strong>提前打基础</strong>才能在关键节点从容参赛。</p>
+      </div>
+      <!-- 卡片 4 -->
+      <div class="card-h bg-white rounded-2xl shadow-md p-6 border-t-4 border-purple-400">
+        <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-2xl mb-4">🔧</div>
+        <h3 class="font-bold text-lg mb-2">培养解决问题的能力</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">编程训练孩子面对复杂问题时不慌张，学会<strong>分步骤、找规律、试错修正</strong>，这是一辈子受用的能力。</p>
+      </div>
+      <!-- 卡片 5 -->
+      <div class="card-h bg-white rounded-2xl shadow-md p-6 border-t-4 border-blue-400">
+        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-2xl mb-4">🤖</div>
+        <h3 class="font-bold text-lg mb-2">AI 时代的核心素养</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">未来无论从事什么行业，<strong>理解计算思维、会和机器"对话"</strong>将成为基本素养，就像今天人人都要会用电脑一样。</p>
+      </div>
+      <!-- 卡片 6 -->
+      <div class="card-h bg-white rounded-2xl shadow-md p-6 border-t-4 border-pink-400">
+        <div class="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center text-2xl mb-4">🎯</div>
+        <h3 class="font-bold text-lg mb-2">专注力与耐心</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">写程序容不得半点马虎——一个分号的遗漏就能让程序报错。编程天然地<strong>培养孩子的细心和耐心</strong>。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 为什么学 C++ 不学 Scratch ===================== -->
+<section id="cpp" class="py-16 md:py-24 bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden">
+  <!-- 装饰 -->
+  <div class="absolute top-0 right-0 w-80 h-80 bg-coral-500/10 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-64 h-64 bg-sea-500/10 rounded-full blur-3xl"></div>
+
+  <div class="max-w-6xl mx-auto px-4 relative z-10">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-white/10 text-coral-400 text-xs font-bold px-3 py-1 rounded-full mb-3">PART 2</span>
+      <h2 class="text-3xl md:text-4xl font-black">为什么选 C++，而不是 Scratch？</h2>
+      <p class="mt-3 text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+        Scratch 很好玩，但我们的目标是 <strong class="text-coral-400">CSP-J 竞赛</strong>。<br>方向选对了，少走两年弯路。
+      </p>
+    </div>
+
+    <!-- 对比 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+      <!-- Scratch 卡片 -->
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-3xl">🧩</span>
+          <h3 class="font-bold text-xl text-gray-300">Scratch / 图形化编程</h3>
+        </div>
+        <ul class="space-y-3 text-sm text-gray-400 leading-relaxed">
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">✕</span>拖拽积木块，<strong class="text-gray-300">不是真正的代码</strong></li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">✕</span>偏游戏化、兴趣启蒙，无法对接竞赛</li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">✕</span>到初中仍需从零学 C++，<strong class="text-gray-300">浪费时间</strong></li>
+          <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">✕</span>CSP-J/S、NOIP 等竞赛<strong class="text-gray-300">不接受</strong>图形化语言</li>
+          <li class="flex items-start gap-2"><span class="text-yellow-400 mt-0.5">△</span>适合低年级（1-3 年级）培养兴趣</li>
+        </ul>
+      </div>
+      <!-- C++ 卡片 -->
+      <div class="bg-gradient-to-br from-coral-500/15 to-sea-500/15 border border-coral-500/30 rounded-2xl p-6 ring-1 ring-coral-500/20">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-3xl">⚡</span>
+          <h3 class="font-bold text-xl text-coral-400">C++ 语言</h3>
+        </div>
+        <ul class="space-y-3 text-sm text-gray-200 leading-relaxed">
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✓</span><strong>信息学竞赛唯一指定语言</strong>（CSP-J/S、NOIP）</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✓</span>直接接触真实代码和算法逻辑</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✓</span>训练纯文本编程思维，为高中/大学打基础</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✓</span>初学阶段可<strong>先纸笔学算法</strong>，不急着上机</li>
+          <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✓</span>五年级开始完全来得及，循序渐进即可</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 代码展示 -->
+    <div class="max-w-2xl mx-auto">
+      <p class="text-center text-gray-400 text-sm mb-4 font-bold">👇 孩子们学的第一段 C++ 代码，其实就是这么简洁：</p>
+      <div class="cblk">
+<span class="cm">// 我的第一个 C++ 程序</span>
+<span class="kw">#include</span> <span class="ty">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="ty">int</span> <span class="fn">main</span>() {
+    <span class="ty">int</span> a, b;
+    cin &gt;&gt; a &gt;&gt; b;               <span class="cm">// 输入两个数</span>
+    cout &lt;&lt; a + b &lt;&lt; endl;       <span class="cm">// 输出它们的和</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 学习进度规划（时间线）===================== -->
+<section id="plan" class="py-16 md:py-24">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-sea-100 text-sea-600 text-xs font-bold px-3 py-1 rounded-full mb-3">PART 3</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900">学习进度规划：五年级 → 初一</h2>
+      <p class="mt-3 text-gray-500 text-base md:text-lg max-w-2xl mx-auto">两年四阶段，每一步都踩在点上。目标明确：<strong>初一参加 CSP-J 并通过</strong>。</p>
+    </div>
+
+    <!-- 时间线 -->
+    <div class="relative pl-10 md:pl-0">
+      <!-- 竖线 -->
+      <div class="absolute left-[18px] md:left-1/2 md:-translate-x-[1.5px] top-0 bottom-0 w-[3px] rounded bg-gradient-to-b from-coral-500 via-sea-500 to-gold-400"></div>
+
+      <!-- ===== 阶段 1 ===== -->
+      <div class="relative mb-12 md:mb-16">
+        <!-- 圆点 -->
+        <div class="absolute left-[-22px] md:left-1/2 md:-translate-x-1/2 top-6 w-5 h-5 rounded-full bg-coral-500 border-4 border-cream dot-pulse z-10"></div>
+        <!-- 内容卡 -->
+        <div class="md:w-[calc(50%-2rem)] md:mr-auto md:pr-10">
+          <div class="card-h bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="bg-coral-500 text-white px-6 py-3 font-black text-sm flex items-center gap-2">
+              <span>🌱</span> 阶段一 · 五年级下学期（3-4 个月）
+            </div>
+            <div class="p-6">
+              <h3 class="font-bold text-lg mb-3 text-gray-800">C++ 基础入门 · 理论先行</h3>
+              <div class="space-y-2 text-sm text-gray-600">
+                <p><strong>🎯 目标：</strong>掌握 C++ 语法基础，能手写简单程序的伪代码</p>
+                <p><strong>📚 内容：</strong></p>
+                <ul class="ml-4 space-y-1 list-disc">
+                  <li>计算机基础：二进制、变量、数据类型</li>
+                  <li>输入输出：<code class="bg-gray-100 px-1 rounded text-xs">cin</code> / <code class="bg-gray-100 px-1 rounded text-xs">cout</code></li>
+                  <li>运算符与表达式</li>
+                  <li>条件语句：<code class="bg-gray-100 px-1 rounded text-xs">if / else / switch</code></li>
+                  <li>循环结构：<code class="bg-gray-100 px-1 rounded text-xs">for</code> / <code class="bg-gray-100 px-1 rounded text-xs">while</code></li>
+                  <li>一维数组基础</li>
+                </ul>
+                <p class="mt-2"><strong>💡 教学方式：</strong>板书 + PPT 讲解为主，<strong class="text-coral-600">不要求上机</strong>。重点训练学生用纸笔画流程图、写伪代码。</p>
+                <p><strong>📅 频率：</strong>每周 2 次课，每次 1.5 小时</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 阶段 2 ===== -->
+      <div class="relative mb-12 md:mb-16">
+        <div class="absolute left-[-22px] md:left-1/2 md:-translate-x-1/2 top-6 w-5 h-5 rounded-full bg-teal-500 border-4 border-cream dot-pulse z-10"></div>
+        <div class="md:w-[calc(50%-2rem)] md:ml-auto md:pl-10">
+          <div class="card-h bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="bg-sea-500 text-white px-6 py-3 font-black text-sm flex items-center gap-2">
+              <span>🌿</span> 阶段二 · 六年级上学期（4 个月）
+            </div>
+            <div class="p-6">
+              <h3 class="font-bold text-lg mb-3 text-gray-800">算法启蒙 · 开始上机</h3>
+              <div class="space-y-2 text-sm text-gray-600">
+                <p><strong>🎯 目标：</strong>掌握基础算法，能在洛谷完成入门题</p>
+                <p><strong>📚 内容：</strong></p>
+                <ul class="ml-4 space-y-1 list-disc">
+                  <li>函数定义与调用</li>
+                  <li>递归入门（斐波那契、阶乘）</li>
+                  <li>排序算法：冒泡排序、选择排序、插入排序</li>
+                  <li>查找算法：顺序查找、<strong>二分查找</strong></li>
+                  <li>贪心算法初步</li>
+                  <li>字符串处理基础</li>
+                </ul>
+                <p class="mt-2"><strong>💡 教学方式：</strong>理论与上机各占一半。<strong class="text-sea-600">开始在洛谷（Luogu）注册账号刷题。</strong></p>
+                <p><strong>📅 频率：</strong>每周 2 次课，每次 2 小时；课后每周 3-5 道在线练习</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 阶段 3 ===== -->
+      <div class="relative mb-12 md:mb-16">
+        <div class="absolute left-[-22px] md:left-1/2 md:-translate-x-1/2 top-6 w-5 h-5 rounded-full bg-gold-500 border-4 border-cream dot-pulse z-10"></div>
+        <div class="md:w-[calc(50%-2rem)] md:mr-auto md:pr-10">
+          <div class="card-h bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="bg-gold-500 text-white px-6 py-3 font-black text-sm flex items-center gap-2">
+              <span>🔥</span> 阶段三 · 六年级下学期（4 个月）
+            </div>
+            <div class="p-6">
+              <h3 class="font-bold text-lg mb-3 text-gray-800">数据结构与进阶算法</h3>
+              <div class="space-y-2 text-sm text-gray-600">
+                <p><strong>🎯 目标：</strong>掌握 CSP-J 第二轮常考的数据结构和算法</p>
+                <p><strong>📚 内容：</strong></p>
+                <ul class="ml-4 space-y-1 list-disc">
+                  <li>栈（Stack）和队列（Queue）</li>
+                  <li>链表基础</li>
+                  <li><strong>深度优先搜索（DFS）</strong>——回溯法</li>
+                  <li><strong>广度优先搜索（BFS）</strong>——最短路径</li>
+                  <li>动态规划入门：0/1 背包问题</li>
+                  <li>树与图的基本概念和表示</li>
+                  <li>简单数论：素数筛、最大公约数（GCD）</li>
+                </ul>
+                <p class="mt-2"><strong>💡 教学方式：</strong>以上机实战为主，配合 CSP-J 真题训练。</p>
+                <p><strong>📅 频率：</strong>每周 2-3 次课，每次 2 小时；每周刷题 5-8 道</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 阶段 4 ===== -->
+      <div class="relative">
+        <div class="absolute left-[-22px] md:left-1/2 md:-translate-x-1/2 top-6 w-5 h-5 rounded-full bg-gradient-to-r from-coral-500 to-sea-500 border-4 border-cream dot-pulse z-10"></div>
+        <div class="md:w-[calc(50%-2rem)] md:ml-auto md:pl-10">
+          <div class="card-h bg-gradient-to-br from-coral-50 to-sea-50 rounded-2xl shadow-md overflow-hidden border-2 border-coral-200">
+            <div class="bg-gradient-to-r from-coral-500 to-sea-500 text-white px-6 py-3 font-black text-sm flex items-center gap-2">
+              <span>🚀</span> 阶段四 · 小升初暑假（2 个月）· 冲刺！
+            </div>
+            <div class="p-6">
+              <h3 class="font-bold text-lg mb-3 text-gray-800">全面冲刺 CSP-J</h3>
+              <div class="space-y-2 text-sm text-gray-600">
+                <p><strong>🎯 目标：</strong>通过 CSP-J 第一轮 + 第二轮，拿到入门级认证</p>
+                <p><strong>📚 安排：</strong></p>
+                <ul class="ml-4 space-y-1 list-disc">
+                  <li><strong>第 1-2 周：</strong>第一轮笔试专项（计算机基础、复杂度分析、逻辑推理）</li>
+                  <li><strong>第 3-4 周：</strong>第二轮上机真题专练（4 题 / 3.5 小时模拟）</li>
+                  <li><strong>第 5-6 周：</strong>全真模拟考试 + 错题回顾 + 薄弱点突破</li>
+                  <li><strong>第 7-8 周：</strong>查漏补缺 + 考前心态调整 + 冲刺训练</li>
+                </ul>
+                <p class="mt-2"><strong>📅 频率：</strong>每周 4-5 次课，每次 2-2.5 小时；配合每日练习</p>
+                <p class="mt-1"><strong>🎯 备注：</strong>CSP-J 一般在每年 <strong>9-10 月</strong>举行，请关注 NOI 官网报名通知。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /时间线 -->
+  </div>
+</section>
+
+<!-- ===================== CSP-J 考级对照教学安排 ===================== -->
+<section id="csp" class="py-16 md:py-24 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-gold-100 text-gold-500 text-xs font-bold px-3 py-1 rounded-full mb-3">PART 4</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900">CSP-J 考级内容 × 教学安排对照</h2>
+      <p class="mt-3 text-gray-500 text-base md:text-lg max-w-3xl mx-auto">
+        CSP-J（入门级）考试分<strong>两轮</strong>：第一轮笔试（选择题），第二轮上机（编程题）。<br>
+        下表将官方考点与教学阶段逐项对应，做到不遗漏、不超前。
+      </p>
+    </div>
+
+    <!-- CSP-J 知识点对照表 -->
+    <div class="overflow-x-auto rounded-2xl shadow-lg bg-white">
+      <table class="tbl-stripe w-full text-sm text-left">
+        <thead>
+          <tr class="bg-gray-800 text-white">
+            <th class="px-4 py-3 font-bold rounded-tl-2xl w-16">#</th>
+            <th class="px-4 py-3 font-bold min-w-[160px]">CSP-J 知识模块</th>
+            <th class="px-4 py-3 font-bold min-w-[200px]">具体考点</th>
+            <th class="px-4 py-3 font-bold min-w-[120px]">对应阶段</th>
+            <th class="px-4 py-3 font-bold rounded-tr-2xl min-w-[100px]">考查轮次</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <!-- C++ 语言 -->
+          <tr><td class="px-4 py-3 font-bold text-coral-600" rowspan="8">C++<br>语言</td>
+              <td class="px-4 py-3" rowspan="8">C++ 程序设计</td>
+              <td class="px-4 py-3">基本数据类型（int, double, char, bool）</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">变量、常量、运算符与表达式</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">输入输出（cin/cout/scanf/printf）</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span></td>
+              <td class="px-4 py-3">上机</td></tr>
+          <tr><td class="px-4 py-3">分支结构（if/else/switch）</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">循环结构（for/while/do-while）</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">数组与字符串</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span><br><span class="bg-sea-100 text-sea-600 text-xs font-bold px-2 py-0.5 rounded">阶段二</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">函数与递归</td>
+              <td class="px-4 py-3"><span class="bg-sea-100 text-sea-600 text-xs font-bold px-2 py-0.5 rounded">阶段二</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">结构体（struct）、指针与引用基础</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试</td></tr>
+
+          <!-- 数据结构 -->
+          <tr><td class="px-4 py-3 font-bold text-sea-600" rowspan="5">数据<br>结构</td>
+              <td class="px-4 py-3" rowspan="5">基本数据结构</td>
+              <td class="px-4 py-3">线性表（数组实现）</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">栈（Stack）与队列（Queue）</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">链表基础</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试</td></tr>
+          <tr><td class="px-4 py-3">二叉树的遍历（前/中/后序）</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">图的表示（邻接矩阵/邻接表）</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试</td></tr>
+
+          <!-- 算法 -->
+          <tr><td class="px-4 py-3 font-bold text-gold-500" rowspan="8">算法</td>
+              <td class="px-4 py-3" rowspan="8">基础算法</td>
+              <td class="px-4 py-3">排序算法（冒泡/选择/插入/快速排序）</td>
+              <td class="px-4 py-3"><span class="bg-sea-100 text-sea-600 text-xs font-bold px-2 py-0.5 rounded">阶段二</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">查找算法（顺序/二分查找）</td>
+              <td class="px-4 py-3"><span class="bg-sea-100 text-sea-600 text-xs font-bold px-2 py-0.5 rounded">阶段二</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">深度优先搜索（DFS）</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">上机重点</td></tr>
+          <tr><td class="px-4 py-3">广度优先搜索（BFS）</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">上机重点</td></tr>
+          <tr><td class="px-4 py-3">贪心算法</td>
+              <td class="px-4 py-3"><span class="bg-sea-100 text-sea-600 text-xs font-bold px-2 py-0.5 rounded">阶段二</span><br><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">上机</td></tr>
+          <tr><td class="px-4 py-3">分治算法</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+          <tr><td class="px-4 py-3">动态规划基础（背包、线性 DP）</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span><br><span class="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">冲刺</span></td>
+              <td class="px-4 py-3">上机重点</td></tr>
+          <tr><td class="px-4 py-3">简单数论（素数、GCD、模运算）</td>
+              <td class="px-4 py-3"><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试 + 上机</td></tr>
+
+          <!-- 计算机基础 -->
+          <tr><td class="px-4 py-3 font-bold text-purple-500" rowspan="5">计算机<br>基础</td>
+              <td class="px-4 py-3" rowspan="5">计算机常识<br>（第一轮笔试）</td>
+              <td class="px-4 py-3">数制转换（二/八/十/十六进制）</td>
+              <td class="px-4 py-3"><span class="bg-coral-100 text-coral-700 text-xs font-bold px-2 py-0.5 rounded">阶段一</span></td>
+              <td class="px-4 py-3">笔试</td></tr>
+          <tr><td class="px-4 py-3">计算机组成与工作原理</td>
+              <td class="px-4 py-3"><span class="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">冲刺</span></td>
+              <td class="px-4 py-3">笔试</td></tr>
+          <tr><td class="px-4 py-3">算法时间/空间复杂度分析</td>
+              <td class="px-4 py-3"><span class="bg-sea-100 text-sea-600 text-xs font-bold px-2 py-0.5 rounded">阶段二</span><br><span class="bg-gold-100 text-gold-500 text-xs font-bold px-2 py-0.5 rounded">阶段三</span></td>
+              <td class="px-4 py-3">笔试重点</td></tr>
+          <tr><td class="px-4 py-3">操作系统与网络基础</td>
+              <td class="px-4 py-3"><span class="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">冲刺</span></td>
+              <td class="px-4 py-3">笔试</td></tr>
+          <tr><td class="px-4 py-3">信息安全基础</td>
+              <td class="px-4 py-3"><span class="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">冲刺</span></td>
+              <td class="px-4 py-3">笔试</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 图例 -->
+    <div class="flex flex-wrap gap-3 mt-6 justify-center text-xs font-bold">
+      <span class="bg-coral-100 text-coral-700 px-3 py-1 rounded-full">阶段一 · 五年级下</span>
+      <span class="bg-sea-100 text-sea-600 px-3 py-1 rounded-full">阶段二 · 六年级上</span>
+      <span class="bg-gold-100 text-gold-500 px-3 py-1 rounded-full">阶段三 · 六年级下</span>
+      <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full">冲刺 · 小升初暑假</span>
+    </div>
+
+    <!-- 补充说明 -->
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-coral-500">
+        <h3 class="font-bold text-lg mb-2">📝 第一轮（笔试）说明</h3>
+        <ul class="text-sm text-gray-600 space-y-1.5 list-disc ml-4">
+          <li>时间：2 小时，共 40 道选择题（含判断题）</li>
+          <li>内容：计算机常识 + C++ 语法 + 算法基础 + 逻辑推理</li>
+          <li>通过率相对较高，但不能掉以轻心</li>
+          <li>建议用历年真题反复练习，熟悉题型</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-sea-500">
+        <h3 class="font-bold text-lg mb-2">💻 第二轮（上机）说明</h3>
+        <ul class="text-sm text-gray-600 space-y-1.5 list-disc ml-4">
+          <li>时间：3.5 小时，共 4 道编程题</li>
+          <li>使用 C++ 语言，需在 OJ 上提交代码</li>
+          <li>部分分机制：即使拿不到满分，写出部分逻辑也有分</li>
+          <li>重点训练：DFS/BFS、动态规划、模拟题</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 给家长的贴心建议 ===================== -->
+<section id="tips" class="py-16 md:py-24">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-purple-100 text-purple-600 text-xs font-bold px-3 py-1 rounded-full mb-3">PART 5</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900">给重庆家长的贴心建议</h2>
+      <p class="mt-3 text-gray-500 text-base md:text-lg max-w-2xl mx-auto">方向对了，方法对了，剩下的就是坚持。以下几点请一定记住：</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- 建议 1 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-coral-50 flex items-center justify-center text-xl font-black text-coral-600">1</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">重视数学基础，编程 ≠ 敲键盘</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">信息学竞赛的本质是<strong>算法和数学思维</strong>，不是比谁打字快。小学阶段同步加强数学训练（特别是逻辑推理、数论基础），比多刷 100 道编程题更有效。</p>
+        </div>
+      </div>
+      <!-- 建议 2 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-sea-50 flex items-center justify-center text-xl font-black text-sea-600">2</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">选对老师和机构</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">重庆有多个信奥培训机构，建议选择有<strong>CSP/NOI 辅导获奖经验</strong>的老师。好老师不只是教语法，更能引导思维、把控节奏。可以先试听再决定。</p>
+        </div>
+      </div>
+      <!-- 建议 3 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-gold-50 flex items-center justify-center text-xl font-black text-gold-500">3</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">每天 30 分钟 > 周末突击 5 小时</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">编程思维需要<strong>持续浸泡</strong>。每天花 30-40 分钟看书或做一道小题，远比周末集中刷 5 小时效果好。贵在坚持，不在时长。</p>
+        </div>
+      </div>
+      <!-- 建议 4 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-xl font-black text-purple-500">4</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">善用在线评测平台</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">注册<strong>洛谷（Luogu）</strong>账号，从入门题开始刷。洛谷有详细的题解和讨论区，是全国信奥学生都在用的平台。养成"提交 → 看结果 → 改进"的习惯。</p>
+        </div>
+      </div>
+      <!-- 建议 5 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-xl font-black text-blue-500">5</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">积累编程英语词汇</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">C++ 关键字、编译器报错信息、题目描述中都有英文。小学阶段同步积累 <strong>100-200 个常用编程英语词汇</strong>，学起来会轻松很多。</p>
+        </div>
+      </div>
+      <!-- 建议 6 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center text-xl font-black text-pink-500">6</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">家长心态：重能力，轻功利</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">学编程最大的收获是<strong>思维方式的提升</strong>，证书和奖项是水到渠成的事。不要给孩子太大压力，保持兴趣和信心比什么都重要。</p>
+        </div>
+      </div>
+      <!-- 建议 7 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-xl font-black text-teal-500">7</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">找同伴一起学</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">有<strong>小伙伴一起讨论问题</strong>，效果远好于独自摸索。可以加入学校的信息学兴趣小组，或者在洛谷上找同龄人互相交流。</p>
+        </div>
+      </div>
+      <!-- 建议 8 -->
+      <div class="card-h flex gap-4 bg-white rounded-2xl shadow-md p-6">
+        <div class="shrink-0 w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-xl font-black text-green-500">8</div>
+        <div>
+          <h3 class="font-bold text-base mb-1">注意保护视力</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">编程学习不可避免地用到屏幕，请遵循 <strong>20-20-20 法则</strong>（每 20 分钟看 20 英尺外 20 秒）。低年级阶段多用纸笔学算法，也是对眼睛的保护。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 常见问题 FAQ ===================== -->
+<section class="py-16 md:py-24 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-blue-100 text-blue-600 text-xs font-bold px-3 py-1 rounded-full mb-3">FAQ</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900">家长常问的问题</h2>
+    </div>
+
+    <div class="space-y-5">
+      <!-- Q1 -->
+      <details class="group bg-white rounded-2xl shadow-md overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-base text-gray-800 hover:text-coral-600 transition-colors select-none">
+          <span>🤔 孩子五年级了，零基础，现在开始还来得及吗？</span>
+          <span class="text-gray-400 group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-sm text-gray-600 leading-relaxed">
+          <strong>完全来得及！</strong>五年级是公认的信奥起步黄金期。大部分 CSP-J 获奖选手都是五六年级或初一开始学的。按照本规划稳步推进，初一参赛是现实可行的目标。关键是<strong>现在就行动</strong>，而不是等到初中再后悔。
+        </div>
+      </details>
+      <!-- Q2 -->
+      <details class="group bg-white rounded-2xl shadow-md overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-base text-gray-800 hover:text-coral-600 transition-colors select-none">
+          <span>🤔 不学 Scratch，孩子能直接学 C++ 吗？会不会太难？</span>
+          <span class="text-gray-400 group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-sm text-gray-600 leading-relaxed">
+          可以直接学！C++ 的入门语法其实并不复杂，变量、条件、循环这些概念和数学思维很接近。我们的规划特意安排了<strong>阶段一纯理论教学</strong>——先用纸笔和流程图理解逻辑，不急着上机操作，降低了入门门槛。五年级的孩子完全能理解这些内容。
+        </div>
+      </details>
+      <!-- Q3 -->
+      <details class="group bg-white rounded-2xl shadow-md overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-base text-gray-800 hover:text-coral-600 transition-colors select-none">
+          <span>🤔 学编程会不会影响学校主课成绩？</span>
+          <span class="text-gray-400 group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-sm text-gray-600 leading-relaxed">
+          恰恰相反——编程训练的<strong>逻辑思维和问题分解能力</strong>对数学、理科成绩有正向促进作用。前提是要合理安排时间，按规划每周 3-4 小时的学习量不会影响主课，反而能让孩子做事更有条理。
+        </div>
+      </details>
+      <!-- Q4 -->
+      <details class="group bg-white rounded-2xl shadow-md overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-base text-gray-800 hover:text-coral-600 transition-colors select-none">
+          <span>🤔 CSP-J 考过了有什么用？</span>
+          <span class="text-gray-400 group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-sm text-gray-600 leading-relaxed">
+          CSP-J 认证是由中国计算机学会（CCF）主办的<strong>全国性认证</strong>，含金量很高。通过后可以继续挑战 CSP-S（提高级）和 NOIP（省级联赛）。在重庆的重点中学自主招生中，CSP/NOIP 奖项是非常有竞争力的加分项。更重要的是，这段经历培养出的<strong>思维能力</strong>将受益终生。
+        </div>
+      </details>
+      <!-- Q5 -->
+      <details class="group bg-white rounded-2xl shadow-md overflow-hidden">
+        <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-bold text-base text-gray-800 hover:text-coral-600 transition-colors select-none">
+          <span>🤔 需要买什么电脑和软件？</span>
+          <span class="text-gray-400 group-open:rotate-45 transition-transform text-xl">+</span>
+        </summary>
+        <div class="px-6 pb-5 text-sm text-gray-600 leading-relaxed">
+          非常简单！一台普通笔记本电脑即可。软件方面，安装免费的 <strong>Dev-C++</strong>（Windows）或 <strong>VS Code</strong>（跨平台）作为编程环境。在线刷题用浏览器打开洛谷网站就行，不需要任何付费软件。前期理论阶段甚至不需要电脑。
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 底部版权 ===================== -->
+<footer class="bg-gray-900 text-gray-400 text-center py-10 px-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-center gap-2 mb-3">
+      <span class="text-xl">🚀</span>
+      <span class="font-black text-lg text-white">编程小达人</span>
+    </div>
+    <p class="text-sm mb-1">助力重庆小学生从 C++ 起步，冲刺 CSP-J 入门级认证</p>
+    <p class="text-xs text-gray-500 mt-4">&copy; 2024-2026 编程小达人 · 重庆小学生编程学习指南 · 保留所有权利</p>
+    <p class="text-xs text-gray-600 mt-1">本页面内容仅供家长参考，具体教学安排请以实际培训机构课程为准</p>
+  </div>
+</footer>
+
+<!-- ===================== 简单脚本 ===================== -->
+<script>
+  // 移动端菜单
+  document.getElementById('menuBtn').addEventListener('click', function () {
+    document.getElementById('mobileMenu').classList.toggle('hidden');
+  });
+  // 点击菜单链接后自动关闭
+  document.querySelectorAll('#mobileMenu a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      document.getElementById('mobileMenu').classList.add('hidden');
+    });
+  });
+</script>
+
+</body>
+</html>

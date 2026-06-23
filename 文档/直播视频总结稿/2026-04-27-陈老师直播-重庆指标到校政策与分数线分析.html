@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重庆指标到校与中考升学实战指南 — 各区录取分析与家长案例精讲</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --accent: #2c3e50;
+    --accent-light: #3d566e;
+    --accent-bg: #eef2f6;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #7a7570;
+    --border: #ddd8d0;
+    --highlight: #fff8e1;
+    --success-bg: #eaf5ed;
+    --success-border: #2d6b3f;
+    --danger-bg: #fdf0ec;
+    --danger-border: #8b2500;
+    --info-bg: #eaf2f8;
+    --info-border: #1a5276;
+    --purple-bg: #f3eef8;
+    --purple-border: #5b2d8e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  .page-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a6741 100%);
+    color: #fff; padding: 60px 24px 52px; position: relative; overflow: hidden;
+  }
+  .page-header::before {
+    content: ''; position: absolute; top: -50%; right: -15%;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(184,134,11,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .page-header h1 {
+    font-family: 'Noto Serif SC', serif; font-size: 2.2rem;
+    font-weight: 700; letter-spacing: 0.03em; margin-bottom: 14px;
+    position: relative; z-index: 1;
+  }
+  .page-header .subtitle {
+    font-size: 1.02rem; opacity: 0.82; font-weight: 300;
+    margin-bottom: 22px; position: relative; z-index: 1; line-height: 1.7;
+  }
+  .tag-bar { display: flex; flex-wrap: wrap; gap: 10px; position: relative; z-index: 1; }
+  .tag {
+    display: inline-block; padding: 4px 16px; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 500;
+  }
+  .tag-blue { background: rgba(255,255,255,0.18); color: #fff; border: 1px solid rgba(255,255,255,0.28); }
+  .tag-gold { background: rgba(184,134,11,0.22); color: #ffd88a; border: 1px solid rgba(184,134,11,0.35); }
+  .tag-green { background: rgba(74,103,65,0.25); color: #b8e0a8; border: 1px solid rgba(74,103,65,0.4); }
+
+  /* TOC */
+  .toc-section { padding: 44px 0 28px; }
+  .toc-title {
+    font-family: 'Noto Serif SC', serif; font-size: 1.1rem;
+    color: var(--accent); margin-bottom: 18px; font-weight: 600;
+  }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .toc-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 20px; display: flex;
+    align-items: center; gap: 14px; text-decoration: none;
+    color: var(--text-primary); transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .toc-card:hover { border-color: var(--accent-light); box-shadow: 0 2px 12px rgba(44,62,80,0.08); }
+  .toc-num { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); min-width: 32px; }
+  .toc-label { font-size: 0.92rem; font-weight: 500; line-height: 1.4; }
+  .toc-label small { display: block; font-size: 0.78rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+
+  /* Chapter */
+  .chapter { padding: 36px 0 20px; }
+  .chapter-header {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .chapter-header .accent-bar {
+    width: 4px; min-height: 38px; background: var(--accent);
+    border-radius: 2px; flex-shrink: 0; margin-top: 4px;
+  }
+  .chapter-header .text { flex: 1; }
+  .chapter-num {
+    font-family: 'Noto Serif SC', serif; font-size: 0.78rem;
+    color: var(--gold); letter-spacing: 0.12em; font-weight: 600;
+    display: block; margin-bottom: 4px;
+  }
+  .chapter-header h2 {
+    font-family: 'Noto Serif SC', serif; font-size: 1.45rem;
+    font-weight: 700; color: var(--text-primary); line-height: 1.4;
+  }
+
+  /* Alerts */
+  .alert {
+    border-radius: 8px; padding: 18px 22px; margin: 18px 0;
+    border-left: 4px solid; font-size: 0.94rem; line-height: 1.78;
+  }
+  .alert strong { display: block; margin-bottom: 4px; font-size: 0.9rem; letter-spacing: 0.02em; }
+  .alert-gold { background: var(--highlight); border-color: var(--gold); }
+  .alert-gold strong { color: var(--gold); }
+  .alert-success { background: var(--success-bg); border-color: var(--success-border); }
+  .alert-success strong { color: var(--success-border); }
+  .alert-danger { background: var(--danger-bg); border-color: var(--danger-border); }
+  .alert-danger strong { color: var(--danger-border); }
+  .alert-info { background: var(--info-bg); border-color: var(--info-border); }
+  .alert-info strong { color: var(--info-border); }
+  .alert-purple { background: var(--purple-bg); border-color: var(--purple-border); }
+  .alert-purple strong { color: var(--purple-border); }
+
+  /* Cards */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px; margin: 16px 0;
+  }
+  .card h3 {
+    font-family: 'Noto Serif SC', serif; font-size: 1.08rem;
+    color: var(--accent); margin-bottom: 12px; font-weight: 600;
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  ul, ol { padding-left: 22px; margin: 12px 0; }
+  li { margin-bottom: 8px; line-height: 1.75; }
+  li strong { color: var(--accent); }
+  p { margin-bottom: 14px; color: var(--text-secondary); line-height: 1.85; }
+  p strong { color: var(--text-primary); }
+  h3 { font-family: 'Noto Serif SC', serif; font-size: 1.08rem; color: var(--text-primary); margin: 26px 0 12px; font-weight: 600; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  thead th { background: var(--accent); color: #fff; padding: 13px 16px; text-align: left; font-weight: 500; white-space: nowrap; }
+  tbody td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--accent-bg); }
+
+  /* Flow */
+  .flow { position: relative; padding-left: 36px; margin: 22px 0; }
+  .flow::before { content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .flow-item { position: relative; margin-bottom: 26px; }
+  .flow-item:last-child { margin-bottom: 0; }
+  .flow-dot { position: absolute; left: -36px; top: 6px; width: 22px; height: 22px; background: var(--surface); border: 3px solid var(--accent); border-radius: 50%; z-index: 1; }
+  .flow-item-title { font-family: 'Noto Serif SC', serif; font-weight: 600; font-size: 1rem; color: var(--text-primary); margin-bottom: 5px; }
+  .flow-item-desc { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.75; }
+
+  /* Diff Bar */
+  .diff-bar { display: flex; align-items: center; gap: 14px; margin: 10px 0; }
+  .diff-label { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); min-width: 100px; text-align: right; }
+  .diff-track { flex: 1; height: 10px; background: #e8e4de; border-radius: 5px; overflow: hidden; }
+  .diff-fill { height: 100%; border-radius: 5px; }
+  .diff-fill-high { background: linear-gradient(90deg, #2d6b3f, #4a9a5f); width: 85%; }
+  .diff-fill-mid { background: linear-gradient(90deg, #b8860b, #d4a017); width: 60%; }
+  .diff-fill-low { background: linear-gradient(90deg, #8b2500, #c0392b); width: 35%; }
+
+  /* Case Card */
+  .case-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 24px; margin: 16px 0; border-left: 4px solid var(--accent);
+  }
+  .case-card .case-tag {
+    display: inline-block; padding: 2px 12px; border-radius: 12px;
+    font-size: 0.78rem; font-weight: 600; margin-bottom: 10px;
+  }
+  .case-tag-yellow { background: var(--highlight); color: var(--gold); }
+  .case-tag-blue { background: var(--info-bg); color: var(--info-border); }
+  .case-tag-green { background: var(--success-bg); color: var(--success-border); }
+  .case-tag-red { background: var(--danger-bg); color: var(--danger-border); }
+
+  /* Footer */
+  .page-footer {
+    margin-top: 44px; padding: 30px 24px; border-top: 1px solid var(--border);
+    text-align: center; color: var(--text-muted); font-size: 0.82rem; line-height: 1.8;
+  }
+
+  @media (max-width: 700px) {
+    .page-header { padding: 36px 16px 32px; }
+    .page-header h1 { font-size: 1.5rem; }
+    .container { padding: 0 16px; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .chapter-header h2 { font-size: 1.2rem; }
+    table { font-size: 0.8rem; }
+    thead th, tbody td { padding: 9px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="page-header">
+  <div class="container">
+    <h1>重庆指标到校与中考升学实战指南</h1>
+    <p class="subtitle">各区指标到校名额·录取分数线·家长案例精讲 — 坡区、江北、两江、渝北四区深度解析与签约策略</p>
+    <div class="tag-bar">
+      <span class="tag tag-blue">九龙坡区</span>
+      <span class="tag tag-blue">江北区</span>
+      <span class="tag tag-blue">两江新区</span>
+      <span class="tag tag-blue">渝北区</span>
+      <span class="tag tag-gold">指标到校</span>
+      <span class="tag tag-green">签约策略</span>
+    </div>
+  </div>
+</header>
+
+<!-- TOC -->
+<section class="toc-section">
+  <div class="container">
+    <div class="toc-title">目录导航</div>
+    <nav class="toc-grid">
+      <a href="#ch1" class="toc-card">
+        <span class="toc-num">01</span>
+        <span class="toc-label">两江新区指标到校<small>大竹林名额分配与跨区捡漏机会</small></span>
+      </a>
+      <a href="#ch2" class="toc-card">
+        <span class="toc-num">02</span>
+        <span class="toc-label">江北区指标到校<small>名额分配逻辑与本校优先机制</small></span>
+      </a>
+      <a href="#ch3" class="toc-card">
+        <span class="toc-num">03</span>
+        <span class="toc-label">九龙坡区全面解析<small>区测难度·分数线走势·名额剧增</small></span>
+      </a>
+      <a href="#ch4" class="toc-card">
+        <span class="toc-num">04</span>
+        <span class="toc-label">分数线升降判断模型<small>四大变量与预估方法</small></span>
+      </a>
+      <a href="#ch5" class="toc-card">
+        <span class="toc-num">05</span>
+        <span class="toc-label">签约与捡漏实战技巧<small>小道消息·降分约·跑学校策略</small></span>
+      </a>
+      <a href="#ch6" class="toc-card">
+        <span class="toc-num">06</span>
+        <span class="toc-label">家长案例精讲（上）<small>鲁巴签约十八中·科巴C档纠结·一系冲线</small></span>
+      </a>
+      <a href="#ch7" class="toc-card">
+        <span class="toc-num">07</span>
+        <span class="toc-label">家长案例精讲（下）<small>渝北普娃·两江李家·红八签约·巴蜀面试</small></span>
+      </a>
+      <a href="#ch8" class="toc-card">
+        <span class="toc-num">08</span>
+        <span class="toc-label">估分填志愿核心策略<small>滑档防范·跑校时机·志愿排列</small></span>
+      </a>
+    </nav>
+  </div>
+</section>
+
+<!-- CH1 -->
+<section class="chapter" id="ch1">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 01</span>
+        <h2>两江新区指标到校：大竹林名额分配与跨区捡漏机会</h2>
+      </div>
+    </div>
+
+    <h3>西附大竹林：性价比之王</h3>
+    <p>西附大竹林（两江新区）被誉为该分数段的"性价比之王"。2020年创校，2023年首届高考成绩极为出色——整个年级仅<strong>五人未上特控线</strong>，其余全部上线，六百分以上人数众多。2026届为第二届，2029届将为第三届。</p>
+
+    <div class="alert alert-gold">
+      <strong>重磅数据：大竹林指标到校名额</strong>
+      两江新区已确定：西附大竹林今年投放<strong>350个指标到校名额</strong>。其中<strong>一半给本校学生</strong>（荆州/新城校区），<strong>一半对外放开</strong>。这与鲁巴、红巴仅放几个名额的做法形成鲜明对比，对区外学生较为公平。
+    </div>
+
+    <h3>两江新区指标到校对比</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>学校</th>
+            <th>指标到校名额</th>
+            <th>对外放量</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>西附大竹林</strong></td>
+            <td>350个</td>
+            <td>约175个（一半对外）</td>
+            <td>首次加入指标到校，放量最大</td>
+          </tr>
+          <tr>
+            <td><strong>鲁巴</strong></td>
+            <td>少量</td>
+            <td>极少（仅几个）</td>
+            <td>绝大部分名额留给本校学生</td>
+          </tr>
+          <tr>
+            <td><strong>红巴</strong></td>
+            <td>约100个</td>
+            <td>以本校为主</td>
+            <td>名额优先本校学生</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>关键信息</strong>
+      两江新区指标到校被形容为"地域型难度"——考试难度极高，甚至将高三英语题放入指标到校考试。但大竹林350个名额的大规模放量，为区外学生提供了难得的机会窗口。
+    </div>
+  </div>
+</section>
+
+<!-- CH2 -->
+<section class="chapter" id="ch2">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 02</span>
+        <h2>江北区指标到校：名额分配逻辑与本校优先机制</h2>
+      </div>
+    </div>
+
+    <p>江北区的指标到校名额分配呈现显著的"本校优先"特征，区外学生获取机会极为有限。</p>
+
+    <div class="card">
+      <h3>江北区指标到校核心特征</h3>
+      <ul>
+        <li><strong>名额极度集中于本校：</strong>A十八中、LB（两江巴蜀）等优质学校，指标到校名额绝大部分留给本校学生</li>
+        <li><strong>对外放出名额极少：</strong>仅放"几盖儿"（极少数量），非本校学生基本无法填报</li>
+        <li><strong>单牌初中困境：</strong>非高完中的单牌初中学生缺乏竞争力，不敢轻易填报</li>
+        <li><strong>鲁巴/红巴同理：</strong>两校在江北区放的指标到校名额极少，仅个位数分配到各校</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>江北区家长须知</strong>
+      如果你是非本校学籍学生，想通过江北区指标到校进入A十八中、LB等校，难度极大。名额几乎全部留给本校学生，对外放出的名额仅有个位数。
+    </div>
+  </div>
+</section>
+
+<!-- CH3 -->
+<section class="chapter" id="ch3">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 03</span>
+        <h2>九龙坡区全面解析：区测难度·分数线走势·名额剧增</h2>
+      </div>
+    </div>
+
+    <h3>一、区测难度分析</h3>
+    <p>九龙坡区区测（指标到校考试）的难度一直较为稳定且偏低：</p>
+    <ul>
+      <li><strong>数学：</strong>常规中考难度，题目简单</li>
+      <li><strong>英语：</strong>可能比中考还要简单</li>
+      <li><strong>整体：</strong>一贯来说，坡区区测都很简单。尤其与意外（一外）、育才校内出的卷子相比，难度差距显著</li>
+    </ul>
+
+    <h3>二、2026届名额剧增</h3>
+    <div class="alert alert-gold">
+      <strong>核心数据：坡区指标到校名额大增</strong>
+      九龙坡区今年全区指标到校名额增加了<strong>快1000个</strong>（约900+个）。其中科学城育才、华岩一外等校直接将约<strong>740~750个名额</strong>全部投放到指标到校。
+    </div>
+
+    <h3>三、各校指标到校分数线参考（去年）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>学校</th>
+            <th>2025年指标到校线</th>
+            <th>2024年指标到校线</th>
+            <th>变化</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>一外</strong></td>
+            <td>582分</td>
+            <td>—</td>
+            <td>预计今年上涨</td>
+          </tr>
+          <tr>
+            <td><strong>杨家坪中学</strong></td>
+            <td>561.5分</td>
+            <td>—</td>
+            <td>预计涨3~5分</td>
+          </tr>
+          <tr>
+            <td><strong>铁路中学</strong></td>
+            <td>540分</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>渝高</strong></td>
+            <td>515分（大跳水）</td>
+            <td>555.5分</td>
+            <td>降40分（捡漏机会）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>渝高"大跳水"分析</strong>
+      渝高2024年指标到校线为555.5分，2025年骤降至515分，降幅达40分。与铁路中学（540分）、杨家坪中学（561.5分）同为区重点，分数线却差异巨大，去年属"捡漏"。今年预计不会再出现如此低的分数线。
+    </div>
+  </div>
+</section>
+
+<!-- CH4 -->
+<section class="chapter" id="ch4">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 04</span>
+        <h2>分数线升降判断模型：四大变量与预估方法</h2>
+      </div>
+    </div>
+
+    <p>判断指标到校或中考录取分数线的升降，需综合考量以下四大变量：</p>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">变量一：试卷难度</div>
+        <div class="flow-item-desc">题目简单 → 分数普遍高 → 分数线可能上升。坡区区测一贯简单，今年预计维持。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">变量二：名额数量</div>
+        <div class="flow-item-desc">名额增加 → 更多人被录取 → 分数线可能被拉低。坡区今年名额增加近1000个，是最大利好。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">变量三：阅卷严格程度（压分）</div>
+        <div class="flow-item-desc">阅卷宽松 → 实际得分偏高 → 分数线上升。去年中考政治历史被"压分"，导致学生估分普遍偏高。</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">变量四：参考人数与竞争格局</div>
+        <div class="flow-item-desc">竞争人数变化、内签分流等也会影响最终分数线。一外等校大量内签会减少统招竞争。</div>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>预判方法</strong>
+      不要过早下结论。需等孩子考完（6月14日左右中考）、估分完毕后，再参考各校预估分数线、题目难度和联招场划线人数，综合判断。过早判断分数线高低容易误导志愿填报。
+    </div>
+  </div>
+</section>
+
+<!-- CH5 -->
+<section class="chapter" id="ch5">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 05</span>
+        <h2>签约与捡漏实战技巧：小道消息·降分约·跑校策略</h2>
+      </div>
+    </div>
+
+    <h3>一、指标到校"补录"机会</h3>
+    <div class="alert alert-purple">
+      <strong>关键策略：出成绩当天立即跑学校</strong>
+      即使看似"公开透明"的指标到校录取，仍存在<strong>补录机会</strong>。如果分数刚好踩线或未填志愿导致滑档，<strong>出成绩当天（非分数线公布后）立即前往目标学校招办</strong>。此时学校尚未确定最终最低分数线，存在捡漏空间。等到分数线公布后再去就晚了。
+    </div>
+
+    <h3>二、一中签约升级策略</h3>
+    <p>一中和三中的签约有一个重要特征：<strong>一开始给的约不是最好的约</strong>。在中考估分阶段，到招办现场咨询时，还可以将约"再升一升"。</p>
+    <div class="card">
+      <h3>一中约的最优形态参考</h3>
+      <ul>
+        <li><strong>分校保底</strong>（一十/一双/一G）</li>
+        <li><strong>四大金刚最低线下5~10分</strong>读实验班</li>
+        <li><strong>上四大金刚最低线</strong>直接读清北班</li>
+        <li>对比原始约（上本部线+5分读清北），存在明显优化空间</li>
+      </ul>
+    </div>
+
+    <h3>三、跑校谈判要诀</h3>
+    <ul>
+      <li><strong>手握多校合约</strong>作为谈判筹码（如"红八高中要跟我签保送，但我更想冲一中"）</li>
+      <li><strong>明确表达需求：</strong>"希望清北班门槛降低"或"希望有更好的保底条件"</li>
+      <li><strong>不急于做决定：</strong>中考估分出来之前，保持开放心态，多校并行</li>
+      <li><strong>利用对方心理：</strong>临近填志愿截止时，学校为完成招生指标会更有弹性</li>
+    </ul>
+
+    <div class="alert alert-danger">
+      <strong>时间节点提醒</strong>
+      中考成绩约6月24日左右公布。出成绩当天如果发现五个志愿都可能滑档，<strong>必须当天立即联系保底校招办</strong>，不要等到分数线出来后再行动。
+    </div>
+  </div>
+</section>
+
+<!-- CH6 -->
+<section class="chapter" id="ch6">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 06</span>
+        <h2>家长案例精讲（上）：鲁巴签约十八中·科巴C档纠结·一系冲线</h2>
+      </div>
+    </div>
+
+    <!-- Case 1 -->
+    <div class="case-card">
+      <span class="case-tag case-tag-yellow">案例一</span>
+      <h3>鲁巴平行班 → 签约十八中（江北区）</h3>
+      <p><strong>背景：</strong>学生在鲁巴平行班排名前十，偏文科，文科拿A，理科稍弱。指标到校报了十八中但未参加考试，十八中主动联系签约（锁档案）。班主任在学生未继续考试后"翻白眼"，家长一夜未眠。</p>
+      <p><strong>签约详情：</strong>十八中签约，具体班型未定，需看中考成绩确定。学籍已被锁定。</p>
+      <p><strong>专家建议：</strong></p>
+      <ul>
+        <li>十八中近年高考出口不错，有清北生，整体拉通看甚至优于鲁巴平行班</li>
+        <li>已签约无法改变结果，应"既来之则安之"，全力冲刺中考进清北班（需680分水平）</li>
+        <li>原学校可能不再重点关注该学生，需家长做好心理疏导</li>
+        <li>十八中目前正在内部"内迁"，体系也在调整中</li>
+      </ul>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="case-card">
+      <span class="case-tag case-tag-blue">案例二</span>
+      <h3>科巴C档 vs 黄花园C档：保送签约纠结</h3>
+      <p><strong>背景：</strong>学生在科巴，保送排名前400，黄花园给了C档（保本部实验班，超5分读创新实验班，超15分读清北班）。同班有人签A档。学生觉得"遭到羞辱"，同时科巴给了清北班约。</p>
+      <p><strong>关键问题：</strong>黄花园C档（本部实验班）vs 科巴清北班，如何选择？</p>
+      <div class="two-col">
+        <div class="card" style="border-left: 3px solid var(--success-border);">
+          <h3 style="color: var(--success-border);">选黄花园（陈老师观点）</h3>
+          <ul>
+            <li>四大金刚本部的品牌效应更强</li>
+            <li>可利用高一选科分班重新冲击清北班</li>
+            <li>数学为优势学科，集中精力冲数理化，政治历史暂放</li>
+            <li>选科分班按所选科目成绩分班，非总成绩</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left: 3px solid var(--info-border);">
+          <h3 style="color: var(--info-border);">选科巴（洪老师观点）</h3>
+          <ul>
+            <li>科巴清北班出口数据确定性更强</li>
+            <li>黄花园C档最终出口平均分可能不如科巴清北班</li>
+            <li>但科巴仅出一届成绩，参考性有限</li>
+          </ul>
+        </div>
+      </div>
+      <p><strong>共识：</strong>现在做决定为时尚早，应等中考估分出来后（目标690分以上可冲黄花园更好班型），再做最终选择。同时可尝试五一节参加一中、三中活动争取更好条件。</p>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="case-card">
+      <span class="case-tag case-tag-green">案例三</span>
+      <h3>一系学生面试巴蜀黄花园</h3>
+      <p><strong>背景：</strong>一中体系学生参加巴蜀黄花园面试，被问"选一中还是巴蜀"时直言"喜欢一中"。招办老师试图说服其将巴蜀作为首选。</p>
+      <p><strong>分析：</strong>四大金刚面试常问忠诚度问题。若明确表示只想当备胎，可能影响签约条件。但最终仍取决于成绩——如果成绩有绝对优势，学校会用好班型"砸"你。</p>
+      <p><strong>建议：</strong>类似场景下可用更圆滑的表达——"作为一中学生自然爱一中，但若巴蜀给我更好的条件，我愿意认真考虑。"</p>
+    </div>
+  </div>
+</section>
+
+<!-- CH7 -->
+<section class="chapter" id="ch7">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 07</span>
+        <h2>家长案例精讲（下）：渝北普娃·两江李家·红八签约·巴蜀面试</h2>
+      </div>
+    </div>
+
+    <!-- Case 4 -->
+    <div class="case-card">
+      <span class="case-tag case-tag-yellow">案例四</span>
+      <h3>渝北区八系普娃：一模560~570分</h3>
+      <p><strong>背景：</strong>渝北区八系学校，中等生，一模加体育约560~570分。</p>
+      <p><strong>预估中考：</strong>600分左右</p>
+      <p><strong>可选学校：</strong></p>
+      <ul>
+        <li><strong>区重点：</strong>尖山中学、清华中学等（600~620分段）</li>
+        <li><strong>渝北区优先：</strong>松树桥中学（渝北区内，距离近）</li>
+        <li>部分学校有"免考直签"机会，可提前了解</li>
+      </ul>
+    </div>
+
+    <!-- Case 5 -->
+    <div class="case-card">
+      <span class="case-tag case-tag-blue">案例五</span>
+      <h3>两江新区李家中学：620~635分</h3>
+      <p><strong>背景：</strong>李家中学学生，平时成绩620~635分，指标到校估分约630分，年级排名约200名。对原学校不满意，想走中考。</p>
+      <p><strong>专家建议：</strong></p>
+      <ul>
+        <li>李家中学近年成绩已明显提升，性价比高，建议认真考虑指标到校</li>
+        <li>中考预计可提分20分左右（650分左右），有机会冲四小金刚</li>
+        <li>西附大竹林去年线659.5分，差距较大，需谨慎评估</li>
+        <li>可同步联系杨中等校签班型约（民校班）做保底</li>
+        <li>杨中民校班上线即可读，对成绩要求相对灵活</li>
+      </ul>
+    </div>
+
+    <!-- Case 6 -->
+    <div class="case-card">
+      <span class="case-tag case-tag-red">案例六</span>
+      <h3>红巴学生：640分冲本部</h3>
+      <p><strong>背景：</strong>红巴学生，平时640分左右（大年级排名800~900），一模约540分（加体育）。已签一中活约（清北班上本部线+5分）。红巴内迁名额不确定。外有猪猪（某校）活约。</p>
+      <p><strong>红巴签约进展：</strong>红巴共签850人（100死约+200活约+二加四+竞赛），预计五一节后签完。</p>
+      <p><strong>专家建议：</strong></p>
+      <ul>
+        <li>如不考虑红八高中（无出口数据），不如冲四大金刚其他三校</li>
+        <li>一中约可尝试升级——利用红八保送作为筹码，谈判"上四大金刚最低线即读清北班"</li>
+        <li>如一中不降条件，可考虑巴蜀活动、七龙珠顶班约等</li>
+        <li>是否拿到红八内迁约，都可以去谈一中，不需要"等拿到才能谈"</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CH8 -->
+<section class="chapter" id="ch8">
+  <div class="container">
+    <div class="chapter-header">
+      <div class="accent-bar"></div>
+      <div class="text">
+        <span class="chapter-num">Chapter 08</span>
+        <h2>估分填志愿核心策略：滑档防范·跑校时机·志愿排列</h2>
+      </div>
+    </div>
+
+    <h3>一、估分原则</h3>
+    <div class="alert alert-danger">
+      <strong>铁律：宁可低估，不可高估</strong>
+      低估后志愿填稳当，高估则面临滑档。中考估分填志愿最易出现的问题就是滑档——估高了分数，志愿未达线，后续志愿已被高分考生占满。
+    </div>
+
+    <h3>二、九龙坡区志愿填报特殊规则</h3>
+    <ul>
+      <li><strong>考前填志愿：</strong>指标到校只能填<strong>一个志愿</strong></li>
+      <li><strong>滑档风险极大：</strong>填错一个志愿可能导致全部落空</li>
+      <li><strong>补救策略：</strong>出成绩当天若发现可能滑档，立即联系保底校招办</li>
+    </ul>
+
+    <h3>三、中考五志愿排列策略</h3>
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">第一志愿：冲刺校</div>
+        <div class="flow-item-desc">填最想去且有希望的学校。四大金刚之间常互放"烟雾弹"（宣称自己收分最低以吸引填报）</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">第二至三志愿：稳妥校</div>
+        <div class="flow-item-desc">填手上有约的学校（内签/降分约），确保不滑档</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot"></div>
+        <div class="flow-item-title">第四至五志愿：保底校</div>
+        <div class="flow-item-desc">填确定能上的学校，防止极端情况</div>
+      </div>
+    </div>
+
+    <h3>四、关键时间节点</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>时间节点</th>
+            <th>事项</th>
+            <th>行动建议</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>4月27~29日</td>
+            <td>指标到校考试（坡区）</td>
+            <td>认真参加，无论是否走指标到校</td>
+          </tr>
+          <tr>
+            <td>5月1~5日</td>
+            <td>五一假期</td>
+            <td>四大金刚HD活动集中期，抓紧参加</td>
+          </tr>
+          <tr>
+            <td>5月6日左右</td>
+            <td>两江新区指标到校出成绩</td>
+            <td>关注结果，做好两手准备</td>
+          </tr>
+          <tr>
+            <td>5月10日前</td>
+            <td>指标到校通知</td>
+            <td>收到通知后决定是否填报（填即锁定学籍）</td>
+          </tr>
+          <tr>
+            <td>5月11日~月底</td>
+            <td>跑校签降分约</td>
+            <td>前往目标学校招办沟通签约</td>
+          </tr>
+          <tr>
+            <td>6月14日左右</td>
+            <td>中考</td>
+            <td>考后立即估分</td>
+          </tr>
+          <tr>
+            <td>6月24日左右</td>
+            <td>中考出成绩</td>
+            <td>出成绩当天若可能滑档，立即跑保底校</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心总结</strong>
+      升学规划是一场信息战和时间战。手握多份约、不急于做决定、出成绩当天果断行动——这三条是贯穿始终的核心策略。家长应提前了解各区政策、各校动态，在关键节点到来前做好充分准备。
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <div class="container">
+    <p>本文档基于直播分享内容整理，信息以分享时口径为准。各区政策、学校安排及签约详情请以官方最新通知为准。</p>
+    <p>整理时间：2025年 &nbsp;|&nbsp; 内容来源：陈老师与洪老师联合直播答疑</p>
+  </div>
+</footer>
+
+</body>
+</html>

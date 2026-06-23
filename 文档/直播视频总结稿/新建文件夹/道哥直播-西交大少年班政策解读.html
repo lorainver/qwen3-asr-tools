@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>西交大少年班政策解读与升学规划指南</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --surface: #ffffff;
+      --surface-alt: #f3f0eb;
+      --accent: #c43e3e;
+      --accent-light: #f5dede;
+      --accent-dark: #8b2020;
+      --text-primary: #1a1612;
+      --text-muted: #6b635a;
+      --text-light: #9a9189;
+      --border: #e0dbd4;
+      --highlight: #fef3c7;
+      --tag-bg: #eef2ff;
+      --tag-text: #3730a3;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --warning-bg: #fffbeb;
+      --warning-text: #92400e;
+      --info-bg: #eff6ff;
+      --info-text: #1e40af;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.85;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1a1612 0%, #2d2319 40%, #4a3020 100%);
+      color: #f0ece4;
+      padding: 80px 40px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(196, 62, 62, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), #e8a040, var(--accent));
+    }
+
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-label {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .hero h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 16px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: #b8b0a4;
+      line-height: 1.7;
+      max-width: 680px;
+    }
+
+    .meta-bar {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 0;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: var(--surface);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+
+    h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 60px 0 24px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--accent);
+      line-height: 1.4;
+    }
+
+    h2:first-child {
+      margin-top: 0;
+    }
+
+    h3 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--accent-dark);
+      margin: 36px 0 16px;
+      padding-left: 14px;
+      border-left: 4px solid var(--accent);
+      line-height: 1.45;
+    }
+
+    h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 28px 0 12px;
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: var(--text-primary);
+    }
+
+    strong {
+      color: var(--accent-dark);
+      font-weight: 600;
+    }
+
+    ul, ol {
+      margin: 12px 0 20px 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      padding-left: 4px;
+    }
+
+    li::marker {
+      color: var(--accent);
+    }
+
+    .callout {
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-size: 0.95rem;
+    }
+
+    .callout-warning {
+      background: var(--warning-bg);
+      border-left: 4px solid #f59e0b;
+      color: var(--warning-text);
+    }
+
+    .callout-info {
+      background: var(--info-bg);
+      border-left: 4px solid #3b82f6;
+      color: var(--info-text);
+    }
+
+    .callout-success {
+      background: var(--success-bg);
+      border-left: 4px solid #10b981;
+      color: var(--success-text);
+    }
+
+    .callout-accent {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      color: var(--accent-dark);
+    }
+
+    .callout-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.92rem;
+    }
+
+    thead {
+      background: var(--text-primary);
+      color: #f0ece4;
+    }
+
+    th {
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 0.02em;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--surface-alt);
+    }
+
+    tbody tr:hover {
+      background: var(--highlight);
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .comparison-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .comparison-card.ustc {
+      border-top: 4px solid #2563eb;
+    }
+
+    .comparison-card.xjtu {
+      border-top: 4px solid #dc2626;
+    }
+
+    .comparison-card h4 {
+      margin-top: 0;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.15rem;
+    }
+
+    .comparison-card .card-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .card-tag.blue {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .card-tag.red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+      margin: 24px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 22px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--bg);
+    }
+
+    .timeline-date {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .step-numbers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .step-box {
+      text-align: center;
+      padding: 24px 16px;
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .step-box .num {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .step-box .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #fef9ee 0%, #fdf6e3 100%);
+      border: 1px solid #e8d5a8;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .grade-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 20px 0;
+    }
+
+    .grade-section h4 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .grade-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .quotation {
+      background: var(--surface-alt);
+      border-left: 4px solid var(--text-muted);
+      padding: 16px 24px;
+      margin: 20px 0;
+      font-style: italic;
+      color: var(--text-muted);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .key-word {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .section-divider {
+      text-align: center;
+      margin: 50px 0;
+      position: relative;
+    }
+
+    .section-divider::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-divider span {
+      background: var(--bg);
+      padding: 0 20px;
+      position: relative;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      letter-spacing: 0.15em;
+    }
+
+    footer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 40px;
+      border-top: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--text-light);
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 50px 24px 40px; }
+      .hero h1 { font-size: 1.8rem; }
+      .container { padding: 30px 20px 60px; }
+      h2 { font-size: 1.4rem; }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .step-numbers { grid-template-columns: 1fr; }
+      .meta-bar { padding: 16px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-label">直播解读整理</div>
+      <h1>西交大少年班2025年政策变化<br>与升学规划全解析</h1>
+      <p class="hero-subtitle">涵盖招生对象、考试内容、中科大对比、各年级准备路径，以及竞赛训练与AI时代的核心思考。</p>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="meta-bar">
+      <span class="meta-tag">内容来源：2025年直播解读</span>
+      <span class="meta-tag">关键词：少年班 / 竞赛 / 升学规划</span>
+      <span class="meta-tag">适用人群：小学至高中家长</span>
+    </div>
+
+    <!-- ==================== 第一部分 ==================== -->
+    <h2>一、西交大少年班2025年最新政策</h2>
+
+    <h3>1.1 招生对象与年龄要求</h3>
+    <p>西交大少年班对出生年月日卡得<strong>非常严格，差一天都不行</strong>。需要同时满足年龄和年级两个条件。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>报考类别</th>
+          <th>年级要求</th>
+          <th>出生日期要求</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>第一类（初中）</strong></td>
+          <td>初三应届毕业生</td>
+          <td>2010年9月1日之后出生</td>
+        </tr>
+        <tr>
+          <td><strong>第二类（高中）</strong></td>
+          <td>高一、高二在读</td>
+          <td>2009年1月1日之后出生</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warning">
+      <div class="callout-title">注意</div>
+      初二学生不能报名。报名时需要填写学校校长或教导主任的联系方式，这是一项必填信息。建议与学校保持持续的良好沟通。
+    </div>
+
+    <h3>1.2 今年的重大变化</h3>
+    <ul>
+      <li><strong>初中名额大幅缩减</strong>：从去年约130人降至今年60人</li>
+      <li><strong>高中名额增加</strong>：今年共120个名额，面向高一和高二</li>
+      <li><strong>高一招生政策放宽</strong>：取消了"原则上针对高二招生，高一特别优秀可报名"的表述，改为直接面向高一、高二招生</li>
+      <li><strong>总招生人数不变</strong>：180人（初中60 + 高中120）</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <div class="callout-title">趋势判断</div>
+      从2024年起，西交大就曾表示计划从2026年起取消初中招生。今年仍给了初中60个名额，已属宽松。未来大概率<strong>所有少年班将集中在高中阶段招生</strong>。
+    </div>
+
+    <h3>1.3 报名与考试时间线</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">即日起</div>
+        开放报名，需在学校网站填写信息
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">1月4日前</div>
+        报名截止
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">1月底左右</div>
+        公布初审结果（一般不会卡得太严格，主要审核学籍）
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">2月中旬</div>
+        初试（往年为2月16日，机考形式）
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">3月</div>
+        复试
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">6月（高中生）</div>
+        正常参加高考
+      </div>
+    </div>
+
+    <h3>1.4 入围比例</h3>
+    <div class="step-numbers">
+      <div class="step-box">
+        <div class="num">360</div>
+        <div class="label">初中生入围复试人数<br>（60 × 6倍）</div>
+      </div>
+      <div class="step-box">
+        <div class="num">720</div>
+        <div class="label">高中生入围复试人数<br>（120 × 6倍）</div>
+      </div>
+      <div class="step-box">
+        <div class="num">同分</div>
+        <div class="label">末位同分者<br>均给予复试资格</div>
+      </div>
+    </div>
+
+    <!-- ==================== 第二部分 ==================== -->
+    <h2>二、考试内容详解</h2>
+
+    <div class="callout callout-accent">
+      <div class="callout-title">核心原则</div>
+      <strong>考什么学什么。</strong>中科大少年班和西交大少年班的考核内容完全不同，一定要针对目标院校的考核内容进行准备。
+    </div>
+
+    <h3>2.1 初中生考试科目与难度</h3>
+    <h4>初试（六门科目）</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>科目</th>
+          <th>难度定位</th>
+          <th>加权系数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>数学</strong></td>
+          <td>会考到高联内容</td>
+          <td>×1.5</td>
+        </tr>
+        <tr>
+          <td><strong>物理</strong></td>
+          <td>会考到高中内容</td>
+          <td>×1.5</td>
+        </tr>
+        <tr>
+          <td><strong>化学</strong></td>
+          <td>高中水平</td>
+          <td>×1.5</td>
+        </tr>
+        <tr>
+          <td>语文</td>
+          <td>略低于高考，高于中考</td>
+          <td>×1.0</td>
+        </tr>
+        <tr>
+          <td>英语</td>
+          <td>略低于高考，高于中考</td>
+          <td>×1.0</td>
+        </tr>
+        <tr>
+          <td>历史</td>
+          <td>略高于中考</td>
+          <td>×1.0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info">
+      <div class="callout-title">关键信息</div>
+      <strong>数学和理综有1.5倍加权。</strong>学校最看重的就是你的数学和物理成绩。文科虽然难度不算特别高，但也不能太差。
+    </div>
+
+    <p>初试形式为<strong>机考，基本都是客观题（选择题）</strong>。基本在当地进行。</p>
+
+    <p>除了综合成绩排名，还有一个特殊通道：<strong>如果数学或理综的单科原始分能进入全国前十名，也可以直接通过初试</strong>。2025年的参考标准为数学88分以上、理综82分以上。</p>
+
+    <h4>复试（六项考核）</h4>
+    <p>复试内容非常全面，包含：</p>
+    <ol>
+      <li><strong>数理思维</strong>（加权 ×1.2）</li>
+      <li><strong>创新设计 / 现学现考</strong>（加权 ×1.5）——给一段视频或文字材料，现场学习后考试</li>
+      <li><strong>综合面试</strong>——包含人文素养、科学素养考察</li>
+      <li><strong>小组辩论</strong>——不是正式辩论赛，更多是交流观点，老师会主动引导发言</li>
+      <li><strong>心理测评</strong></li>
+      <li><strong>体育测试</strong>——<strong>一票否决，体测不过不能录取</strong></li>
+    </ol>
+
+    <div class="callout callout-warning">
+      <div class="callout-title">特别提醒：复试各科单科线</div>
+      复试中所有科目都要过及格线，<strong>任何一科未过，即使总分再高也不能录取</strong>。去年就出现过总分第六但单科未过的落选案例。<br><br>
+      2024年初中组单科线参考：数理思维54分，创新设计35分，面试74分。
+    </div>
+
+    <h3>2.2 高中生考试科目与难度</h3>
+    <h4>初试（四门科目）</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>科目</th>
+          <th>难度定位</th>
+          <th>加权系数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>数学</strong></td>
+          <td>高联程度</td>
+          <td>×1.3</td>
+        </tr>
+        <tr>
+          <td><strong>物理</strong></td>
+          <td>高中竞赛程度</td>
+          <td>×1.5</td>
+        </tr>
+        <tr>
+          <td>语文</td>
+          <td>高考难度</td>
+          <td>×1.0</td>
+        </tr>
+        <tr>
+          <td>英语</td>
+          <td>高考难度</td>
+          <td>×1.0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>高中的要求：必须是<strong>物理和化学选科的理科生</strong>才能报名。单科全国前十同样可以直接通过初试。</p>
+
+    <h3>2.3 人文素养考什么？</h3>
+    <p>很多家长担心文科部分，以下是历年出现过的真实考题类型：</p>
+    <ul>
+      <li><strong>王国维的人生三大境界</strong>——"昨夜西风凋碧树""为伊消得人憔悴""蓦然回首，那人却在灯火阑珊处"</li>
+      <li><strong>如何理解"消费降级"？</strong></li>
+      <li><strong>"错彩镂金"与"芙蓉出水"两种美感</strong>的区别</li>
+      <li><strong>《孙子兵法》</strong>"上兵伐谋，其次伐交，其次伐兵，其下攻城"的理解</li>
+      <li><strong>辩论话题</strong>：智能驾驶的利与弊、远程工作是否会成为未来标准模式等</li>
+    </ul>
+
+    <p>核心要求：<strong>言之有理即可</strong>，不要求你讲得天花乱坠，但至少要有基础的表达能力和对社会的基本认知。</p>
+
+    <h3>2.4 体育测试标准</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>男生标准</th>
+          <th>女生标准</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>中长跑</td>
+          <td>1000米，4分40秒内</td>
+          <td>800米，4分38秒内</td>
+        </tr>
+        <tr>
+          <td>立定跳远</td>
+          <td>初中1.85m / 高中2.0m</td>
+          <td>初中1.46m / 高中1.49m</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-success">
+      <div class="callout-title">体测要求不高</div>
+      这个体测标准真不高，只要你是一个有基础体能的孩子基本没问题。中考一千米满分是3分30秒，这里只要4分40秒。<strong>但体测不过，一票否决。</strong>
+    </div>
+
+    <!-- ==================== 第三部分 ==================== -->
+    <div class="section-divider"><span>对比分析</span></div>
+
+    <h2>三、中科大少年班 vs 西交大少年班</h2>
+
+    <div class="comparison-grid">
+      <div class="comparison-card ustc">
+        <span class="card-tag blue">中科大少年班</span>
+        <h4>中国科学技术大学</h4>
+        <ul>
+          <li><strong>招生年级</strong>：高二和部分高一（不招初中）</li>
+          <li><strong>考试科目</strong>：只考数学和物理</li>
+          <li><strong>考试轮次</strong>：三轮（初试→一试→二试）</li>
+          <li><strong>难度</strong>：比西交大高</li>
+          <li><strong>录取优惠</strong>：A档降一本线录取（人数最多）、B档降40分、C档提前录取</li>
+          <li><strong>专业选择</strong>：所有专业任选</li>
+          <li><strong>培养方向</strong>：偏基础研究、学术导向</li>
+        </ul>
+      </div>
+      <div class="comparison-card xjtu">
+        <span class="card-tag red">西交大少年班</span>
+        <h4>西安交通大学</h4>
+        <ul>
+          <li><strong>招生年级</strong>：初三 + 高一 + 高二</li>
+          <li><strong>考试科目</strong>：数学、物理、语文、英语（初中还加历史、化学）</li>
+          <li><strong>考试轮次</strong>：两轮（初试→复试）</li>
+          <li><strong>难度</strong>：低于中科大</li>
+          <li><strong>录取优惠</strong>：初中生一考免三考（免中考、高考、考研）；高中生降一本线录取</li>
+          <li><strong>专业选择</strong>：预科后可选，资源有限需竞争排名</li>
+          <li><strong>培养方向</strong>：注重实践、工科导向</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>3.1 招生人数对比</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>中科大</th>
+          <th>西交大（2025年）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>总招生人数</td>
+          <td>不超过400人（实际录取约372人）</td>
+          <td>180人（初中60 + 高中120）</td>
+        </tr>
+        <tr>
+          <td>初中机会</td>
+          <td>无</td>
+          <td>有（60个名额）</td>
+        </tr>
+        <tr>
+          <td>省时间</td>
+          <td>高二省1年，高一省2年</td>
+          <td>初三省1年（预科2年），高一省2年，高二省1年</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>3.2 如何选择？</h3>
+
+    <div class="highlight-box">
+      <strong>选中科大的画像：</strong>数学或物理某一科特别突出，或数理同时学竞赛（双开），语文英语不算拔尖但理科顶尖。<br><br>
+      <strong>选西交大的画像：</strong>语文、英语、数学、物理都比较强，属于"文理全才"型——在数理有特长的同时，也是一个活跃的、关注社会的、愿意阅读的孩子。
+    </div>
+
+    <h3>3.3 两者的共通点</h3>
+    <ul>
+      <li>课内学习必须拉到高考水平</li>
+      <li>初中阶段需要进行数理竞赛训练以增加上岸把握</li>
+      <li>都要准备"现学现考"，临时学习能力要强</li>
+      <li>上了少年班后，基本不需要纠结考研的事——核心目标是<strong>保研</strong></li>
+      <li>进入大学后竞争依然存在，需要靠<strong>排名和绩点</strong>争取资源</li>
+    </ul>
+
+    <!-- ==================== 第四部分 ==================== -->
+    <div class="section-divider"><span>其他提前升学路径</span></div>
+
+    <h2>四、各类少年班与提前升学方式总览</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>学校</th>
+          <th>目标学科</th>
+          <th>可报考年级</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>中科大少年班</td>
+          <td>中国科学技术大学</td>
+          <td>数学、物理</td>
+          <td>高二、部分高一</td>
+        </tr>
+        <tr>
+          <td>西交大少年班</td>
+          <td>西安交通大学</td>
+          <td>数理 + 文科综合</td>
+          <td>初三、高一、高二</td>
+        </tr>
+        <tr>
+          <td>东南大学少年班</td>
+          <td>东南大学</td>
+          <td>—</td>
+          <td>招生极少（15人以内）</td>
+        </tr>
+        <tr>
+          <td>西湖大学</td>
+          <td>西湖大学</td>
+          <td>生物等研究方向</td>
+          <td>往年仅浙江，今年有所放开</td>
+        </tr>
+        <tr>
+          <td>丘成桐数学领军计划</td>
+          <td>清华大学</td>
+          <td>数学</td>
+          <td>初三至高三</td>
+        </tr>
+        <tr>
+          <td>清华英才计划</td>
+          <td>清华大学</td>
+          <td>数学</td>
+          <td>高二至高三（今年≤30人）</td>
+        </tr>
+        <tr>
+          <td>清华攀登计划</td>
+          <td>清华大学</td>
+          <td>物理</td>
+          <td>高二至高三</td>
+        </tr>
+        <tr>
+          <td>北大英才班</td>
+          <td>北京大学</td>
+          <td>数学</td>
+          <td>高二至高三（高一金牌有机会）</td>
+        </tr>
+        <tr>
+          <td>北大卓越计划</td>
+          <td>北京大学</td>
+          <td>物理</td>
+          <td>初三至高三</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>英才和领军针对数学方向；卓越和攀登针对物理方向。</strong>这些本质上都是竞赛路线的兑现方式。</p>
+
+    <!-- ==================== 第五部分 ==================== -->
+    <div class="section-divider"><span>核心规划思路</span></div>
+
+    <h2>五、各年级升学准备路径</h2>
+
+    <p>无论是走少年班、强基、竞赛还是高考，前期的准备路径本质上是<strong>统一的</strong>，核心分化发生在中后期。</p>
+
+    <h3>5.1 概念澄清：各层级学习内容</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>层级</th>
+          <th>内容定义</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>高考</strong>（校内）</td>
+          <td>纯校内内容（初中或高中课内）</td>
+        </tr>
+        <tr>
+          <td><strong>初联</strong></td>
+          <td>初中内容 + 30%~50% 竞赛拓展</td>
+        </tr>
+        <tr>
+          <td><strong>强基 / 综评</strong></td>
+          <td>高中内容 + 20%~30% 拓展（综评考得更宽，强基考得更深）</td>
+        </tr>
+        <tr>
+          <td><strong>竞赛</strong></td>
+          <td>校内 + 50%~90% 拓展；数学需学到二试四大板块，物理需学大学普物和四大力学</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>5.2 小学阶段（三个关键词）</h3>
+
+    <div class="grade-section">
+      <h4><span class="grade-badge">小</span> 小学阶段核心任务</h4>
+
+      <p>三个关键词：<span class="key-word">兴趣</span> <span class="key-word">时间</span> <span class="key-word">升学</span></p>
+
+      <h4>兴趣</h4>
+      <p>提前判断孩子在数学、物理还是其他方向有真正的兴趣。区分<strong>兴趣和好奇</strong>——好奇是尝试两节课就不玩了，兴趣是能坚持下来并愿意为此付出时间和承受挫折。</p>
+
+      <h4>时间</h4>
+      <p>如果一定要压缩出两年进行竞赛或少年班训练，在<strong>小学阶段压缩比高中容易得多</strong>。小学数学可以两年搞定，初中数学靠家长基本不可能。</p>
+      <ul>
+        <li>如果<strong>没有明确方向</strong>：英语和数学是小学可以提前压缩时间的两个学科</li>
+        <li>英语：小学阶段背完初中甚至高中单词</li>
+        <li>数学：从小学开始一路往后学，压力不大</li>
+      </ul>
+
+      <h4>升学</h4>
+      <p>关注当地的小升初择校机会。核心关注<strong>集训队</strong>（各地机构组织的顶尖孩子考试选拔）——这类集训队通常有考试门槛，收费不高，且能得到当地学校的关注。</p>
+    </div>
+
+    <h3>5.3 初中阶段</h3>
+
+    <div class="grade-section">
+      <h4><span class="grade-badge">初</span> 初中阶段核心任务</h4>
+
+      <h4>核心目标：搞定高中升学 + 进入平台校</h4>
+      <p><strong>平台校</strong>（能稳定培养出省队甚至银牌及以上的学校）极其关键，它提供三大核心资源：</p>
+      <ol>
+        <li><strong>教练</strong>——不仅是讲课的人，更是规划能力强的导航者，能告诉你哪强哪弱，该找谁补</li>
+        <li><strong>题目</strong>——好题目是极其珍贵的资源，顶尖教练有渠道收集和筛选适合的题目</li>
+        <li><strong>同学</strong>——学长学姐在后期往往承担讲题的角色，正处于做题能力的巅峰期</li>
+      </ol>
+
+      <h4>学习内容：初联</h4>
+      <p><strong>初联</strong>（初中数学竞赛内容）是初中到高中难度过渡的台阶。只要学有余力，就应该学初联。</p>
+      <ul>
+        <li>做初高衔接：但凡学有余力，哪怕初中排名不高，也可以学</li>
+        <li>为竞赛做准备：未来想走数学竞赛或特殊招生，必须学</li>
+        <li>目标高中特殊招生：百强校基本都要考初联内容</li>
+      </ul>
+
+      <div class="callout callout-accent">
+        <div class="callout-title">时间节奏建议</div>
+        目标数竞拿奖的同学，最好在<strong>上初中之前（小六或小七）搞定初联</strong>，最晚初一搞定。因为之后需要腾出足够时间学高联一试和二试。在目前竞争环境下，建议<strong>上高一之前搞定高联一试、二试</strong>。
+      </div>
+    </div>
+
+    <h3>5.4 高中阶段</h3>
+
+    <div class="grade-section">
+      <h4><span class="grade-badge">高</span> 高中阶段核心任务</h4>
+      <ul>
+        <li>不再建议学太多新内容，时间可能不够</li>
+        <li>核心时间用于：<strong>第一，考试兑现结果；第二，发现来不及则快速撤回，专注高考课内学习</strong></li>
+        <li>数学和物理是所有方向持续考核的关键——"学好数理，走遍天下都不怕"</li>
+        <li>高一高二参加各类竞赛和招生考试进行兑现</li>
+      </ul>
+    </div>
+
+    <!-- ==================== 第六部分 ==================== -->
+    <div class="section-divider"><span>热点话题</span></div>
+
+    <h2>六、AI与数学竞赛：一个被误读的话题</h2>
+
+    <p>近期有新闻称AI能做出CMO（中国数学奥林匹克）的题目，甚至能拿金牌，引发了一些"数学竞赛无用论"的声音。对此需要澄清：</p>
+
+    <h3>6.1 学校看中竞赛生的到底是什么？</h3>
+    <p>数学竞赛的知识本身与未来数学研究的内容<strong>并没有特别强的直接联系</strong>。学校看中的是竞赛训练中展现出的<strong>核心素质</strong>：</p>
+    <ul>
+      <li><strong>抗挫折能力</strong>——遇到极难的问题仍然能坚持下来</li>
+      <li><strong>长期思考能力和专注力</strong>——一个问题想三五小时、三五天甚至三五周</li>
+      <li><strong>学习能力和自学能力</strong>——自主探索和解决问题的能力</li>
+    </ul>
+
+    <div class="quotation">
+      这些都是AI做不到的。科技要发展，靠的是一个一个优秀的人往前去推动。优秀的人怎么选出来？是通过竞赛中表现出来的这些能力来选拔的。
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title">结论</div>
+      AI能做题不代表竞赛失去了选拔价值。就像AI的计算速度早已远超人类，但我们仍然有"最强大脑"——不是为了替代AI，而是为了展现和选拔人的核心能力。不必因此焦虑或转向。
+    </div>
+
+    <!-- ==================== 第七部分 ==================== -->
+    <div class="section-divider"><span>总结</span></div>
+
+    <h2>七、核心要点回顾</h2>
+
+    <ol>
+      <li><strong>西交大少年班今年名额变化大</strong>：初中从130减至60，高中增加至120，高一政策放宽</li>
+      <li><strong>年龄卡得非常严格</strong>，差一天不行，务必提前算好出生日期</li>
+      <li><strong>考什么学什么</strong>：中科大只考数理，西交大考全科——备考策略完全不同</li>
+      <li><strong>数学和物理是所有少年班的核心</strong>，有加权优势</li>
+      <li><strong>复试单科有一科不过就全部作废</strong>，不能偏科太严重</li>
+      <li><strong>体测一票否决</strong>，但标准不高，正常体能即可</li>
+      <li><strong>少年班趋势是集中在高中招生</strong>，未来初中机会可能继续缩减甚至消失</li>
+      <li><strong>无论走哪条路径，小学抓兴趣+时间+升学，初中搞定初联+进平台校，高中专注考试兑现</strong></li>
+      <li><strong>AI不会取代竞赛的选拔价值</strong>，竞赛训练培养的是人的核心素质</li>
+    </ol>
+
+  </div>
+
+  <footer>
+    本文档根据直播内容整理，具体政策以官方最新公告为准。<br>
+    涉及的出生年份、分数线等数据均为2025年参考，请关注后续官方更新。
+  </footer>
+
+</body>
+</html>

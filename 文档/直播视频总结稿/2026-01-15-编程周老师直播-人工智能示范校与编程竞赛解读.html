@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信奥赛道升学规划与培养体系</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --accent: #6b2d5b;
+    --accent-light: #8e4585;
+    --accent-bg: #f5eef3;
+    --gold: #b8860b;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #7a7570;
+    --border: #e2ddd6;
+    --highlight: #fff3cd;
+    --success: #2d6b3f;
+    --danger: #8b2500;
+    --info: #1a5276;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  /* ===== HEADER ===== */
+  .page-header {
+    background: linear-gradient(135deg, #4a1942 0%, #6b2d5b 40%, #8e4585 100%);
+    color: #fff;
+    padding: 56px 32px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(184,134,11,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-inner h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .header-inner .subtitle {
+    font-size: 15px;
+    color: rgba(255,255,255,0.78);
+    font-weight: 300;
+    margin-bottom: 20px;
+    max-width: 640px;
+  }
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .tag-purple { background: rgba(255,255,255,0.18); color: #fff; }
+  .tag-gold { background: rgba(184,134,11,0.25); color: #ffd97d; }
+
+  /* ===== NAV ===== */
+  .nav-section {
+    max-width: 960px;
+    margin: -28px auto 0;
+    padding: 0 16px;
+    position: relative;
+    z-index: 2;
+  }
+  .nav-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .nav-card .nav-label {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 32px;
+  }
+  .nav-grid a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-grid a:hover {
+    background: var(--accent-bg);
+    color: var(--accent);
+  }
+  .nav-grid a .nav-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ===== MAIN ===== */
+  .main-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 16px 80px;
+  }
+
+  /* Section */
+  section {
+    margin-bottom: 48px;
+  }
+  .section-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-head .sec-line {
+    width: 4px;
+    min-height: 36px;
+    border-radius: 2px;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .section-head .sec-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 12px;
+    color: var(--accent-light);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .section-head h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  /* Alert boxes */
+  .alert {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .alert-gold { background: var(--highlight); border-left: 4px solid var(--gold); }
+  .alert-success { background: #eaf5ed; border-left: 4px solid var(--success); }
+  .alert-danger { background: #fdf0ec; border-left: 4px solid var(--danger); }
+  .alert-info { background: #eaf2f8; border-left: 4px solid var(--info); }
+  .alert-purple { background: var(--accent-bg); border-left: 4px solid var(--accent); }
+
+  .alert strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Lists */
+  .main-content ul, .main-content ol {
+    padding-left: 22px;
+    margin: 12px 0;
+  }
+  .main-content li {
+    margin-bottom: 8px;
+    font-size: 14.5px;
+    color: var(--text-secondary);
+  }
+  .main-content li strong {
+    color: var(--text-primary);
+  }
+
+  /* Text helpers */
+  .main-content p {
+    font-size: 14.5px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    line-height: 1.85;
+  }
+  .main-content h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 24px 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--gold);
+  }
+  .main-content h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 18px 0 10px;
+  }
+
+  /* Two column */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .two-col .card { margin-bottom: 0; }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  thead th {
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; }
+  tbody td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  tbody tr:hover {
+    background: var(--accent-bg);
+  }
+
+  /* Diff bar */
+  .diff-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  .diff-bar .diff-label {
+    min-width: 80px;
+    text-align: right;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .diff-bar .diff-track {
+    flex: 1;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .diff-bar .diff-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .diff-fill-high { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+  .diff-fill-mid { background: linear-gradient(90deg, var(--gold), #d4a843); }
+  .diff-fill-low { background: linear-gradient(90deg, var(--success), #4a9e6a); }
+
+  /* Flow timeline */
+  .flow {
+    position: relative;
+    padding-left: 32px;
+    margin: 20px 0;
+  }
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--border);
+  }
+  .flow-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .flow-item::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 7px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .flow-item .flow-title {
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .flow-item .flow-desc {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* Quote */
+  .quote-block {
+    border-left: 3px solid var(--gold);
+    padding: 14px 20px;
+    background: #fdfbf7;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .page-header { padding: 40px 20px 36px; }
+    .header-inner h1 { font-size: 24px; }
+    .nav-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .section-head h2 { font-size: 19px; }
+    .main-content { padding: 28px 12px 60px; }
+    .card { padding: 18px; }
+    .nav-card { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-inner">
+    <h1>信奥赛道升学规划与培养体系</h1>
+    <p class="subtitle">基于信息学奥林匹克竞赛的中小升初升学路径、AI时代的编程学习价值、学校选拔机制与推优服务体系全面解读</p>
+    <div class="tag-bar">
+      <span class="tag tag-purple">小升初升学</span>
+      <span class="tag tag-purple">信息学竞赛</span>
+      <span class="tag tag-gold">强基计划</span>
+      <span class="tag tag-gold">综合评价</span>
+      <span class="tag tag-purple">AI与编程</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-section">
+  <nav class="nav-card">
+    <div class="nav-label">目 录</div>
+    <div class="nav-grid">
+      <a href="#ch1"><span class="nav-num">01</span>信奥赛道的战略价值与招生逻辑</a>
+      <a href="#ch2"><span class="nav-num">02</span>AI时代：编程学习的不可替代性</a>
+      <a href="#ch3"><span class="nav-num">03</span>信奥的多条升学路径</a>
+      <a href="#ch4"><span class="nav-num">04</span>学校选拔机制与推优体系</a>
+      <a href="#ch5"><span class="nav-num">05</span>跟训模式与签约策略</a>
+      <a href="#ch6"><span class="nav-num">06</span>评估体系：CCF-GSP考级与能力分层</a>
+      <a href="#ch7"><span class="nav-num">07</span>课程体系与性价比优势</a>
+      <a href="#ch8"><span class="nav-num">08</span>寒假安排与近期活动</a>
+      <a href="#ch9"><span class="nav-num">09</span>给家长的核心建议</a>
+    </div>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <!-- CH1 -->
+  <section id="ch1">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 01</span>
+        <h2>信奥赛道的战略价值与招生逻辑</h2>
+      </div>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心观点</strong>
+      信奥赛道的价值远不止小升初，它是一条长线发展的路径，回报率随时间递增——从小升初到中学竞赛、大学综评/强基，乃至就业环节，将逐步迎来至高点回报。
+    </div>
+
+    <h3>1.1 国家科技政策驱动</h3>
+    <p>国家对科技领域的重视程度持续提升。各中学在评定"人工智能示范校"或争取竞赛成果产出时，需要具备信奥竞赛能力的学生群体作为基础。这是中学主动招收信奥学生的重要政策背景。</p>
+
+    <h3>1.2 信奥学生的筛选价值</h3>
+    <p>能够将编程（特别是软编）学好的学生，其学习能力普遍优于单纯刷题型学生。信奥训练在本质上起到了筛选高素质生源的工具作用。</p>
+
+    <div class="alert alert-gold">
+      <strong>关键判断</strong>
+      学信奥的学生在学习能力、自律性、解决问题的能力上，普遍处于同龄人中等偏上水平。编程训练的核心成果不是"堆代码"，而是培养独立思维能力和将复杂问题拆解为简单问题的能力——这正是社会和学校所追求的人才特质。
+    </div>
+
+    <h3>1.3 招收信奥学生的学校特征</h3>
+    <p>凡招收科技特长生的学校，均为区内特别优秀的学校。原因在于：稍弱的学校缺乏培养体系和培养资源，无法支撑学生的后续发展。以南岸区为例，主要对接的学校为<strong>十一中和融侨南开</strong>。</p>
+  </section>
+
+  <!-- CH2 -->
+  <section id="ch2">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 02</span>
+        <h2>AI时代：编程学习的不可替代性</h2>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>警示</strong>
+      AI取代的不是学过编程的人，而是没有学过编程的人。AI越发展，越需要懂编程语言的人去沟通、驾驭它。
+    </div>
+
+    <h3>2.1 AI替代的本质</h3>
+    <p>AI会替代80%的码农，因为这些码农从事的是重复性劳动。但剩下的20%算法工程师将越来越值钱。AI不会取代学过编程的人——它取代的是码农中的重复劳动部分。</p>
+
+    <h3>2.2 不懂编程将无法与AI对话</h3>
+    <ul>
+      <li>不理解编程逻辑，就无法对AI提出有效的需求和问题</li>
+      <li>AI生成的代码，不懂编程的人甚至无法判断其正确与否</li>
+      <li>精通AI、精通编程的人将分为两大类型：<strong>创造AI的人</strong>（信奥体系）和<strong>驾驭AI应用的人</strong></li>
+    </ul>
+
+    <h3>2.3 编程是未来的通用工具</h3>
+    <div class="quote-block">
+      编程之于未来，如同电脑之于当下、算盘之于过去。会计不会因电脑出现而失业，但不会使用电脑的会计会被淘汰。同理，AI绘画出现后，审美能力成为核心竞争力——懂它才能驾驭它。
+    </div>
+
+    <h3>2.4 职业发展的实际案例</h3>
+    <p>据科技型企业反馈，编程能力优秀的人才已被头部企业（如华为）争抢。AI工具可以提升各行业效率（如医疗），但从业者需要懂编程才能驾驭这些工具。会编程的人在各"部门"中都极为抢手。</p>
+  </section>
+
+  <!-- CH3 -->
+  <section id="ch3">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 03</span>
+        <h2>信奥的多条升学路径</h2>
+      </div>
+    </div>
+
+    <div class="alert alert-success">
+      <strong>核心结论</strong>
+      信奥在所有科技特长赛道中招生人数最多，原因在于它覆盖的升学路线最广——留学线、综评线、强基线，以及大学阶段的多种升学通道。
+    </div>
+
+    <h3>3.1 小升初阶段</h3>
+    <ul>
+      <li><strong>目标学校：</strong>以七龙珠直属校、直属分校及区重点中学为主</li>
+      <li>特别优秀的学生以直属校为目标；中等偏上学生以区内重点中学为主</li>
+      <li>区内升学相对容易，跨区难度较大</li>
+    </ul>
+
+    <h3>3.2 中学至大学阶段</h3>
+    <ul>
+      <li><strong>综合评价（综评）：</strong>部分985高校大一不分专业，有编程基础的学生可提前锁定导师资源、保研/保博资源及优先选专业资格</li>
+      <li><strong>强基计划：</strong>高校强基招生老师明确表示，<strong>670分有信息学基础的学生，优先于695分无信息学基础的学生</strong></li>
+      <li><strong>留学路线：</strong>C++基础可快速转Python（人工智能方向）或Java（国际留学路线、DB预科）</li>
+    </ul>
+
+    <div class="alert alert-info">
+      <strong>重要说明</strong>
+      大学阶段才开始学编程，天花板大概率停留在码农层面。小学、中学经历多年编程能力训练的学生，进入大学后可直接进入更高维度的培养体系，而非仅以成为码农为目标。
+    </div>
+
+    <h3>3.3 省赛一等奖的升学价值</h3>
+    <p>省赛一等奖（除近亲辈外）含金量极高，拥有众多升学通道。即便高考分数不够，也可凭省赛一等奖申请多所大学的入学机会，甚至获得奖学金。</p>
+  </section>
+
+  <!-- CH4 -->
+  <section id="ch4">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 04</span>
+        <h2>学校选拔机制与推优体系</h2>
+      </div>
+    </div>
+
+    <h3>4.1 选拔逻辑的变革</h3>
+    <p>当前学校招生权限发生了重要变化：招生办不再是学生和教练之间的中介，教练和学生可以直接确定。这意味着招生权限更大、灵活性更高。</p>
+
+    <h3>4.2 跨区升学的特殊通道</h3>
+    <p>对于南岸区、巴南区、大渡口区等区域内学校不满意的优秀学生，<strong>信竞（信息学竞赛）比数竞（数学竞赛）更好走</strong>，原因是学数竞的学生太多，而信竞学生比例极少。</p>
+
+    <div class="alert alert-gold">
+      <strong>关键时间节点</strong>
+      部分区已开始取消区统一调研。取消后，招生将变得非常不标准化。如果不主动创造机会（如信奥/科技特长生通道），学生可能完全失去跨区升学的机会。五年级是关键窗口期——如五年级寒假签不下来，六年级基本只能看区内学校。
+    </div>
+
+    <h3>4.3 推优体系架构</h3>
+    <p>推优资源来自机构每年稳定为学校提供优质生源的能力。推优并非盲目推送，而是经过以下流程：</p>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-title">内部评估学生现阶段水平</div>
+        <div class="flow-desc">评估学生能力是否达到目标学校的调线，判断签约概率</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">制定个性化推优方案</div>
+        <div class="flow-desc">根据学生跟训状态，安排专项课程查漏补缺，提升签约效率</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">匹配适合的学校与活动</div>
+        <div class="flow-desc">避免因选择失误错过最佳签约节点；学生机会有限，不可轻易浪费</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">跟进结果与原因</div>
+        <div class="flow-desc">被选上或被淘汰，均会向家长反馈原因，持续优化后续方案</div>
+      </div>
+    </div>
+
+    <h3>4.4 推优的双轨保底策略</h3>
+    <div class="two-col">
+      <div class="card">
+        <h4>上限保障（自有资源）</h4>
+        <p>主要推七龙珠直属校本部，利用自有渠道资源确保优质学生进入顶级学校</p>
+      </div>
+      <div class="card">
+        <h4>下限保障（合作渠道）</h4>
+        <p>通过合作机构覆盖区内重点中学及分校，基本打通整个重庆所有招考学校</p>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>注意</strong>
+      虽然学校声称不卡重复推优，但实际上每个学校每年只有一次机会。选择学校的方案规划至关重要，选择失误可能直接错过最佳签约节点。
+    </div>
+  </section>
+
+  <!-- CH5 -->
+  <section id="ch5">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 05</span>
+        <h2>跟训模式与签约策略</h2>
+      </div>
+    </div>
+
+    <h3>5.1 跟训模式的运作方式</h3>
+    <p>目前大部分学校采取<strong>跟训模式</strong>进行选拔，而非一次性考试录取。跟训是一个周期性考察过程，周期有长有短。</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h4>跟训模式的优势</h4>
+        <ul>
+          <li>不会因一次考试失利而被淘汰</li>
+          <li>有充足时间展示综合能力</li>
+          <li>考察更全面、更客观</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>跟训模式的挑战</h4>
+        <ul>
+          <li>学生时间只有一份，无法同时投入所有学校</li>
+          <li>学校选择规划至关重要</li>
+          <li>需持续保持良好状态</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>5.2 跟训期间的淘汰风险</h3>
+    <p>部分学生进入学校跟训后，因大班课教师关注度不足、自律性不够，出现上课打游戏、用纯暴力解题等问题，最终被学校淘汰。学校老师不会批评或警告——直接不予签约。</p>
+
+    <div class="alert alert-purple">
+      <strong>应对策略</strong>
+      通过校外"保驾护航"机制，跟进学生每周的考试情况、排名、分数及补题情况，在校外再次督促并帮助学生吸收校内跟训内容，提升签约率。
+    </div>
+
+    <h3>5.3 签约进度</h3>
+    <p>有些学校出结果很快（个把月），有些学校则持续较慢。但只要学生不放弃，至少能进入初中竞赛班。核心方向是留在本部竞赛班。</p>
+
+    <h3>5.4 报考学校的策略</h3>
+    <div class="alert alert-gold">
+      <strong>报考技巧</strong>
+      学校要求"三级以上"时，三级水平的学生大概率成为炮灰。四级水平才有考上的概率，五级水平则属于降维打击。切勿仅"扒到边"就盲目参加——要以高出学校要求的水平去报考，才能在选拔中脱颖而出。
+    </div>
+  </section>
+
+  <!-- CH6 -->
+  <section id="ch6">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 06</span>
+        <h2>评估体系：CCF-GSP考级与能力分层</h2>
+      </div>
+    </div>
+
+    <h3>6.1 CCF-GSP考级作为评估工具</h3>
+    <p>判定学生是否适合走信奥升学路线，最有效的方法是参加<strong>CCF的GSP考级</strong>。1-4级为筛选阶段，4级以上是推优的关键节点。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>考级情况</th>
+          <th>建议方向</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>通过4级且成绩良好</td>
+          <td>具备信奥升学路径的基本条件，可进入推优体系</td>
+        </tr>
+        <tr>
+          <td>无法通过4级或成绩不佳</td>
+          <td>大概率无法依靠信奥升学，建议转其他方向或作为兴趣拓展</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>6.2 "基础语法"的真实含义</h3>
+    <p>许多学校声称考试范围为"三级左右的基础语法"，但学校所说的"基础语法"与学生理解的完全不同。实际考试会在基础语法之上叠加：</p>
+    <ul>
+      <li>搜索类问题</li>
+      <li>二分思想</li>
+      <li>贪心算法</li>
+      <li>思维题与思维优化问题</li>
+    </ul>
+
+    <h3>6.3 能力层级与选拔需求的匹配</h3>
+    <div class="diff-bar">
+      <span class="diff-label">思维题核心</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-high" style="width: 95%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="diff-label">阅读理解力</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-high" style="width: 88%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="diff-label">复杂问题拆解</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-mid" style="width: 82%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="diff-label">方案灵活性</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-mid" style="width: 78%"></div></div>
+    </div>
+    <div class="diff-bar">
+      <span class="diff-label">代码编写能力</span>
+      <div class="diff-track"><div class="diff-fill diff-fill-low" style="width: 55%"></div></div>
+    </div>
+
+    <p style="margin-top: 12px; font-size: 13px; color: var(--text-muted);">学校跟训主要考察思维题，对阅读理解能力、分析复杂问题能力、思考深度及解决方案灵活性的要求，远高于代码编写本身。</p>
+  </section>
+
+  <!-- CH7 -->
+  <section id="ch7">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 07</span>
+        <h2>课程体系与性价比优势</h2>
+      </div>
+    </div>
+
+    <h3>7.1 课程特点</h3>
+    <div class="two-col">
+      <div class="card">
+        <h4>高效率</h4>
+        <p>培养体系效率高，课程数量精简，占用学生时间较少，但题目质量高，不刷水题。</p>
+      </div>
+      <div class="card">
+        <h4>高性价比</h4>
+        <p>费用低于市场平均水平，但获得同等的资源和课程效果。以优质生源为机构核心竞争力。</p>
+      </div>
+    </div>
+
+    <h3>7.2 推优服务内容</h3>
+    <ul>
+      <li><strong>个性化推优方案：</strong>由专人根据学生跟训状态制定，而非简单通知考试信息</li>
+      <li><strong>专项训练课程：</strong>基于目标学校历年真题的难度和方向进行偏向性训练</li>
+      <li><strong>保驾护航机制：</strong>校外跟进校内跟训内容，查漏补缺，督促学习</li>
+      <li><strong>推优结果反馈：</strong>无论录取与否，均向家长说明原因并调整后续方案</li>
+    </ul>
+
+    <h3>7.3 合作学校覆盖</h3>
+    <p>合作资源覆盖整个重庆所有在招信奥特长生的学校，包括七龙珠直属校、直属分校及区内重点中学。自有渠道推上限（直属校本部），合作渠道保下限（区内重点及分校）。</p>
+  </section>
+
+  <!-- CH8 -->
+  <section id="ch8">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 08</span>
+        <h2>寒假安排与近期活动</h2>
+      </div>
+    </div>
+
+    <h3>8.1 寒假课程安排</h3>
+    <p>寒假是极为关键的时间节点，课程安排紧凑：</p>
+    <ul>
+      <li>同时在<strong>四个学校进行跟训</strong>对接</li>
+      <li>包含<strong>金刚校编程考试</strong></li>
+      <li>思维课训练、考试专项课、培优课、赶进度课</li>
+      <li>多轮专项课程（基于各学校不同考试方向）</li>
+    </ul>
+
+    <div class="alert alert-info">
+      <strong>重要提醒</strong>
+      寒假期间有三所以上直属校开展活动。五年级学生的寒假尤其关键——五年级窗口期很短，基本只有最后一个寒假和暑假。若五年级寒假无法签约，六年级只能看区内学校，且跨区材料准备不出来。
+    </div>
+
+    <h3>8.2 近期学校动态</h3>
+    <p>从今年寒假开始，直属校（含金刚校）已陆续启动招生动作。近期多所学校正在组织相关活动，具体安排通过推优群同步通知。</p>
+
+    <h3>8.3 二月讲座预告</h3>
+    <div class="alert alert-success">
+      <strong>活动信息</strong>
+      二月初将在<strong>重庆大学</strong>举办线下公益讲座，邀请重庆邮电大学就业规划老师及重庆大学相关教师，主题包括：编程学生未来大学专业及就业优势、中学生参加综评/强基的路径、大学阶段如何获取资源优势等。
+    </div>
+  </section>
+
+  <!-- CH9 -->
+  <section id="ch9">
+    <div class="section-head">
+      <div class="sec-line"></div>
+      <div>
+        <span class="sec-num">CHAPTER 09</span>
+        <h2>给家长的核心建议</h2>
+      </div>
+    </div>
+
+    <h3>9.1 认知层面</h3>
+    <ul>
+      <li><strong>信奥赛道需要家长认知作为支撑</strong>，它不是适合所有孩子的路径</li>
+      <li>当一个信奥学生容易，当一个信奥家长更难——需要不断调整心态，理解竞赛训练的周期和节奏</li>
+      <li>不要以传统认知去判断编程学习的价值，时代在变化</li>
+    </ul>
+
+    <h3>9.2 角色定位</h3>
+    <div class="alert alert-purple">
+      <strong>策略建议</strong>
+      家长应成为孩子的<strong>助理和帮手</strong>，而非拖后腿的人。做好后勤工作——安排营养、作息、锻炼，以沟通而非批判的方式交流。不要以挑剔的方式对待孩子的学习过程。
+    </div>
+
+    <h3>9.3 关于学习与健康的平衡</h3>
+    <p>近视的根本原因是用眼习惯和户外时间不足，而非学编程本身。即便是纯文化课学习，伏案时间过长同样会导致近视。家长应安排好作息和营养，而非因健康顾虑而中断学业。</p>
+
+    <h3>9.4 坚持与放弃的判断</h3>
+    <ul>
+      <li>只要学校老师认为学生适合学，家长就不应单方面要求放弃</li>
+      <li>现在坚持学习，十年后将吃到大学阶段的巨大红利</li>
+      <li>如果学生确实被学校淘汰，再根据实际情况调整方向是合理的</li>
+      <li>在孩子遇到瓶颈期前建立良好的沟通模式，避免因冲突影响竞赛状态</li>
+    </ul>
+
+    <h3>9.5 关于游戏与自律</h3>
+    <p>学习能力强的学生在各方面（包括游戏）都表现更好。部分优秀学生（如南开竞赛生）每周有固定的游戏放松时间，但能非常好地管理自己的时间。关键在于信任孩子的自律性，同时做好引导。</p>
+
+    <h3>9.6 C++作为起点的重要性</h3>
+    <p>建议以C++为起点进行学习。C++难度最高，学会后转任何方向都很轻松——转Python走人工智能、转Java走国际留学路线、学DB预科等，均可快速切换。</p>
+
+    <div class="alert alert-success">
+      <strong>总结</strong>
+      信奥赛道的核心价值在于：它是一条以编程能力为载体、以思维训练为核心、覆盖小升初至大学就业全周期的长线发展路径。家长需要做的是：提升自身认知、做好后勤保障、信任专业判断、坚持长期投入。
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

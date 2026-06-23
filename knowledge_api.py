@@ -311,11 +311,18 @@ async def rag_chat(request: KBChatRequest):
             filter_category=request.filter_category
         )
 
+        # 按文件名去重，避免同一文档的多个 chunk 重复显示
+        seen_filenames = set()
         sources = []
         for hit in hits:
+            filename = hit.metadata.get('filename', '')
+            if filename in seen_filenames:
+                continue
+            seen_filenames.add(filename)
+            
             text_preview = hit.text[:200] + "..." if len(hit.text) > 200 else hit.text
             sources.append({
-                "filename": hit.metadata.get('filename', ''),
+                "filename": filename,
                 "category": hit.metadata.get('category', ''),
                 "text": text_preview,
                 "score": round(hit.score, 4)

@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2025年高考趋势分析与学段规划要点</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --primary: #2d1b4e;
+  --primary-light: #4a2d7a;
+  --accent: #c9a84c;
+  --accent-light: #e8d48b;
+  --text-primary: #1a1a1a;
+  --text-muted: #6b6560;
+  --text-on-dark: #f0ece4;
+  --border: #e8e2d8;
+  --highlight: #f5f0e6;
+  --danger: #8b2d2d;
+  --success: #2d5a3a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1a0f30 60%, #0d0818 100%);
+  color: var(--text-on-dark);
+  padding: 60px 0 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+header .container {
+  text-align: center;
+}
+
+.header-badge {
+  display: inline-block;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 4px 18px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+header h1 span {
+  color: var(--accent);
+}
+
+header .subtitle {
+  font-size: 15px;
+  color: rgba(240,236,228,0.65);
+  font-weight: 300;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== NAV / TOC ===== */
+nav {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: -30px auto 48px;
+  padding: 28px 32px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 20px rgba(45,27,78,0.08);
+}
+
+nav h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  color: var(--primary);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+
+nav ol {
+  list-style: none;
+  counter-reset: toc;
+  columns: 2;
+  column-gap: 32px;
+}
+
+@media (max-width: 600px) {
+  nav ol { columns: 1; }
+}
+
+nav ol li {
+  counter-increment: toc;
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+
+nav ol li a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 14.5px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+nav ol li a::before {
+  content: counter(toc, cjk-ideographic);
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  color: var(--primary-light);
+  font-size: 14px;
+  min-width: 20px;
+}
+
+nav ol li a:hover {
+  background: var(--highlight);
+  color: var(--primary);
+}
+
+/* ===== SECTIONS ===== */
+section {
+  margin-bottom: 56px;
+}
+
+.section-number {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+h2.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(22px, 3vw, 28px);
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 24px;
+  line-height: 1.4;
+  position: relative;
+  padding-left: 16px;
+  border-left: 4px solid var(--accent);
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 28px 24px;
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 6px 24px rgba(45,27,78,0.07);
+}
+
+.card h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  color: var(--primary);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card h3 .num {
+  background: var(--primary);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-family: 'Noto Serif SC', serif;
+}
+
+/* ===== LISTS ===== */
+.key-list {
+  list-style: none;
+  padding: 0;
+}
+
+.key-list li {
+  position: relative;
+  padding: 8px 0 8px 24px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.key-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+}
+
+.key-list li strong {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ===== HIGHLIGHT BOX ===== */
+.highlight-box {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: var(--text-on-dark);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: 24px 0;
+  position: relative;
+}
+
+.highlight-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--accent));
+  border-radius: 10px 10px 0 0;
+}
+
+.highlight-box h4 {
+  font-family: 'Noto Serif SC', serif;
+  color: var(--accent);
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+.highlight-box p,
+.highlight-box li {
+  font-size: 15px;
+  line-height: 1.9;
+  color: rgba(240,236,228,0.9);
+}
+
+.highlight-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.highlight-box ul li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+}
+
+.highlight-box ul li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+/* ===== COMPARISON TABLE ===== */
+.table-wrap {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+}
+
+thead {
+  background: var(--primary);
+  color: var(--text-on-dark);
+}
+
+th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.7;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--highlight);
+}
+
+/* ===== TAG ===== */
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+  margin: 2px 2px;
+}
+
+.tag-purple { background: rgba(45,27,78,0.1); color: var(--primary); }
+.tag-gold { background: rgba(201,168,76,0.15); color: #8a6d1a; }
+.tag-red { background: rgba(139,45,45,0.1); color: var(--danger); }
+.tag-green { background: rgba(45,90,58,0.1); color: var(--success); }
+
+/* ===== TIMELINE ===== */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin: 24px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--primary));
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+  padding: 18px 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+}
+
+.timeline-item h4 {
+  font-family: 'Noto Serif SC', serif;
+  color: var(--primary);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.timeline-item p {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* ===== CALLOUT ===== */
+.callout {
+  background: var(--highlight);
+  border-left: 4px solid var(--accent);
+  padding: 16px 22px;
+  border-radius: 0 8px 8px 0;
+  margin: 18px 0;
+  font-size: 14.5px;
+  line-height: 1.8;
+}
+
+.callout strong {
+  color: var(--primary);
+}
+
+/* ===== SCORE LADDER ===== */
+.score-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 20px 0;
+}
+
+.ladder-step {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.ladder-bar {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.ladder-score {
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--accent);
+  padding: 14px 16px;
+  background: rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.ladder-step:nth-child(1) .ladder-bar { background: #2d1b4e; }
+.ladder-step:nth-child(2) .ladder-bar { background: #3d2568; }
+.ladder-step:nth-child(3) .ladder-bar { background: #4d2f82; }
+.ladder-step:nth-child(4) .ladder-bar { background: #5d399c; }
+
+.ladder-step:nth-child(1) .ladder-score { background: rgba(0,0,0,0.2); }
+.ladder-step:nth-child(2) .ladder-score { background: rgba(0,0,0,0.2); }
+.ladder-step:nth-child(3) .ladder-score { background: rgba(0,0,0,0.2); }
+.ladder-step:nth-child(4) .ladder-score { background: rgba(0,0,0,0.2); }
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+}
+
+footer p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+footer .footer-accent {
+  width: 40px;
+  height: 3px;
+  background: var(--accent);
+  margin: 0 auto 16px;
+  border-radius: 2px;
+}
+
+/* ===== ANIMATIONS ===== */
+section {
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+}
+
+section:nth-child(1) { animation-delay: 0.1s; }
+section:nth-child(2) { animation-delay: 0.15s; }
+section:nth-child(3) { animation-delay: 0.2s; }
+section:nth-child(4) { animation-delay: 0.25s; }
+section:nth-child(5) { animation-delay: 0.3s; }
+section:nth-child(6) { animation-delay: 0.35s; }
+section:nth-child(7) { animation-delay: 0.4s; }
+section:nth-child(8) { animation-delay: 0.45s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  header { padding: 44px 0 38px; }
+  nav { padding: 20px; margin: -24px 16px 36px; }
+  .card { padding: 20px; }
+  .highlight-box { padding: 20px; }
+  .ladder-step { flex-direction: column; }
+  .ladder-score { min-width: auto; justify-content: flex-end; padding: 6px 16px; font-size: 15px; }
+  th, td { padding: 10px 12px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="container">
+    <div class="header-badge">高考研究 · 2025</div>
+    <h1>2025年高考趋势分析<br>与全学段<span>升学规划</span>要点</h1>
+    <p class="subtitle">基于数理化三科试卷深度解析，提炼备考方向与各年级行动建议</p>
+  </div>
+</header>
+
+<!-- ===== TOC ===== -->
+<div class="container">
+  <nav>
+    <h2>目录导航</h2>
+    <ol>
+      <li><a href="#s1">核心结论：机械刷题时代终结</a></li>
+      <li><a href="#s2">试卷难度分布与能力阶梯</a></li>
+      <li><a href="#s3">全国一卷数学逐题分析</a></li>
+      <li><a href="#s4">各卷难度排序与特点</a></li>
+      <li><a href="#s5">理化三科趋势总结</a></li>
+      <li><a href="#s6">创新考法的三种类型</a></li>
+      <li><a href="#s7">竞赛体系：一试·强基·二试</a></li>
+      <li><a href="#s8">全学段规划路径</a></li>
+      <li><a href="#s9">多元升学路线与待遇</a></li>
+    </ol>
+  </nav>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="container">
+
+  <!-- ===== Section 1 ===== -->
+  <section id="s1">
+    <div class="section-number">第一章</div>
+    <h2 class="section-title">核心结论：机械刷题时代终结</h2>
+
+    <div class="highlight-box">
+      <h4>今年高考数理化给出的四个关键变化</h4>
+      <ul>
+        <li><strong>区分度明确化</strong> —— 送分题、中档题、难题界限清晰，不同目标分数对应截然不同的备考策略</li>
+        <li><strong>情境活化</strong> —— 题目情景更加灵活，考察对知识本质的理解，背题、记题型的方式已失效</li>
+        <li><strong>思维与计算双升</strong> —— 要么通过思维找到低计算量的解法，要么以更大计算量硬解</li>
+        <li><strong>高考强基化、强基竞赛化</strong> —— 对优生而言，高考命题趋势正逐步向强基靠拢</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>趋势的实质含义</h3>
+      <p style="font-size:15px; line-height:1.9;">
+        全国一卷已成为各地命题的风向标。它反映的是大学选拔人才的逻辑：让不同能力水平的学生通过分数梯度清晰地显现出来。北京卷、二卷、天津卷、上海卷也在逐步向这一方向过渡。
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== Section 2 ===== -->
+  <section id="s2">
+    <div class="section-number">第二章</div>
+    <h2 class="section-title">试卷难度分布与能力阶梯</h2>
+
+    <p style="margin-bottom:20px; font-size:15px; color: var(--text-muted);">以全国一卷数学（满分150分）为例，不同训练背景对应的能力上限：</p>
+
+    <div class="score-ladder">
+      <div class="ladder-step">
+        <div class="ladder-bar">纯课内训练（学校练习册 + 课本 + 常规教辅），不失误情况下的天花板</div>
+        <div class="ladder-score">≤130</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ladder-bar">课内基础上额外拓展20%—30%（强基级别训练），天花板</div>
+        <div class="ladder-score">≤140</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ladder-bar">高强度课内训练 + 接触竞赛/一试内容，天花板</div>
+        <div class="ladder-score">≤145</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ladder-bar">课内扎实 + 竞赛思维 + 强基训练 + 心态与计算量兼顾</div>
+        <div class="ladder-score">150</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>核心启示：</strong>计算量、心态、思维三者缺一不可。目标130分以上的同学，强基或竞赛内容的系统训练是必要路径；目标130分以下的同学，扎实的传统训练仍可达标。
+    </div>
+  </section>
+
+  <!-- ===== Section 3 ===== -->
+  <section id="s3">
+    <div class="section-number">第三章</div>
+    <h2 class="section-title">全国一卷数学逐题分析</h2>
+
+    <div class="card">
+      <h3><span class="num">1</span> 单选题（1—8题）</h3>
+      <ul class="key-list">
+        <li><strong>1—6题：</strong>难度不高，属于送分题。只要完成课内练习和课本阅读，应当拿到分数。</li>
+        <li><strong>7—8题：</strong>题干阅读量显著增大（从一行扩展至四五五行），耗时较长且容易引发心理压力，但本质属于"纸老虎"——看着吓人，实际可以拿分。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span> 多选题（9—11题）</h3>
+      <ul class="key-list">
+        <li><strong>9—10题：</strong>不难，属于练习册常见题型。</li>
+        <li><strong>11题：</strong>计算量大，容易卡手。目标110—120分的同学可正常跳过；目标130分的同学若在此纠结过久，会影响后续答题。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span> 填空题（12—14题）</h3>
+      <ul class="key-list">
+        <li><strong>12—13题：</strong>不难。</li>
+        <li><strong>14题（数列）：</strong>极易出错——可能无思路，或有多个思路不敢尝试，或计算量很大。预计正常能上985的同学需要10—15分钟。一道填空题占用如此时间，对后续大题极为不利。<strong>需要跳过的胆量。</strong></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">4</span> 解答题（15—19题）</h3>
+      <ul class="key-list">
+        <li><strong>15—16题：</strong>难度适中，常规练习可覆盖。</li>
+        <li><strong>17题：</strong>有一定难度，放在新高考改革前可排在第18题位置。</li>
+        <li><strong>18题：</strong>陈题。可找巧解思路（官方题评已给出），也可硬算但计算量极大。</li>
+        <li><strong>19题（压轴·新定义题）：</strong>现场给出全新定义，要求当场理解并运算。第一问读懂题即可拿分；第二问要求严谨的数学证明语言；第三问拆为两小问，第二小问在考场时间内几乎无法完成。</li>
+      </ul>
+    </div>
+
+    <div class="callout">
+      <strong>关于"超纲"说法的澄清：</strong>高考命题绝不能超纲，超纲即为事故。所谓"考了大学内容"的说法不准确——十九题若具备数学分析的思维，更容易找到解题方向，但解题本身并不需要用到大学知识点。
+    </div>
+  </section>
+
+  <!-- ===== Section 4 ===== -->
+  <section id="s4">
+    <div class="section-number">第四章</div>
+    <h2 class="section-title">各卷难度排序与特点</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>试卷</th>
+            <th>难度定位</th>
+            <th>核心特点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>全国一卷</strong> <span class="tag tag-purple">最高</span></td>
+            <td>2022年以来最难数学卷，风向标</td>
+            <td>区分度最强，代表未来各地命题改革方向</td>
+          </tr>
+          <tr>
+            <td><strong>北京卷</strong> <span class="tag tag-gold">次高</span></td>
+            <td>难度仅次于一卷</td>
+            <td>压轴题读题难度甚至超过一卷（新定义部分），但得分难度略低于一卷；解析几何、导数均不简单</td>
+          </tr>
+          <tr>
+            <td><strong>全国二卷</strong> <span class="tag tag-purple">中等</span></td>
+            <td>整体难度不高</td>
+            <td>与天津卷难度相近</td>
+          </tr>
+          <tr>
+            <td><strong>天津卷</strong> <span class="tag tag-purple">中等</span></td>
+            <td>先易后难</td>
+            <td>后面三道题难度逐次提升，对考生心态较友好</td>
+          </tr>
+          <tr>
+            <td><strong>上海卷</strong> <span class="tag tag-green">相对低</span></td>
+            <td>无特别高难度题</td>
+            <td>需要对课本内容特别熟悉，涉及部分非应试重点的知识</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>重要提醒：</strong>二卷、天津、上海的考生切勿认为"一卷与我无关"。全国一卷反映的是大学选拔逻辑，各地试卷将逐步向一卷方向过渡。
+    </div>
+  </section>
+
+  <!-- ===== Section 5 ===== -->
+  <section id="s5">
+    <div class="section-number">第五章</div>
+    <h2 class="section-title">理化三科趋势总结</h2>
+
+    <div class="card">
+      <h3><span class="num">1</span> 基础题回归课本</h3>
+      <p style="font-size:15px;">对课本不熟悉，理化成绩将受到严重影响。</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">2</span> 信息处理能力要求提升</h3>
+      <p style="font-size:15px;">题干越来越长，阅读、分析、理解、抽象的能力要求显著提高，读题所需时间增加。</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">3</span> 摆脱机械刷题，重视创新考法</h3>
+      <p style="font-size:15px;">仅靠重复练习已不足以应对，需要理解命题逻辑并掌握创新题的应对方法。</p>
+    </div>
+  </section>
+
+  <!-- ===== Section 6 ===== -->
+  <section id="s6">
+    <div class="section-number">第六章</div>
+    <h2 class="section-title">创新考法的三种类型</h2>
+
+    <div class="card">
+      <h3><span class="num">一</span> 设置新场景</h3>
+      <p style="font-size:15px;">将经典物理场景（如小车运动）替换为新情境（滑板、电梯、新能源卡车等）。读完题后发现本质仍是旧问题，难度相对最低。</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">二</span> 多板块结合</h3>
+      <p style="font-size:15px;">将两个各自成熟的考查板块组合为一道新题。要求各板块无明显弱点，学习面够广。</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">三</span> 创造全新情境</h3>
+      <p style="font-size:15px;">例如将运动学分析对象从地面小车改为"太空电梯"，需要考虑重力变化；或增加垂直于纸面的运动方向分析。这是最具挑战性的创新类型。</p>
+    </div>
+
+    <div class="callout">
+      <strong>应对思路：</strong>了解创新题的出题逻辑后，解题策略也变得清晰——先识别属于哪种创新类型，再调用对应的分析框架。
+    </div>
+  </section>
+
+  <!-- ===== Section 7 ===== -->
+  <section id="s7">
+    <div class="section-number">第七章</div>
+    <h2 class="section-title">竞赛体系：一试 · 强基 · 二试</h2>
+
+    <div class="card">
+      <h3>什么是"一试"？</h3>
+      <p style="font-size:15px; line-height:1.9;">
+        一试指高中生数学联赛的第一场考试。其命题范围严格限定在高中教学大纲之内，不超出课内。一试与高考的可出题范围完全一致，区别在于：一试在更短时间内要求解答更难的题目——相当于高考的"难度升级版"。
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>学习竞赛/强基的三重优势</h3>
+      <ul class="key-list">
+        <li><strong>更丰富的数学工具箱</strong> —— 通过系统学习获得课内不教的解题工具，如同工具箱中多了一把锤子，应对钉子问题更高效</li>
+        <li><strong>面对难题的进攻心态</strong> —— 竞赛训练以应对新题、难题为核心目标，形成更强的心理韧性</li>
+        <li><strong>更高强度的计算训练</strong> —— 一试对时间限制比高考更严，经过系统训练后，计算速度与准确度显著提升</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <h4>各阶段拔高体系对照</h4>
+      <ul>
+        <li><strong>小学拔高 → 浅奥</strong>（小学数学加强版，与初中内容不交叉）</li>
+        <li><strong>初中拔高 → 初联</strong>（初中数学进阶版，与高中内容不交叉）</li>
+        <li><strong>高中拔高 → 高联一试</strong>（高中数学进阶版，与大学内容不交叉）</li>
+      </ul>
+      <p style="margin-top:12px;">每一层拔高与下一学段内容没有重合，各自独立。</p>
+    </div>
+
+    <div class="card">
+      <h3>学习竞赛/强基的前提条件</h3>
+      <ul class="key-list">
+        <li>课内基础知识必须扎实（至少120分水平）</li>
+        <li>需具备充足的时间精力，或较高的天赋，至少居其一</li>
+        <li>不建议所有人盲目学习竞赛，需根据实际情况判断</li>
+        <li>判断标准：通过水平测试（而非仅凭月考成绩）来评估是否具备学习条件</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Section 8 ===== -->
+  <section id="s8">
+    <div class="section-number">第八章</div>
+    <h2 class="section-title">全学段规划路径</h2>
+
+    <!-- 小学 -->
+    <h3 style="font-family: 'Noto Serif SC', serif; color: var(--primary); font-size: 20px; margin: 32px 0 18px; padding-left: 12px; border-left: 3px solid var(--accent);">小学阶段</h3>
+
+    <div class="card">
+      <h3>关于奥数：核心看"择校"</h3>
+      <div class="table-wrap" style="margin:12px 0 0;">
+        <table>
+          <thead>
+            <tr><th>情况</th><th>建议</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>有择校机会</strong>（SMK、点招等）</td>
+              <td>必须学奥数。考多难学多难，以通过选拔考试为目标</td>
+            </tr>
+            <tr>
+              <td><strong>无择校机会</strong>（划片入学等）</td>
+              <td>学"浅奥"（小学数学加强版），建议自学为主，不必上套路课或背大招</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>小学三件核心要事</h3>
+      <ul class="key-list">
+        <li><strong>培养兴趣</strong> —— 通过实地探索或数学科普读物激发学科兴趣</li>
+        <li><strong>大量阅读</strong> —— 多位竞赛金牌、国家集训队成员的共同特点是幼年阅读量极大（案例：某集训队成员幼儿园阶段阅读超3000本绘本）</li>
+        <li><strong>练习计算</strong> —— 通过课内习题和小奥训练提升计算稳定性和准确度</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>五六年级"小初衔接"决策</h3>
+      <ul class="key-list">
+        <li><strong>目标普通本科</strong> → 直接学初中课内内容，利用网上录播资源即可</li>
+        <li><strong>目标211及以上</strong> → 以初联（初中数学联赛难度）进行衔接学习</li>
+        <li><strong>判断标准</strong> → 通过水平测试验证底子是否足够，测试能拿到50%以上说明可以进入初联学习</li>
+      </ul>
+    </div>
+
+    <!-- 初中 -->
+    <h3 style="font-family: 'Noto Serif SC', serif; color: var(--primary); font-size: 20px; margin: 32px 0 18px; padding-left: 12px; border-left: 3px solid var(--accent);">初中阶段</h3>
+
+    <div class="card">
+      <h3>初中核心任务</h3>
+      <ul class="key-list">
+        <li><strong>选方向</strong> —— 通过初联训练判断孩子适合走竞赛路线还是综合路线</li>
+        <li><strong>定高中</strong> —— 进入足够好的高中，获取优质师资与资源</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>初联学习要点</h3>
+      <ul class="key-list">
+        <li>初联难度高于中考，系统学完并对中考有降维打击效果</li>
+        <li>各地高中自招考试核心考查内容即为初联难度</li>
+        <li>最佳学习窗口：<strong>五年级至初二</strong>（初三时间紧张，回归中考备考）</li>
+        <li>初联课程通常针对初中零基础设计，有小学计算底子即可衔接</li>
+        <li>小蓝本是经典教材，但题目难度编排不够合理，建议在教练指导下使用</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>时间前置策略</h3>
+      <p style="font-size:15px; line-height:1.9;">
+        若想不落下文化课又冲竞赛，唯一办法是<strong>将课内学习前置</strong>：五六年级学初联（省出初中三年数学时间）→ 初一初二学完高中数理化 → 初三和高一高二全力投入竞赛训练。
+      </p>
+    </div>
+
+    <div class="callout">
+      <strong>初联与高联的关系：</strong>初联完整学完后可直接进入高联一试学习，无需先单独学高中课内——高联一试的课程本身已覆盖高中课内内容。学习进度应通过做题测试来判断：高联一试测试通过则进入高联，未通过则回头巩固初联。
+    </div>
+
+    <!-- 高中 -->
+    <h3 style="font-family: 'Noto Serif SC', serif; color: var(--primary); font-size: 20px; margin: 32px 0 18px; padding-left: 12px; border-left: 3px solid var(--accent);">高中阶段</h3>
+
+    <div class="card">
+      <h3>高中阶段家长的核心角色</h3>
+      <ul class="key-list">
+        <li><strong>帮助孩子明确自我定位</strong> —— 清北/985/211/普通本科，目标不同，策略不同</li>
+        <li><strong>搞清楚多元升学政策</strong> —— 强基、综评、竞赛保送等各类路径的要求、局限与待遇</li>
+      </ul>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <h4>竞赛路线时间线（以数竞为例）</h4>
+        <p>小学完成初联 → 高一完成高中数学与高联一试 → 初二进入高联二试学习 → 高一九月参赛。时间极其紧凑，且物理、化学等科目也需提前学习。</p>
+      </div>
+      <div class="timeline-item">
+        <h4>综合路线时间安排</h4>
+        <p>以课内学习为主线保持稳定，利用周末、晚间、假期匀出时间学习拓展内容（强基级别），一方面提升高考成绩，另一方面争取多元升学的额外优待。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section 9 ===== -->
+  <section id="s9">
+    <div class="section-number">第九章</div>
+    <h2 class="section-title">多元升学路线与待遇</h2>
+
+    <div class="highlight-box">
+      <h4>核心分界线：是否以竞赛银牌为目标</h4>
+      <p>以银牌为目标 → 竞赛路线；不以银牌为目标 → 综合路线。学习竞赛内容的人很多（因其确实有用），但真正走竞赛道路的孩子很少。</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">升学路径</th>
+            <th style="width:40%">核心内容</th>
+            <th>待遇</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>国家集训队保送</strong><br><span class="tag tag-purple">竞赛路线·最高层</span></td>
+            <td>数学前60名、其他学科前50名。需进一步训练备战国际赛事</td>
+            <td>清北直接保送（需通过简单笔面试）；专业方向须在本学科内选择</td>
+          </tr>
+          <tr>
+            <td><strong>特殊招生</strong><br><span class="tag tag-gold">竞赛路线·数理专属</span></td>
+            <td>清华"新领军"（保送，八年本博）、清北数学英才班（降一本线）、北大"卓越计划"（保送）、清华"攀登计划"（降一本线）、中科大少年班/少创班</td>
+            <td>新领军保送本博读数学；英才班本科读数学；中科大可降一本线、提前上学、任选专业</td>
+          </tr>
+          <tr>
+            <td><strong>强基破格</strong><br><span class="tag tag-purple">竞赛路线·底线</span></td>
+            <td>各学科竞赛银牌。专业涵盖数理化生及部分新工科（自动化、电子、储能等）</td>
+            <td>清北降约30分，华五降约50分；本科期间原则上不可转专业；入学即获本校保研资格</td>
+          </tr>
+          <tr>
+            <td><strong>强基（综合路线）</strong><br><span class="tag tag-green">综合路线·拓展</span></td>
+            <td>课内主线不变，利用课余时间学习拓展内容。笔试涉及约20%—30%高中不教的内容</td>
+            <td>清北降约10分；华五降15—20分；再往下985可降更多</td>
+          </tr>
+          <tr>
+            <td><strong>综合评价</strong><br><span class="tag tag-green">综合路线</span></td>
+            <td>高考成绩为主，辅以校测（笔试+面试），考察部分拓展知识</td>
+            <td>降分幅度因校而异，浙大在浙江有综合评价招生</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top: 28px;">
+      <h3>关于"天赋"的理性判断</h3>
+      <ul class="key-list">
+        <li><strong>仅冲高考</strong> —— 时间精力与天赋居其一即可</li>
+        <li><strong>冲国籍保送/领军保送/英才班降一本线</strong> —— 既需要充足时间精力，也需要较高天赋</li>
+        <li><strong>纯靠努力的上限</strong> —— 大约到数竞银牌高位或金牌低位</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-accent"></div>
+    <p>基于演讲直播内容整理 · 2025年高考趋势分析与升学规划</p>
+    <p style="margin-top:6px; font-size:12px; color: #aaa;">内容经去冗余、口语转书面语处理，关键信息忠实于原始内容</p>
+  </div>
+</footer>
+
+</body>
+</html>

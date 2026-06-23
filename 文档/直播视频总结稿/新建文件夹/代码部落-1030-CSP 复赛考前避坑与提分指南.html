@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSP复赛考前提分指南</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --surface: #ffffff;
+      --accent: #6b2d5b;
+      --accent-light: #8e4585;
+      --accent-bg: #f5eef3;
+      --gold: #b8860b;
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #7a7570;
+      --border: #e2ddd6;
+      --highlight: #fff3cd;
+      --success: #2d6b3f;
+      --danger: #8b2500;
+      --info: #1a5276;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* === HEADER === */
+    .header {
+      background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #a05a7a 100%);
+      color: #fff;
+      padding: 56px 0 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(184,134,11,0.12);
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 10%;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .header h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .header .subtitle {
+      font-size: 1rem;
+      opacity: 0.85;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .tag-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+    }
+    .tag-purple { background: rgba(107,45,91,0.5); border-color: rgba(255,255,255,0.2); }
+    .tag-gold { background: rgba(184,134,11,0.4); border-color: rgba(255,255,255,0.2); }
+
+    /* === NAV === */
+    .nav-section {
+      padding: 32px 0 8px;
+    }
+    .nav-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 28px;
+      position: relative;
+    }
+    .nav-label {
+      position: absolute;
+      top: -1px; left: 24px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 0 0 6px 6px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .nav-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 32px;
+      margin-top: 16px;
+    }
+    .nav-grid a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border);
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-grid a:hover { color: var(--accent); }
+    .nav-grid a .nav-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--accent-bg);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* === SECTION === */
+    .section {
+      padding: 40px 0 20px;
+    }
+    .section-title {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title::before {
+      content: '';
+      display: block;
+      width: 4px;
+      min-height: 32px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .section-title h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .section-title h2 .num {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--accent-light);
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    /* === CARD === */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    /* === ALERT === */
+    .alert {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+    .alert-gold {
+      background: var(--highlight);
+      border-left: 4px solid var(--gold);
+    }
+    .alert-success {
+      background: #eaf5ed;
+      border-left: 4px solid var(--success);
+    }
+    .alert-danger {
+      background: #fdf0ec;
+      border-left: 4px solid var(--danger);
+    }
+    .alert-info {
+      background: #eaf2f8;
+      border-left: 4px solid var(--info);
+    }
+    .alert-purple {
+      background: var(--accent-bg);
+      border-left: 4px solid var(--accent);
+    }
+
+    /* === TWO COL === */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    /* === LIST === */
+    .content-list {
+      list-style: none;
+      padding: 0;
+    }
+    .content-list li {
+      position: relative;
+      padding: 10px 0 10px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .content-list li:last-child { border-bottom: none; }
+    .content-list li::before {
+      content: '';
+      position: absolute;
+      left: 4px; top: 18px;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .content-list li strong {
+      color: var(--accent);
+    }
+
+    /* === TABLE === */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 500;
+    }
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:hover { background: var(--accent-bg); }
+
+    /* === DIFF BAR === */
+    .diff-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+    }
+    .diff-bar .label {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      width: 80px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .diff-bar .track {
+      flex: 1;
+      height: 10px;
+      background: var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .diff-bar .fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+    .diff-bar .fill-high { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+    .diff-bar .fill-med { background: linear-gradient(90deg, var(--gold), #d4a017); }
+    .diff-bar .fill-low { background: linear-gradient(90deg, var(--success), #4a9c60); }
+
+    /* === FLOW === */
+    .flow {
+      position: relative;
+      padding-left: 36px;
+      margin: 16px 0;
+    }
+    .flow::before {
+      content: '';
+      position: absolute;
+      left: 11px; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .flow-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .flow-item::before {
+      content: '';
+      position: absolute;
+      left: -30px; top: 6px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 3px solid var(--accent);
+    }
+    .flow-item h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .flow-item p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* === CASE BOX === */
+    .case-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      position: relative;
+    }
+    .case-box .case-tag {
+      position: absolute;
+      top: 12px; right: 16px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 4px;
+    }
+    .case-box .case-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .case-box p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* === QUOTE === */
+    .quote {
+      border-left: 3px solid var(--gold);
+      padding: 12px 20px;
+      margin: 16px 0;
+      background: rgba(184,134,11,0.06);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    /* === FOOTER === */
+    .footer {
+      margin-top: 48px;
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 700px) {
+      .container { padding: 0 16px; }
+      .header { padding: 36px 0 32px; }
+      .header h1 { font-size: 1.5rem; }
+      .nav-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .section-title h2 { font-size: 1.15rem; }
+      .card { padding: 18px; }
+      .case-box .case-tag { position: static; display: inline-block; margin-bottom: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="container">
+    <h1>CSP 复赛考前避坑与提分指南</h1>
+    <p class="subtitle">基于往年真实翻车案例的系统梳理，覆盖赛制规则、低级错误规避与最后两天备考策略</p>
+    <div class="tag-bar">
+      <span class="tag tag-purple">CSP 复赛</span>
+      <span class="tag tag-purple">信奥赛制</span>
+      <span class="tag tag-gold">实战经验</span>
+      <span class="tag tag-gold">最后两天提分</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-section">
+  <div class="container">
+    <div class="nav-card">
+      <span class="nav-label">目录</span>
+      <div class="nav-grid">
+        <a href="#s1"><span class="nav-num">1</span>最后两天的核心策略</a>
+        <a href="#s2"><span class="nav-num">2</span>意外爆零：四大低级错误</a>
+        <a href="#s3"><span class="nav-num">3</span>文件命名与保存的致命细节</a>
+        <a href="#s4"><span class="nav-num">4</span>CSP 评测机制解析</a>
+        <a href="#s5"><span class="nav-num">5</span>申诉的真实流程与意义</a>
+        <a href="#s6"><span class="nav-num">6</span>信奥赛的公平性与五大学科对比</a>
+        <a href="#s7"><span class="nav-num">7</span>骗分策略的演变与防范</a>
+        <a href="#s8"><span class="nav-num">8</span>入门组满分策略：会做≠拿分</a>
+        <a href="#s9"><span class="nav-num">9</span>下半年重点赛事一览</a>
+        <a href="#s10"><span class="nav-num">10</span>考前核心行动清单</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S1 -->
+<div class="section" id="s1">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 01</span>最后两天的核心策略</h2>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心结论：</strong>最后两天，算法能力的提升空间已极为有限。首要目标不是"多拿分"，而是<strong>确保会做的题不因低级错误丢分</strong>——即防止"意外爆零"。
+    </div>
+
+    <ul class="content-list">
+      <li>盲目刷题已无太大帮助，应将精力转向<strong>熟悉赛制规则与考试注意事项</strong></li>
+      <li>每年约 <strong>10%~20%</strong> 的学生会因低级失误导致意外爆零</li>
+      <li>信奥赛的评审为<strong>纯系统评测</strong>，无阅卷老师，任何细节错误都可能导致零分</li>
+      <li>只要足够细心，绝大多数低级错误完全可规避</li>
+    </ul>
+
+    <div class="alert alert-gold">
+      <strong>老师寄语：</strong>"最后两天你想的不是提高多少分，而是怎么去确保不要考零分。"
+    </div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="section" id="s2">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 02</span>意外爆零：四大低级错误</h2>
+    </div>
+
+    <p style="margin-bottom:16px; color:var(--text-secondary);">以下四类错误每年都会导致大量学生爆零，且均与算法能力无关：</p>
+
+    <div class="flow">
+      <div class="flow-item">
+        <h4>错误一：不熟悉 OI 赛制</h4>
+        <p>部分学生对 OI 赛制的规则（如评测方式、提交规范）缺乏了解，导致操作不当。</p>
+      </div>
+      <div class="flow-item">
+        <h4>错误二：文件输入输出流未掌握</h4>
+        <p>CSP 复赛采用<strong>标准文件输入输出流</strong>，但学生平时训练中极少使用。该知识点是爆零高发区。</p>
+      </div>
+      <div class="flow-item">
+        <h4>错误三：操作系统搞混</h4>
+        <p>复赛使用 <strong>Linux</strong> 系统，而非 Windows。部分学生考前才意识到系统与平时训练环境不同，导致操作生疏。</p>
+      </div>
+      <div class="flow-item">
+        <h4>错误四：考试时间记错</h4>
+        <p>入门组为上午 8:30–12:00，提高组为下午 14:00–18:00。有学生将上下时段混淆，到场后发现考场对不上。</p>
+      </div>
+    </div>
+
+    <div class="case-box">
+      <span class="case-tag">真实案例</span>
+      <div class="case-title">文件输出流模板字符遗漏 → 四题全部爆零</div>
+      <p>一名算法能力优秀的入门组学生（模拟赛稳定 260 分以上，最高 320 分），在考前默写文件输出流模板时，循环中的某行代码始终无法正确写出。最终四道题的文件输出流全部对不上，本地测试全部通过，但实际比赛<strong>四个零全部爆零</strong>。</p>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>关键提醒：</strong>进入考场后的<strong>第一件事</strong>，应将文件输入输出流模板默写出来并注释掉，确保后续编码时不会遗漏。
+    </div>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="section" id="s3">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 03</span>文件命名与保存的致命细节</h2>
+    </div>
+
+    <p style="margin-bottom:16px; color:var(--text-secondary);">评测机逐字符匹配文件名，任何微小偏差都会导致文件无法读取，直接判零。</p>
+
+    <div class="two-col">
+      <div class="case-box">
+        <span class="case-tag">案例一</span>
+        <div class="case-title">双重后缀名</div>
+        <p>系统隐藏了文件扩展名显示，学生手动添加 <code>.cpp</code> 后，实际文件名变为 <code>apple.cpp.cpp</code>，评测机无法读取，四题全部爆零。</p>
+      </div>
+      <div class="case-box">
+        <span class="case-tag">案例二</span>
+        <div class="case-title">保存为 .exe 而非 .cpp</div>
+        <p>应提交 <code>.cpp</code> 代码文件，部分学生误保存为 <code>.exe</code> 可执行文件，导致提交内容不正确。</p>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="case-box">
+        <span class="case-tag">案例三</span>
+        <div class="case-title">文件名手动输入出错</div>
+        <p>未使用复制粘贴，手动输入文件名时出现单个字符错误，导致该题文件读取失败。</p>
+      </div>
+      <div class="case-box">
+        <span class="case-tag">案例四</span>
+        <div class="case-title">文件夹层级结构不符</div>
+        <p>实际文件需存放在以考号命名的文件夹中，且须严格按照规定的框架顺序存放。层级不正确同样会导致评测机无法读取。</p>
+      </div>
+    </div>
+
+    <div class="alert alert-success">
+      <strong>正确做法（"CV大法"）：</strong>文件名务必从题目中<strong>直接复制粘贴</strong>（Control C + Control V），切忌手动逐字符输入。提交文件为 <code>.cpp</code> 代码文件，<code>.exe</code> 文件可删除。
+    </div>
+  </div>
+</div>
+
+<!-- S4 -->
+<div class="section" id="s4">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 04</span>CSP 评测机制解析</h2>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>核心机制：</strong>CSP 复赛采用<strong>纯系统评测（评测机）</strong>，无任何人工阅卷环节。所有评分均由固定程序自动完成。
+    </div>
+
+    <ul class="content-list">
+      <li><strong>无人阅卷：</strong>没有老师查看考生试卷或代码，不存在人工纠错或"看情面"的情况</li>
+      <li><strong>严格匹配：</strong>字符级别的细节错误（多写一个点号、空格或字符）即判零分</li>
+      <li><strong>处理流程：</strong>所有考生文件统一命名后直接投入评测机，系统自动返回成绩清单</li>
+      <li><strong>出分速度：</strong>只要有评测数据，理论上当天即可出分，老师通常丢两到三次以确保稳妥</li>
+      <li><strong>核心数据：</strong>对主办方而言，最关键的资源是每道题的<strong>评测数据</strong>，有了测试数据即可立即算分</li>
+      <li><strong>参赛规模参考：</strong>以浙江为例，入门组约 2000 人、提高组约 2000 人，合计约 4000 名考生</li>
+    </ul>
+
+    <div class="quote">
+      "信奥的改卷早已是无人测评模式，不需要人去改。程序能评多少分，就是多少分。"
+    </div>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="section" id="s5">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 05</span>申诉的真实流程与意义</h2>
+    </div>
+
+    <ul class="content-list">
+      <li><strong>初赛申诉：</strong>将答题卡重新送入打卡机再跑一遍，耗时约一分钟</li>
+      <li><strong>复赛申诉：</strong>将代码重新提交评测机运行一遍，同样无人工审阅</li>
+      <li><strong>需缴费：</strong>初赛和复赛的申诉均需缴纳申诉费，并非免费</li>
+      <li><strong>结果一致性：</strong>申诉结果与原评测结果通常无差异，除非存在试卷漏评</li>
+      <li><strong>系统性问题：</strong>若评测程序本身存在 bug，受影响的是大批考生而非个别学生，此类问题无需个人反馈，已有大量考生优先举报，主办方会直接发布公告并统一调整分数</li>
+    </ul>
+
+    <div class="alert alert-danger">
+      <strong>残酷现实：</strong>申诉没有太大意义。该拿多少分就是多少分，调整空间极为有限。
+    </div>
+  </div>
+</div>
+
+<!-- S6 -->
+<div class="section" id="s6">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 06</span>信奥赛的公平性与五大学科对比</h2>
+    </div>
+
+    <div class="alert alert-success">
+      <strong>五大学科竞赛中，公认最公平的三个是：数学竞赛、物理竞赛、信息学竞赛。</strong>三者均为完全客观题，标准答案，纯系统评测。
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>学科竞赛</th><th>评测方式</th><th>公平性特点</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>信息学竞赛</strong></td><td>纯系统评测</td><td>每个阶段均为评测机评测，不存在主观评分</td></tr>
+          <tr><td><strong>物理竞赛</strong></td><td>系统评测为主</td><td>纯客观题，标准答案</td></tr>
+          <tr><td><strong>数学竞赛</strong></td><td>标准答案客观题</td><td>纯客观题，无主观操作空间</td></tr>
+          <tr><td>其余学科</td><td>含主观评分</td><td>存在主观评分，有高分或低分的波动空间</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="color:var(--text-secondary); margin-top:12px;">信息学竞赛从 CSP → NOIP → 省选 → NOI，每个阶段均为系统评测，评分公平性是行业共识。因此很少有人质疑信奥赛的评分公正性。</p>
+  </div>
+</div>
+
+<!-- S7 -->
+<div class="section" id="s7">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 07</span>骗分策略的演变与防范</h2>
+    </div>
+
+    <p style="margin-bottom:16px; color:var(--text-secondary);">骗分是指在不会做的题目中，通过输出特定值获取部分分数的行为。该策略在规则允许范围内，但近年来出题人已大幅加强防范。</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h4 style="color:var(--accent); margin-bottom:8px;">早期骗分手段</h4>
+        <ul class="content-list">
+          <li>输出固定字符串（如 <code>yes</code>、<code>no</code>、<code>-1</code>）即可获得部分分数</li>
+          <li>即使完全不会做题，仅输出一个字符也能拿到一定分值</li>
+          <li>以前有学生和老师都会主动教授骗分技巧</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--accent); margin-bottom:8px;">当前防范措施</h4>
+        <ul class="content-list">
+          <li>出题人设置<strong>多组样例与测试数据</strong>，增加骗分难度</li>
+          <li>题目给出的标准样例<strong>一般不在实际测试数据中出现</strong></li>
+          <li>输出结果通常为<strong>多组数据或一行数值</strong>，而非单一字符</li>
+          <li>即使输出 <code>-1</code>，实际数据中也会混入其他值，仅输出 <code>-1</code> 已无法得分</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>补充说明：</strong>骗分属于规则允许的策略，不算违规。但当前出题方式已使骗分的收益大幅降低，不建议依赖此类策略。
+    </div>
+  </div>
+</div>
+
+<!-- S8 -->
+<div class="section" id="s8">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 08</span>入门组满分策略：会做 ≠ 拿分</h2>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>核心结论：</strong>入门组一等奖的关键在于——<strong>会做的题全部拿满分，不会做的题尽可能拿部分分</strong>。做到这两点，即可领先超过 70% 的考生。
+    </div>
+
+    <div class="diff-bar">
+      <span class="label">能力发挥率</span>
+      <div class="track"><div class="fill fill-low" style="width:30%;"></div></div>
+      <span style="font-size:0.82rem; color:var(--danger);">≤30% 首次参赛</span>
+    </div>
+
+    <p style="margin:12px 0; color:var(--text-secondary);">数据显示，首次参加 CSP 复赛的学生中，能将自身能力<strong>完整发挥</strong>出来的比例不超过 30%。约 70% 的学生即使算法学到了深搜程度，仍会因非能力因素失分。</p>
+
+    <p style="margin:12px 0; font-weight:600; color:var(--text-primary);">超过 80% 的学生第二次参赛成绩会比第一次提升一百多分，核心原因并非算法能力提升，而是<strong>获得了复赛经验</strong>。</p>
+
+    <h3 style="font-family:'Noto Serif SC',serif; font-size:1.05rem; margin:24px 0 12px; color:var(--text-primary);">常见失分场景</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>失分类型</th><th>具体表现</th><th>后果</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>long long 数据类型</strong></td>
+            <td>不确定何时使用，有人全部开启，有人全部不开启</td>
+            <td>数据溢出导致丢分</td>
+          </tr>
+          <tr>
+            <td><strong>时间复杂度预估（TLE）</strong></td>
+            <td>未提前评估程序是否会超时，思路效率低</td>
+            <td>即使代码无误，超时部分直接零分</td>
+          </tr>
+          <tr>
+            <td><strong>内存溢出（RE）</strong></td>
+            <td>未考虑特殊情况导致内存越界</td>
+            <td>实际比赛中系统不会提示 RE，只能靠经验预判</td>
+          </tr>
+          <tr>
+            <td><strong>特殊情况漏判</strong></td>
+            <td>如输出 <code>-1</code> 的边界条件等特殊情况未处理</td>
+            <td>本应满分的题只能拿到 60~70 分</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>关键差异：</strong>平时做题时，系统会直观反馈 TLE/RE 等错误；但<strong>实际 CSP 比赛中，系统不会告知你是否超时或内存溢出</strong>，完全依赖选手自身的基本功和经验预判。
+    </div>
+  </div>
+</div>
+
+<!-- S9 -->
+<div class="section" id="s9">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 09</span>下半年重点赛事一览</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>赛事</th><th>时间</th><th>面向群体</th><th>特点</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>杭州智运会</strong></td>
+            <td>预计 11 月下旬</td>
+            <td>杭州学生</td>
+            <td>通知发布较晚，含金量尚可，规模略小于校级联赛</td>
+          </tr>
+          <tr>
+            <td><strong>杭州校级联赛</strong></td>
+            <td>12 月</td>
+            <td>杭州学生</td>
+            <td>影响力较大，通过学校报名</td>
+          </tr>
+          <tr>
+            <td><strong>GESP 十二月考期</strong></td>
+            <td>12 月</td>
+            <td>全国学生</td>
+            <td>C++ 编程能力等级认证，含金量较高</td>
+          </tr>
+          <tr>
+            <td><strong>USACO（美国信息学竞赛）</strong></td>
+            <td>寒假</td>
+            <td>全球学生</td>
+            <td>线上免费参加，全球影响力高，适合国际路线</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>USACO 补充说明：</strong>USACO 与 CSP 考查的是同一套知识体系（C++ 算法与数据结构），无需额外学习新内容。对于走国际路线（出国、港澳台升学）的学生，USACO 成绩的认可度可能高于国内 NOI 赛道。
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>时间提醒：</strong>智运会等赛事通知发布较晚，等到文件出来再准备已来不及，建议提前关注"代码部落"公众号获取第一时间转发的官方通知。
+    </div>
+  </div>
+</div>
+
+<!-- S10 -->
+<div class="section" id="s10">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="num">CHAPTER 10</span>考前核心行动清单</h2>
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <h4>1. 默写文件输入输出流模板</h4>
+        <p>考前反复练习，进入考场后第一件事即默写并注释保存，确保四道题均不遗漏。</p>
+      </div>
+      <div class="flow-item">
+        <h4>2. 使用"CV大法"管理文件名</h4>
+        <p>所有文件名从题目中复制粘贴，切忌手动输入。确认提交的是 <code>.cpp</code> 文件。</p>
+      </div>
+      <div class="flow-item">
+        <h4>3. 确认操作系统为 Linux</h4>
+        <p>提前在 Linux 环境下练习，熟悉操作差异，避免考场上手生。</p>
+      </div>
+      <div class="flow-item">
+        <h4>4. 核实考试时间与考场</h4>
+        <p>入门组：上午 8:30–12:00｜提高组：下午 14:00–18:00。考前再次确认准考证信息。</p>
+      </div>
+      <div class="flow-item">
+        <h4>5. 严格遵守文件层级结构</h4>
+        <p>文件必须按规定的文件夹框架和考号层级存放，不可随意调整。</p>
+      </div>
+      <div class="flow-item">
+        <h4>6. 不要自作聪明或画蛇添足</h4>
+        <p>题目要求如何保存就如何保存，如何命名就如何命名。哪怕一个百分号、一个点号的偏差都会导致零分。</p>
+      </div>
+    </div>
+
+    <div class="alert alert-danger">
+      <strong>铁律：</strong>信奥赛"一就是一，二就是二"。不会因为你"只差一点点"就原谅你。严格按照比赛文件要求执行，是避免意外爆零的唯一方法。
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <p>内容整理自"代码部落"直播间分享，基于往年 CSP 复赛真实案例</p>
+    <p style="margin-top:4px;">信息仅供参考，具体赛事安排以官方通知为准</p>
+  </div>
+</div>
+
+</body>
+</html>

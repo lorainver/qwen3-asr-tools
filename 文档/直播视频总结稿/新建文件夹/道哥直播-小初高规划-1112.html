@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>竞赛·强基·升学规划 — 家长答疑实录精编</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--bg);
+        }
+
+        /* ── Page Header ── */
+        .page-header {
+            background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #b8860b 100%);
+            padding: 64px 32px 56px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .page-header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 2.4em;
+            color: #fff;
+            margin-bottom: 12px;
+            position: relative;
+            letter-spacing: 0.06em;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.05em;
+            color: rgba(255,255,255,0.85);
+            font-weight: 300;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .tag-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+        }
+
+        .tag-purple {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .tag-gold {
+            background: rgba(184,134,11,0.25);
+            color: #fff;
+            border: 1px solid rgba(184,134,11,0.5);
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ── Table of Contents ── */
+        .toc-section {
+            margin: -32px auto 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .toc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            position: relative;
+        }
+
+        .toc-card::before {
+            content: '目录';
+            position: absolute;
+            top: -1px;
+            left: 24px;
+            background: var(--accent);
+            color: #fff;
+            padding: 4px 16px;
+            font-size: 0.78em;
+            font-weight: 500;
+            border-radius: 0 0 8px 8px;
+            letter-spacing: 0.1em;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 32px;
+            margin-top: 12px;
+        }
+
+        .toc-grid a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.92em;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .toc-grid a:hover {
+            background: var(--accent-bg);
+            color: var(--accent);
+        }
+
+        .toc-num {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.85em;
+            min-width: 22px;
+        }
+
+        /* ── Sections ── */
+        .content-section {
+            margin-bottom: 48px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-bar {
+            width: 4px;
+            min-height: 42px;
+            background: var(--accent);
+            border-radius: 2px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .section-header-text h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.45em;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .section-num {
+            font-size: 0.72em;
+            color: var(--accent-light);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 28px 0 12px;
+            padding-left: 12px;
+            border-left: 3px solid var(--gold);
+        }
+
+        h4 {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 20px 0 8px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: var(--text-secondary);
+        }
+
+        p strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-accent {
+            border-left: 4px solid var(--accent);
+        }
+
+        /* ── Alert Boxes ── */
+        .alert {
+            padding: 18px 20px;
+            border-radius: 8px;
+            margin: 18px 0;
+            font-size: 0.94em;
+            line-height: 1.7;
+            border-left: 4px solid;
+        }
+
+        .alert p {
+            margin-bottom: 6px;
+            color: inherit;
+        }
+
+        .alert p:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-gold {
+            background: var(--highlight);
+            border-color: var(--gold);
+            color: #6b5a00;
+        }
+
+        .alert-success {
+            background: #eaf5ed;
+            border-color: var(--success);
+            color: #1a4a28;
+        }
+
+        .alert-danger {
+            background: #fdf0ec;
+            border-color: var(--danger);
+            color: #6b1a00;
+        }
+
+        .alert-info {
+            background: #eaf2f8;
+            border-color: var(--info);
+            color: #0f3d5e;
+        }
+
+        .alert-purple {
+            background: var(--accent-bg);
+            border-color: var(--accent);
+            color: #4a1a3a;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 0.96em;
+        }
+
+        /* ── Lists ── */
+        ul, ol {
+            margin: 10px 0 16px 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        /* ── Two Column ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 16px 0;
+        }
+
+        /* ── Table ── */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92em;
+        }
+
+        thead {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        thead th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+        }
+
+        tbody td {
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        /* ── Diff Bar ── */
+        .diff-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .diff-label {
+            font-size: 0.82em;
+            font-weight: 500;
+            color: var(--text-muted);
+            min-width: 56px;
+            text-align: right;
+        }
+
+        .diff-track {
+            flex: 1;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .diff-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+        }
+
+        .diff-value {
+            font-size: 0.78em;
+            color: var(--text-muted);
+            min-width: 36px;
+        }
+
+        /* ── Flow Timeline ── */
+        .flow {
+            position: relative;
+            padding-left: 32px;
+            margin: 16px 0 24px;
+        }
+
+        .flow::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .flow-item {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .flow-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .flow-dot {
+            position: absolute;
+            left: -32px;
+            top: 6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 3px solid var(--accent);
+            z-index: 1;
+        }
+
+        .flow-dot.gold {
+            border-color: var(--gold);
+        }
+
+        .flow-title {
+            font-weight: 600;
+            font-size: 1em;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .flow-desc {
+            font-size: 0.92em;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ── Quote ── */
+        .quote-block {
+            background: var(--surface);
+            border-left: 4px solid var(--gold);
+            padding: 16px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .quote-block .author {
+            display: block;
+            margin-top: 8px;
+            font-style: normal;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .page-header {
+                padding: 48px 20px 40px;
+            }
+
+            .page-header h1 {
+                font-size: 1.7em;
+            }
+
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 16 20px;
+            margin: 16pxpx;
+            }
+
+            h2 {
+                font-size: 1.2em !important;
+            }
+
+            .section-bar {
+                min-height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════ HEADER ════════════════════════════════════ -->
+<header class="page-header">
+    <h1>竞赛 · 强基 · 升学规划</h1>
+    <p class="subtitle">家长答疑直播精华实录 — 从小学到高中的全阶段路径指南</p>
+    <div class="tag-bar">
+        <span class="tag tag-purple">数学竞赛</span>
+        <span class="tag tag-purple">物理竞赛</span>
+        <span class="tag tag-gold">强基计划</span>
+        <span class="tag tag-gold">综合评价</span>
+        <span class="tag tag-purple">新领军</span>
+        <span class="tag tag-gold">卓越·攀登</span>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- ════════════════════════════════════ TOC ════════════════════════════════════ -->
+<nav class="toc-section">
+    <div class="toc-card">
+        <div class="toc-grid">
+            <a href="#ch1"><span class="toc-num">01</span>语文与写作的评分规则</a>
+            <a href="#ch2"><span class="toc-num">02</span>小学阶段竞赛路径规划</a>
+            <a href="#ch3"><span class="toc-num">03</span>学习方法论："倒爬珠峰"之辩</a>
+            <a href="#ch4"><span class="toc-num">04</span>清华新领军计划详解</a>
+            <a href="#ch5"><span class="toc-num">05</span>数竞 vs 物竞：核心差异</a>
+            <a href="#ch6"><span class="toc-num">06</span>卓越计划与攀登计划</a>
+            <a href="#ch7"><span class="toc-num">07</span>强基计划全解析</a>
+            <a href="#ch8"><span class="toc-num">08</span>综合评价招生</a>
+            <a href="#ch9"><span class="toc-num">09</span>物理竞赛学习规划</a>
+            <a href="#ch10"><span class="toc-num">10</span>生物竞赛：趋势与风险</a>
+            <a href="#ch11"><span class="toc-num">11</span>各阶段时间线与资源</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ══════════════════════ CH1 语文 ══════════════════════ -->
+<section class="content-section" id="ch1">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第一章</span>
+            <h2>语文与写作的评分规则</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-purple">
+        <p class="alert-title">核心观点</p>
+        <p>理科思维较强的孩子学习语文，不应依赖广泛阅读来提升"语文素养"，而应<strong>总结不同题型的答题技巧与结构</strong>，找到答题的公式和框架。任何科目感到"玄学"，本质上都是尚未找到其学习方法。</p>
+    </div>
+
+    <h3>作文评分的三层结构</h3>
+
+    <div class="flow">
+        <div class="flow-item">
+            <div class="flow-dot"></div>
+            <div class="flow-title">第一层：基础分（约40分）</div>
+            <div class="flow-desc">写够800字且不跑题。若作文低于40分，问题必为<strong>跑题或字数不足</strong>。</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot gold"></div>
+            <div class="flow-title">第二层：结构分（约45–46分）</div>
+            <div class="flow-desc">开头论点清晰；行文中分论点采用<strong>多种论证方法</strong>加以佐证；分论点支撑总论点；结尾完整收束。</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot"></div>
+            <div class="flow-title">第三层：亮点分（52分以上）</div>
+            <div class="flow-desc">在结构完整的基础上，恰当引用<strong>名人名言</strong>或具有深度的论据，实现分数跃升。</div>
+        </div>
+    </div>
+
+    <div class="alert alert-gold">
+        <p class="alert-title">关键结论</p>
+        <p>高中作文本质是议论文。掌握"字数+不跑题→结构→亮点"的递进规则，作文提分路径非常清晰，并不神秘。</p>
+    </div>
+</section>
+
+<!-- ══════════════════════ CH2 小学 ══════════════════════ -->
+<section class="content-section" id="ch2">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第二章</span>
+            <h2>小学阶段竞赛路径规划</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <p class="alert-title">前提共识</p>
+        <p>以下规划针对<strong>目标985及以上、有意接触竞赛/强基/综评</strong>的家庭。规划的本质不是"想走就必须这么学"，而是"能走通竞赛/强基路径的孩子，在小段就应具备这样的学习节奏与能力"。</p>
+    </div>
+
+    <h3>小段数学的本质</h3>
+    <p>小学阶段数学训练的核心是<strong>在固定规则下，按步骤进行计算与推导</strong>（如列竖式）。对于数学能力尚可的孩子，课内内容不应成为阻碍，也不构成所谓的"门槛"。</p>
+
+    <h3>拓展路径：小奥的定位</h3>
+    <p>当孩子课内学有余力时，应通过更高难度的挑战进一步发展能力。小学阶段除小奥和英语之外，不适合涉及其他学科的竞赛训练。</p>
+
+    <div class="two-col">
+        <div class="card card-accent">
+            <h4>走数竞方向</h4>
+            <p>浅奥 → 深奥 → 初中知识 → 初联 → 高联</p>
+            <p style="font-size:0.88em;color:var(--text-muted);">小奥需推至较深层次，为后续竞赛体系打好基础。</p>
+        </div>
+        <div class="card card-accent">
+            <h4>走综合/强基方向</h4>
+            <p>浅奥 → 初中知识（快速推进）</p>
+            <p style="font-size:0.88em;color:var(--text-muted);">小奥无需推得过深，快速衔接初中内容更为高效。</p>
+        </div>
+    </div>
+
+    <div class="alert alert-success">
+        <p class="alert-title">进度参考</p>
+        <p>若在六年级前完成上述对应阶段的内容，<strong>小升初有机会进入优质初中</strong>，且能进入快班获得更好的教学资源与更快速度。</p>
+    </div>
+
+    <h3>五年级数竞规划要点</h3>
+    <ul>
+        <li>需以<strong>实际进度</strong>而非年级判断现状：小数是否完成？浅奥/深奥是否完成？初段是否已开始？</li>
+        <li>五年级过半时，至少应<strong>深奥啃得差不多</strong>，六年级需完成初中数学。</li>
+        <li>目标竞赛有所成就的孩子，进度至少比同龄人<strong>快两年</strong>。</li>
+    </ul>
+</section>
+
+<!-- ══════════════════════ CH3 学习方法 ══════════════════════ -->
+<section class="content-section" id="ch3">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第三章</span>
+            <h2>学习方法论："倒爬珠峰"之辩</h2>
+        </div>
+    </div>
+
+    <h3>何为"倒爬珠峰"</h3>
+    <p>"倒爬珠峰"是一种民间教育理念，指<strong>从最难的内容入手</strong>，再回头学习基础内容。例如：不学高中先搞高联，不学初中先搞初联，不学小数先搞小奥，或在某一板块直接挑战最难的题目。</p>
+
+    <div class="alert alert-danger">
+        <p class="alert-title">警示</p>
+        <p>倒爬珠峰并非绝对错误，但<strong>风险较大，容易使多数孩子受挫</strong>。绝大多数孩子更适合"顺爬"——从简单问题入手，逐步进阶，持续获得正反馈与成就感。</p>
+    </div>
+
+    <h3>教育观的核心：黑盒理论</h3>
+
+    <div class="quote-block">
+        每个孩子如同一个不透明的黑盒。作为老师和家长，我们能掌控<strong>输入</strong>（上课、看书、讲授），能看到<strong>输出</strong>（做题结果、升学成绩），但孩子内部如何将输入转化为输出，我们无从得知。
+        <span class="author">—— 主讲人核心教育观</span>
+    </div>
+
+    <p>因此，看到"某人上了清北"就倒推其成长路径并加以模仿，往往不可靠。每个孩子天赋、性格、学习习惯截然不同，不能简单复制。</p>
+
+    <h3>适合倒爬珠峰的孩子特征</h3>
+    <ul>
+        <li>天赋较高，理解能力强</li>
+        <li>乐于接受挑战</li>
+        <li>不喜欢重复性学习</li>
+        <li>遇到难题时能<strong>主动倒推寻找解决方案</strong>，自学能力较强</li>
+    </ul>
+
+    <h3>若已选择倒爬的建议</h3>
+    <ol>
+        <li><strong>实时观测孩子状态</strong>（此条适用于任何学习路径）</li>
+        <li><strong>提供充足的信息库与补充资源</strong>——当遇到知识缺口时（如高联数论中遇到小奥/初联未覆盖的内容），能快速查阅或找到老师补足</li>
+    </ol>
+
+    <div class="quote-block">
+        能通过倒爬珠峰解决这个问题的人，顺爬大概率也能快速达到同样高度。区别仅在于部分孩子认为顺爬挑战性不足，缺乏动力。
+        <span class="author">—— 弹幕精华观点</span>
+    </div>
+</section>
+
+<!-- ══════════════════════ CH4 新领军 ══════════════════════ -->
+<section class="content-section" id="ch4">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第四章</span>
+            <h2>清华新领军计划详解</h2>
+        </div>
+    </div>
+
+    <h3>培养目标与出口</h3>
+    <p>新领军旨在培养<strong>数学领域的深入研究人才</strong>。第一批学生尚在八年培养期内，尚无毕业数据。基于当前培养方案，毕业生大概率走向：</p>
+    <ul>
+        <li><strong>高校研究岗位</strong>（最主要方向）</li>
+        <li>统计与数据分析方向</li>
+        <li>算法与AI方向（以数学工具为核心）</li>
+    </ul>
+    <p>在数学大方向下，可转向物理的数学方法、统计分析、数据分析等关联领域。</p>
+
+    <h3>核心筛选机制：现学现考</h3>
+
+    <div class="alert alert-danger">
+        <p class="alert-title">关键概念 — 现学现考</p>
+        <p>通过初审和初试后，候选人被<strong>召集至清华现场</strong>，由教授现场讲授大学数学课程，随后<strong>当场考试</strong>检验学习效果。内容随机，难以押题，考查的实质是<strong>数学天赋与学习能力</strong>。</p>
+    </div>
+
+    <p>选拔面向<strong>初三、高一、高二</strong>学生，是少数可以提前升入大学的通道之一。</p>
+
+    <h3>新领军 vs 数竞的核心区别</h3>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>维度</th>
+                    <th>数学竞赛（数竞）</th>
+                    <th>清华新领军</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>考查内容</strong></td>
+                    <td>高中数学内容 + 更难的解题方法</td>
+                    <td>大学数学（现场教学后考试）</td>
+                </tr>
+                <tr>
+                    <td><strong>核心能力</strong></td>
+                    <td>解题技巧与思维深度</td>
+                    <td>数学天赋与即时学习能力</td>
+                </tr>
+                <tr>
+                    <td><strong>关键关卡</strong></td>
+                    <td>高联一试 + 高联二试</td>
+                    <td>初试 → 现学现考</td>
+                </tr>
+                <tr>
+                    <td><strong>可预测性</strong></td>
+                    <td>考纲明确，可针对性训练</td>
+                    <td>内容随机，无法提前准备</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alert alert-gold">
+        <p class="alert-title">重要提醒</p>
+        <p>在一两年内数竞与新领军双修，<strong>基本不可能</strong>（除非是数学天才）。两者考查方向差异显著，需尽早确定主攻路径。</p>
+    </div>
+
+    <h3>新领军备考时间线（倒推法）</h3>
+    <div class="flow">
+        <div class="flow-item">
+            <div class="flow-dot"></div>
+            <div class="flow-title">初三前</div>
+            <div class="flow-desc">精通高联一试，掌握浅层二试知识，微积分与线性代数基本学完</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot gold"></div>
+            <div class="flow-title">初一前</div>
+            <div class="flow-desc">解决所有小数、初数、高数的校内内容</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot"></div>
+            <div class="flow-title">小学三年级</div>
+            <div class="flow-desc">基本完成小学校内数学</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot"></div>
+            <div class="flow-title">小学四年级</div>
+            <div class="flow-desc">基本完成小奥</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot gold"></div>
+            <div class="flow-title">小学五至六年级</div>
+            <div class="flow-desc">完成初中数学与高中数学（越学越快，后期加速明显）</div>
+        </div>
+    </div>
+
+    <div class="alert alert-success">
+        <p class="alert-title">积极信号</p>
+        <p>竞赛学习具有<strong>前期慢、后期快</strong>的特征。部分孩子高一仅为省二水平，高二即可冲入金牌行列。进入学习节奏后，积累效应显著。</p>
+    </div>
+</section>
+
+<!-- ══════════════════════ CH5 数竞vs物竞 ══════════════════════ -->
+<section class="content-section" id="ch5">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第五章</span>
+            <h2>数竞 vs 物竞：核心差异与选择</h2>
+        </div>
+    </div>
+
+    <div class="two-col">
+        <div class="card card-accent">
+            <h4>数学竞赛</h4>
+            <p>训练核心：<strong>在有限知识范围内的答题思路与技巧</strong></p>
+            <p>变难方式：引入更多知识 → 通过思维难度、综合度、解题复杂度提升区分度</p>
+            <p>高联一试难度逐年上升，但<strong>不依赖扩展知识范围</strong></p>
+        </div>
+        <div class="card card-accent">
+            <h4>物理竞赛</h4>
+            <p>训练核心：<strong>大学物理学内容的深度掌握</strong></p>
+            <p>变难方式：考试范围不断扩大（普物+四大力学），计算量持续增加</p>
+            <p>光在考纲内已无区分度，<strong>知识层面的难度</strong>是主要壁垒</p>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <p class="alert-title">选择启示</p>
+        <p>若天赋偏向<strong>逻辑推理与技巧运用</strong>，数竞更合适；若擅长<strong>知识面广度与计算能力</strong>，且不排斥大量知识学习，物竞是可选路径。数竞小天才的培养年龄可更早（如13岁可冲省级前列），物竞对知识积累的依赖更重。</p>
+    </div>
+
+    <h3>物竞生转新领军的可能性</h3>
+    <p>对于<strong>强省省一或省队水平</strong>的物竞生（且愿意转学数学），转新领军反而可能比纯数竞生更有优势：</p>
+    <ol>
+        <li>冲击CMO的数竞生不会专门投入时间学大学数学，但物竞生<strong>不可能不学微积分</strong></li>
+        <li>物竞训练中已学习大学普物，面对现学现考时<strong>听懂概率更大</strong></li>
+    </ol>
+    <p>核心门槛：是否愿意<strong>在数学方向上一路本硕博深造</strong>。</p>
+</section>
+
+<!-- ══════════════════════ CH6 卓越攀登 ══════════════════════ -->
+<section class="content-section" id="ch6">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第六章</span>
+            <h2>卓越计划与攀登计划</h2>
+        </div>
+    </div>
+
+    <div class="two-col">
+        <div class="card card-accent">
+            <h4>卓越计划（北大）</h4>
+            <p>通过后可<strong>保送北京大学</strong></p>
+            <p>从人数与奖项门槛来看，<strong>相对更容易</strong></p>
+        </div>
+        <div class="card card-accent">
+            <h4>攀登计划（清华）</h4>
+            <p>通过后可<strong>降一本线录取清华大学</strong></p>
+            <p>与卓越方向类似，核心差异在于院校偏好</p>
+        </div>
+    </div>
+
+    <div class="alert alert-purple">
+        <p class="alert-title">选择建议</p>
+        <p>喜欢清华准备攀登，喜欢北大准备卓越。两者与新领军、英才计划以及少年班的选拔有一个共同核心：<strong>现学现考</strong>。</p>
+    </div>
+
+    <h3>为何采用"现学现考"机制</h3>
+    <p>当固定的考核范围与学习套路被充分研究后（如高考数理化已有成熟方案），选拔将失去区分度。近年来物竞、化竞、生竞考试范围扩大、难度飙升，根本原因在于<strong>原有考纲内已无法区分真正有天赋的学生</strong>。现学现考使准备变得不可能，从而筛选出真正具备数学/物理直觉的人才。</p>
+
+    <h3>卓越/攀登备考内容</h3>
+    <ul>
+        <li>普物基础必须打得<strong>特别扎实</strong>，数学物理方法、微积分、线性代数等必须学习</li>
+        <li>四大力学至少应<strong>通览教材</strong>，不可完全空白</li>
+        <li>物竞与卓越/攀登之间的差距<strong>没有想象中那么大</strong>，但数竞与新领军/英才之间差距较大</li>
+    </ul>
+
+    <h3>高三参加卓越/攀登是否值得</h3>
+    <p>值得。若当年招简招收高三学生，持有金银牌的竞赛生<strong>应当参加</strong>。理由：初试阶段耗时以月计，但一旦入营，除非有致命问题，不会被刷。而回报极高——卓越通过即保送，攀登通过即降一本线。对于能拿金银牌的孩子，用四个月时间将高考总分考到550分并非难事。</p>
+</section>
+
+<!-- ══════════════════════ CH7 强基 ══════════════════════ -->
+<section class="content-section" id="ch7">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第七章</span>
+            <h2>强基计划全解析</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-gold">
+        <p class="alert-title">核心定位</p>
+        <p>强基计划承担着<strong>大量985招生名额</strong>。即使某专业在某省仅多招2人，相对于该专业原本3–5人的统招名额，已是大幅增加。目标985的家庭，强基<strong>必须关注</strong>。</p>
+    </div>
+
+    <h3>难度定位</h3>
+    <p>整体难度：<strong>高考之上，竞赛之下</strong>。最顶尖的学校（清北华五）考查难度可对标高联一试水平。</p>
+
+    <h3>考查科目与形式（一校一策）</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>学校/层次</th>
+                    <th>考核形式</th>
+                    <th>理科笔试科目</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>清华 / 北大</strong></td>
+                    <td>初试笔试 + 面试 + 体测</td>
+                    <td>数学、物理、化学</td>
+                </tr>
+                <tr>
+                    <td><strong>华五</strong></td>
+                    <td>依专业考两科</td>
+                    <td>如物理专业考数学+物理；化学专业考物理+化学</td>
+                </tr>
+                <tr>
+                    <td><strong>部分学校</strong></td>
+                    <td>分数达标直接面试 + 体测</td>
+                    <td>无笔试</td>
+                </tr>
+                <tr>
+                    <td><strong>复交南</strong></td>
+                    <td>先笔试再面试，再结合高考分</td>
+                    <td>笔试优先</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alert alert-info">
+        <p class="alert-title">备考建议</p>
+        <p>在目标学校未确定时，优先准备<strong>数学和物理</strong>；目标专业涉及化学则额外准备化学。强基学习的本质是在高考内容基础上，<strong>向外拓展20%–40%的难度</strong>。</p>
+    </div>
+
+    <h3>强基的两类备考人群</h3>
+    <div class="two-col">
+        <div class="card card-accent">
+            <h4>竞赛生搞强基</h4>
+            <p>核心问题：<strong>跨科目</strong>（如数竞生需额外学物理和化学）</p>
+            <p>策略：在高考科目常规学习中，<strong>利用周末完成拓展</strong></p>
+        </div>
+        <div class="card card-accent">
+            <h4>综合生搞强基</h4>
+            <p>策略：在难题轮学习阶段同步准备强基</p>
+            <p>最晚冲刺：高考后15天（对自律、师资、题目精准度要求极高）</p>
+        </div>
+    </div>
+
+    <h3>降维打击的逻辑</h3>
+
+    <div class="alert alert-purple">
+        <p class="alert-title">策略建议</p>
+        <p>无论未来是否走强基，只要学有余力，<strong>都应学习强基内容</strong>。经过高强度训练后面对中等难度考试，即为"降维打击"。近年高考数学、物理的难题也越来越多地出现在强基考试范围内。</p>
+    </div>
+
+    <h3>强基真题来源拆解</h3>
+    <p>通过拆解2020年至2024年强基真题，发现主要由以下三类组成：</p>
+    <ol>
+        <li><strong>历年自主招生题目</strong>（2020年已终止）——改数复用</li>
+        <li><strong>高考/联考/模考压轴题</strong>——改数后基本保留原题思路</li>
+        <li><strong>外校历年强基题目</strong>——跨校复用（如某华五出现top二校的原题）</li>
+    </ol>
+
+    <div class="alert alert-success">
+        <p class="alert-title">刷题路径</p>
+        <p>① 历年强基真题 → ② 自主招生题集 → ③ 各校强基真题 → ④ 高考/联考/模考压轴题 → ⑤ 机构整理的针对性题集</p>
+    </div>
+
+    <h3>清北破格强基政策变化（2025年）</h3>
+    <div class="alert alert-danger">
+        <p class="alert-title">重大变化</p>
+        <p>往年破格生<strong>无人数限制</strong>，合格即录取。2025年起设置上限：<strong>北大310人，清华130人</strong>。选拔引入"相对值"概念——破格生综合成绩减去本省最低分非破格生的综合成绩。</p>
+    </div>
+    <p>今年最终的相对值为<strong>负的3.04分</strong>，这意味着排行榜中最后一名破格生的综合成绩比本省最低分非破格生仍低3.04分，换算为高考分约<strong>低25–30分</strong>。</p>
+    <p>结论：政策依然<strong>接受破格生综合分低于非破格生</strong>，破格优势虽被缩减，但仍然显著。</p>
+
+    <div class="alert alert-gold">
+        <p class="alert-title">数据波动预判</p>
+        <p>分差在未来年份<strong>会有波动</strong>（更多人将选择破格通道），但"破格生可低于非破格生"的基本结论稳定。参考意义在于确认了政策对破格生的包容度。</p>
+    </div>
+</section>
+
+<!-- ══════════════════════ CH8 综评 ══════════════════════ -->
+<section class="content-section" id="ch8">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第八章</span>
+            <h2>综合评价招生</h2>
+        </div>
+    </div>
+
+    <h3>什么是综合评价</h3>
+    <p>综合评价（综评）是在高考之外提供额外测试机会的录取方式。各校高考成绩占比从<strong>50%到85%</strong>不等（硬性底线为50%）。综评<strong>仅在本省投放名额</strong>，是省内政策性照顾。</p>
+
+    <div class="alert alert-info">
+        <p class="alert-title">省份覆盖</p>
+        <p>综评主要覆盖<strong>浙江、江苏、上海、广东、山东</strong>等省份。北京目前仅7–8所院校参与（含中外合办及北外）。其他省份暂无综评通道。</p>
+    </div>
+
+    <h3>综评的省内优势</h3>
+    <p>以浙大为例：在北京，即使是强基+奖项加持，基本需在全省<strong>1000名以内</strong>才有机会；而在浙江，<strong>5000–6000名</strong>即有机会通过综评进入浙大（冷门专业方向）。</p>
+
+    <h3>浙江综评争取清北的策略</h3>
+    <ul>
+        <li>数竞生首先需<strong>搞好高考</strong>（浙大综评高考占比85%）</li>
+        <li>裸分排名需保证在浙江省<strong>6000名以内</strong></li>
+        <li>同时争取<strong>省队或省一</strong>，概率将大幅提升</li>
+    </ul>
+
+    <div class="alert alert-success">
+        <p class="alert-title">降分实例</p>
+        <p>某学生在江苏通过综评进入东南大学生物科学专业，高考616–619分，相比当年统招线<strong>降分超过30分</strong>。</p>
+    </div>
+</section>
+
+<!-- ══════════════════════ CH9 物竞 ══════════════════════ -->
+<section class="content-section" id="ch9">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第九章</span>
+            <h2>物理竞赛学习规划</h2>
+        </div>
+    </div>
+
+    <h3>初一起步 → 高一进省队：时间分析</h3>
+
+    <div class="alert alert-danger">
+        <p class="alert-title">目标评估</p>
+        <p>在中等竞赛省份，高一进省队属于<strong>高目标</strong>。省队名额固定（中等省份约十几个），竞争者包含高二、高三选手，且物竞不存在数竞那样的保送进队机制。</p>
+    </div>
+
+    <h3>达成该目标的时间线要求</h3>
+    <div class="flow">
+        <div class="flow-item">
+            <div class="flow-dot"></div>
+            <div class="flow-title">初一结束前</div>
+            <div class="flow-desc">高中物理校内内容全部学完（约半年学习量）</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot gold"></div>
+            <div class="flow-title">初一至初二</div>
+            <div class="flow-desc">普物（光、电、热、力）学完并完成配套习题（主要为程力、舒力等）</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot"></div>
+            <div class="flow-title">同步进行</div>
+            <div class="flow-desc">四大力学初步涉猎 + 微积分学习</div>
+        </div>
+        <div class="flow-item">
+            <div class="flow-dot gold"></div>
+            <div class="flow-title">赛前半年至一年</div>
+            <div class="flow-desc">高强度做题训练（如刷难题集）</div>
+        </div>
+    </div>
+
+    <div class="alert alert-gold">
+        <p class="alert-title">代价提醒</p>
+        <p>若坚持高一进省队，接下来两年多<strong>几乎没有照顾课内学习的时间</strong>。建议将目标调整为高二或高三进省队，留出更充裕的余量。</p>
+    </div>
+
+    <h3>关于教练的优先级</h3>
+
+    <div class="alert alert-purple">
+        <p class="alert-title">核心原则</p>
+        <p>若学校有教练且能每年稳定带出省队或金牌学生，<strong>优先听从教练安排</strong>。教练长期跟随孩子，最了解其特点、进度与状态。</p>
+    </div>
+
+    <p>判断教练是否靠谱的关键指标：是否曾<strong>带出过省队或金牌级别的学生</strong>。若无成功案例且训练方案明显不合理（如要求初中生每天做三套IMO题目），则需考虑更换。</p>
+</section>
+
+<!-- ══════════════════════ CH10 生竞 ══════════════════════ -->
+<section class="content-section" id="ch10">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第十章</span>
+            <h2>生物竞赛：趋势与风险</h2>
+        </div>
+    </div>
+
+    <h3>教练为何偏爱生竞生</h3>
+    <p>生竞生通常在学习竞赛前已完成高中数理化，综合成绩往往<strong>非常出色</strong>。即使生物竞赛未达预期，他们仍可能通过<strong>综合成绩或强基通道进入清北</strong>——最终出口表现良好。</p>
+
+    <div class="alert alert-danger">
+        <p class="alert-title">趋势预警</p>
+        <p>近年来政策文件逐步收紧竞赛保送生的专业选择自由度：从"鼓励学习特长相关科目" → "原则上应学习特长科目" → "原则上应学习竞赛科目对应的<strong>基础学科</strong>"。未来三年的走向存在不确定性。</p>
+    </div>
+
+    <h3>生物方向的现实困境</h3>
+    <p>若政策最终限定竞赛保送生只能学习对应基础学科：</p>
+    <ul>
+        <li>数竞 → 数学/算法/统计/AI，<strong>出路宽广</strong></li>
+        <li>物竞 → 物理大类（电子/自动化/机械），<strong>应用面广</strong></li>
+        <li>生竞 → 生物科学/生物技术/生物医学，<strong>强相关优质方向有限</strong></li>
+    </ul>
+
+    <div class="alert alert-info">
+        <p class="alert-title">客观分析</p>
+        <p>生物方面较好的方向如<strong>生物医学工程</strong>，其核心科目实为生物+数学+物理，并非仅生物学好即可胜任。若临床医学通道未来关闭，生竞生的出路选择将更加受限。是否学生竞，核心参考应为<strong>综合成绩水平</strong>——若高考能达到600分左右，生竞可考虑；否则需慎重。</p>
+    </div>
+</section>
+
+<!-- ══════════════════════ CH11 时间线 ══════════════════════ -->
+<section class="content-section" id="ch11">
+    <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-header-text">
+            <span class="section-num">第十一章</span>
+            <h2>各阶段时间线与学习资源</h2>
+        </div>
+    </div>
+
+    <h3>初中速通高中数学的方法</h3>
+    <div class="card card-accent">
+        <ul>
+            <li>途径一：学校提供快班资源，跟随进度推进</li>
+            <li>途径二：购买优质高中教师的网课，<strong>开倍速刷完</strong></li>
+            <li>推荐正版课程（配套习题），学习模式为<strong>听课 → 做题 → 听课 → 做题</strong>循环</li>
+            <li>做题目的为<strong>辅助理解</strong>，而非追求熟练度</li>
+        </ul>
+    </div>
+
+    <h3>教材与教辅推荐</h3>
+    <ul>
+        <li><strong>教材</strong>：当地高考使用的课本</li>
+        <li><strong>教辅</strong>：五三、金考卷、天利38套、高中必刷题等</li>
+    </ul>
+
+    <h3>强基物理的拓展程度</h3>
+    <p>强基物理不要求普物完全搞熟，大致相当于<strong>物理预赛水平</strong>。需记住：竞赛是为大学物理专业准备的，而强基基本仍为<strong>高中生水平</strong>的拓展。</p>
+
+    <h3>竞赛学习的通用原则</h3>
+
+    <div class="alert alert-purple">
+        <p class="alert-title">核心共识</p>
+        <p>竞赛不是标准化流程。每个孩子特点不同，路径各异。选择竞赛或强基的前提是<strong>课内学有余力</strong>——是用更多付出换取更低风险或更丰厚回报的策略，而非"课内搞不定就送去学竞赛"的退路。</p>
+    </div>
+
+    <div class="quote-block">
+        千万不要抱着"综合学不下来就送去学竞赛"的心态。现在的逻辑是：课内手拿把掐，没有压力 → 以额外付出换更低风险或更丰厚回报 → 选择竞赛或强基。
+        <span class="author">—— 关于竞赛定位的核心观点</span>
+    </div>
+
+    <h3>已规划资源整理</h3>
+    <div class="alert alert-success">
+        <p class="alert-title">后续发布</p>
+        <p>以下资料将通过社群渠道整理发布：综评各省学校分布清单、强基历年真题汇编、历年攀登/英才/卓越试题参考、各计划政策完整解读文章。请关注公众号或添加微信获取。</p>
+    </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer style="text-align:center; padding:40px 0; border-top:1px solid var(--border); margin-top:48px;">
+    <p style="font-size:0.85em; color:var(--text-muted); font-family:'Noto Serif SC',serif;">
+        本文档基于家长答疑直播内容精编整理，仅供教育规划参考。<br>
+        具体政策请以各校官方最新发布为准。
+    </p>
+</footer>
+
+</div><!-- /.container -->
+</body>
+</html>

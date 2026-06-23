@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理竞赛规划全指南</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --success-bg: #eaf5ed;
+  --danger: #8b2500;
+  --danger-bg: #fdf0ec;
+  --info: #1a5276;
+  --info-bg: #eaf2f8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #b8860b 100%);
+  color: #fff;
+  padding: 56px 32px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.page-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.4em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.page-header .subtitle {
+  font-size: 1.05em;
+  opacity: 0.9;
+  font-weight: 300;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header-tags {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.82em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.tag-purple { background: rgba(107,45,91,0.35); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+.tag-gold { background: rgba(184,134,11,0.35); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Navigation */
+.nav-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: 32px auto;
+  max-width: 960px;
+  position: relative;
+}
+
+.nav-label {
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.72em;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.06em;
+}
+
+.nav-card h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1em;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+
+.nav-grid a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.92em;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.nav-grid a:hover {
+  color: var(--accent);
+}
+
+.nav-grid a .num {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85em;
+  min-width: 20px;
+}
+
+/* Section */
+section {
+  margin: 40px auto;
+  max-width: 960px;
+  padding: 0 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-title .s-num {
+  font-size: 0.72em;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section-title h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.45em;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.15em;
+  color: var(--accent);
+  margin: 24px 0 12px;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+}
+
+p { margin-bottom: 12px; }
+
+ul, ol {
+  padding-left: 22px;
+  margin-bottom: 14px;
+}
+
+li {
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+li strong {
+  color: var(--text-primary);
+}
+
+/* Alert boxes */
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 18px 0;
+  border-left: 4px solid;
+  font-size: 0.93em;
+}
+
+.alert-gold { background: var(--highlight); border-left-color: var(--gold); }
+.alert-gold strong { color: var(--gold); }
+
+.alert-success { background: var(--success-bg); border-left-color: var(--success); }
+.alert-success strong { color: var(--success); }
+
+.alert-danger { background: var(--danger-bg); border-left-color: var(--danger); }
+.alert-danger strong { color: var(--danger); }
+
+.alert-info { background: var(--info-bg); border-left-color: var(--info); }
+.alert-info strong { color: var(--info); }
+
+.alert-purple { background: var(--accent-bg); border-left-color: var(--accent); }
+.alert-purple strong { color: var(--accent); }
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+
+/* Two columns */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 16px 0;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.92em;
+}
+
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
+}
+
+tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+/* Flow timeline */
+.flow {
+  position: relative;
+  padding-left: 32px;
+  margin: 20px 0;
+}
+
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+
+.flow-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+
+.flow-item.gold::before { background: var(--gold); }
+
+.flow-item h4 {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 1em;
+}
+
+.flow-item p {
+  margin: 0;
+  font-size: 0.92em;
+  color: var(--text-secondary);
+}
+
+/* Difficulty bar */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.diff-bar .label {
+  font-size: 0.82em;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+}
+
+.diff-bar .bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.diff-bar .bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent));
+}
+
+.diff-bar .bar-fill.gold {
+  background: linear-gradient(90deg, #daa520, var(--gold));
+}
+
+.diff-bar .bar-fill.danger {
+  background: linear-gradient(90deg, #c0392b, var(--danger));
+}
+
+.diff-bar .bar-fill.info {
+  background: linear-gradient(90deg, #2980b9, var(--info));
+}
+
+.diff-bar .value {
+  font-size: 0.82em;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 36px;
+}
+
+/* Book grid */
+.book-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.book-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.book-item .book-name {
+  font-weight: 600;
+  font-size: 0.92em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.book-item .book-desc {
+  font-size: 0.82em;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Highlight text */
+.accent { color: var(--accent); font-weight: 600; }
+.gold { color: var(--gold); font-weight: 600; }
+.green { color: var(--success); font-weight: 600; }
+.red { color: var(--danger); font-weight: 600; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .page-header { padding: 40px 20px 36px; }
+  .page-header h1 { font-size: 1.6em; }
+  .container, section { padding: 0 16px; }
+  .nav-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .book-grid { grid-template-columns: 1fr; }
+  .section-title h2 { font-size: 1.2em; }
+  table { font-size: 0.82em; }
+  thead th, tbody td { padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE HEADER ==================== -->
+<header class="page-header">
+  <h1>物理竞赛规划全指南</h1>
+  <p class="subtitle">从入门到金牌 —— 赛制解读 / 学习路径 / 书单推荐 / 省份策略</p>
+  <div class="header-tags">
+    <span class="tag tag-purple">五大学科竞赛</span>
+    <span class="tag tag-gold">保送清北路径</span>
+    <span class="tag tag-purple">强基计划</span>
+    <span class="tag tag-gold">省一至集训队</span>
+  </div>
+</header>
+
+<!-- ==================== NAVIGATION ==================== -->
+<div class="container">
+  <nav class="nav-card">
+    <span class="nav-label">目录导航</span>
+    <h3>内容总览</h3>
+    <div class="nav-grid">
+      <a href="#ch1"><span class="num">01</span> 物理竞赛概览与核心价值</a>
+      <a href="#ch2"><span class="num">02</span> 赛制结构与奖项体系</a>
+      <a href="#ch3"><span class="num">03</span> 各奖项的升学作用</a>
+      <a href="#ch4"><span class="num">04</span> 竞赛适配性评估</a>
+      <a href="#ch5"><span class="num">05</span> 竞赛规划的核心决策维度</a>
+      <a href="#ch6"><span class="num">06</span> 强省与弱省的差异化策略</a>
+      <a href="#ch7"><span class="num">07</span> 自学路径：知识准备</a>
+      <a href="#ch8"><span class="num">08</span> 自学路径：心理准备</a>
+      <a href="#ch9"><span class="num">09</span> 分阶段学习规划时间线</a>
+      <a href="#ch10"><span class="num">10</span> 从零基础到参赛的完整规划</a>
+      <a href="#ch11"><span class="num">11</span> 各阶段推荐书单</a>
+      <a href="#ch12"><span class="num">12</span> 物理竞赛考点全景</a>
+      <a href="#ch13"><span class="num">13</span> 政策补充：强基与综评</a>
+      <a href="#ch14"><span class="num">14</span> 常见问题解答</a>
+    </div>
+  </nav>
+</div>
+
+<!-- ==================== CHAPTER 1 ==================== -->
+<section id="ch1">
+  <div class="section-title">
+    <span class="s-num">Chapter 01</span>
+    <h2>物理竞赛概览与核心价值</h2>
+  </div>
+
+  <p>物理竞赛是<strong>五大学科竞赛</strong>之一，为学有余力的中学生提供了超出课内知识体系的深度学习与竞技平台。</p>
+
+  <div class="alert alert-gold">
+    <strong>核心利好：</strong>在每年全国决赛中，物理学科前五十名可进入<strong>国家集训队</strong>，获得<strong>保送清华大学、北京大学</strong>的资格。原则上建议选择与物理相关的专业方向。
+  </div>
+
+  <h3>竞赛的本质定位</h3>
+  <ul>
+    <li>竞赛是<strong>锦上添花</strong>，而非替代课内学习</li>
+    <li>只有在课内知识掌握扎实的前提下，才有精力投入竞赛</li>
+    <li>竞赛奖项在各阶段均有一定作用，不仅仅是冲刺清北的工具</li>
+  </ul>
+</section>
+
+<!-- ==================== CHAPTER 2 ==================== -->
+<section id="ch2">
+  <div class="section-title">
+    <span class="s-num">Chapter 02</span>
+    <h2>赛制结构与奖项体系</h2>
+  </div>
+
+  <h3>国内赛事层级</h3>
+  <p>国内物理竞赛分为<strong>预赛、复赛、决赛</strong>三个赛段。成绩足够优秀者可代表国家参加亚洲奥林匹克竞赛和国际奥林匹克竞赛。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>赛段</th>
+        <th>考试时间</th>
+        <th>对应层级</th>
+        <th>产出奖项</th>
+        <th>含金量</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>预赛</strong></td>
+        <td>每年九月第一个周六</td>
+        <td>市级</td>
+        <td>无升学含金量</td>
+        <td>极低，对高考加成可忽略</td>
+      </tr>
+      <tr>
+        <td><strong>复赛</strong></td>
+        <td>每年九月第三个周六</td>
+        <td>省级</td>
+        <td>省一 / 省二 / 省三</td>
+        <td>较高（省二以上覆盖强基）</td>
+      </tr>
+      <tr>
+        <td><strong>决赛</strong></td>
+        <td>复赛后数月</td>
+        <td>全国级</td>
+        <td>国一 / 国二 / 国三（金银铜牌）</td>
+        <td>极高（银牌以上破格入围强基）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>关键时间节点：</strong>预赛与复赛间隔仅<strong>两周</strong>。若仅以预赛为目标准备，两周时间内难以完成复赛知识的学习与熟练，会造成一次参赛机会的浪费。
+  </div>
+
+  <h3>省队选拔机制</h3>
+  <p>复赛中省一的<strong>前十几至二十几名</strong>（因省份强弱而异）将入选省队，代表所在省份参加全国决赛。</p>
+</section>
+
+<!-- ==================== CHAPTER 3 ==================== -->
+<section id="ch3">
+  <div class="section-title">
+    <span class="s-num">Chapter 03</span>
+    <h2>各奖项的升学作用</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>奖项层级</th>
+        <th>升学作用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong class="accent">国家集训队（前50名）</strong></td>
+        <td>保送清华、北大；专业原则上建议选择与物理相关的方向</td>
+      </tr>
+      <tr>
+        <td><strong class="gold">金牌 / 银牌</strong></td>
+        <td>可与C9、双一流名校签约；<strong>银牌以上可破格入围强基计划</strong>（清北可能需额外条件，其他985院校基本均可破格）</td>
+      </tr>
+      <tr>
+        <td><strong>铜牌</strong></td>
+        <td>在中等以上省份进入省队后，决赛大概率获得国银以上；铜牌多留给弱省考生</td>
+      </tr>
+      <tr>
+        <td><strong>省一</strong></td>
+        <td>可参加名校学科营活动；可入围北大清华"攀登""卓越"等计划；在强基计划中有一定加成</td>
+      </tr>
+      <tr>
+        <td><strong>省二</strong></td>
+        <td>可覆盖大部分学校的<strong>强基计划</strong>报名门槛；可作为综合评价的敲门砖</td>
+      </tr>
+      <tr>
+        <td><strong>省三</strong></td>
+        <td>用处有限，但部分特殊计划仍可作为参考材料</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-purple">
+    <strong>竞赛的双重优势：</strong>① 竞赛奖项本身在特殊招生计划中带来加分；② 竞赛所学知识可直接应对强基计划、综合评价中的<strong>校测</strong>内容——校测题目本身与竞赛题目有较强关联性。
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4 ==================== -->
+<section id="ch4">
+  <div class="section-title">
+    <span class="s-num">Chapter 04</span>
+    <h2>竞赛适配性评估</h2>
+  </div>
+
+  <p>竞赛并非适合所有学生。需要评估以下基础条件：</p>
+
+  <div class="two-col">
+    <div class="card">
+      <h4>课内基础要求</h4>
+      <ul>
+        <li>中考模拟题准确率<strong>≥ 90%</strong></li>
+        <li>高中同步/高考题目准确率<strong>≥ 75%~80%</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>不建议参赛的情况</h4>
+      <ul>
+        <li>课内公式尚未掌握、基础计算尚不熟练</li>
+        <li>高三阶段课内成绩中游，企图孤注一掷冲国集</li>
+        <li>脱产学习竞赛导致课内成绩严重下滑</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>警示：</strong>除国家集训队前五十名外，其他所有同学最终都需要<strong>高考成绩</strong>。即使获得银牌，若课内成绩不达标，强基计划等政策路径均无法走通。课内成绩是一切的基础。
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 5 ==================== -->
+<section id="ch5">
+  <div class="section-title">
+    <span class="s-num">Chapter 05</span>
+    <h2>竞赛规划的核心决策维度</h2>
+  </div>
+
+  <p>制定竞赛规划需从以下三个维度综合考量：</p>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>维度一：所在省份的竞争烈度</h4>
+      <p>预赛与复赛为省内竞争，强省与弱省的分数线和竞争激烈程度差异巨大，直接决定备考节奏。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>维度二：当地竞赛氛围与资源</h4>
+      <p>竞赛强省的教学资源丰富、教练经验丰富、学习意识超前；弱省则参赛人数少、分数线相对较低。</p>
+    </div>
+    <div class="flow-item">
+      <h4>维度三：孩子的目标、基础与性格</h4>
+      <p>目标高低决定规划深度；课内基础决定能否投入竞赛；孩子的性格特质（自律性、抗压能力、成长曲线）同样关键。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-purple">
+    <strong>目标设定建议：</strong>以<strong>省一为目标</strong>进行规划，"进可攻、退可守"。达到省一后视情况冲击金银铜牌或国家集训队；避免直接以国集为目标导致目标链条过长、反馈周期过久而丧失动力。
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 6 ==================== -->
+<section id="ch6">
+  <div class="section-title">
+    <span class="s-num">Chapter 06</span>
+    <h2>强省与弱省的差异化策略</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 style="margin-top:0">竞赛强省</h3>
+      <p><strong>代表省市：</strong>湖南、湖北、浙江、上海、北京、四川等传统竞赛强省</p>
+      <h4>优势</h4>
+      <ul>
+        <li>教学资源丰富，竞赛教练经验丰富</li>
+        <li>学习意识与竞赛意识超前（五年级即开始规划）</li>
+      </ul>
+      <h4>劣势</h4>
+      <ul>
+        <li>复赛竞争极其激烈，拿省奖难度远高于弱省</li>
+      </ul>
+      <div class="alert alert-danger">
+        <strong>最晚启动时间：</strong>初三之前必须开始竞赛知识学习
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">竞赛弱省</h3>
+      <h4>优势</h4>
+      <ul>
+        <li>参赛人数少，名额固定，分数线相对较低</li>
+        <li>跟随竞赛一轮课程即有可能获得省一甚至进入省队</li>
+      </ul>
+      <h4>相对劣势</h4>
+      <ul>
+        <li>教学资源较少</li>
+      </ul>
+      <div class="alert alert-success">
+        <strong>最晚启动时间：</strong>高一仍可开始
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>补充说明：</strong>强省省队的分数线可能远高于弱省。在中等以上省份进入省队后，决赛大概率获得国银以上。铜牌名额较多留给特别弱的省份。
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 7 ==================== -->
+<section id="ch7">
+  <div class="section-title">
+    <span class="s-num">Chapter 07</span>
+    <h2>自学路径：知识准备</h2>
+  </div>
+
+  <h3>知识学习的推荐顺序</h3>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>第一阶段：初中物理 + 穿插初中数学</h4>
+      <p>以物理学科为例，学习光学等内容时需同步补充初中数学中的相关知识。秉持"现学现用"原则，无需先将初中数学全部学完再回头学物理。</p>
+    </div>
+    <div class="flow-item">
+      <h4>第二阶段：高中物理 + 穿插高中数学</h4>
+      <p>学习力学时需补充三角函数（sin、cos）等高中数学知识。同样采用交叉学习的方式。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>第三阶段：物理竞赛知识</h4>
+      <p>在高中物理基础扎实后，正式进入竞赛一轮、二轮的学习。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>关键提醒：</strong><strong>高中物理 ≠ 高考物理</strong>。自学时的检测资料应选用对应高中物理教材的练习题，而非高考题。高考的考查方式与侧重点和竞赛完全不同。二者关系如同"自行车质检标准与机动车质检标准"。
+  </div>
+
+  <h3>学习方法论</h3>
+  <ul>
+    <li><strong>禁止一遍过：</strong>至少学习两遍。第一遍了解知识点及初步应用，第二遍侧重综合应用与中高难度题目</li>
+    <li><strong>新知识用大块时间：</strong>暑假等集中时段学习新内容，保证学习状态连续性</li>
+    <li><strong>强化训练用碎片时间：</strong>秋季、寒假、春季用于刷题巩固，频率要求不高</li>
+    <li><strong>达标线：</strong>模拟题准确率达到<strong>90%~95%以上</strong>即可推进下一阶段</li>
+  </ul>
+</section>
+
+<!-- ==================== CHAPTER 8 ==================== -->
+<section id="ch8">
+  <div class="section-title">
+    <span class="s-num">Chapter 08</span>
+    <h2>自学路径：心理准备</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 style="margin-top:0">对学生的要求</h3>
+      <div class="flow">
+        <div class="flow-item">
+          <h4>求知欲</h4>
+          <p>具备勇于质疑、主动思考的精神。不被动接受，而是主动追问"为什么这样""能否换一种方法""这类题目是否可用统一方法"。</p>
+        </div>
+        <div class="flow-item">
+          <h4>细致</h4>
+          <p>物理竞赛涉及大量计算，需要耐心与细心。化简时丢失字母或系数是最常见的错误，每次都需要认真对待，不能以"下次注意"敷衍。</p>
+        </div>
+        <div class="flow-item gold">
+          <h4>严谨</h4>
+          <p>在思路清晰的基础上，确保每一步代数计算的准确性，养成逐步检查的习惯。</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">对家长的要求</h3>
+      <div class="flow">
+        <div class="flow-item">
+          <h4>包容与支持</h4>
+          <p>家庭是孩子的成长底气。足够的安全感让孩子有勇气面对挑战与做出选择。</p>
+        </div>
+        <div class="flow-item">
+          <h4>有边界的理解</h4>
+          <p>理解与包容不等于无条件放任。支持与要求并存，才能帮助孩子建立方向感。无条件满足反而容易导致迷茫与空虚。</p>
+        </div>
+        <div class="flow-item gold">
+          <h4>不焦虑</h4>
+          <p>每个孩子的成长曲线不同，不是线性增长也不是指数增长，甚至同一孩子在不同阶段的成长速度也难以预测。理性看待横向比较，避免因网络上的"别人家孩子"而产生不必要的焦虑。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 9 ==================== -->
+<section id="ch9">
+  <div class="section-title">
+    <span class="s-num">Chapter 09</span>
+    <h2>分阶段学习规划时间线</h2>
+  </div>
+
+  <div class="alert alert-gold">
+    <strong>注意：</strong>以下为理想化的时间规划，重点在于参考思路而非死板执行。具体进度因人而异，以目标达成度为推进标准。
+  </div>
+
+  <div class="flow">
+    <div class="flow-item">
+      <h4>六年级暑假（6~9月）</h4>
+      <p>利用升入初中前的大块时间，初步学习初中物理知识。大块时间学习新知识效率远高于开学后的碎片时间。</p>
+    </div>
+    <div class="flow-item">
+      <h4>初一</h4>
+      <p>学完初中物理全部知识；穿插补充所需的初中数学内容。以中考题检测，准确率≥80%后推进下一阶段。</p>
+    </div>
+    <div class="flow-item">
+      <h4>初二</h4>
+      <p>完成高中物理知识学习（数学同步推进）。同样分为基础知识学习与巩固加深两个阶段。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>初三</h4>
+      <p>根据中考压力灵活安排：中考压力大的地区，上学期可接触竞赛知识、下学期回归中考；有保送/贯通项目的学生自由度更高。核心目标：<strong>考上一个好的高中</strong>。</p>
+    </div>
+    <div class="flow-item">
+      <h4>高一</h4>
+      <p>尽量争取参加当年物理竞赛，积累实战经验；系统学习竞赛一轮知识。</p>
+    </div>
+    <div class="flow-item">
+      <h4>高二</h4>
+      <p>正式参赛冲刺奖项。若获得省一或进入省队，高三可继续冲更高奖项。</p>
+    </div>
+    <div class="flow-item gold">
+      <h4>高三</h4>
+      <p>若高一高二已取得省一以上成绩，可尝试冲击国集；若成绩一般，建议回归课内、稳住高考成绩，利用已有竞赛奖项走强基计划/综合评价等多元升学路径。</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>高三参赛的前提：</strong>必须是高一高二已获得省一以上奖项，且课内成绩学有余力的同学。对于课内成绩中游的同学，高三应优先提高课内成绩，而非全力以赴冲刺竞赛。
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 10 ==================== -->
+<section id="ch10">
+  <div class="section-title">
+    <span class="s-num">Chapter 10</span>
+    <h2>从零基础到参赛的完整规划</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>年级</th>
+        <th>主要任务</th>
+        <th>达标标准</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>五年级</strong></td>
+        <td>完成小学课内数学；保持整体学业水平</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>六年级</strong></td>
+        <td>提前学习初中课内数学</td>
+        <td>尽量学完，至少完成初一初二数学</td>
+      </tr>
+      <tr>
+        <td><strong>初一</strong></td>
+        <td>学完初中数学与初中物理</td>
+        <td>中考题准确率≥80%</td>
+      </tr>
+      <tr>
+        <td><strong>初二</strong></td>
+        <td>初中竞赛内容（约半年）+ 高中课内推进</td>
+        <td>初中竞赛测试准确率≥80%</td>
+      </tr>
+      <tr>
+        <td><strong>初三</strong></td>
+        <td>以考上好高中为第一目标；时间充裕者可学高中课内</td>
+        <td>中考稳定发挥</td>
+      </tr>
+      <tr>
+        <td><strong>高一</strong></td>
+        <td>学完高中课内 + 竞赛一轮；尝试参赛</td>
+        <td>竞赛一轮核心内容掌握</td>
+      </tr>
+      <tr>
+        <td><strong>高二</strong></td>
+        <td>竞赛一轮/二轮 + 正式参赛</td>
+        <td>冲击省一/省队</td>
+      </tr>
+      <tr>
+        <td><strong>高三</strong></td>
+        <td>视成绩决定：冲国集 或 回归课内走多元升学</td>
+        <td>高考成绩 + 竞赛奖项协同</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-purple">
+    <strong>核心原则：</strong>上一个好高中的优先级高于盲目推进竞赛进度。高中学校提供的竞赛教练、资源倾斜和培养体系，远优于校外自学。
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 11 ==================== -->
+<section id="ch11">
+  <div class="section-title">
+    <span class="s-num">Chapter 11</span>
+    <h2>各阶段推荐书单</h2>
+  </div>
+
+  <h3>一、物理启蒙（预科轮）</h3>
+  <p><strong>适用对象：</strong>五年级至初一，尚未接触物理的学生</p>
+  <div class="card">
+    <h4>《头条物理学》</h4>
+    <p>以趣味方式介绍电学、力学等物理专有名词与基本概念，适合零基础启蒙阅读。</p>
+  </div>
+
+  <h3>二、初中课内 + 初中竞赛（预备轮）</h3>
+  <p><strong>适用对象：</strong>正在学习或已完成初中物理的学生</p>
+  <div class="two-col">
+    <div class="card">
+      <h4>初中课内</h4>
+      <ul>
+        <li>人教版物理教材（权威教材）</li>
+        <li>《五年中考三年模拟》（五三）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>初中竞赛</h4>
+      <ul>
+        <li>《物理培优新方法》</li>
+        <li>《初中小绿本》</li>
+        <li>《新编初中物理竞赛辅导》</li>
+      </ul>
+    </div>
+  </div>
+  <p>初中竞赛内容可衔接高中竞赛知识板块，同时覆盖自招考试。若当地无自招，对中考题型可形成"降维打击"。</p>
+
+  <h3>三、高中课内（基础轮）</h3>
+  <p><strong>适用对象：</strong>已完成初中物理的学生</p>
+  <div class="card">
+    <ul>
+      <li>高中物理课本（必修系列）</li>
+      <li>高中数学课本（与物理同步推进）</li>
+      <li>《高中物理学》习题详解</li>
+      <li>五三（高考版）</li>
+    </ul>
+    <p style="margin-top:8px;color:var(--text-muted);font-size:0.9em;">注意：教材编写默认读者已有初中学历。高中物理与高考物理的考查方式不同，竞赛备考阶段不要用高考题检测。</p>
+  </div>
+
+  <h3>四、竞赛一轮</h3>
+  <p><strong>适用对象：</strong>学完高中课内，正式进入竞赛学习阶段</p>
+  <div class="alert alert-gold">
+    <strong>核心书目：</strong>建议五选二或五选三，其中程书为必备。
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>书名</th>
+        <th>特点</th>
+        <th>推荐度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>程书（程力/程电）</strong></td>
+        <td>竞赛生人手一套，难度适中偏高，涵盖力学与电磁学</td>
+        <td><span class="accent">必备</span></td>
+      </tr>
+      <tr>
+        <td><strong>黑白皮</strong></td>
+        <td>黑皮为知识点讲解，白皮为题库</td>
+        <td>推荐</td>
+      </tr>
+      <tr>
+        <td><strong>小绿本</strong></td>
+        <td>知识点覆盖范围广</td>
+        <td>推荐</td>
+      </tr>
+      <tr>
+        <td><strong>新大纲</strong></td>
+        <td>适合刷完成书后的进阶练习</td>
+        <td>推荐</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>五、竞赛二轮</h3>
+  <p><strong>适用对象：</strong>竞赛一轮已完成，冲击省一/省队阶段</p>
+  <div class="card">
+    <ul>
+      <li>《精编漫谈题选》</li>
+      <li>《更高更妙的物理》（"高妙"）</li>
+      <li>《俄罗斯五百题》</li>
+      <li>《二百道物理学难题》</li>
+      <li>《国培》（国家集训队教练出题编制）</li>
+      <li><strong>《高等数学》</strong>（同济版绿皮或北大版红皮）</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-danger">
+    <strong>重要提示：</strong>高等数学（微积分）应提前至竞赛一轮就开始学习。根据复赛数据，微积分占比从第33届的<strong>37.5%</strong>飙升至第40届的<strong>83.3%</strong>。不掌握微积分，复赛中几乎无法完成任何一道完整题目。
+  </div>
+
+  <h3>六、竞赛三轮 / 高阶</h3>
+  <div class="card">
+    <ul>
+      <li>金三尔《难题集萃》</li>
+      <li>《新概念物理》（力学等大学教材）</li>
+      <li>实验类：《全国中学生物理竞赛实验指导书》（官方必备）</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>关于四大力学：</strong>不建议省一层级的选手学习四大力学。四大力学为冲国赛阶段（竞赛二轮后期）的内容。即使今年复赛题稍有涉及，也未真正考查四大力学的核心知识点。
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 12 ==================== -->
+<section id="ch12">
+  <div class="section-title">
+    <span class="s-num">Chapter 12</span>
+    <h2>物理竞赛考点全景</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 style="margin-top:0">物理模块</h3>
+      <ul>
+        <li>力学</li>
+        <li>热学</li>
+        <li>电磁学</li>
+        <li>光学</li>
+        <li>近代物理</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">数学基础</h3>
+      <ul>
+        <li>中学阶段全部数学（初中+高中）</li>
+        <li><strong>高等数学</strong>（微积分等）</li>
+      </ul>
+      <p style="font-size:0.85em;color:var(--text-muted);margin-top:8px;">学数学竞赛可能不涉及高等数学，但学物理竞赛必须学习高等数学。</p>
+    </div>
+  </div>
+
+  <h3>微积分在复赛中的占比趋势</h3>
+  <div class="card">
+    <div class="diff-bar">
+      <span class="label">第33届</span>
+      <div class="bar-track"><div class="bar-fill info" style="width:37.5%"></div></div>
+      <span class="value">37.5%</span>
+    </div>
+    <div class="diff-bar">
+      <span class="label">第34~39届</span>
+      <div class="bar-track"><div class="bar-fill" style="width:65%"></div></div>
+      <span class="value">~65%</span>
+    </div>
+    <div class="diff-bar">
+      <span class="label">第40届</span>
+      <div class="bar-track"><div class="bar-fill danger" style="width:83.3%"></div></div>
+      <span class="value">83.3%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 13 ==================== -->
+<section id="ch13">
+  <div class="section-title">
+    <span class="s-num">Chapter 13</span>
+    <h2>政策补充：强基与综评</h2>
+  </div>
+
+  <h3>强基计划</h3>
+  <ul>
+    <li>面向<strong>985院校</strong>，基础学科方向（数学、物理等），本硕博连读</li>
+    <li>除复交南模式外，其他大学<strong>按高考成绩划线入围</strong></li>
+    <li>银牌以上可<strong>破格入围</strong>（清北可能需额外条件，其他985基本均可）</li>
+    <li>近年改革力度大，不同学校模式差异显著，不再全国统一</li>
+  </ul>
+
+  <h3>综合评价</h3>
+  <ul>
+    <li>专业覆盖面远广于强基计划，热门专业基本都有</li>
+    <li>需提交材料（课内成绩、大考成绩、竞赛奖项等）</li>
+    <li>省二奖项在材料审核阶段即可帮助通过初筛</li>
+    <li>综评办得较好的地区：<strong>浙江</strong>（三位一体）、<strong>江苏</strong>、<strong>上海</strong>、<strong>山东</strong>、广东</li>
+  </ul>
+
+  <h3>少年班</h3>
+  <ul>
+    <li><strong>西交大少年班：</strong>初三应届生可报考，免中考、免高考、免研究生考试，"2+X"培养模式</li>
+    <li><strong>中科大少年班：</strong>高中阶段可报考，需参加高考</li>
+    <li>准备内容：数学与物理需达到竞赛一轮难度</li>
+    <li>考查科目较多（数学、物理、化学、语文等），数学和物理为重点</li>
+  </ul>
+</section>
+
+<!-- ==================== CHAPTER 14 ==================== -->
+<section id="ch14">
+  <div class="section-title">
+    <span class="s-num">Chapter 14</span>
+    <h2>常见问题解答</h2>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：高一开始学竞赛还来得及吗？</h4>
+    <p>取决于省份和目标。在弱省，高一仍可启动。若目标不是冲国集而是拿省二走综评/强基，高一开始准备<strong>完全可行</strong>。关键是在稳定课内的基础上推进竞赛学习，高一开始准备强基计划是合理节奏。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：省二奖项有用吗？</h4>
+    <p>无论在哪个省份，<strong>省二都有用</strong>。省二可覆盖大部分学校的强基计划报名门槛，是综合评价材料审核中的重要加分项。省二的价值在于<strong>扩大选择面</strong>。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：物理竞赛可以完全自学吗？</h4>
+    <p>可以自学，但完全自学成才者<strong>不多</strong>。自学需要极强的自律性、信息检索能力和自我检测能力。跟课学习在知识检测和资料获取方面更有保障。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：课内成绩一般，只学竞赛行不行？</h4>
+    <p><strong>绝对不行。</strong>除国家集训队50人外，所有同学最终都需要高考成绩。即使拿到银牌，课内成绩不达标也走不了强基计划等政策路径。"竞赛是锦上添花"——课内知识是一切的基础。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：孩子进度快、数学基础好，能否加速？</h4>
+    <p>若孩子接受能力强（如初一已学完初中物理、数学已学到高联水平），可直接推进高中物理与竞赛内容。进度超前的孩子可选择的政策路径更多（如少年班、提前参赛等）。但仍需注意<strong>数学与物理同步推进</strong>，物理竞赛对高等数学有刚性需求。</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h4>Q：扎实学就会慢，进度落后怎么办？</h4>
+    <p>竞赛本身就不是"学一遍就过"的事情。第一遍是了解与初步应用，第二、三遍才真正发现深层问题。扎扎实实学一年竞赛一轮是合理的。不必焦虑进度，以每章节测试准确率≥80%为推进标准。</p>
+  </div>
+
+  <div class="card">
+    <h4>Q：学习竞赛能获得什么？</h4>
+    <p>除升学优势外，竞赛能够：① 拓宽思维——形成"竞赛思维"，看问题时能想到更多维度；② 磨练耐心——长时间高强度的刷题训练培养坚韧性格；③ 奠定科研基础——为未来的学术研究打下性格与能力基础。</p>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer style="text-align:center;padding:40px 24px;color:var(--text-muted);font-size:0.82em;border-top:1px solid var(--border);margin-top:48px;">
+  <p>本文档整理自物理竞赛规划专题直播内容，仅供参考。</p>
+  <p>具体政策请以教育部及各高校最新公告为准。</p>
+</footer>
+
+</body>
+</html>

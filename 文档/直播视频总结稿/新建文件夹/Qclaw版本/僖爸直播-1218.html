@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>僖爸直播-1218</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>僖爸直播-1218</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>我们关键是待会儿给大家看哈，我们的红包灿烂哈，灿烂的红包，大家明白是干啥子不哈</li>
+                <li>还有一个我觉得第二点哈，对娃儿有要多鼓励一哈，就让他娃儿自己要有信心一点，因为在</li>
+                <li>待会儿你们最后的问题了，我们集中地回复一些问题就行了，</li>
+                <li>最后后头我把他做过的卷子，然后因为都会发出来空白卷儿，然后把他</li>
+                <li>以前考试过的留下来，把错题给他勾出来，让他反复的做，可能起码做了还是至少是三遍吧</li>
+                <li>然后还有个要有个考试的技巧，在刷题的后期因为有时候他题又刷得好，有时候题刷得不好</li>
+                <li>后头我都给他讲，你刷考试的时候你要把第一遍先把简单的做了</li>
+                <li>然后后头后期第二遍，你再去过诶，你能会的，去想一想，能能够做会的那种</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>积累哈，然后三四五年级哈都可以要重视阅读写作，阅读写作哈，五六年级准备控制时间。一二年级先把字写好，三四年级把词该该背的背到。大概上样子，因为时间比较敏感哈，希望我不想大家都很熟了，而且我们很多都是老朋友，我不想在这儿说哈，我们到时有机会我们还会见面，见面再再详聊，因为网上哈东西。</p>
+                <p>我给大家说一下简单的个比较哈，那会比较简单的。我人讲了讲了都喜欢讲得久，我五分钟就结束哈。然后我交给其他的家长，他们过往家长，他们是实战派的，给你们做一些分享。</p>
+                <p>入院率哈，大幅的高哈，这样子哈，都基本上这样子哈。黑科技都没在那儿展现哈，小板子黑科技，任何事情多了搞不好，所以我们是精英制，不能多了哈。给你们带你们托管的名师哈简单的给你们介绍下。</p>
+                <p>吴老师是理科王者哈，理科王者，他是我们三爸的。画技，然后都都获了奖，然后而且搞信号，所以说他是全能冠军。Hello，然后我们来简单嘞，大海老师过来，大海老师哈，大海老师是原来学而思的大海老师，很出名，很出名哈。</p>
+                <p>你在学而思混得风生水起，过来在领志领这边学历太低了，对，你现在加油哦。要的，但是他带的娃儿上程度高得很他这个学历带个娃儿是最最撇的，好调皮嘛，虽然是从事数学系，还是比较。原来当年还去教过高中咯，数学那时候，对对对，学校出来的，当时从事数学是A等男的，B加哦。</p>
+                <p>数学还是很牛逼的哈，好，然后呀，太多老师了哈，好，然后再加上几个校长。过来个王毅哈，王校长哈，你们如果要去南平，到那儿找找找王校长然后。然后我们陈陈老师不在，但是我们杜晓在杜杜晓，杜晓在渝北哈，Hello，还有我们陈老师哈，陈老师现在江渝北都在负责哈，陈老师。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>我先直接说你刷了很快，你都发发现你娃儿刷不到积分，你刷不动。” 你复习完了，当时复习的时候他搞懂了，然后你刷题的时候他又搞完完了，所以你看他们都涨得很快，因为他们都比较听我的，上。我跟你们讲，包括你们寒假，你们有些娃娃，你们不相信能够高，跟他刚开始刷题的时候，你寒假可能变化二十分。</p>
+                <p>拿的积分二十分，他们基本上是一个板块儿涨涨涨积分十分，他可能刚开始刷二班二班都是我们。大致上，刷三十来分，那然后他基本上是到了后头，他都刷了六七十分。他可能把复习完，他就涨了四十分，然后他再转了一半，主要是那样子。</p>
+                <p>所以，我我反复给大家说，因为大家我很能理解，但是有时候我没得办法鼓动大家，希望我那面，我跟你们说的是哪个数字。真的，你边复习边刷题，你节约钱，你节约钱，为什么你节约钱。你都不用精打刷，你看起来有人家长觉得我不复习，我直接刷，你刷不走，你刷到一定程度过后，他可能。</p>
+                <p>然后，因为你刷题，你暴露了问题，然后通过复习去解决问题。同时呢， 你复习了，你看刷题的时候，你看你娃儿他有没有进步，。你在检验复习效果，你能达到一个互相促进作用。</p>
+                <p>其实他不会搞忘，所以说我觉得这些是我给大家分享的。你们其实回去过后要要消化，因为有些娃娃在家里面啥都不整，。然后我们猪爸爸，我们今儿请爸爸，我们今儿请的都有很多代表，李同学是。</p>
+                <p>我们猪头和爸爸，但我很少有爸爸来猪妈妈，猪妈妈，。也是哈，对娃娃的关心非常多，哈，然后大家家长晚上好，特别激动。第一次上电视来和大家一起分享，然后哦，前面两位都是学霸。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>六年级如果没上岸的家长哈，然后我觉得也可以听一下。户口在主城区，我看你们想了解什么内容， 听听其他家长给你们分享啥子。第二个部分，我给你们讲哈，我们寒假的一个体系。</p>
+                <p>然后非莲州区户口在主城区，学籍在区县，没得要求燕子，。你学籍在你现在小小学学籍在区县你严格的按照各个区的要求，你学校的要求交文件就行了，大致上。大致上我待会儿我给你们讲哈，大致上包含了你提供一个是居住证明，比如租房或者居住证儿。</p>
+                <p>第二个，或者说是社社保，或者说个体，工商户，。或者说是买房那些很多，只要能证明其中之一就行了。英语效率九十多，我觉得你很不错了，也，你现在不用特别提高你现在已经九十几了，你你你现在如果你小升初上了。</p>
+                <p>但你如果小学只是为了效率提升，我觉得你你九十几了，你没得必要啷个提升嘞。于巧回答的很好哈，所以我看大家可能还是好，我们因为我们再个几分钟正式开始，大家把你们关注的问题都打在公屏上面哈，我待会儿结合你们的问题来一起来讲。第一个部分哈，希望我先跟你们，我会跟你们聊天，让我看你们关心啥子，。</p>
+                <p>第三个的话，我们会有六年级的今年六年级的家长。好的，我看这些问题哈，大家都提得很好， 我先收集问题哈，先收集问题。金奥哈，我吴老师，你去给我拿个拿个纸和笔过来，我把你们的问题。</p>
+                <p>然后我把大家关注的问题，通过我们的聊天的内容我都把它尽量是尽量是把它给你们涵盖进去，。我看了一下，一个是例如在小升初阶段重要的学科，学科包括英语。大家听到哪儿听到哪儿丢哈，听到哪儿丢，有不同的意见。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>然后绝大多数亲学完了过后，特别是你们的班型在别个减配了的，需要注意的是们，你们后面很重要的是一定要系统的复习，万儿遗忘，三百六十度无死角的复习。有些区会看一次成绩，但是我都跟你讲，你试下那几次都很重要，试下过后高年级的成绩哈，。然后到了后期阶段，你来整难题，不要你板块基础没问题。</p>
+                <p>是因为他就只有几个高端班型搞得出来，他低端的整不出来，所以哈，这些是那些特色。当然，部分初中知识还是有必要掌握的，因为有些学校他还扯，他要搞点儿那些东西，你没整，你那吃亏。哈，哈，说希望，然后你最后准备好了，那些准备好了，你要比赛前，你可以针对性的某些学校，正好短期的，不用哈说说整很久，正好短期的那种集训，是没。</p>
+                <p>所以说，起码给你简单总结哈：先校内，校内的搞好了，然后进入板块。比武前针对某个学校整一下，就一个比较好的安排。数数学你权重一百，语文你权重五十，哈，英语可以忽略，英语可以忽略，英语效率把它抓好就行了。</p>
+                <p>然后三四五年级哈都可以重视阅读写作，阅读写作哈。一二年级先把字写好，三四年级把词该该背的背到。大概上样子，因为时间比较敏感哈，希望我不想大家都很熟了，而且我们很多都是老朋友，我不想在这儿说哈。</p>
+                <p>我们到时有机会，我们还会见面，见面再再详聊，因为网上哈东西。我给大家说一下简单的个比较哈，来会比较简单的。我人讲了讲了都喜欢讲得久，我五分钟就结束哈。</p>
+                <p>然后我交给其他的家长，他们过往家长，他们是实战派的，给你们做一些分享。我们和别个的区别我告诉大家，我会更加系统化。入院率哈，大幅的高哈，这样子哈，都基本上这样子哈。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>都是可以去参加的，因为是不像我们嘛，是收到了一些密电的，然后是直接进复试的哈，直接是进校复试。校门口的小卖部的一些简历投简历那些，然后反正家长都要去努力的为娃儿做好那些后面的工作哈，娃儿努力提分嘛，我们家长也要。今天呢，我都分享，基本上我们整个小的那一个都分享到那点儿哈。</p>
+                <p>如果有有啥子想问的，我们下来可以再沟通哈，因为我非常愿意的分享。因为呀，当时我自己也是非常的迷茫和焦虑的哈，也是在其他妈妈的分享里面少走了很多弯路哈。预祝我们林子的小朋友都能够考到自己心仪的学校。</p>
+                <p>然后我觉得跟大家当个科代表哈，因为宋妈妈他们基本上是，宋妈妈你们是几年级过的。然后他们当然他们有一点哈，我看很多人都羡慕宋妈妈，还有一个好老公。还有一个小宋妈妈，小宋妈妈是名牌大学的，小宋妈妈也成了。</p>
+                <p>然后从头就起，然后一路陪伴，所以我跟那讲，我觉得其实你们在你们后面，包括初中、高、高中、升大学，大学找工作。我跟你们说，父母其实有时候筛选呢，我真的认为跟父母的那种陪伴也很有关系。所以我觉得这一点，这个，然后简单的复个盘，然后我觉得，第一个，就说其实他们还板块当时学的不是很扎实，所以有人问我是复习跟刷题。</p>
+                <p>你听西麻的建议，需要注意的是，我见过无数的人，我包括在直播间，我一直跟大家说，边复习边刷题是效果最好的。我先直接说你刷了很快，你都发发现你娃儿刷不到积分，你刷不动。你复习完了，当时复习的时候他搞懂了，然后你刷题的时候他又搞完完了，所以你看他们都涨得很快，因为他们都比较听我的，上。</p>
+                <p>我跟你们讲，包括你们寒假，你们有些娃娃，你们不相信啷个高。跟他刚开始刷题的时候，你寒假可能变化二十分。拿的积分二十分，他们基本上是一个板块儿涨涨涨积分十分，他可能刚开始刷二班二班都是我们。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

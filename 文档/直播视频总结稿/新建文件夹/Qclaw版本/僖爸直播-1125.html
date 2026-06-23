@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>僖爸直播-1125</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>僖爸直播-1125</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>然后没得放，好，最后肯定竞赛退下来，这样退下来，最后高考考得不是理想走了个重大你们可能对</li>
+                <li>是某科竞赛里面的重庆市的第一名，第一名</li>
+                <li>那另外一个娃娃呀，是班上的倒数第一</li>
+                <li>其实核心秘密，我跟你们讲个，除了八中的体系以外</li>
+                <li>你们可能是第一次听博主，你们那些听到的啥子混编班儿读不得哟，把你娃儿毁了</li>
+                <li>需要注意的是，你个人在那儿，就像我刚刚跟你们说高三同学，你个人在里面自卑，牛哇一句</li>
+                <li>大家都很阳光上进，需要注意的是说，能够普遍优秀</li>
+                <li>因为平时考试难一点儿嘛，好好整，我觉得应该是他实力六百来分是没得问题的</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>你们如果自己去打听哈，西马说的，重庆的，包括以前的，甚至的中考状元也好，高考状元哈，出事儿的都多。只要起码我在这儿不没得办法给你们讲讲别个的隐私的哈，没得办法讲名字，。我再给你们举举两个例子，其中有一个娃娃我给你们讲个正面和反面的。</p>
+                <p>他高三的时候，找希望就说：“希望你能不能跟娃儿谈哈，包括跟他规划哈，。跟他家长规划说，这个他们很惆怅，为啥他们学竞赛。” 他说竞赛，但他妈在我们那儿竞赛垫底，文化成绩也一般。</p>
+                <p>不好，然后他娃儿压力在很大，都是一天胡言乱语了，都出现真的都出现一点那种胡言乱语了，极其不正常了。然后没得放，好，最后肯定竞赛退下来，这样退下来，最后高考考得不是理想走了个重大你们可能对。对于最好的班儿，我跟你讲哈，我们一班儿一半都是清华北大，他娃儿考的重大，是基本上哈，上班上唯一一个考的重大。</p>
+                <p>我又给你们讲另外一个例子，然后他都变得重大起来，但是因为他其实基础条件很优秀。他因为是遭竞赛毁了然后遭竞赛把他时间耽误了，然后把他搞压力分到最好的班儿，压力太大了，所以他遭到极度不自信。那马都是碾压式的，它的级点基本上是满级点，那到。</p>
+                <p>他直接推免清华直博，重庆大学满级点，清华直博，坏事儿又变成了好事儿，让我。我再给你们举另外一个例子，我都不跟你讲那种极端，出了问题，然后另外一个娃娃，然后。然后国家集训队保送了北大，保送了北大，北大。</p>
+                <p>还有点当哈儿家教整那一些，他大概不是在实蝇，结果啥子。结果就导致了他，有颗挂了颗，有颗挂了颗过后，他都没得推免的，他都没得推免的，他没得推免过后后面都。然后跟他们学一样的，都跟他学一样的竞赛，然后但是是班上倒数的，所以他很早就退出了竞赛。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>更精准，就说是他尽量是牵的娃儿，是大多数是考得起的。集团校，因为它有很多分校，所以说，所以说对你们影响不大。哦，你们你拍了哈，好的哈，我给你们讲哈，你们拍的，再跟亲们说几点哈。</p>
+                <p>你们不着急，然后我们会给你们寄个单子，今天会给你们寄个单子过来。你们明后天儿都收到，收到过后你们签收，然后上面你们看哈，上面有加入的要求，联系助理，联系助理，让他拉你进群，进年级群和我们的会员群。第二个，你们告诉我你们的年级，如果是小学的同学哈，我们把一年级到六年级的奥数的视频课，像学而思的各种班的线下那种视频课，全部给给你们。</p>
+                <p>音乐新概念的全部给你们，语文大语文全部给你们。我们自己那么多年的那些，都举个例子，积累的各个大型机构的视频课全部给你们开放。语文哈，大语文、窦胜语文，然后学而思的、新东方的，啥子新思维、培优新方法。</p>
+                <p>有的全部都会给给你们然后新概念包括数数学、语文、英语、物理、化学，初一到高三用来自主学习哈。所以说这个你们到了过后，让他们把资源给你们开通起。我外头没说东西我不想老，我不想老啥子推考啥子资料来吸引大家，因为太功利了。</p>
+                <p>会给给你们，因为你如果冲到到时候你说，呀，别个那些鬼儿还不是有，。我跟你实话，你马上买盗版的，你买盗版的，你要花个一千多两千。因为我们给给所有人能给，所以我不拿突出价值。</p>
+                <p>但是有一些博主可能或者外面的，你可能去买别个会员给你强调资料、推广那不是你们加西马的排一号链接。有且有早培的视频课，全部都有哈，从初一到高三你都有。想娃儿发展发展的好一些，然后遇到择校的困惑，遇到升学的困惑，遇到学习的困惑，都可以找我们。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>然后南岳差点的B区那些有机会，然后一中二塘有机会。好，七龙珠的分校，包括一师那些都有机会，所以我个人我还有百分之二十到三十的名额。六年级自己去拍一号链接第三集，那啥子二十套卷子，是一三八班复试的。</p>
+                <p>这个一号出出生高不是哈，一凡，我待会儿给你讲出生高，你听完哈，我把二号房的出生高，哈，二号房出生高，我待会儿再讲，再再给你们介绍哈。然后有答案外外面我很多盗版，大家晓得西马卖的比较火，外面很多盗版。为了防止盗版，全部给你们录制成了视频课，是二十次刷题课，线下刷题二十次，差不多要五六千，直播间价格二百二十八，值经典值经典。</p>
+                <p>就周中自掏做两套，周末你们在机构去刷题的去，。当然，你如果不在机构刷题，你自己或者你们现在早培了，你们有早培了还想冲上来。但是你已经在早培了，没时间的，你就周中拿来练。</p>
+                <p>你们可能没我快去考的，然后特别是四五年级的，四五年级的大多数亲。大多数四五年级的，如果你们要拍卷子哈，你们拍，你们拍第一季那啥子一三八八复试的中档题。专门节选了过往两年的经典的中档贴，哈，那全是中档贴。</p>
+                <p>一定要练中档题，因为练很偏很难的题，对你没意义的。你娃儿水平达够不着，还有一个大多数考试，他都是考中档题。而且那是浮式，你看六，那是一只嘛嘛浮式的中档题，所以对你们刷题来来摸底玩儿那种。</p>
+                <p>我给你们讲一个，特别是四五年级的亲，你们听我给你们摆，你们很多人在外面报的班儿，难度是远远不够的。我跟你们讲，又远远不够，你们照别人给你贴了标签儿，比方说分了那那类班儿、那类班儿、那类班儿，结果就导致了。你们学的是个减配版，但是你们去比武的时候是真的，很多幺儿直到就说是要去比武的时候才发现自己学了个寂寞，特别是三四年级、四年级的家长。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>那就在那讲，下期又在那讲，他都把每个板块儿给你讲一部分，任何一个那新来的娃儿呢，他都能把它插进去。他把打乱了过后你不好跑到其他机构去，因为你跑到其他机构去，你不好接的。因为他每个板块儿都给你讲了一部分，但是他也没给你讲完。</p>
+                <p>你例如，你拿张卷子来，他说你你做不起，你去找他，你说我那儿没学到哦，考试的卷子我做不起哦。他跟你说，呀，家长不着急嘛，我们还没教完的嘛，。他让你无法检验，说跨度的时间太长了，很多娃儿甚至都搞忘了。</p>
+                <p>然后板块儿不成体系，所以基本上你们栽都栽在那些方面，栽在栽在那些方面。只有那种娃儿很聪明的，然后家长或者管得很细的，甚至再多加机构学的，。这些娃娃，特别是高端班儿的，他最后能出成绩。</p>
+                <p>哈当然，你们如果说是才才三四年级，我建议你们及时止损，。如果你们是已经五年级了，哈，我建议的是把它学完。但是你听西巴说，你要做一些补救措施，天天向上肯定后面有。</p>
+                <p>我能帮到你们，你们学的差不多了，你们学的差不多了，你们自己去拍一号链接，你们个人把板块儿拿来复习走一遍。因为其实奥数都是七大板块，所以你们很多时候学完了或者学差不多了过后。你在开始复习和刷题，包括你们刷题，很多娃儿。</p>
+                <p>成绩他提升不起来，其实是板块的知识它不够系统。然后还有很多漏洞，很多题型没见过，难度原来没上去，所以这个是帮助你们这些娃娃的。二号里面那种板块学习，好，所以一号里面分为了复习一和复习二，我快速跟你们说哈，我不仅要劝你们哈，然后你们信任都个人去配哈，因为我待会儿待会儿要走。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>好，我再等大家三十分钟哈，等到你们下班儿下班儿哈，当然可能下下不起了。没关注的关注一拍打个一拍哈，然后我再给你们说哈，你们拍了我们。明后天收到书过后，联系助理，做备稿，联系助理。</p>
+                <p>下午专门让他们拉你们进群，同时让他们开通视频课。他们拍了会员的，你们如果着急找我的，在后台人数多。如果说是不着急的，我们明今天会给你们单子，收到过后有详细加入流程，到时候。</p>
+                <p>按流程联系助理，好，可以给他们预约时间或者拉你进会员群，亲们。感谢亲们的陪伴，欣赏第三节也是一视频课，断了。小红帽都有课，都有课，你去拍吧，在在叫七号链接，七号链接，你自己安静，。</p>
+                <p>你们要没付款的，赶快把它付了，因为因为待会儿都清掉了。那么还有一个事情，有像图中顶点的出度的和入度的，这个也非常好理解。贡献也是一，那你一条边产生一的出度，产生一的入度，那么你所有顶点它最后的出度和当然会等于入度和。</p>
+                <p>概念那比如一个例子就左边的有向图，它每个点的入度、出度和度数分别为多少。它出度是零，然后它入度是二，因为有两条边指向它，。那么对于D呢，它的出度是一，因为它只有一条连出去的边，那么它的。</p>
+                <p>然后你会发现它的出度的和是二加二加一等于五，那入度的和是二加一加二也等于五，。总的度数是二，B的度数是二，C的度数是三，D的度数是三，。好，我们继续来看两个概念图里面两种比较有意思、比较特殊的图。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

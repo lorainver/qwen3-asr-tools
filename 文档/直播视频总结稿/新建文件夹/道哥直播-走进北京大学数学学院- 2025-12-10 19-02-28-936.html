@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北京大学数学学院——宣讲会精华记录</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --purple-deep: #2D1B4E;
+            --purple-mid: #4A2D73;
+            --purple-light: #6B3FA0;
+            --purple-pale: #E8DEF8;
+            --gold: #C9A84C;
+            --gold-light: #E5D18E;
+            --gold-dark: #A68530;
+            --warm-white: #FAF8F5;
+            --warm-cream: #F3EFE8;
+            --text-primary: #1A1025;
+            --text-secondary: #4A4055;
+            --text-muted: #7A7085;
+            --border: #E2DDE8;
+            --shadow-sm: 0 1px 3px rgba(45, 27, 78, 0.08);
+            --shadow-md: 0 4px 16px rgba(45, 27, 78, 0.10);
+            --shadow-lg: 0 8px 32px rgba(45, 27, 78, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--warm-white);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== Header ===== */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(250, 248, 245, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .site-header.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--purple-deep);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-brand .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .toc-toggle {
+            display: none;
+            background: var(--purple-deep);
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            margin-top: 64px;
+            background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 40%, var(--purple-light) 100%);
+            padding: 5rem 2rem 4.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: white;
+            line-height: 1.3;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.8;
+            max-width: 700px;
+        }
+
+        .hero-meta {
+            margin-top: 2rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta span {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .hero-meta span::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        /* ===== Layout ===== */
+        .page-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* ===== Sidebar TOC ===== */
+        .sidebar {
+            position: sticky;
+            top: 84px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--purple-pale);
+            border-radius: 3px;
+        }
+
+        .toc-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            padding-left: 0.75rem;
+            font-weight: 500;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 2px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 0.45rem 0.75rem;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            border-left: 2px solid transparent;
+            transition: all 0.2s ease;
+            line-height: 1.5;
+        }
+
+        .toc-list a:hover {
+            color: var(--purple-deep);
+            background: var(--purple-pale);
+            border-left-color: var(--gold);
+        }
+
+        .toc-list a.active {
+            color: var(--purple-deep);
+            background: var(--purple-pale);
+            border-left-color: var(--purple-deep);
+            font-weight: 500;
+        }
+
+        .toc-list .toc-sub {
+            padding-left: 1.5rem;
+        }
+
+        .toc-list .toc-sub a {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== Main Content ===== */
+        .main-content {
+            min-width: 0;
+        }
+
+        section {
+            margin-bottom: 3.5rem;
+            animation: fadeInUp 0.5s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-anchor {
+            display: block;
+            position: relative;
+            top: -80px;
+            visibility: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--purple-deep);
+        }
+
+        .section-number {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--gold);
+            min-width: 2rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--purple-deep);
+            line-height: 1.3;
+        }
+
+        .subsection-anchor {
+            display: block;
+            position: relative;
+            top: -80px;
+            visibility: hidden;
+        }
+
+        h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--purple-mid);
+            margin: 2rem 0 0.8rem;
+            padding-left: 0.75rem;
+            border-left: 3px solid var(--gold);
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            line-height: 2;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== Summary Box ===== */
+        .summary-box {
+            background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+            color: white;
+            border-radius: 12px;
+            padding: 1.8rem 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .summary-box h4 {
+            color: var(--gold);
+            margin: 0 0 0.8rem;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.05rem;
+        }
+
+        .summary-box p {
+            color: rgba(255, 255, 255, 0.88);
+            margin-bottom: 0;
+        }
+
+        /* ===== Info Cards ===== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.2rem 0;
+        }
+
+        .info-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem 1.4rem;
+            transition: all 0.25s ease;
+        }
+
+        .info-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: var(--purple-pale);
+        }
+
+        .info-card .card-value {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--purple-deep);
+            line-height: 1.2;
+        }
+
+        .info-card .card-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            line-height: 1.5;
+        }
+
+        /* ===== Timeline ===== */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold), var(--purple-light));
+            border-radius: 1px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.2rem;
+            padding-left: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 10px;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--gold);
+            z-index: 1;
+        }
+
+        .timeline-year {
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            color: var(--purple-deep);
+            font-size: 0.95rem;
+        }
+
+        .timeline-desc {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        /* ===== Lists ===== */
+        .feature-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding: 0.6rem 0 0.6rem 1.8rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(226, 221, 232, 0.5);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 2px;
+            transform: rotate(45deg);
+        }
+
+        .feature-list li strong {
+            color: var(--text-primary);
+        }
+
+        .bullet-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding: 0.4rem 0 0.4rem 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .bullet-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.85rem;
+            width: 6px;
+            height: 6px;
+            background: var(--purple-light);
+            border-radius: 50%;
+        }
+
+        /* ===== Quote Block ===== */
+        .quote-block {
+            background: var(--warm-cream);
+            border-left: 4px solid var(--gold);
+            border-radius: 0 10px 10px 0;
+            padding: 1.5rem 1.8rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .quote-block::before {
+            content: '"';
+            font-family: 'Noto Serif SC', serif;
+            font-size: 3.5rem;
+            color: var(--gold-light);
+            position: absolute;
+            top: 0.2rem;
+            left: 0.8rem;
+            line-height: 1;
+        }
+
+        .quote-block p {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            font-style: italic;
+            padding-left: 1.5rem;
+            line-height: 2;
+            margin-bottom: 0;
+        }
+
+        .quote-attr {
+            font-style: normal;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.8rem;
+            display: block;
+        }
+
+        /* ===== Tag Group ===== */
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.8rem 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.82rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .tag-purple {
+            background: var(--purple-pale);
+            color: var(--purple-deep);
+        }
+
+        .tag-gold {
+            background: rgba(201, 168, 76, 0.15);
+            color: var(--gold-dark);
+        }
+
+        .tag-outline {
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        /* ===== Data Table ===== */
+        .data-table-wrapper {
+            overflow-x: auto;
+            margin: 1.2rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--purple-deep);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--warm-cream);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== Highlight Box ===== */
+        .highlight-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem 1.8rem;
+            margin: 1.2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--gold), var(--purple-light));
+        }
+
+        .highlight-box h4 {
+            margin-top: 0;
+        }
+
+        /* ===== Stat Row ===== */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.2rem;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-item .stat-num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--purple-deep);
+            line-height: 1.2;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* ===== Two Column ===== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.2rem 0;
+        }
+
+        .col-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .col-box h4 {
+            margin-top: 0;
+            color: var(--purple-mid);
+        }
+
+        /* ===== Footer ===== */
+        .site-footer {
+            background: var(--purple-deep);
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 2.5rem 2rem;
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+
+        .site-footer strong {
+            color: var(--gold);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 900px) {
+            .page-layout {
+                grid-template-columns: 1fr;
+                padding: 2rem 1.2rem;
+            }
+
+            .sidebar {
+                position: static;
+                max-height: none;
+                background: white;
+                border-radius: 10px;
+                border: 1px solid var(--border);
+                padding: 1.2rem;
+                margin-bottom: 2rem;
+            }
+
+            .toc-toggle {
+                display: inline-block;
+            }
+
+            .sidebar.collapsed .toc-list {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .stat-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== Print ===== */
+        @media print {
+            .site-header, .sidebar, .toc-toggle { display: none; }
+            .hero { margin-top: 0; }
+            .page-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="site-header" id="siteHeader">
+    <div class="header-inner">
+        <div class="header-brand">
+            <span class="dot"></span>
+            北京大学数学学院 · 宣讲精华
+        </div>
+        <button class="toc-toggle" onclick="toggleToc()" aria-label="切换目录">目录</button>
+    </div>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-label">宣讲会精华记录</span>
+        <h1>走进北京大学<em>数学学院</em></h1>
+        <p class="hero-subtitle">本文整理自北京大学数学科学学院刘旭峰教授招生宣讲会实录，涵盖学院历史、师资力量、人才培养、英才班政策及数学人才成长路径等核心内容。</p>
+        <div class="hero-meta">
+            <span>主讲：刘旭峰教授</span>
+            <span>机构：北京大学数学科学学院</span>
+            <span>整理：口语转书面结构化</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Page Layout ===== -->
+<div class="page-layout">
+
+    <!-- Sidebar TOC -->
+    <aside class="sidebar collapsed" id="sidebar">
+        <div class="toc-title">目录导航</div>
+        <ul class="toc-list">
+            <li><a href="#s1" class="toc-link">一、学院历史沿革</a></li>
+            <li><a href="#s2" class="toc-link">二、师资与科研实力</a></li>
+            <li><a href="#s3" class="toc-link">三、学科建设与荣誉</a></li>
+            <li><a href="#s4" class="toc-link">四、人才培养体系</a></li>
+            <li class="toc-sub"><a href="#s4a" class="toc-link">培养理念与专业方向</a></li>
+            <li class="toc-sub"><a href="#s4b" class="toc-link">课程体系</a></li>
+            <li class="toc-sub"><a href="#s4c" class="toc-link">拔尖学生培养</a></li>
+            <li class="toc-sub"><a href="#s4d" class="toc-link">国际交流</a></li>
+            <li class="toc-sub"><a href="#s4e" class="toc-link">三加X本博贯通</a></li>
+            <li><a href="#s5" class="toc-link">五、人才培养成果</a></li>
+            <li class="toc-sub"><a href="#s5a" class="toc-link">杰出校友与黄金一代</a></li>
+            <li class="toc-sub"><a href="#s5b" class="toc-link">竞赛与科研成绩</a></li>
+            <li><a href="#s6" class="toc-link">六、本科毕业去向</a></li>
+            <li><a href="#s7" class="toc-link">七、数学英才班政策</a></li>
+            <li class="toc-sub"><a href="#s7a" class="toc-link">选拔标准与流程</a></li>
+            <li class="toc-sub"><a href="#s7b" class="toc-link">考核重点与备考建议</a></li>
+            <li class="toc-sub"><a href="#s7c" class="toc-link">英才班与普通班差异</a></li>
+            <li><a href="#s8" class="toc-link">八、数学人才成长路径</a></li>
+            <li class="toc-sub"><a href="#s8a" class="toc-link">核心素质要求</a></li>
+            <li class="toc-sub"><a href="#s8b" class="toc-link">各阶段培养建议</a></li>
+            <li class="toc-sub"><a href="#s8c" class="toc-link">择校与方向选择</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- ===== Section 1: 历史沿革 ===== -->
+        <section>
+            <span class="section-anchor" id="s1"></span>
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2>学院历史沿革</h2>
+            </div>
+
+            <p class="lead">北京大学是中国第一所国立综合性大学，创建于清末。数学系被蔡元培校长亲自列为"第一系"，地位可见一斑。以下为关键时间节点：</p>
+
+            <div class="quote-block">
+                <p>大学宗旨，凡是哲学、文学、应用科学者，都要从纯粹科学入手；治纯粹科学者都要从数学入手，所以各系次序列数学系为第一系。</p>
+                <span class="quote-attr">—— 蔡元培</span>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-year">1913年</span>
+                    <p class="timeline-desc">北大"数学门"开始招生，标志中国现代第一个大学数学系开始教学活动。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">1919年</span>
+                    <p class="timeline-desc">北大将各"门"改为"系"，数学系列第一系。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">1952年</span>
+                    <p class="timeline-desc">全国高校院系调整，北大数学系、清华数学系、燕京大学数学系合并，成立北京大学数学力学系。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">1969年</span>
+                    <p class="timeline-desc">在陕西汉中北京大学分校成立力学系。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">1985年</span>
+                    <p class="timeline-desc">成立概率统计系。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">1995年</span>
+                    <p class="timeline-desc">北京大学数学科学学院正式成立。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2005年</span>
+                    <p class="timeline-desc">成立北京国际数学研究中心。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2013年</span>
+                    <p class="timeline-desc">数学学科成立百年庆典。</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2020年</span>
+                    <p class="timeline-desc">成立中俄数学中心。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Section 2: 师资与科研 ===== -->
+        <section>
+            <span class="section-anchor" id="s2"></span>
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h2>师资力量与科研实力</h2>
+            </div>
+
+            <h3>师资概况</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="card-value">130+</div>
+                    <div class="card-label">现有教职人员</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value">8</div>
+                    <div class="card-label">中科院院士</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value">33</div>
+                    <div class="card-label">国家杰出青年基金获得者</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value">24</div>
+                    <div class="card-label">国家重大人才计划项目入选者</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value">39</div>
+                    <div class="card-label">国家重大人才计划青年项目入选者</div>
+                </div>
+            </div>
+
+            <h3>科研获奖</h3>
+            <div class="two-col">
+                <div class="col-box">
+                    <h4>国家级奖项</h4>
+                    <ul class="bullet-list">
+                        <li>国家自然科学奖二等奖：5项</li>
+                        <li>教育部自然科学奖：4项</li>
+                    </ul>
+                </div>
+                <div class="col-box">
+                    <h4>国际学术奖项</h4>
+                    <ul class="bullet-list">
+                        <li>美国数学会奖项（钟传明等）</li>
+                        <li>ICTP拉马努金奖（许晨阳）</li>
+                        <li>麦克斯韦尔奖</li>
+                        <li>陈松溪统计学相关奖项</li>
+                        <li>丁建、刘若川等国际奖项</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>中国数学会颁发奖项</h4>
+                <div class="tag-group">
+                    <span class="tag tag-purple">华罗庚奖</span>
+                    <span class="tag tag-purple">陈省身奖</span>
+                    <span class="tag tag-purple">冯康科学计算奖</span>
+                    <span class="tag tag-gold">及其他多项</span>
+                </div>
+            </div>
+
+            <h3>国际数学家大会（ICM）受邀报告人</h3>
+            <ul class="feature-list">
+                <li><strong>2018年ICM：</strong>受邀45分钟报告人共8位，均为北大校友。</li>
+                <li><strong>2022年ICM：</strong>鄂维南教授获1小时报告资格；另有多位教师及校友获45分钟报告资格。</li>
+                <li><strong>2026年ICM：</strong>已知获邀者包括朱永昌、徐峰、鲁建峰、林林、邓煜、唐云清、王虹、张瑞祥、沈俊亮、庄志全等校友，以及孙鑫、谢俊逸、袁新意等教师。</li>
+            </ul>
+        </section>
+
+        <!-- ===== Section 3: 学科建设 ===== -->
+        <section>
+            <span class="section-anchor" id="s3"></span>
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2>学科建设与荣誉</h2>
+            </div>
+
+            <div class="summary-box">
+                <h4>学科评估核心数据</h4>
+                <p>在前四次教育部学科评估中，数学与统计学两个学科均列全国首位。2022年第五次学科评估中，数学与统计学均获评<strong>A+</strong>。</p>
+            </div>
+
+            <ul class="feature-list">
+                <li>获教育部与人力资源和社会保障部授予<strong>"全国教育系统先进集体"</strong>称号。</li>
+                <li>2023年获国家一流数学人才培养基地建设一等奖。</li>
+                <li>获国家教学二等奖："立足国家发展需求，开创和引领金融数学应用人才培养"。</li>
+                <li>以上两项同时获北京市教学成果特等奖与一等奖。</li>
+                <li><strong>5门课程</strong>获评国家级一流课程。</li>
+                <li>2021年获全国优秀教材一等奖与二等奖。</li>
+            </ul>
+        </section>
+
+        <!-- ===== Section 4: 人才培养 ===== -->
+        <section>
+            <span class="section-anchor" id="s4"></span>
+            <div class="section-header">
+                <span class="section-number">04</span>
+                <h2>人才培养体系</h2>
+            </div>
+
+            <!-- 4a -->
+            <span class="subsection-anchor" id="s4a"></span>
+            <h3>培养理念与专业方向</h3>
+
+            <div class="summary-box">
+                <h4>培养理念（十六字方针）</h4>
+                <p><strong>加强基础、重视应用、因材施教、分流培养</strong> —— 培养具有世界一流学术素养、学术水平和综合能力的数学精英人才。</p>
+            </div>
+
+            <h4>开设专业方向</h4>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>专业</th>
+                            <th>方向</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>数学与应用数学</td>
+                            <td>基础数学 / 概率论 / 金融数学</td>
+                        </tr>
+                        <tr>
+                            <td>数据科学与大数据技术</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>统计学</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>生物统计学</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>信息与计算科学</td>
+                            <td>计算数学 / 信息科学</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>学院坚持"不设门槛"原则——学生可根据个人兴趣自由选择专业方向，学院不以绩点高低做标签化分流。</p>
+
+            <!-- 4b -->
+            <span class="subsection-anchor" id="s4b"></span>
+            <h3>课程体系</h3>
+
+            <p>学院将全部课程分为四个层级，构建本博贯通式培养体系：</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.3rem;">初级课程</div>
+                    <div class="card-label">本科基础课程，全体学生必修</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.3rem;">中级课程</div>
+                    <div class="card-label">本科核心课程，按专业方向分设</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.3rem;">高级课程</div>
+                    <div class="card-label">前沿热点课程</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.3rem;">专题课程</div>
+                    <div class="card-label">研究生课程，本科四年级即可选修</div>
+                </div>
+            </div>
+
+            <h4>中级课程示例（按方向）</h4>
+            <div class="two-col">
+                <div class="col-box">
+                    <h4>基础数学方向</h4>
+                    <div class="tag-group">
+                        <span class="tag tag-outline">拓扑学</span>
+                        <span class="tag tag-outline">微分几何</span>
+                        <span class="tag tag-outline">实变函数</span>
+                        <span class="tag tag-outline">微分流形</span>
+                    </div>
+                </div>
+                <div class="col-box">
+                    <h4>金融数学方向</h4>
+                    <div class="tag-group">
+                        <span class="tag tag-outline">金融数学引论</span>
+                        <span class="tag tag-outline">数理统计</span>
+                        <span class="tag tag-outline">应用随机过程</span>
+                        <span class="tag tag-outline">证券投资学</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4c -->
+            <span class="subsection-anchor" id="s4c"></span>
+            <h3>拔尖学生培养</h3>
+
+            <h4>数学英才班</h4>
+            <p>教育部特批的招生政策，仅授予北大、清华的数学与物理学科。2018年启动首届招生，2022年扩大招生规模，计划规模不超过100人。</p>
+
+            <h4>荣誉课程体系</h4>
+            <p>自2015年起逐步开设实验班课程（荣誉课程），满足拔尖学生对更高难度课程的需求。</p>
+
+            <h4>本科生科研</h4>
+            <p>自大二起鼓励学生进入导师科研项目，提供学术报告会、交流讲座、学术研讨会、博士生论坛等平台，引导学生了解科研全过程。</p>
+
+            <h4>拔尖计划2.0</h4>
+            <div class="highlight-box">
+                <p>2017年进入"拔尖计划2.0"阶段，成立由<strong>田刚、陈大岳、鄂维南</strong>三位教授组成的专家指导组。分设<strong>基础数学拔尖计划</strong>与<strong>应用数学拔尖计划</strong>两条路径。</p>
+                <ul class="bullet-list" style="margin-top:0.8rem;">
+                    <li>开设暑期学校，实施导师制</li>
+                    <li>国际化培养与本科生科研学术活动</li>
+                    <li>开设特色课程</li>
+                    <li>重点培养创新能力、学术素养、科研能力、质疑能力、独立思考与学习能力</li>
+                </ul>
+            </div>
+
+            <!-- 4d -->
+            <span class="subsection-anchor" id="s4d"></span>
+            <h3>国际交流</h3>
+
+            <ul class="feature-list">
+                <li><strong>基础数学国际暑期学校：</strong>由北京大学、东京大学、首尔大学、莫斯科大学四校联合举办（2018年启动，疫情期间转为线上，持续至今）。</li>
+                <li><strong>应用数学交叉学科学暑期学校：</strong>已举办24期，每年暑假开设4门课程。</li>
+                <li><strong>联合培养：</strong>学生可赴哈佛、MIT、巴黎高师、巴黎综合理工等高校学习课程或进行暑期科研。</li>
+                <li><strong>院系交换项目：</strong>赴国外高水平大学学习一学年或一学期，<strong>全部费用由学院承担</strong>。</li>
+            </ul>
+
+            <p>国际交流项目涵盖国家级、校级、院系级及学生自主申请四个层级。</p>
+
+            <!-- 4e -->
+            <span class="subsection-anchor" id="s4e"></span>
+            <h3>"三加X"本博贯通培养</h3>
+
+            <div class="summary-box">
+                <h4>核心机制</h4>
+                <p>2019年起实施。"三"指三年本科，"X"指研究生阶段（根据论文进展，X可为4、5或6年）。本科四年级即可进入研究生阶段学习。授课教师涵盖基础数学、应用数学、计算、概率统计、金融、信息科学等方向。</p>
+            </div>
+
+            <h4>博士生拔尖计划</h4>
+            <p>建设国家高层次人才培养基地，聘请菲尔兹奖获得者担任国际顾问专家。</p>
+        </section>
+
+        <!-- ===== Section 5: 成果 ===== -->
+        <section>
+            <span class="section-anchor" id="s5"></span>
+            <div class="section-header">
+                <span class="section-number">05</span>
+                <h2>人才培养成果</h2>
+            </div>
+
+            <h3>学生荣誉</h3>
+            <ul class="feature-list">
+                <li><strong>"北大学生年度人物"：</strong>自首届起，数学学院每届均有学生当选，从未空缺。</li>
+                <li><strong>"五四奖章"：</strong>自1998年北大百年校庆起每两年评选一次，数学学院几乎每届均获此殊荣。</li>
+            </ul>
+
+            <h3>竞赛成绩</h3>
+
+            <h4>阿里巴巴全球数学竞赛</h4>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>届次</th><th>金奖人数</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>第一届</td><td>2人</td></tr>
+                        <tr><td>第二届</td><td>3人</td></tr>
+                        <tr><td>第三届</td><td>2人</td></tr>
+                        <tr><td>第四届</td><td>3人</td></tr>
+                        <tr><td>第五、六届</td><td>各3人</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>全国大学生数学竞赛决赛</h4>
+            <p>从第十届起，全国一等奖人数呈递增趋势（7人 → 12人 → 16人），取得压倒性优势。</p>
+
+            <h3>本科生科研成果</h3>
+            <div class="highlight-box">
+                <p>丁建教授与两位博士生（刘玉、夏奥腾）的论文在国际顶尖期刊在线发表——这对绝大多数数学学者而言都是极具难度的成就，体现了本科生科研培养的卓越成效。</p>
+            </div>
+
+            <!-- 5a -->
+            <span class="subsection-anchor" id="s5a"></span>
+            <h3>杰出校友与"黄金一代"</h3>
+
+            <p>自1952年以来培养逾万名学生，其中至少<strong>41位当选两院院士</strong>（2024年又新增一位）。</p>
+
+            <div class="summary-box">
+                <h4>"黄金一代"</h4>
+                <p>2000年前后入学的许晨阳、恽之玮、张伟、刘若川、袁新意、朱歆文、肖良等，已成为国际数学界青年领军数学家，其中半数以上已回到北京大学工作。</p>
+            </div>
+
+            <p>以下为黄金一代部分代表性成就：</p>
+            <ul class="feature-list">
+                <li><strong>许晨阳：</strong>ICM报告人</li>
+                <li><strong>恽之玮：</strong>ICM报告人</li>
+                <li><strong>张伟：</strong>ICM报告人</li>
+                <li><strong>朱歆文：</strong>ICM报告人</li>
+                <li><strong>刘若川：</strong>国家自然科学奖二等奖</li>
+                <li><strong>袁新意、肖良：</strong>长江学者 / 克雷研究奖 / 新基石研究员</li>
+            </ul>
+
+            <h4>1999—2010年优秀校友（部分）</h4>
+            <div class="tag-group">
+                <span class="tag tag-purple">董彬</span>
+                <span class="tag tag-purple">李驰</span>
+                <span class="tag tag-purple">马宗明</span>
+                <span class="tag tag-purple">鲁建峰</span>
+                <span class="tag tag-purple">丁建</span>
+                <span class="tag tag-purple">王虹</span>
+                <span class="tag tag-purple">唐云清</span>
+                <span class="tag tag-purple">张瑞祥</span>
+                <span class="tag tag-purple">邓煜</span>
+                <span class="tag tag-purple">孙鑫</span>
+                <span class="tag tag-gold">及更多</span>
+            </div>
+            <p style="font-size:0.88rem;color:var(--text-muted);">其中大部分有数学竞赛背景。张瑞祥获斯隆奖（相当于美国杰出青年基金）；王虹在动力学理论与希尔伯特第六问题方面取得重要进展。</p>
+
+            <!-- 5b -->
+            <span class="subsection-anchor" id="s5b"></span>
+            <h3>学术报告与两院院士</h3>
+            <ul class="feature-list">
+                <li><strong>ICM受邀报告人：</strong>累计28+12位（1990年至2022年，不含2026年已知数据）。</li>
+                <li><strong>两院院士：</strong>41人（截至2024年统计）。</li>
+                <li><strong>杰出青年：</strong>46人。</li>
+            </ul>
+
+            <p>此外，学院毕业生在其他领域同样表现卓越——部分未从事纯数学研究的同学在IT、人工智能等行业取得了出色成绩。</p>
+        </section>
+
+        <!-- ===== Section 6: 毕业去向 ===== -->
+        <section>
+            <span class="section-anchor" id="s6"></span>
+            <div class="section-header">
+                <span class="section-number">06</span>
+                <h2>本科毕业去向</h2>
+            </div>
+
+            <h3>专业方向选择分布</h3>
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>方向</th><th>选择比例</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>基础数学</td><td>约30%</td></tr>
+                        <tr><td>金融数学</td><td>约15%</td></tr>
+                        <tr><td>计算数学</td><td>约15%</td></tr>
+                        <tr><td>统计学</td><td>约15%</td></tr>
+                        <tr><td>信息科学</td><td>约7%</td></tr>
+                        <tr><td>概率论</td><td>约6%</td></tr>
+                        <tr><td>应用数学拔尖计划</td><td>约6%</td></tr>
+                        <tr><td>大数据</td><td>约5%</td></tr>
+                        <tr><td>生物统计</td><td>约4%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>整体去向结构</h3>
+            <div class="stat-row">
+                <div class="stat-item">
+                    <div class="stat-num">54%</div>
+                    <div class="stat-label">国内升学</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">29%</div>
+                    <div class="stat-label">境外深造</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">13%</div>
+                    <div class="stat-label">直接就业</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">4%</div>
+                    <div class="stat-label">其他</div>
+                </div>
+            </div>
+            <p>国内升学与境外深造合计超过<strong>80%</strong>。</p>
+
+            <h3>主要去向机构</h3>
+            <div class="two-col">
+                <div class="col-box">
+                    <h4>国内升学</h4>
+                    <ul class="bullet-list">
+                        <li>校内：数学科学学院、信息科学学院、光华管理学院、汇丰商学院、国家发展研究院等</li>
+                        <li>校外：清华大学、中国科学院大学、人民大学、复旦大学、浙江大学等</li>
+                    </ul>
+                </div>
+                <div class="col-box">
+                    <h4>境外深造</h4>
+                    <ul class="bullet-list">
+                        <li>美国：普林斯顿、MIT、哈佛、斯坦福等</li>
+                        <li>英国：牛津、剑桥、曼彻斯特、LSE等</li>
+                        <li>法国：巴黎十一大、巴黎高商、巴黎高师等</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>就业去向</h4>
+            <div class="tag-group">
+                <span class="tag tag-outline">中国农业发展银行</span>
+                <span class="tag tag-outline">中国银行</span>
+                <span class="tag tag-outline">华为</span>
+                <span class="tag tag-outline">腾讯</span>
+                <span class="tag tag-outline">微软</span>
+                <span class="tag tag-outline">摩根士丹利</span>
+                <span class="tag tag-outline">党政机关</span>
+                <span class="tag tag-outline">中学及教育机构</span>
+            </div>
+
+            <h3>生源构成</h3>
+            <p>学生来源主要为四个渠道：英才班、保送生、强基计划、高考统招。其中高考录取分数列北大数理科学院首位。</p>
+        </section>
+
+        <!-- ===== Section 7: 英才班 ===== -->
+        <section>
+            <span class="section-anchor" id="s7"></span>
+            <div class="section-header">
+                <span class="section-number">07</span>
+                <h2>数学英才班政策详解</h2>
+            </div>
+
+            <!-- 7a -->
+            <span class="subsection-anchor" id="s7a"></span>
+            <h3>选拔标准与流程</h3>
+
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>维度</th><th>说明</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>时间</strong></td><td>每年CMO比赛前后报名，冬令营结束后开始考核遴选</td></tr>
+                        <tr><td><strong>年级</strong></td><td>原则上高二及以上年级</td></tr>
+                        <tr><td><strong>报名条件</strong></td><td>在国内外数学专业相关学习实践活动中取得优异成绩</td></tr>
+                        <tr><td><strong>考核重点</strong></td><td>学习高等数学的能力和潜力</td></tr>
+                        <tr><td><strong>录取政策</strong></td><td>集训队成员可直接保送；其他学生参加高考，达一本线即可</td></tr>
+                        <tr><td><strong>计划规模</strong></td><td>不超过100人</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <h4>关于"优异成绩"的实际执行</h4>
+                <p>虽然报名条件表述为"在国内外数学专业相关学习实践活动中取得优异成绩"，但近年来实际入围者均为CMO金牌获得者。2024年政策虽未最终公布，大概率仍将如此。</p>
+            </div>
+
+            <!-- 7b -->
+            <span class="subsection-anchor" id="s7b"></span>
+            <h3>考核重点与备考建议</h3>
+
+            <p>初审通过后，考核采用<strong>"讲课—考试"交替进行</strong>的模式：</p>
+            <ul class="feature-list">
+                <li>授课教师讲解高等数学内容，随后进行考试，重点考察<strong>现学现考能力</strong>。</li>
+                <li>内容基于高中数学基础设计，确保学生能够听懂。</li>
+                <li>建议以无准备状态参加，以真实反映学习能力。</li>
+            </ul>
+
+            <div class="summary-box">
+                <h4>关于提前学习高等数学</h4>
+                <p>提前学习微积分、线性代数等有一定帮助，但由于考试内容取决于授课教师当堂讲授的内容，大范围自学高等数学的边际收益有限。核心还是考察学生<strong>面对新知识时的即时理解与推理能力</strong>。</p>
+            </div>
+
+            <h4>其他说明</h4>
+            <ul class="bullet-list">
+                <li>通过初审需要提供<strong>实打实的证明材料</strong>，且需通过纪委审核。</li>
+                <li>单纯依靠"热爱数学"而无竞赛成绩证明，大概率无法通过初审。</li>
+                <li>如CMO为银牌，入围概率较低——当前金牌数已达200余块。</li>
+                <li>性别、生源地、学校背景等<strong>不在考量范围内</strong>，仅以考核成绩为准。</li>
+                <li>北大以往金秋营等高中生营的良好表现可作为参考（往年均有记录），但2024年起此类营已取消。</li>
+            </ul>
+
+            <!-- 7c -->
+            <span class="subsection-anchor" id="s7c"></span>
+            <h3>英才班与普通班的培养差异</h3>
+
+            <div class="summary-box">
+                <h4>统一培养，不做标签化</h4>
+                <p>英才班与强基班、高考入学学生<strong>在同一学院统一培养</strong>。学院不认为英才班学生更"天才"，也不认为其他渠道的学生更弱势。典型案例：王虹并非通过英才班进入北大数学学院，而是通过转系考试入学，现已成为杰出数学家。</p>
+            </div>
+
+            <p><strong>关于保研比例：</strong>整体保研比例约70%以上，但保研至本院需看绩点排名。绩点较低的学生可持保研名额前往其他高校或科研院所参加面试。</p>
+        </section>
+
+        <!-- ===== Section 8: 成长路径 ===== -->
+        <section>
+            <span class="section-anchor" id="s8"></span>
+            <div class="section-header">
+                <span class="section-number">08</span>
+                <h2>数学人才的成长路径</h2>
+            </div>
+
+            <!-- 8a -->
+            <span class="subsection-anchor" id="s8a"></span>
+            <h3>核心素质要求</h3>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.2rem;">心理素质</div>
+                    <div class="card-label">面对困难与挫折时保持稳定心态</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.2rem;">推理能力</div>
+                    <div class="card-label">严密的逻辑推理是必备基础</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.2rem;">专注度</div>
+                    <div class="card-label">能长时间深入思考困难问题</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.2rem;">热爱</div>
+                    <div class="card-label">对数学发自内心的喜爱与热情</div>
+                </div>
+                <div class="info-card">
+                    <div class="card-value" style="font-size:1.2rem;">抗挫勇气</div>
+                    <div class="card-label">克服困难、坐得住冷板凳</div>
+                </div>
+            </div>
+
+            <p>此外，<strong>高水平平台</strong>（与自身水平相当的同学群体）和<strong>高水平教师</strong>（尤其是30—40岁、思想活跃的年轻学者）是成长的重要外部条件。</p>
+
+            <!-- 8b -->
+            <span class="subsection-anchor" id="s8b"></span>
+            <h3>各阶段培养建议</h3>
+
+            <div class="two-col">
+                <div class="col-box">
+                    <h4>小学阶段</h4>
+                    <ul class="bullet-list">
+                        <li>阅读数学相关趣味书籍，开发智力</li>
+                        <li>观察孩子是否有兴趣、能坐得住、愿意长时间思考难题</li>
+                        <li>兴趣与专注度比做题数量更重要</li>
+                    </ul>
+                </div>
+                <div class="col-box">
+                    <h4>中学阶段</h4>
+                    <ul class="bullet-list">
+                        <li>可接触数学竞赛内容，磨练专注力与思维深度</li>
+                        <li>推荐阅读北京数学会《数学小丛书》（华罗庚、吴文俊等名家撰写）</li>
+                        <li>适当阅读数学史相关资料，激发研究兴趣</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>关于竞赛技巧与大学数学学习的关系</h4>
+                <p>从数学学习角度看，奥数技巧的重要性有限。<strong>高等数学的思想和方法</strong>才是决定长期发展的关键。除非目标是IMO金牌，否则应尽早进入大学数学的学习。</p>
+            </div>
+
+            <h4>竞赛与研究的关系</h4>
+            <ul class="feature-list">
+                <li><strong>数学竞赛是"短跑"：</strong>在规定时间内解题。</li>
+                <li><strong>数学研究是"长跑"：</strong>可能需要数月甚至数年攻克一个问题。</li>
+                <li>竞赛培养的专注力与心理素质对研究有重要价值，但两者本质不同。</li>
+                <li>竞赛生的优势不在于数学基础更强，而在于<strong>对数学的喜爱程度和专注度</strong>更高。</li>
+            </ul>
+
+            <h4>从初等数学到高等数学的过渡</h4>
+            <div class="quote-block">
+                <p>大学数学学习中，理解证明过程比记住定理更重要。思维方式与方法的掌握，远比结论本身更为关键。</p>
+            </div>
+            <p>每年都有中学数学优秀的学生进入大学后出现不适应——根本原因在于仍沿用中学"抄定理、背结论"的学习方式，而未真正理解证明的逻辑。中学阶段的数学学习本质上是基础能力训练（认真、专注、耐性），真正的数学攀登始于大学。</p>
+
+            <!-- 8c -->
+            <span class="subsection-anchor" id="s8c"></span>
+            <h3>择校与方向选择建议</h3>
+
+            <h4>选择大学的核心标准</h4>
+            <ul class="feature-list">
+                <li><strong>高水平的同伴群体：</strong>同学水平相当才能相互激励。</li>
+                <li><strong>高水平的年轻教师：</strong>关注30—40岁、思想活跃、正处于学术高峰期的教师团队，而非仅看已获巨大成就的资深教授。</li>
+            </ul>
+
+            <h4>方向选择</h4>
+            <p>学院的应用数学、计算数学、统计学等方向均实力强劲，学生可根据兴趣自由选择并获得充分支持。无论基础数学还是应用方向，学院均有足够的师资和资源保障高质量培养。</p>
+
+            <h4>关于物理竞赛转数学</h4>
+            <p>物理竞赛所用的数学偏重计算层面，并非数学最本质的内容。对微积分感兴趣的物理竞赛生可以考虑转入数学专业，但需注意两者训练方向存在差异。</p>
+
+            <h4>从事纯数学研究的比例</h4>
+            <div class="stat-row">
+                <div class="stat-item">
+                    <div class="stat-num" style="color:var(--gold-dark);">&lt;10%</div>
+                    <div class="stat-label">最终从事纯数学研究</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">~220</div>
+                    <div class="stat-label">每届毕业人数（含转系）</div>
+                </div>
+            </div>
+            <p>每年从事纯数学研究的毕业生不超过20人，多数学生转向应用领域、IT行业或人工智能等方向。</p>
+        </section>
+
+    </main>
+</div>
+
+<!-- ===== Footer ===== -->
+<footer class="site-footer">
+    <p>本文整理自<strong>北京大学数学科学学院</strong>招生宣讲会实录，仅供学习参考。</p>
+    <p style="margin-top:0.5rem;">如有最新政策变动，请以北京大学官方发布信息为准。</p>
+</footer>
+
+<script>
+    // Header scroll effect
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // TOC toggle (mobile)
+    function toggleToc() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+
+    // Active TOC link on scroll
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const sections = [];
+    tocLinks.forEach(link => {
+        const id = link.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if (el) sections.push({ el, link });
+    });
+
+    function updateToc() {
+        let current = sections[0];
+        for (const s of sections) {
+            if (s.el.getBoundingClientRect().top <= 120) {
+                current = s;
+            }
+        }
+        tocLinks.forEach(l => l.classList.remove('active'));
+        if (current) current.link.classList.add('active');
+    }
+
+    window.addEventListener('scroll', updateToc);
+    updateToc();
+</script>
+
+</body>
+</html>

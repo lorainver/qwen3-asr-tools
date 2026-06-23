@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>南开中学信息学竞赛班型体系与选拔机制全解析</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --surface: #ffffff;
+      --accent: #6b2d5b;
+      --accent-light: #8e4585;
+      --accent-bg: #f5eef3;
+      --gold: #b8860b;
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #7a7570;
+      --border: #e2ddd6;
+      --highlight: #fff3cd;
+      --success: #2d6b3f;
+      --danger: #8b2500;
+      --info: #1a5276;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* ===== 页面头部 ===== */
+    .hero {
+      background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 40%, #b8860b 100%);
+      color: #fff;
+      padding: 60px 40px 50px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+
+    .hero .subtitle {
+      font-size: 1rem;
+      opacity: 0.85;
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+
+    .hero .tags {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .tag-purple {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    .tag-gold {
+      background: rgba(184,134,11,0.25);
+      color: #fff;
+      border: 1px solid rgba(184,134,11,0.5);
+    }
+
+    /* ===== 主体容器 ===== */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== 目录导航 ===== */
+    .toc-section {
+      padding: 40px 0 20px;
+    }
+
+    .toc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 32px;
+      position: relative;
+    }
+
+    .toc-card::before {
+      content: '目录';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 16px;
+      border-radius: 10px 0 8px 0;
+      letter-spacing: 0.08em;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 32px;
+      margin-top: 8px;
+    }
+
+    .toc-grid a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.92rem;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border);
+      transition: color 0.2s;
+    }
+
+    .toc-grid a:hover {
+      color: var(--accent);
+    }
+
+    .toc-grid a .toc-num {
+      color: var(--accent);
+      font-weight: 600;
+      margin-right: 6px;
+      font-size: 0.82rem;
+    }
+
+    /* ===== 章节 ===== */
+    .content-section {
+      padding: 40px 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-bar {
+      width: 4px;
+      min-height: 40px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .section-title-group {
+      flex: 1;
+    }
+
+    .section-num {
+      font-size: 0.78rem;
+      color: var(--accent-light);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    /* ===== 提示框 ===== */
+    .alert {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 0.93rem;
+      border-left: 4px solid;
+    }
+
+    .alert-gold {
+      background: var(--highlight);
+      border-color: var(--gold);
+    }
+
+    .alert-success {
+      background: #eaf5ed;
+      border-color: var(--success);
+    }
+
+    .alert-danger {
+      background: #fdf0ec;
+      border-color: var(--danger);
+    }
+
+    .alert-info {
+      background: #eaf2f8;
+      border-color: var(--info);
+    }
+
+    .alert-purple {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+    }
+
+    .alert-label {
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    /* ===== 卡片 ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin: 16px 0;
+    }
+
+    .card h4 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    /* ===== 双栏 ===== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+
+    /* ===== 列表 ===== */
+    .content-section ul,
+    .content-section ol {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+      line-height: 1.8;
+    }
+
+    .content-section p {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== 流程时间线 ===== */
+    .flow {
+      position: relative;
+      padding-left: 32px;
+      margin: 20px 0;
+    }
+
+    .flow::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .flow-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .flow-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-dot {
+      position: absolute;
+      left: -28px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--accent-bg);
+    }
+
+    .flow-item-title {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .flow-item-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ===== 表格 ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.92rem;
+    }
+
+    thead th {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      padding: 12px 16px;
+      text-align: left;
+    }
+
+    thead th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    thead th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:hover {
+      background: var(--accent-bg);
+    }
+
+    /* ===== 难度条 ===== */
+    .diff-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+    }
+
+    .diff-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      min-width: 56px;
+      text-align: right;
+      font-weight: 500;
+    }
+
+    .diff-track {
+      flex: 1;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .diff-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .diff-fill-purple {
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    }
+
+    .diff-fill-gold {
+      background: linear-gradient(90deg, #b8860b, #d4a017);
+    }
+
+    .diff-fill-green {
+      background: linear-gradient(90deg, #2d6b3f, #4a9e62);
+    }
+
+    .diff-fill-red {
+      background: linear-gradient(90deg, #8b2500, #c0392b);
+    }
+
+    /* ===== 页脚 ===== */
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 700px) {
+      .hero {
+        padding: 40px 20px 36px;
+      }
+
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+      }
+
+      .container {
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== 页面头部 ===== -->
+  <header class="hero">
+    <h1>南开中学信息学竞赛班型体系与选拔机制全解析</h1>
+    <p class="subtitle">涵盖班型建制、培养理念、核心优势、选拔通道及备考建议</p>
+    <div class="tags">
+      <span class="tag tag-purple">信息学竞赛</span>
+      <span class="tag tag-purple">班型体系</span>
+      <span class="tag tag-gold">选拔通道</span>
+      <span class="tag tag-purple">培养理念</span>
+      <span class="tag tag-gold">核心优势</span>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- ===== 目录 ===== -->
+    <nav class="toc-section">
+      <div class="toc-card">
+        <div class="toc-grid">
+          <a href="#s1"><span class="toc-num">01</span>南开信竞班型体系概述</a>
+          <a href="#s2"><span class="toc-num">02</span>竞赛班培养理念与底层逻辑</a>
+          <a href="#s3"><span class="toc-num">03</span>班型学生来源与分流机制</a>
+          <a href="#s4"><span class="toc-num">04</span>核心优势一：教练团队</a>
+          <a href="#s5"><span class="toc-num">05</span>核心优势二：文化课托底机制</a>
+          <a href="#s6"><span class="toc-num">06</span>核心优势三：比赛资源</a>
+          <a href="#s7"><span class="toc-num">07</span>竞赛成果亮点</a>
+          <a href="#s8"><span class="toc-num">08</span>进入南开信竞班的三个梯队通道</a>
+          <a href="#s9"><span class="toc-num">09</span>关键补充信息与备考建议</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ===== 01 ===== -->
+    <section class="content-section" id="s1">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 01</div>
+          <h2 class="section-title">南开信竞班型体系概述</h2>
+        </div>
+      </div>
+
+      <p>南开中学信息学竞赛的招生规模与建制规模在重庆所有相关学校中<strong>体量最大</strong>。</p>
+
+      <div class="card">
+        <h4>班型分布</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>层级</th>
+              <th>所属校区</th>
+              <th>班型定位</th>
+              <th>人数规模</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>本部（一梯队）</strong></td>
+              <td>南开本部</td>
+              <td>竞赛丘班</td>
+              <td>约20—30人</td>
+            </tr>
+            <tr>
+              <td><strong>分校（二梯队）</strong></td>
+              <td>融侨南开</td>
+              <td>竞赛行政班</td>
+              <td>约50人</td>
+            </tr>
+            <tr>
+              <td><strong>分校（二梯队）</strong></td>
+              <td>南渝中学</td>
+              <td>竞赛行政班</td>
+              <td>约50人</td>
+            </tr>
+            <tr>
+              <td><strong>分校（二梯队）</strong></td>
+              <td>两江南开</td>
+              <td>竞赛行政班（筹备中）</td>
+              <td>约50人</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-gold">
+        <span class="alert-label">关键信息：</span>
+        各分校的行政班以竞赛学生为主体，部分情况下因招生不足会补充少量综合优生。班内主要进行信息学奥赛培养，每个分校的竞赛班均配置<strong>同年级最顶尖的师资</strong>，全部头部资源向该班倾斜。
+      </div>
+
+      <div class="alert alert-info">
+        <span class="alert-label">对比参考：</span>
+        以育才学校为例，其一个30人编制的班级至少需要签约约100人以保障入学率；南开因体量更大，建一个30人的班至少需签约40—50人，整体招生规模和建制规模为各校之最。
+      </div>
+    </section>
+
+    <!-- ===== 02 ===== -->
+    <section class="content-section" id="s2">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 02</div>
+          <h2 class="section-title">竞赛班培养理念与底层逻辑</h2>
+        </div>
+      </div>
+
+      <div class="alert alert-purple">
+        <span class="alert-label">核心观点：</span>
+        南开建设大规模竞赛班的底层逻辑并非仅培养竞赛选手，而是<strong>培养未来的理论计算机科学家</strong>。
+      </div>
+
+      <p>二梯队竞赛班的学生大概率会在培养过程中退役（退出竞赛路径），但学校仍愿意投入两年左右的竞赛培养资源，原因在于以下两点：</p>
+
+      <div class="two-col">
+        <div class="card">
+          <h4>一、竞赛训练提升综合能力</h4>
+          <p>接受过竞赛训练的学生，其综合能力显著强于未接受训练的学生。学校通过竞赛训练链对学生进行<strong>密集且高效的综合能力训练</strong>，类似于小学阶段学习奥数对后续数学能力的提升作用——学过小奥的学生在后续数学学习中难度感知明显降低。</p>
+        </div>
+        <div class="card">
+          <h4>二、教育理念驱动</h4>
+          <p>学校的设计初衷是<strong>为国家培养更多的理论计算机科学家</strong>。即便学生未走到竞赛终点（如保送清北或进入省队），经历两年的信息学奥赛训练，对其未来能否成为计算机理论科学家将产生<strong>重大的导向作用</strong>。</p>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <span class="alert-label">家长须知：</span>
+        学生在进入竞赛班之前，学校已对其学习意愿进行了筛选。进入班级后可享受最好的师资、课程以及综合能力训练，无需过度焦虑训练强度问题。
+      </div>
+    </section>
+
+    <!-- ===== 03 ===== -->
+    <section class="content-section" id="s3">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 03</div>
+          <h2 class="section-title">班型学生来源与分流机制</h2>
+        </div>
+      </div>
+
+      <h3 style="font-family:'Noto Serif SC',serif;font-size:1.15rem;margin-bottom:12px;color:var(--text-primary);">学生来源的两个渠道</h3>
+
+      <div class="flow">
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-item-title">渠道一：文化课上岸后招培入选</div>
+          <div class="flow-item-desc">学生以文化课成绩进入南开后，通过校内招培（零基础招培）形式选拔进入竞赛兴趣班。此渠道针对<strong>文化课达标但编程零基础</strong>的学生。</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-dot"></div>
+          <div class="flow-item-title">渠道二：编程测试外选</div>
+          <div class="flow-item-desc">学生通过编程能力测试直接进入竞赛班型。此渠道针对<strong>具备编程基础</strong>的学生，选拔方式与渠道一有所不同。</div>
+        </div>
+      </div>
+
+      <h3 style="font-family:'Noto Serif SC',serif;font-size:1.15rem;margin:24px 0 12px;color:var(--text-primary);">分流机制：秋班 vs. 竞赛班</h3>
+
+      <div class="two-col">
+        <div class="card">
+          <h4>本部丘班（秋班）——会动班</h4>
+          <ul>
+            <li>退役后需返回<strong>学籍所在地</strong>的竞赛班</li>
+            <li>如二梯队竞赛生水平上升，可调整进入丘班</li>
+            <li>属于综合调动机制，根据排名动态调整</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>二梯队竞赛班——不动班</h4>
+          <ul>
+            <li>即便退役也不换班，学生仍在原班</li>
+            <li>相当于学校为该班学生<strong>单独开设竞赛培优</strong></li>
+            <li>退出竞赛后仅不再学习竞赛内容，学籍班型不变</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <span class="alert-label">说明：</span>
+        丘班退役学生如转入其他竞赛方向或综合培养路径，且达到本部机科班筛选标准，则可能留本部。具体以学籍所在初中为返回单位。
+      </div>
+    </section>
+
+    <!-- ===== 04 ===== -->
+    <section class="content-section" id="s4">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 04</div>
+          <h2 class="section-title">核心优势一：教练团队专业度高</h2>
+        </div>
+      </div>
+
+      <p>南开校内核心教练团队在重庆信息学领域具有显著竞争力。</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>教师</th>
+            <th>角色说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>何浪教练</strong></td>
+            <td>校内核心教练</td>
+          </tr>
+          <tr>
+            <td><strong>董老师</strong></td>
+            <td>校内核心教练</td>
+          </tr>
+          <tr>
+            <td><strong>陈老师（陈哥）</strong></td>
+            <td>校内核心教练（自谦算"0.5个"）</td>
+          </tr>
+          <tr>
+            <td><strong>蒋林宇老师</strong>（外聘）</td>
+            <td>世界排名第一的教练，长期驻校执教，负责带省队级以上选手，"一个顶十个"</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-purple">
+        <span class="alert-label">核心价值：</span>
+        蒋林宇老师作为外聘世界级教练，能够解决顶尖比赛中难度极高的题目。其核心优势在于：自身解题速度极快，可为顶尖学生提供<strong>高密度、高频次</strong>的密集训练，快速讲解、即时反馈，大幅提升训练频次与效率。
+      </div>
+    </section>
+
+    <!-- ===== 05 ===== -->
+    <section class="content-section" id="s5">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 05</div>
+          <h2 class="section-title">核心优势二：文化课托底机制</h2>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <span class="alert-label">关键数据：</span>
+        南渝中学竞赛班退役选手的中考成绩<strong>平均分为699分</strong>，充分体现了学校对竞赛生综合能力的培养与托底水平。
+      </div>
+
+      <p>南开的竞赛部门（"未来课程中心"）在文化课保障方面配置独特：</p>
+
+      <ul>
+        <li>竞赛部门独立配置了<strong>四套专门的文化课教师班子</strong>，定期为竞赛生补课</li>
+        <li>这些教师<strong>由竞赛部门统一调配</strong>，不隶属于年级组，灵活性极高</li>
+        <li>即使只有个别学生需要补课，也可灵活安排</li>
+        <li>该套班子<strong>专职服务于竞赛生</strong>，不同时承担年级常规教学任务</li>
+      </ul>
+
+      <div class="alert alert-gold">
+        <span class="alert-label">重要提醒：</span>
+        正因为有独立的文化课托底班子，南开竞赛生的综合成绩才保持强势。竞赛部门与文化课部门的协同机制，是南开竞赛综合能力强于其他学校的关键原因。
+      </div>
+    </section>
+
+    <!-- ===== 06 ===== -->
+    <section class="content-section" id="s6">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 06</div>
+          <h2 class="section-title">核心优势三：比赛资源丰富</h2>
+        </div>
+      </div>
+
+      <p>南开在比赛资源方面具有显著优势，能够为学生提供<strong>高频次、多层级</strong>的比赛机会。</p>
+
+      <div class="alert alert-info">
+        <span class="alert-label">实例：</span>
+        以清华大学ICPC比赛为例，南开能够为低年级至高年级学生提供比赛资格，参赛规模可达<strong>十余支队伍</strong>。在密集比赛资源的支撑下，学生的进步速度显著提升。
+      </div>
+    </section>
+
+    <!-- ===== 07 ===== -->
+    <section class="content-section" id="s7">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 07</div>
+          <h2 class="section-title">竞赛成果亮点</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>亮点一：国家队选手——六年一贯制培养</h4>
+        <p>南开近年培养出<strong>国家队选手</strong>，且该选手是南开体系<strong>六年一贯制自主培养</strong>的成果——从小学进入融侨南开体系，经融侨南开和南开本部竞赛梯队逐步选拔上升，而非初中与高中分别在不同学校培养。</p>
+        <div class="alert alert-success" style="margin-top:12px;">
+          <span class="alert-label">意义：</span>
+          这一成果变向论证了南开六年一贯制培养体系已经跑通，从初学者到国家级选手的完整培养链路和资源已具备。
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h4>亮点二：初中生省队成绩</h4>
+          <p>近四年内，南开有<strong>五人次以内</strong>初中生进入省队，该数据在重庆地区历史上<strong>前所未有</strong>。</p>
+        </div>
+        <div class="card">
+          <h4>亮点三：南渝中学全国排名</h4>
+          <p>南渝中学在八年间进入<strong>全国前五十名</strong>排名，体现了其竞赛实力在全国范围内的竞争力。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 08 ===== -->
+    <section class="content-section" id="s8">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 08</div>
+          <h2 class="section-title">进入南开信竞班的三个梯队通道</h2>
+        </div>
+      </div>
+
+      <div class="alert alert-purple">
+        <span class="alert-label">整体说明：</span>
+        南开信竞班的选拔分为<strong>三个梯队</strong>，各有不同的编程水平要求和选拔方式。学生根据自身能力层级对应相应梯队方案。
+      </div>
+
+      <!-- 难度总览 -->
+      <div style="margin:24px 0 8px;font-weight:600;color:var(--text-primary);">各梯队难度与门槛概览</div>
+      <div class="diff-bar">
+        <span class="diff-label">高梯队</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-red" style="width:90%"></div></div>
+      </div>
+      <div class="diff-bar">
+        <span class="diff-label">中梯队</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-gold" style="width:55%"></div></div>
+      </div>
+      <div class="diff-bar">
+        <span class="diff-label">零基础梯队</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-purple" style="width:75%"></div></div>
+      </div>
+
+      <div class="flow" style="margin-top:28px;">
+        <!-- 高梯队 -->
+        <div class="flow-item">
+          <div class="flow-dot" style="background:var(--danger);"></div>
+          <div class="flow-item-title">第一梯队：高梯队（高级别选手直通）</div>
+          <div class="flow-item-desc">
+            <strong>适用对象：</strong>GSP达到七级、八级的学生<br>
+            <strong>选拔方式：</strong>走"一试一议"政策，通过思维测评（数学逻辑思维）后，根据能力分配至图灵班或滑板班等对应班级跟训，考察学习情况与考试表现<br>
+            <strong>前置条件：</strong>即便达到七八级，仍须通过思维测评方可入选<br>
+            <strong>特点：</strong>高级别考生自带较强实力，可获得快速筛选机会
+          </div>
+        </div>
+
+        <!-- 中梯队 -->
+        <div class="flow-item">
+          <div class="flow-dot" style="background:var(--gold);"></div>
+          <div class="flow-item-title">第二梯队：跟训梯队（中级别选手）</div>
+          <div class="flow-item-desc">
+            <strong>适用对象：</strong>编程三级、四级水平的学生<br>
+            <strong>选拔方式：</strong>进校前参加思维测评，达到分数线后进入跟训班<br>
+            <strong>班级特点：</strong>不讲授编程知识点，纯筛选性质——<strong>每周考试、每周评讲</strong>，持续考核学生能力<br>
+            <strong>难度评估：</strong>在三个梯队中<strong>相对最容易进入</strong>，对编程要求不高，重在解题思维能力
+          </div>
+        </div>
+
+        <!-- 零基础梯队 -->
+        <div class="flow-item">
+          <div class="flow-dot" style="background:var(--accent);"></div>
+          <div class="flow-item-title">第三梯队：零基础选拔梯队</div>
+          <div class="flow-item-desc">
+            <strong>适用对象：</strong>编程零基础但数学水平较好的学生（三、四、五年级）<br>
+            <strong>选拔方式：</strong>通过公益逻辑思维测评活动进行选拔，不查重（一年最多查一次），机会较多<br>
+            <strong>难度评估：</strong>虽然编程零基础，但<strong>逻辑思维题难度极高</strong>，分数线设定较高，旨在筛选零级数学生并防止浪费培训资源<br>
+            <strong>特点：</strong>该梯队活动<strong>全免费、全公益、全开放</strong>，不限定在哪学习编程均可参加
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <span class="alert-label">注意：</span>
+        零基础梯队的选拔题难度远高于二梯队——二梯队学生做零基础的卷子都可能达不到分数线。中段分数仅二十余分，上五十分者极少。选拔通过率约<strong>20%</strong>左右。
+      </div>
+
+      <div class="card">
+        <h4>各梯队进入方式对比</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>梯队</th>
+              <th>编程要求</th>
+              <th>思维测评</th>
+              <th>进入难度</th>
+              <th>费用</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>高梯队</td>
+              <td>GSP七级以上</td>
+              <td>必须通过</td>
+              <td><strong>高</strong></td>
+              <td>校内跟训</td>
+            </tr>
+            <tr>
+              <td>中梯队（跟训）</td>
+              <td>三、四级水平</td>
+              <td>必须通过</td>
+              <td><strong>中等偏低</strong></td>
+              <td>校内跟训</td>
+            </tr>
+            <tr>
+              <td>零基础梯队</td>
+              <td>无要求</td>
+              <td>必须通过（难度高）</td>
+              <td><strong>中等偏高</strong></td>
+              <td>活动全免费</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-family:'Noto Serif SC',serif;font-size:1.15rem;margin:24px 0 12px;color:var(--text-primary);">各梯队内推条件</h3>
+      <ul>
+        <li><strong>高梯队与中梯队的内推：</strong>须为机构自有学生</li>
+        <li><strong>零基础梯队活动：</strong>全开放，不限定在哪学习编程，只要加入活动社群即可报名参加</li>
+        <li><strong>外校优秀学生：</strong>可将简历提交进行免费推荐</li>
+      </ul>
+    </section>
+
+    <!-- ===== 09 ===== -->
+    <section class="content-section" id="s9">
+      <div class="section-header">
+        <div class="section-bar"></div>
+        <div class="section-title-group">
+          <div class="section-num">Chapter 09</div>
+          <h2 class="section-title">关键补充信息与备考建议</h2>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h4>跟训周期</h4>
+          <p>南开跟训一般周期为<strong>约三到四个月</strong>，届时会有一波淘汰和补充。部分表现突出的学生有机会获得额外推荐机会。</p>
+        </div>
+        <div class="card">
+          <h4>ABC比赛（AtCoder）</h4>
+          <p>AtCoder为日本算法竞技平台，<strong>每周六晚8:00—9:14</strong>举办比赛。南开、八中、育才等学校均参考ABC的Rating评分和实时排名，是重要的选拔依据和训练资源。</p>
+        </div>
+      </div>
+
+      <div class="alert alert-purple">
+        <span class="alert-label">备考建议：</span>
+        南开、八中、育才等学校的考核均以<strong>思维题为主</strong>，题型与ABC题目及ABC变形题高度相关。四级以上学生均建议参加ABC比赛训练，走竞赛路线的学生须进行<strong>专项思维训练</strong>。
+      </div>
+
+      <div class="alert alert-info">
+        <span class="alert-label">补充说明：</span>
+        南开在选拔中偏好<strong>天然思维能力强</strong>的学生，但在主城区内纯天然型学生较难筛选，实际选拔仍以考试与跟训的双重机制为主。
+      </div>
+
+      <div class="alert alert-gold">
+        <span class="alert-label">总结：</span>
+        南开信竞班的选拔呈现"体量大但门槛高"的特点——招生建制规模在重庆各校中最大，但考核方式独特、要求严格。对于有志于通过信息学进入南开的学生，需根据自身水平选择对应梯队通道，提前做好思维能力与编程能力的双重准备。
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <p>本文档基于南开中学信息学竞赛招生说明会内容整理</p>
+    <p style="margin-top:4px;">信息整理时间：2025年 ｜ 具体政策以学校官方发布为准</p>
+  </footer>
+
+</body>
+</html>

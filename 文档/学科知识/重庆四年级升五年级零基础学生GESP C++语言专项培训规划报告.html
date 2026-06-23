@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆四年级升五年级GESP C++培训规划报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background-color: #FFFFFF;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .highlight-gradient-blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.05));
+        }
+        .highlight-gradient-purple {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0), rgba(168, 85, 247, 0.05));
+        }
+        .highlight-gradient-green {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0), rgba(34, 197, 94, 0.05));
+        }
+        .highlight-gradient-orange {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0), rgba(249, 115, 22, 0.05));
+        }
+        .highlight-gradient-red {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0), rgba(239, 68, 68, 0.05));
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+            <!-- Title Card -->
+            <div class="card md:col-span-4 p-8 flex flex-col justify-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative">
+                    <div class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">重庆四年级升五年级</div>
+                    <div class="text-4xl md:text-6xl font-extrabold text-blue-600 mb-4">GESP C++ 语言专项培训规划</div>
+                    <div class="text-lg text-gray-500">零基础到GESP四级的完整学习路径 | 12-18个月系统规划</div>
+                </div>
+            </div>
+
+            <!-- Overview Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-between">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-bullseye text-2xl text-purple-600 mr-3"></i>
+                        <h3 class="text-xl font-bold text-gray-800">规划总览</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">针对重庆地区四年级升五年级、周末有半天固定学习时间的编程零基础学生，设计了一套从C++零基础到GESP四级水平的完整培训计划。</p>
+                    <div class="flex items-center text-purple-700 font-semibold">
+                        <i class="fa-solid fa-flag-checkered mr-2"></i>
+                        <span>目标：12-18个月内掌握编程逻辑，具备GESP四级认证能力</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Logic Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-center items-center text-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <div class="text-2xl font-bold text-gray-800 mb-4">核心学习逻辑</div>
+                    <div class="flex items-center justify-center space-x-2 md:space-x-4 text-lg">
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">语法夯实</span>
+                        <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">算法启蒙</span>
+                        <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">真题实战</span>
+                        <i class="fa-solid fa-arrow-right-long text-green-500"></i>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">等级通关</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Investment Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="relative">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-clock text-2xl text-orange-600 mr-3"></i>
+                        <h3 class="text-xl font-bold text-gray-800">学习投入</h3>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-orange-600">110</div>
+                            <div class="text-gray-600">分钟/周</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-orange-600">12-18</div>
+                            <div class="text-gray-600">个月</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-gray-600">每周1次课，90分钟核心课程+两次10分钟休息</div>
+                </div>
+            </div>
+
+            <!-- Progress Chart Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative flex-1 flex flex-col">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-chart-line text-2xl text-blue-600 mr-3"></i>
+                        <h3 class="text-xl font-bold text-gray-800">学习进度规划</h3>
+                    </div>
+                    <div class="flex-1 h-64">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 1 Card -->
+            <div class="card md:col-span-1 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4 mx-auto">
+                        <span class="text-2xl font-bold text-blue-600">1</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-center text-gray-800 mb-2">零基础语法入门</h3>
+                    <div class="text-3xl font-bold text-center text-blue-600 mb-2">64学时</div>
+                    <p class="text-center text-gray-600 text-sm mb-4">对应GESP一级，掌握基础语法与三种程序结构</p>
+                    <div class="space-y-2 text-sm text-gray-700">
+                        <div class="flex items-center"><i class="fa-solid fa-check text-blue-500 w-4 mr-2"></i> 数据类型与变量</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-blue-500 w-4 mr-2"></i> 运算符与表达式</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-blue-500 w-4 mr-2"></i> 顺序、分支、循环</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-blue-500 w-4 mr-2"></i> 一维数组基础</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2 Card -->
+            <div class="card md:col-span-1 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mb-4 mx-auto">
+                        <span class="text-2xl font-bold text-purple-600">2</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-center text-gray-800 mb-2">语法进阶与算法启蒙</h3>
+                    <div class="text-3xl font-bold text-center text-purple-600 mb-2">64学时</div>
+                    <p class="text-center text-gray-600 text-sm mb-4">对应GESP二、三级，引入基础算法思想</p>
+                    <div class="space-y-2 text-sm text-gray-700">
+                        <div class="flex items-center"><i class="fa-solid fa-check text-purple-500 w-4 mr-2"></i> 变量作用域</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-purple-500 w-4 mr-2"></i> 枚举与递推算法</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-purple-500 w-4 mr-2"></i> 函数结构化编程</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-purple-500 w-4 mr-2"></i> 字符串处理</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3 Card -->
+            <div class="card md:col-span-1 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4 mx-auto">
+                        <span class="text-2xl font-bold text-green-600">3</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-center text-gray-800 mb-2">核心算法与数据结构进阶</h3>
+                    <div class="text-3xl font-bold text-center text-green-600 mb-2">64学时</div>
+                    <p class="text-center text-gray-600 text-sm mb-4">对应GESP四级，掌握核心数据结构与算法</p>
+                    <div class="space-y-2 text-sm text-gray-700">
+                        <div class="flex items-center"><i class="fa-solid fa-check text-green-500 w-4 mr-2"></i> 二维数组与矩阵</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-green-500 w-4 mr-2"></i> 结构体与指针</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-green-500 w-4 mr-2"></i> 排序与查找算法</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-green-500 w-4 mr-2"></i> 初等数论</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4 Card -->
+            <div class="card md:col-span-1 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-full mb-4 mx-auto">
+                        <span class="text-2xl font-bold text-orange-600">4</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-center text-gray-800 mb-2">真题实战冲刺与等级通关</h3>
+                    <div class="text-3xl font-bold text-center text-orange-600 mb-2">32学时</div>
+                    <p class="text-center text-gray-600 text-sm mb-4">强化应试能力与答题技巧，确保通关</p>
+                    <div class="space-y-2 text-sm text-gray-700">
+                        <div class="flex items-center"><i class="fa-solid fa-check text-orange-500 w-4 mr-2"></i> 上机环境专项训练</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-orange-500 w-4 mr-2"></i> 历年真题全真模拟</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-orange-500 w-4 mr-2"></i> 错题精讲与强化</div>
+                        <div class="flex items-center"><i class="fa-solid fa-check text-orange-500 w-4 mr-2"></i> 考前冲刺与心态调整</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exam Strategy Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-red"></div>
+                <div class="relative">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-calendar-check text-2xl text-red-600 mr-3"></i>
+                        <h3 class="text-xl font-bold text-gray-800">报考规划</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-20 text-sm text-gray-500">五年级上</div>
+                            <div class="flex-1 text-gray-700">学习阶段一内容，掌握基础语法，目标报考<span class="font-semibold text-red-600">GESP一级</span></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-20 text-sm text-gray-500">五年级下</div>
+                            <div class="flex-1 text-gray-700">学习阶段二内容，掌握进阶语法，目标报考<span class="font-semibold text-red-600">GESP二级</span></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-20 text-sm text-gray-500">六年级上</div>
+                            <div class="flex-1 text-gray-700">学习阶段三内容，掌握函数与数组，目标报考<span class="font-semibold text-red-600">GESP三级</span></div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-20 text-sm text-gray-500">六年级下</div>
+                            <div class="flex-1 text-gray-700">学习阶段四内容，掌握核心算法，目标报考<span class="font-semibold text-red-600">GESP四级</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why C++ Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-code text-2xl text-purple-600 mr-3"></i>
+                        <h3 class="text-xl font-bold text-gray-800">为什么选择C++？</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-star text-purple-500 mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold text-gray-800">完全匹配考级竞赛体系</div>
+                                <div class="text-sm text-gray-600">C++是GESP、CSP-J/S等官方竞赛的唯一主流语言，无需中途更换语言。</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-star text-purple-500 mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold text-gray-800">学习成长天花板更高</div>
+                                <div class="text-sm text-gray-600">C++语法严谨，适合培养逻辑思维，支撑更复杂的算法与数据结构研究。</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-star text-purple-500 mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold text-gray-800">学习效率更适配</div>
+                                <div class="text-sm text-gray-600">五年级学生的数学基础已足够支撑C++学习，无需通过图形化课程过渡。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teaching Model Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-chalkboard-user text-2xl text-green-600 mr-3"></i>
+                        <h3 class="text-xl font-bold text-gray-800">教学实施建议</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">教学模式</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• 线下小班面授 (1V6或1V8)</li>
+                                <li>• 理论讲解+即时实操+当场答疑</li>
+                                <li>• 使用GESP官方指定环境</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">课后练习</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• 每次课后60分钟巩固作业</li>
+                                <li>• 专业OJ平台练习 (洛谷、ACGO)</li>
+                                <li>• 家校协同反馈机制</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Card -->
+            <div class="card md:col-span-2 p-6 flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative">
+                    <div class="flex items-center mb-4">
+                        <i class="fa-solid fa-book-open-reader text-2xl text-blue-600 mr-3"></i>
+                        <h3 class="text-xl font-bold text-gray-800">推荐学习资源</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">核心教材</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• 《信息学奥赛一本通 编程启蒙C++版》</li>
+                                <li>• 《小学生C++趣味编程》</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">练习平台</h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• 洛谷、ACGO OJ、啊哈编程星球</li>
+                                <li>• GESP官方历年真题集</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="card md:col-span-4 p-8 flex flex-col justify-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="relative">
+                    <div class="text-3xl font-bold text-gray-800 mb-4 text-center">规划核心优势总结</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-map-signs text-2xl text-orange-600"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">路径科学</h4>
+                            <p class="text-sm text-gray-600">完全匹配考试标准，学练测结合，通关率有保障</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-brain text-2xl text-orange-600"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">内容务实</h4>
+                            <p class="text-sm text-gray-600">聚焦核心能力培养，教授标准编程语法与经典算法</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-location-dot text-2xl text-orange-600"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">落地性强</h4>
+                            <p class="text-sm text-gray-600">适配本地学习场景，完全匹配重庆地区学生特点</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-graduation-cap text-2xl text-orange-600"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-800 mb-2">衔接性好</h4>
+                            <p class="text-sm text-gray-600">直接对接初中竞赛体系，为CSP-J打下坚实基础</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // Progress Chart
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    const progressChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['GESP一级', 'GESP二级', 'GESP三级', 'GESP四级'],
+            datasets: [{
+                label: '预计学习时长 (月)',
+                data: [2.5, 3.5, 4.5, 5],
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.7)',
+                    'rgba(168, 85, 247, 0.7)',
+                    'rgba(34, 197, 94, 0.7)',
+                    'rgba(249, 115, 22, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(59, 130, 246, 1)',
+                    'rgba(168, 85, 247, 1)',
+                    'rgba(34, 197, 94, 1)',
+                    'rgba(249, 115, 22, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '学习时长 (月)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+</html>

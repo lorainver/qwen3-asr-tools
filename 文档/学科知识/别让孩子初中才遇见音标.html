@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小学阶段提前学音标 — 给重庆家长的一封公开信</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f4;
+            --surface: #ffffff;
+            --accent: #c05529;
+            --accent-light: #f0d5c4;
+            --accent-deep: #8b3a1a;
+            --green: #2e6b4f;
+            --green-light: #e0f0e8;
+            --text-primary: #1a1612;
+            --text-muted: #6b635a;
+            --text-light: #9a928a;
+            --border: #e8e2da;
+            --shadow: rgba(26, 22, 18, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* === HERO === */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(160deg, #1a1612 0%, #2c2420 40%, #3d2a1e 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 80%;
+            height: 120%;
+            background: radial-gradient(ellipse, rgba(192, 85, 41, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '/iː/ /ɑː/ /ɔː/ /uː/ /ɜː/';
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.12);
+            letter-spacing: 0.8em;
+            white-space: nowrap;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 860px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid rgba(192, 85, 41, 0.4);
+            padding: 0.4em 1.4em;
+            margin-bottom: 2.5rem;
+            animation: fadeUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            color: #f5f0ea;
+            line-height: 1.35;
+            margin-bottom: 1.8rem;
+            animation: fadeUp 0.8s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--accent);
+            position: relative;
+        }
+
+        .hero h1 em::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            opacity: 0.5;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: rgba(245, 240, 234, 0.6);
+            max-width: 620px;
+            margin: 0 auto 3rem;
+            line-height: 2;
+            animation: fadeUp 0.8s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .hero-meta {
+            font-size: 0.8rem;
+            color: rgba(245, 240, 234, 0.3);
+            letter-spacing: 0.08em;
+            animation: fadeUp 0.8s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: bounce 2s ease infinite;
+        }
+
+        .scroll-hint span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3));
+            margin: 0 auto;
+        }
+
+        .scroll-hint small {
+            display: block;
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 0.2em;
+            margin-top: 0.5rem;
+        }
+
+        /* === MAIN CONTENT === */
+        .main-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* === SECTION: INTRO LETTER === */
+        .letter-section {
+            padding: 6rem 0 4rem;
+        }
+
+        .letter-section .section-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .letter-section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .letter-section p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+        }
+
+        .letter-section p strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .letter-signature {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .letter-signature span {
+            display: block;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* === SECTION DIVIDER === */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 3rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        /* === CORE PROBLEM === */
+        .problem-section {
+            padding: 2rem 0 5rem;
+        }
+
+        .section-header {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-header .label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-header h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text-primary);
+        }
+
+        .section-header p {
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 700px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+            margin: 3rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--green));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding: 1.8rem 2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 2px 12px var(--shadow);
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.25s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.55s; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 2rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            transform: translateX(-5px);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 2rem;
+            width: 24px;
+            height: 24px;
+            background: rgba(192, 85, 41, 0.15);
+            border-radius: 50%;
+            transform: translateX(-11px) translateY(-6px);
+        }
+
+        .timeline-item .phase {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-item p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .timeline-item .warning {
+            margin-top: 0.8rem;
+            padding: 0.6rem 1rem;
+            background: #fdf4ef;
+            border-left: 3px solid var(--accent);
+            font-size: 0.85rem;
+            color: var(--accent-deep);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .timeline-item .ok {
+            margin-top: 0.8rem;
+            padding: 0.6rem 1rem;
+            background: var(--green-light);
+            border-left: 3px solid var(--green);
+            font-size: 0.85rem;
+            color: var(--green);
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* === GAP CALLOUT === */
+        .gap-callout {
+            margin: 3rem 0;
+            padding: 3rem 2.5rem;
+            background: linear-gradient(135deg, #1a1612, #2c2420);
+            color: #f5f0ea;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gap-callout::before {
+            content: '!';
+            position: absolute;
+            right: -1rem;
+            top: -2rem;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 12rem;
+            font-weight: 900;
+            color: rgba(192, 85, 41, 0.08);
+            line-height: 1;
+        }
+
+        .gap-callout h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .gap-callout p {
+            font-size: 1rem;
+            color: rgba(245, 240, 234, 0.7);
+            line-height: 2;
+            max-width: 650px;
+            position: relative;
+        }
+
+        /* === EVIDENCE CARDS === */
+        .evidence-section {
+            padding: 2rem 0 5rem;
+        }
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .evidence-card {
+            padding: 2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 2px 16px var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .evidence-card:nth-child(1) { animation-delay: 0.1s; }
+        .evidence-card:nth-child(2) { animation-delay: 0.2s; }
+        .evidence-card:nth-child(3) { animation-delay: 0.3s; }
+        .evidence-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .evidence-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px var(--shadow);
+        }
+
+        .evidence-card .num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 0.8rem;
+        }
+
+        .evidence-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .evidence-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .evidence-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* === STAT BOX === */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 2px 12px var(--shadow);
+        }
+
+        .stat-box .number {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1.1;
+        }
+
+        .stat-box .unit {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .stat-box .desc {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* === COMPARISON TABLE === */
+        .compare-section {
+            padding: 2rem 0 5rem;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px var(--shadow);
+        }
+
+        .compare-table thead th {
+            padding: 1.2rem 1.5rem;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-align: left;
+            background: #1a1612;
+            color: #f5f0ea;
+            letter-spacing: 0.05em;
+        }
+
+        .compare-table thead th:first-child {
+            width: 22%;
+        }
+
+        .compare-table tbody td {
+            padding: 1rem 1.5rem;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.7;
+        }
+
+        .compare-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .compare-table tbody td:first-child {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+
+        .compare-table .highlight-cell {
+            background: #fdf8f4;
+            color: var(--accent-deep);
+            font-weight: 500;
+        }
+
+        /* === METHOD SECTION === */
+        .method-section {
+            padding: 2rem 0 5rem;
+        }
+
+        .method-steps {
+            margin-top: 3rem;
+        }
+
+        .method-step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: flex-start;
+        }
+
+        .method-step .step-num {
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            background: var(--accent-light);
+            border-radius: 50%;
+        }
+
+        .method-step .step-body h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .method-step .step-body p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .method-step .step-body .tip {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--green-light);
+            color: var(--green);
+            font-size: 0.78rem;
+            font-weight: 500;
+            border-radius: 3px;
+            margin-top: 0.3rem;
+        }
+
+        /* === RESOURCE SECTION === */
+        .resource-section {
+            padding: 2rem 0 5rem;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .resource-card {
+            padding: 2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 2px 12px var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .resource-card .type {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 0.8rem;
+        }
+
+        .resource-card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--text-primary);
+        }
+
+        .resource-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .resource-card .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: #f5f2ee;
+            border-radius: 3px;
+            font-size: 0.72rem;
+            color: var(--text-light);
+            margin-top: 0.8rem;
+            margin-right: 0.3rem;
+        }
+
+        /* === CTA SECTION === */
+        .cta-section {
+            padding: 5rem 0;
+        }
+
+        .cta-box {
+            text-align: center;
+            padding: 4rem 3rem;
+            background: linear-gradient(160deg, #2c2420, #1a1612);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(192, 85, 41, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+            color: #f5f0ea;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .cta-box p {
+            font-size: 1rem;
+            color: rgba(245, 240, 234, 0.55);
+            max-width: 550px;
+            margin: 0 auto 2.5rem;
+            line-height: 2;
+            position: relative;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 0.9em 2.8em;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+            transition: background 0.3s ease, letter-spacing 0.3s ease;
+            position: relative;
+        }
+
+        .cta-btn:hover {
+            background: #d4663a;
+            letter-spacing: 0.14em;
+        }
+
+        /* === FOOTER === */
+        .footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .footer .credit {
+            margin-top: 0.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* === CITATION BOX === */
+        .cite-box {
+            margin: 2rem 0;
+            padding: 1.2rem 1.5rem;
+            background: #f9f7f3;
+            border-left: 3px solid var(--accent);
+            border-radius: 0 6px 6px 0;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .cite-box strong {
+            color: var(--text-primary);
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .evidence-grid,
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .compare-table {
+                font-size: 0.8rem;
+            }
+
+            .compare-table thead th,
+            .compare-table tbody td {
+                padding: 0.8rem 1rem;
+            }
+
+            .method-step {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .hero::after {
+                font-size: 0.7rem;
+                letter-spacing: 0.4em;
+            }
+        }
+
+        /* === FLOATING NAV === */
+        .float-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0.7rem 2rem;
+            background: rgba(26, 22, 18, 0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateY(-100%);
+            transition: transform 0.4s ease;
+        }
+
+        .float-nav.visible {
+            transform: translateY(0);
+        }
+
+        .float-nav .nav-brand {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #f5f0ea;
+        }
+
+        .float-nav .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .float-nav .nav-links a {
+            font-size: 0.72rem;
+            color: rgba(245, 240, 234, 0.5);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.3s;
+        }
+
+        .float-nav .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* === IP BADGE === */
+        .ipa-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.15rem 0.6rem;
+            background: rgba(192, 85, 41, 0.08);
+            border-radius: 3px;
+            font-size: 0.82rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin: 0 0.15rem;
+        }
+
+        /* === CHECKLIST === */
+        .checklist {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .checklist li {
+            position: relative;
+            padding-left: 1.8rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .checklist li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55rem;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            margin: 2rem 0;
+            padding: 2rem 2.5rem;
+            background: #fdf8f4;
+            border: 1px solid var(--accent-light);
+            border-radius: 6px;
+        }
+
+        .highlight-box h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-deep);
+            margin-bottom: 0.8rem;
+        }
+
+        .highlight-box p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Floating Nav -->
+<nav class="float-nav" id="floatNav">
+    <div class="nav-brand">致家长的一封信</div>
+    <ul class="nav-links">
+        <li><a href="#problem">核心问题</a></li>
+        <li><a href="#evidence">多维论据</a></li>
+        <li><a href="#method">学习方法</a></li>
+        <li><a href="#resource">资源推荐</a></li>
+    </ul>
+</nav>
+
+<!-- ====== HERO ====== -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-tag">致重庆小学英语家长</div>
+        <h1>别让孩子在初中<br>才第一次"遇见"<em>音标</em></h1>
+        <p class="hero-sub">
+            重庆的小学英语教育从低年级便引入自然拼读，但进入初中后，音标教学时间极为有限。
+            如果在小学高年级阶段提前系统学习音标，孩子将拥有一把终身受用的"发音钥匙"。
+        </p>
+        <p class="hero-meta">小学英语教师 &middot; 2026年6月</p>
+    </div>
+    <div class="scroll-hint">
+        <span></span>
+        <small>向下阅读</small>
+    </div>
+</section>
+
+<!-- ====== LETTER ====== -->
+<section class="letter-section">
+    <div class="main-wrap">
+        <div class="section-label">一封来自老师的信</div>
+        <h2>亲爱的家长朋友们：</h2>
+        <p>
+            您好。我是孩子们的英语老师，在日常教学中，我经常遇到这样的情况：孩子们凭借自然拼读规则，能够大致读出大部分简单单词，但一旦遇到<strong>不规则发音</strong>的词汇——比如 <em>colonel</em>（读作 /ˈkɜːnl/）、<em>queue</em>（读作 /kjuː/）——就束手无策了。
+        </p>
+        <p>
+            更令人担忧的是，当这些孩子升入初中，发现<strong>音标教学往往只安排几周甚至更短的时间</strong>（citation:1），而初中课标要求的核心素养涵盖语言能力、文化意识、思维品质和学习能力四大方面（citation:5），发音准确性直接影响语言能力的发展。在这样紧迫的节奏中，没有提前接触过音标的孩子，很容易在英语学习的"地基"上留下隐患。
+        </p>
+        <p>
+            今天写下这封信，是想和您聊聊一个我认为<strong>至关重要却常常被忽视</strong>的话题：为什么孩子应该在小学高年级（四至六年级）就系统学习音标，而不是等到初中再"补课"。
+        </p>
+        <div class="letter-signature">
+            此致，敬礼<br>
+            <span>一位关心孩子英语未来的小学英语教师</span>
+        </div>
+    </div>
+</section>
+
+<div class="main-wrap">
+    <div class="divider"><span>壹</span></div>
+</div>
+
+<!-- ====== CORE PROBLEM ====== -->
+<section class="problem-section" id="problem">
+    <div class="main-wrap">
+        <div class="section-header">
+            <span class="label">核心问题</span>
+            <h2>自然拼读 vs. 音标：<br>一条被忽视的"断层带"</h2>
+            <p>自然拼读（Phonics）与音标（IPA）是两套不同的系统，各有优势，但不能互相替代。</p>
+        </div>
+
+        <!-- FAQ -->
+        <div class="cite-box">
+            <strong>概念辨析：</strong>自然拼读侧重"见词能读"的规则，适合启蒙阶段（3-8岁）；音标是符号系统，适合8岁以上或需精准发音者。建议先学自然拼读建立语感，再学音标矫正发音，两者不冲突，可高效衔接。(citation:1)
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="phase">重庆小学低年级 · 一至三年级</div>
+                <h3>自然拼读启蒙期</h3>
+                <p>
+                    重庆许多学校和培训机构从低年级开始教授自然拼读规则，帮助孩子建立"字母-发音"的对应关系。这个阶段孩子们学习 CVC（辅音-元音-辅音）单词、长元音组合等基础规则，能够"见词能读"大约70%的规律词汇。(citation:1)
+                </p>
+                <div class="ok">
+                    这一阶段打下良好的语音意识基础，是正确的做法。
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="phase">重庆小学高年级 · 四至六年级</div>
+                <h3>"真空地带"——音标学习的黄金窗口期</h3>
+                <p>
+                    问题出现在这里：自然拼读在高年级的深入教学逐渐停止，但正式的音标教学也尚未开始。许多孩子在这个阶段出现了<strong>"会拼读但发音不准确"</strong>的尴尬状况，尤其是 th /θ/ /ð/、v/w 混淆、长短元音不分等问题。(citation:1)
+                </p>
+                <div class="warning">
+                    这个阶段正是学习音标的"黄金窗口期"——孩子的认知能力已足以理解抽象符号系统，但尚未形成错误的发音习惯。
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="phase">重庆初中 · 七年级起</div>
+                <h3>压缩的音标教学期</h3>
+                <p>
+                    进入初中后，英语课程需要覆盖语法、阅读、写作、听说等多维度内容。根据《义务教育英语课程标准（2022版）》，初中英语学科核心素养涉及语言能力、文化意识、思维品质和学习能力四大方面（citation:5），音标教学往往只是语音板块中的一个小环节。实际教学中，系统教授44个国际音标的时间通常<strong>仅有数周</strong>，远不足以让零基础的学生真正掌握。
+                </p>
+                <div class="warning">
+                    初中教师反馈：大量新生无法正确辨认和发出全部音标，课堂进度被迫压缩。
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="phase">后果</div>
+                <h3>发音问题的长期影响</h3>
+                <p>
+                    发音不准确会引发连锁反应：听力理解困难（因为大脑中的"声音模板"是错误的）、口语表达缺乏自信、单词记忆效率低下（无法利用音形对应关系）。研究指出，使用音标法进行语音教学可以有效提升初中生的语音水平和核心素养（citation:5）。
+                </p>
+            </div>
+        </div>
+
+        <!-- Gap Callout -->
+        <div class="gap-callout">
+            <h3>这条"断层带"，就是我们需要弥合的</h3>
+            <p>
+                自然拼读覆盖了约70%的英语词汇发音规则，但剩余30%的不规则词汇，恰恰需要音标来"兜底"。国际读写协会（IRA）建议，体系化课程需覆盖44个音标符号认知与自然拼读规则的结合（citation:1）。在小学高年级，趁孩子发音习惯尚未定型，将音标系统地引入，是最高效、最经济的做法。
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="main-wrap">
+    <div class="divider"><span>贰</span></div>
+</div>
+
+<!-- ====== EVIDENCE ====== -->
+<section class="evidence-section" id="evidence">
+    <div class="main-wrap">
+        <div class="section-header">
+            <span class="label">多维论据</span>
+            <h2>为什么要提前学音标？<br>六个维度的证据</h2>
+            <p>从语言学、认知科学、教育政策、一线教学等角度，系统阐述提前学习音标的必要性。</p>
+        </div>
+
+        <div class="stat-row">
+            <div class="stat-box">
+                <div class="number">44</div>
+                <div class="unit">个音标符号</div>
+                <div class="desc">英语国际音标（IPA）共44个音素，是精准发音的"密码表"</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">30%</div>
+                <div class="unit">不规则词汇</div>
+                <div class="desc">自然拼读无法覆盖的词汇，必须依赖音标来准确发音(citation:1)</div>
+            </div>
+            <div class="stat-box">
+                <div class="number">40%</div>
+                <div class="unit">效率提升</div>
+                <div class="desc">使用多模态音标教学的学生，音标掌握速度提升40%(citation:1)</div>
+            </div>
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-card">
+                <div class="num">01</div>
+                <h3>语言学依据：音标是发音的"终极工具"</h3>
+                <p>
+                    自然拼读基于"字母-发音"的统计规律，但英语是一门"拼写不规则"的语言——同一个字母组合可能有多种发音（如 <em>ough</em> 在 though, through, thought, cough 中各不相同）。音标作为一套精确的符号系统，为每一个音素提供唯一标注，是解决发音问题的"终极工具"。(citation:1)
+                </p>
+            </div>
+
+            <div class="evidence-card">
+                <div class="num">02</div>
+                <h3>认知科学依据：窗口期内学习效率最高</h3>
+                <p>
+                    儿童在9-12岁处于"语言分析能力"的快速发展期。这个阶段的孩子已具备抽象思维的萌芽，能够理解符号与音素之间的对应关系，同时口腔肌肉的可塑性仍然很强，更容易纠正发音。错过这个窗口，错误发音一旦固化，纠正成本将成倍增加。
+                </p>
+            </div>
+
+            <div class="evidence-card">
+                <div class="num">03</div>
+                <h3>政策依据：新课标对语音能力的要求提高</h3>
+                <p>
+                    2022年版《义务教育英语课程标准》将核心素养明确为语言能力、文化意识、思维品质和学习能力四个维度（citation:5）。其中"语言能力"的基础就是准确的语音感知与产出。新课标对初中英语语音教学的要求并未降低，但课时分配中留给纯音标教学的时间被进一步压缩。
+                </p>
+            </div>
+
+            <div class="evidence-card">
+                <div class="num">04</div>
+                <h3>一线教学依据：初中教师的普遍反馈</h3>
+                <p>
+                    大量初中英语教师反映，新生入学时的音标基础普遍薄弱。在语法、阅读、写作、听说等多重教学任务的压力下，音标教学往往只能"走过场"。如果孩子在小学阶段已经系统掌握音标，初中阶段就能将更多精力放在语言综合运用上。
+                </p>
+            </div>
+
+            <div class="evidence-card full-width">
+                <div class="num">05</div>
+                <h3>学术研究依据：音标教学对核心素养的正向影响</h3>
+                <p>
+                    学术研究表明，采用音标法进行语音教学能够有效提升学生的英语语音水平和核心素养发展（citation:5）。该研究采用定量与定性结合的方法，系统验证了音标教学对学生"听音写词"和"见词能读"双向能力的显著促进作用。同时，行业数据显示，科学的课程应包含"音素意识—拼读规则—解码阅读"三阶段（citation:1），音标正是音素意识的核心载体。
+                </p>
+            </div>
+
+            <div class="evidence-card full-width">
+                <div class="num">06</div>
+                <h3>工具与资源依据：学习条件已完全成熟</h3>
+                <p>
+                    当前市场提供了丰富的音标学习辅助工具：自然拼读规则挂图、音标有声挂图等教辅材料已被大量家长验证有效——买家反馈"印刷清晰""发音准确""孩子能挂在墙上随时看"（citation:4）。此外，AI纠音系统、互动白板、点读笔等多模态教学工具的普及，使得自学者也能获得专业级的发音反馈，使用多模态教学的学生音标掌握速度可提升40%（citation:1）。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="main-wrap">
+    <div class="divider"><span>叁</span></div>
+</div>
+
+<!-- ====== PHONICS vs IPA COMPARISON ====== -->
+<section class="compare-section">
+    <div class="main-wrap">
+        <div class="section-header">
+            <span class="label">系统对比</span>
+            <h2>自然拼读与音标的差异</h2>
+            <p>两套系统各有侧重，互为补充。真正高效的英语启蒙教育，应该是两者的有序衔接。</p>
+        </div>
+
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>维度</th>
+                    <th>自然拼读 (Phonics)</th>
+                    <th>国际音标 (IPA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>本质</td>
+                    <td>字母/字母组合与发音之间的统计规律</td>
+                    <td>精确标注每一个音素的符号系统</td>
+                </tr>
+                <tr>
+                    <td>符号数量</td>
+                    <td>无独立符号，依赖字母本身</td>
+                    <td>44个音素（20个元音 + 24个辅音）</td>
+                </tr>
+                <tr>
+                    <td>覆盖率</td>
+                    <td>约70%的英语词汇</td>
+                    <td>100%的英语词汇（含不规则词）</td>
+                </tr>
+                <tr>
+                    <td>适用年龄</td>
+                    <td>3-8岁启蒙阶段效果最佳</td>
+                    <td>8岁以上认知能力较成熟后学习</td>
+                </tr>
+                <tr>
+                    <td>优势</td>
+                    <td>趣味性强、入门快、培养语感</td>
+                    <td>精准度高、适用范围广、可自学新词</td>
+                </tr>
+                <tr>
+                    <td>局限性</td>
+                    <td>遇到不规则词无法准确发音</td>
+                    <td>符号抽象，低龄儿童理解困难</td>
+                </tr>
+                <tr>
+                    <td class="highlight-cell">衔接建议</td>
+                    <td class="highlight-cell" colspan="2">
+                        先用自然拼读建立语感和拼读信心（低年级），再用音标系统修正和完善发音（高年级），实现"见词能读 + 听音写词"双向打通(citation:1)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div class="main-wrap">
+    <div class="divider"><span>肆</span></div>
+</div>
+
+<!-- ====== METHODS ====== -->
+<section class="method-section" id="method">
+    <div class="main-wrap">
+        <div class="section-header">
+            <span class="label">方法指南</span>
+            <h2>如何在小学阶段<br>系统学习音标？</h2>
+            <p>以下是一套经过教学验证的、适合小学高年级学生的音标学习路径。</p>
+        </div>
+
+        <div class="method-steps">
+            <div class="method-step">
+                <div class="step-num">一</div>
+                <div class="step-body">
+                    <h3>建立音素意识（第1-2周）</h3>
+                    <p>
+                        先不急着学符号。从"听"开始——让孩子辨别英语中的不同音素。可以通过"最小对立体"训练（如 ship/sheep、cat/cut、bed/bad），让孩子意识到英语中有多少个不同的"声音"。
+                    </p>
+                    <p>
+                        这一步的目标是：让孩子的大脑建立对44个音素的"声音地图"，为后续的符号学习打下感知基础。行业建议音素意识与拼读规则的课时分配比例为6:4（citation:1）。
+                    </p>
+                    <span class="tip">可配合英语音标有声挂图，扫码听标准发音(citation:4)</span>
+                </div>
+            </div>
+
+            <div class="method-step">
+                <div class="step-num">二</div>
+                <div class="step-body">
+                    <h3>分组学习44个音标符号（第3-6周）</h3>
+                    <p>
+                        将44个音标按照"先易后难"的原则分组学习。建议顺序：
+                    </p>
+                    <ul class="checklist">
+                        <li><strong>第一批：</strong>短元音 /ɪ/ /e/ /æ/ /ʌ/ /ɒ/ /ʊ/ /ə/ + 爆破辅音 /p/ /b/ /t/ /d/ /k/ /g/</li>
+                        <li><strong>第二批：</strong>长元音 /iː/ /ɑː/ /ɔː/ /uː/ /ɜː/ + 摩擦辅音 /f/ /v/ /θ/ /ð/ /s/ /z/ /ʃ/ /ʒ/ /h/</li>
+                        <li><strong>第三批：</strong>双元音 /eɪ/ /aɪ/ /ɔɪ/ /aʊ/ /əʊ/ /ɪə/ /eə/ /ʊə/ + 其他辅音</li>
+                    </ul>
+                    <p>
+                        每组音标用3-4天学习，通过"听音辨标—看标读音—模仿跟读—独立发音"四步法掌握。每天15-20分钟即可。
+                    </p>
+                    <span class="tip">建议使用音标卡或APP进行"闪卡"训练，强化符号与音素的联结</span>
+                </div>
+            </div>
+
+            <div class="method-step">
+                <div class="step-num">三</div>
+                <div class="step-body">
+                    <h3>结合自然拼读进行"双向打通"（第7-8周）</h3>
+                    <p>
+                        将已学的自然拼读规则与音标进行对照学习。例如：
+                    </p>
+                    <p>
+                        当孩子看到 <em>rain</em> 这个词，自然拼读告诉他 "ai" 发长音，音标则精确标注为 /reɪn/。两套系统互为验证，孩子不仅能"读出来"，还能"读准确"。
+                    </p>
+                    <p>
+                        这一阶段建议结合分级阅读材料（如 RAZ、牛津树），在真实语境中反复练习音标标注（citation:1）。
+                    </p>
+                    <span class="tip">可用彩色笔在阅读材料上标注音标，增强视觉记忆</span>
+                </div>
+            </div>
+
+            <div class="method-step">
+                <div class="step-num">四</div>
+                <div class="step-body">
+                    <h3>日常巩固与自我检测（持续进行）</h3>
+                    <p>
+                        学完系统课程后，关键是保持练习的频率。建议：
+                    </p>
+                    <ul class="checklist">
+                        <li>每天10分钟"单词打卡"——遇到生词先尝试用音标拼读，再查证(citation:1)</li>
+                        <li>每周2次集中练习，每次45分钟，保持学习连续性(citation:1)</li>
+                        <li>利用AI纠音工具（如"英语趣配音""可可英语"等APP）进行发音自测</li>
+                        <li>将音标表挂在书桌前，随时查阅（家长反馈"贴墙上没事看看，加深印象"(citation:4)）</li>
+                    </ul>
+                    <span class="tip">免费单词打卡营可以帮助孩子坚持练习(citation:1)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>给家长的核心建议</h3>
+            <p>
+                音标学习不需要"天赋"，需要的是<strong>系统的方法 + 持续的练习</strong>。如果家长自身英语基础较弱，完全可以借助专业机构或工具来完成。在选择培训机构时，重点考察教师是否持有TEFL/TESOL等专业证书、是否经过专项拼读教学法培训、以及能否提供试听课体验。(citation:1)
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="main-wrap">
+    <div class="divider"><span>伍</span></div>
+</div>
+
+<!-- ====== RESOURCES ====== -->
+<section class="resource-section" id="resource">
+    <div class="main-wrap">
+        <div class="section-header">
+            <span class="label">资源推荐</span>
+            <h2>学习音标的<br>优质资源与获取途径</h2>
+            <p>以下资源按类别整理，涵盖线下机构、线上课程、辅助工具和教辅材料。</p>
+        </div>
+
+        <div class="resource-grid">
+            <div class="resource-card">
+                <div class="type">线下培训机构</div>
+                <h3>选择标准与建议</h3>
+                <p>
+                    选择有实体校区的本地机构，优先考虑具备以下特征的：
+                </p>
+                <ul class="checklist">
+                    <li>教师持TEFL/TESOL或教师资格证，并经过专项拼读教学法培训(citation:1)</li>
+                    <li>提供"讲练测评补"闭环教学体系，确保学习效果可追踪(citation:1)</li>
+                    <li>支持试听，可先体验再决定</li>
+                    <li>配备AI纠音系统、互动白板等多模态教学工具(citation:1)</li>
+                </ul>
+                <span class="tag">一对一辅导</span>
+                <span class="tag">小班教学</span>
+                <span class="tag">免费试听</span>
+            </div>
+
+            <div class="resource-card">
+                <div class="type">线上课程平台</div>
+                <h3>灵活的在线学习选择</h3>
+                <p>
+                    对于时间不便的家庭，线上课程是很好的补充或替代方案。部分平台采用"AI智能诊断 + 真人教师一对一"的混合模式，能精准定位发音问题并提供针对性辅导(citation:1)。
+                </p>
+                <p>
+                    推荐关注：学而思网校的自然拼读AI课+真人一对一模式，通过智能系统诊断发音问题后再由教师讲解，趣味性强，适合对发音准确性要求高的学生(citation:1)。
+                </p>
+                <span class="tag">AI纠音</span>
+                <span class="tag">灵活时间</span>
+                <span class="tag">数据追踪</span>
+            </div>
+
+            <div class="resource-card">
+                <div class="type">教辅材料</div>
+                <h3>音标学习挂图与卡片</h3>
+                <p>
+                    音标有声挂图和自然拼读规则表是性价比极高的辅助工具。家长反馈"挂在孩子卧室里""扫码出音频，发音非常清楚""印刷清晰，纸张很厚"(citation:4)。
+                </p>
+                <p>
+                    推荐购买"自然拼读+音标挂图"套装和"小学英语挂图套装"，贴在孩子学习桌前，方便随时查阅巩固(citation:4)。购买时注意选择经过校对、印刷清晰的版本。
+                </p>
+                <span class="tag">有声挂图</span>
+                <span class="tag">音标卡</span>
+                <span class="tag">实体教具</span>
+            </div>
+
+            <div class="resource-card">
+                <div class="type">APP与数字工具</div>
+                <h3>日常练习的好帮手</h3>
+                <p>
+                    利用科技手段可以大幅提升学习效率。以下几类工具值得尝试：
+                </p>
+                <ul class="checklist">
+                    <li><strong>AI纠音类：</strong>英语趣配音、可可英语等——实时反馈发音准确性</li>
+                    <li><strong>分级阅读类：</strong>RAZ、牛津树APP——在语境中巩固音标标注能力(citation:1)</li>
+                    <li><strong>单词打卡类：</strong>每日10分钟打卡，保持学习连续性(citation:1)</li>
+                    <li><strong>点读笔：</strong>配合纸质教材使用，即点即读，强化听觉记忆(citation:1)</li>
+                </ul>
+                <span class="tag">免费APP</span>
+                <span class="tag">AI反馈</span>
+                <span class="tag">碎片时间</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="main-wrap">
+    <div class="divider"><span>陆</span></div>
+</div>
+
+<!-- ====== CTA ====== -->
+<section class="cta-section">
+    <div class="main-wrap">
+        <div class="cta-box">
+            <h2>现在开始，就是最好的时机</h2>
+            <p>
+                孩子的英语学习之路很长，但发音的地基只有一段时间可以打。
+                在小学高年级这个"黄金窗口期"，用几周的系统学习，换来未来数年的从容自信——这笔投资，值得每位家长认真考虑。
+            </p>
+            <a href="#method" class="cta-btn">查看学习方案</a>
+        </div>
+    </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="footer">
+    <div class="main-wrap">
+        <p>
+            本文档基于行业研究数据、学术文献及一线教学经验整理而成。<br>
+            部分数据来源于《2025年中国少儿英语教育行业报告》及公开学术研究(citation:1)(citation:5)。<br>
+            教辅材料信息参考电商平台真实用户评价(citation:4)。
+        </p>
+        <p class="credit">一位小学英语教师 &middot; 2026年6月</p>
+    </div>
+</footer>
+
+<script>
+    // Floating nav visibility
+    const nav = document.getElementById('floatNav');
+    const hero = document.querySelector('.hero');
+
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+            if (!entry.isIntersecting) {
+                nav.classList.add('visible');
+            } else {
+                nav.classList.remove('visible');
+            }
+        },
+        { threshold: 0.1 }
+    );
+
+    observer.observe(hero);
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Animate elements on scroll
+    const animateOnScroll = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    document.querySelectorAll('.evidence-card, .resource-card, .timeline-item, .stat-box').forEach(el => {
+        animateOnScroll.observe(el);
+    });
+</script>
+
+</body>
+</html>

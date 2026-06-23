@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025-12-24-道哥直播-数学竞赛题目精讲</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 40px 32px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .summary-box {
+            background: var(--accent-bg);
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-box h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-box ul {
+            list-style: none;
+        }
+
+        .summary-box li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-box li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        nav {
+            background: var(--surface);
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+        }
+
+        nav li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        nav li a:hover { color: var(--accent); }
+
+        main { padding: 32px; }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 20px;
+        }
+
+        section h3 {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        section p {
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            text-align: justify;
+            line-height: 2;
+        }
+
+        section ul, section ol {
+            margin: 14px 0 14px 28px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 10px; line-height: 1.8; }
+
+        strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            background: #fafafa;
+        }
+
+        .alert-gold { background: var(--highlight); border-color: var(--gold); }
+        .alert-success { background: #eaf5ed; border-color: var(--success); }
+        .alert-danger { background: #fdf0ec; border-color: var(--danger); }
+        .alert-info { background: #eaf2f8; border-color: var(--info); }
+        .alert-purple { background: var(--accent-bg); border-color: var(--accent); }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 4px;
+            font-weight: 500;
+        }
+
+        .tag-purple { background: var(--accent-bg); color: var(--accent); }
+        .tag-gold { background: var(--highlight); color: var(--gold); }
+        .tag-green { background: #eaf5ed; color: var(--success); }
+        .tag-blue { background: #eaf2f8; color: var(--info); }
+
+        .highlight-text {
+            background: linear-gradient(transparent 60%, var(--highlight) 60%);
+            padding: 0 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead {
+            background: var(--accent);
+            color: white;
+        }
+
+        thead th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        .content-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.5rem; }
+            main { padding: 20px; }
+            .summary-box, nav { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>2025-12-24-道哥直播-数学竞赛题目精讲</h1>
+            <div class="subtitle">直播内容整理稿</div>
+        </header>
+        <div class="summary-box">
+            <h2>核心要点</h2>
+            <ul>
+                <li>那这道题也是比较有意思一道题这个是学生供的，做出来第一问</li>
+                <li>但是它又应该是一个公共的基质因子，它应该是整出f n和g n的，这他妈</li>
+                <li>那首先看这个二的n减二次方模n是多少</li>
+                <li>所以此时，它们的最小质因因子是相同的，因为我们第一位已经证过了，最小质因因子必须是大于等于n的</li>
+                <li>第二问，我们又证出来，刚好全是n，</li>
+                <li>那很简单，首先p要整除二的n减一次方加n减一的阶乘，然后p要整除二的n减二次方加上n减三的阶乘，</li>
+                <li>你用两倍的第二个式子减去第一个式子</li>
+                <li>或者说，第一个式子减去两倍的第二个式子，你就会得到p整除n减一的阶乘减去两倍的n减三的阶乘，</li>
+            </ul>
+        </div>
+        <nav>
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">一、概述</a></li>
+                <li><a href="#section2">二、核心要点</a></li>
+                <li><a href="#section3">三、详细内容</a></li>
+                <li><a href="#section4">四、重要建议</a></li>
+                <li><a href="#section5">五、总结</a></li>
+            </ul>
+        </nav>
+        <main>
+            <section id="section1">
+                <h2>概述</h2>
+                <p>那这道题也是比较有意思一道题这个是学生供的，做出来第一问。比较小的情况还是比较好算的，或者你直接每局其实都能算，。定义的f n是二的n减一次方加上n减一的阶乘，g n是二的n减二次方加上n减三的阶乘。</p>
+                <p>然后这个f n和g n的最小公共基质因子，它是多少。好，假设随便取一个i吧，随便取一个i，去算一下。因为我们只考虑机制因子嘛，我们不考虑二，所以假设三。</p>
+                <p>到n减一之间的一个i，f n和i的最小的公因数是多少。n减一的阶乘，它和i显然是这个显然是i的倍数，。因为n是大于等于七的，所以n减三的阶乘它也是n减一的倍数。</p>
+                <p>因为你的n减三的阶乘，它也是n减，它也是i的一个倍数，。公共的基质因子，你想要去算一个公共的基质因子，那假设这个i它公共的基质因子。如果i在三到n减一之间，我们能得出来这都是一呀。</p>
+                <p>因为它是奇质因子，它和这个二的幂当然是没有公约数的。如果i在三到n减一之间，它和f n g n的最大公约数都是一呀。但是它又应该是一个公共的基质因子，它应该是整出f n和g n的，这他妈。</p>
+                <p>那他们肯定是矛盾的，不可能，它又是一个机制因子，又是互质的。所以说，如果你是公共基质因子的话，那你的i一定是比n要大的。所以说，这个i比n要大的，那对任意的在1到n减1之间的k，。</p>
+            </section>
+            <section id="section2">
+                <h2>核心要点</h2>
+                <p>也可以消掉，你就会得到 p 是整除 n 的。说，不管是怎么样的一种情况，首先，如果n是一个质数，你可以得到它们的最小质因子都是n，是一样的。其次呢，如果它们最小质因子是p，是是相同的，你也可以得到这个pn。</p>
+                <p>所以说，对于所有的n，使得f n和g n最小质因子相同的n，所有。所以这道题结合了比较多的前面的，例如什么威尔逊定理、费马小定理以及什么数论倒数这些，在数论里边比较基础的一些知识。在我圈的这个第一部分，它用到了费马小定理，然后威尔逊定理以及数论倒数。</p>
+                <p>那p整除f n和g n，你直接去利用这个整除关系，把这个二的幂次给消掉，然后再利用p大于等于n的这个关系，把所有和把所有小于n的数都给消掉，就能得出来p整除n了。所以这个简单的整除，所以综合来看，它是一道比较综合的题，它考察到了数论的方方面面。基本上你中阶之前的很多，比如你在初阶一、初阶二里边学到的一些概念，它都考察到了。</p>
+                <p>所以把它选到咱们中间的题里面是非常合适的，非常合适的。先看这个第一道，类似于这个像什么玩的那种合成游戏的那种题，。你需要用基础的物资去合成一些比较高等的物资。</p>
+                <p>那首先，A、B两个物资都是基础物资，你的每个回合都可以获得一个物资，或者合成一个物资。你要注意，中间是“或”，也说，你每个回合只能做一件事。你要么获得，要么合成，你不能既获得又合成，。</p>
+                <p>然后第三个呢，是你不能连续两个回合都获得A物质。也说，你获得一次A物资之后，你要隔一个回合再获得。说小明要在二十五、二十六获得两合成两次E物资，那么我前二十四个回合应该去怎么去选择我要什么物资，。</p>
+            </section>
+            <section id="section3">
+                <h2>详细内容</h2>
+                <p>所以只能是上面这种情况，所以你会发现你的奇数回合都是定好的，必须用来获得A物资。不然你二十五、二十六不可能合成两C一物质，。你的奇数回合必须是定好的，只要来看偶数回合就可以了。</p>
+                <p>首先，你的两个B物资在偶数回合你随时去获得都可以。你一共是需要四个B物资，所以你在这十二个回合里任意选四个位置去合成B物资就可以了。你的B物资是十二个位置，任何任意挑四个就可以了。</p>
+                <p>这四个回合是你用需要挑出来去合成C物资的，。需要挑出来去合成C物资的，所以是四百九十五种。例如，你第一回合合获得一个A物资，你不可能第二回合就合成D物资，。</p>
+                <p>然后合成C物资是会固定消耗到一个A物资的，所以你获得一个A，然后合成一个C，相当于啥都没干，所以合成C你就不用管了。但是，如果你中间有一个回合是用来获得B物资了，那你就会空出来一个A物资没有消耗。此时，你空出来一个A物资，你就可以结合上下一个你获得的A物资，这两个合成一个D。</p>
+                <p>然后呢，B和D的关系是，你前面如果没有合成过B，你就没有多余的A。你前面，例如你你的第一回合，如果你用来获得B了，那你就会空出来一个A，此时你就可以用两个A合成D了。你如果前面没有这个b，你不可能在这儿填一个d的，因为此时你只有一个a物资。</p>
+                <p>也说，你必须空一个回合，空一个回合才能再获得，再去合成D。因为你空的这个回合，你如果去合成C的话，你会消耗掉的，相当于啥都没有。所以说，剩下的八个位置，你要去填四个B，四个D。</p>
+            </section>
+            <section id="section4">
+                <h2>重要建议</h2>
+                <p>所以能给的分也比较多，那咱们一个一个来看，那首先这个运算规则你是应该能清楚了，。运算规则看二进制对应的数码，如果是不一样的，那就填一；如果是一样的，那就填填零，。然后他还给你举了一个例子，例如三写成二进制的话是零一一。</p>
+                <p>五写成二进制是一零一，然后你会发现它的前两位是不同的，第三位是相同的。所以说这是运算规则，那么你去一个一个算就可以了，。然后这个从一加到二零二五，不管你去找规律去算也好，还是去简便的算也好，其实都都比较好算。</p>
+                <p>然后我们讲一种比较有意思的算法，我们先验证这个运算是符符合结合律的。因为它只看相同或者不同，你把两个数交换一下，不影响它算出来的结果。那么看结合律，也说，你先算前边两个数，和你先算后边两个数，应该是一样的。</p>
+                <p>例如你只看二进制下的个位，或者只看十位，或者只看百位就行了。十位和十位算出来就在十位上，个位和个位算出来就在个位上，所以你只需要看一位就可以了，。所以你就把什么零零零，什么一一一，这几种情况。</p>
+                <p>分别去算一算就可以了，你会发现它是符合结合律的，。它是零和一是不一样的嘛，所以是一加一，那零。或者你先算一和一，那一和一是一样的，那零加零，那也是零，。</p>
+                <p>那在符合结合律的情况下，一加到二点二五这个顺序，你可以随便调。它只差了一，而且二k的末二进制它的最后一位数是零，。前面的所有的都是一样的，那前面算出来都是零。</p>
+            </section>
+            <section id="section5">
+                <h2>总结</h2>
+                <p>所以这道题虽然是最难的，但是它这个九分是最好拿的。一般来说，你做到这儿就可以结束了，就把该拿的分拿了就可以结束了。那首先你知道，它既然和这个最后算出来的结果都是一加到n，那你不妨给它一个定义，。</p>
+                <p>就数列a k从一加到k，数列a k从一加到k，然后你可以算一下前几个数是多少，。例如，你的k是从一、二、三、四、五、六、七、八，你的ak算出来应该是一三零四。我们想一想，A、B、C没有一个时刻两两不同，等价于什么东西。</p>
+                <p>A、B、C没有一个时刻两两不同，意思是A、B、C在每个时候它总有两个数是一样的，。总有两个数是一样的，知道两个一样的数加起来零。比方说，a和b是一样的，a和b是一样的，那你的a加上b加上c，a和b一加变成零了。</p>
+                <p>所以两这三个里边有两个一样的，等价于它的值第三个数，。你如果把前k个数加上去，这个值一定是a k，所以有两个数是一样的。有两个数是一样的，你能算出来第三个数是a k。</p>
+                <p>你的a k加a k会变成零，所以你会得到b加c等于零。那两个数运算一下等于零，说明这两个数在二进制下所有的位数都是一样的，。所以这是一个等价条件，没有a、b、c没有一个时刻两两不同，说明什么。</p>
+                <p>说明你的a、b、c永远都有一个数，它就等于a k。比方说你把前k个数加上去，你加第一个数的时候有一个数它是a一，加第二个数的时候有一个数它是a二，。那我的A、B、C在每个时刻它都是A、K，然后一个N，两个N，。</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

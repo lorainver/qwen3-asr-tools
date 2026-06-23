@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI时代信息学竞赛与编程教育全解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --accent: #6b2d5b;
+  --accent-light: #8e4585;
+  --accent-bg: #f5eef3;
+  --gold: #b8860b;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7570;
+  --border: #e2ddd6;
+  --highlight: #fff3cd;
+  --success: #2d6b3f;
+  --danger: #8b2500;
+  --info: #1a5276;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+/* ===== HEADER ===== */
+.page-header {
+  background: linear-gradient(135deg, #6b2d5b 0%, #4a1a3f 50%, #2d0f28 100%);
+  color: #fff;
+  padding: 60px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(184,134,11,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.page-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+}
+.page-header .subtitle {
+  font-size: 1.05rem;
+  opacity: 0.85;
+  margin-bottom: 20px;
+  font-weight: 300;
+  position: relative;
+}
+.tag-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  position: relative;
+}
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.tag-purple { background: rgba(142,69,133,0.3); color: #f0d4ea; }
+.tag-gold { background: rgba(184,134,11,0.3); color: #f5e6a3; }
+.tag-green { background: rgba(45,107,63,0.3); color: #a3e4b8; }
+
+/* ===== CONTAINER ===== */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* ===== NAV ===== */
+nav {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 36px;
+  position: relative;
+}
+nav::before {
+  content: '目录';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+nav ol {
+  list-style: none;
+  counter-reset: nav-counter;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+nav li {
+  counter-increment: nav-counter;
+}
+nav li::before {
+  content: counter(nav-counter, decimal-leading-zero);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-right: 8px;
+}
+nav a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--accent); }
+
+/* ===== SECTION ===== */
+section {
+  margin-bottom: 40px;
+}
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-left: 4px solid var(--accent);
+  padding-left: 16px;
+  margin-bottom: 6px;
+}
+.section-num {
+  font-size: 0.75rem;
+  color: var(--accent-light);
+  font-weight: 500;
+  margin-bottom: 2px;
+  padding-left: 16px;
+}
+
+/* ===== ALERTS ===== */
+.alert {
+  border-left: 4px solid;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 0.95rem;
+}
+.alert-gold { background: #fff3cd; border-color: var(--gold); }
+.alert-success { background: #eaf5ed; border-color: var(--success); }
+.alert-danger { background: #fdf0ec; border-color: var(--danger); }
+.alert-info { background: #eaf2f8; border-color: var(--info); }
+.alert-purple { background: #f5eef3; border-color: var(--accent); }
+.alert strong { display: block; margin-bottom: 4px; }
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+}
+.card h4 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.05rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+/* ===== TWO-COL ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+/* ===== TABLE ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.93rem;
+}
+thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr:hover { background: var(--accent-bg); }
+
+/* ===== FLOW ===== */
+.flow {
+  position: relative;
+  padding-left: 32px;
+  margin: 20px 0;
+}
+.flow::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-bg);
+}
+.flow-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+.flow-item::before {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--accent-bg);
+}
+.flow-item h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.flow-item p {
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+}
+
+/* ===== DIFF BAR ===== */
+.diff-bar {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  gap: 12px;
+}
+.diff-bar .label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  min-width: 100px;
+  text-align: right;
+  color: var(--text-secondary);
+}
+.diff-bar .bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.diff-bar .bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+}
+
+/* ===== LIST ===== */
+ul, ol { padding-left: 20px; margin: 8px 0; }
+li { margin-bottom: 6px; color: var(--text-secondary); }
+li strong { color: var(--text-primary); }
+
+p { margin-bottom: 12px; color: var(--text-secondary); }
+p strong { color: var(--text-primary); }
+
+.highlight-text { color: var(--accent); font-weight: 600; }
+.gold-text { color: var(--gold); font-weight: 600; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .page-header h1 { font-size: 1.6rem; }
+  .page-header { padding: 40px 16px 36px; }
+  nav ol { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .section-title { font-size: 1.2rem; }
+  .container { padding: 20px 14px 40px; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>AI时代信息学竞赛与编程教育全解析</h1>
+  <div class="subtitle">从算法核心到升学路径，从AI趋势到实战规划 — 一场面向家长的深度讲座整理</div>
+  <div class="tag-bar">
+    <span class="tag tag-purple">信息学竞赛</span>
+    <span class="tag tag-gold">人工智能时代</span>
+    <span class="tag tag-green">升学规划</span>
+    <span class="tag tag-purple">算法教育</span>
+    <span class="tag tag-gold">职业发展</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- NAV -->
+  <nav>
+    <ol>
+      <li><a href="#s1">AI时代的宏观背景与人才需求</a></li>
+      <li><a href="#s2">信息学竞赛的本质：算法而非语言</a></li>
+      <li><a href="#s3">成功案例与行业影响力</a></li>
+      <li><a href="#s4">升学价值与选拔机制</a></li>
+      <li><a href="#s5">学科能力的附带收益</a></li>
+      <li><a href="#s6">对虚假机构与课程的识别</a></li>
+      <li><a href="#s7">学习门槛与适龄规划</a></li>
+      <li><a href="#s8">学习路径与阶段规划</a></li>
+      <li><a href="#s9">师资条件与教学保障</a></li>
+      <li><a href="#s10">费用参考与理性消费建议</a></li>
+    </ol>
+  </nav>
+
+  <!-- SECTION 1 -->
+  <section id="s1">
+    <div class="section-num">第一章</div>
+    <h2 class="section-title">AI时代的宏观背景与人才需求</h2>
+
+    <div class="alert alert-purple">
+      <strong>核心判断</strong>
+      人工智能正在推动第四次工业革命，是全球经济增长的核心驱动力。掌握人工智能与编程能力，已成为面向未来的关键素养。
+    </div>
+
+    <p>当前时代变化极快，人工智能的发展超出了所有人的预期。全球范围内，科技股持续爆发，头部科技公司全面押注人工智能。人工智能不仅将渗透教育、医疗、家居等各领域，还将深刻改变人们的生活方式。</p>
+
+    <h4 style="color:var(--accent); margin:16px 0 8px;">人工智能的多领域渗透</h4>
+    <div class="two-col">
+      <div class="card">
+        <h4>科技与金融</h4>
+        <ul>
+          <li>头部科技公司全面押注AI</li>
+          <li>量化交易与AI结合（如幻方量化）</li>
+          <li>无人工厂与智能驾驶</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>医疗与生命科学</h4>
+        <ul>
+          <li>诺贝尔奖已转向AI+生命科学交叉领域</li>
+          <li>AI辅助医药研发与创新药开发</li>
+          <li>AI辅助临床诊断与医学研究</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>家居与通用机器人</strong>
+      以宇树科技为代表的通用机器人将走入家庭，解决居家养老、生活辅助等问题。结合脑机接口等前沿技术，未来人可以通过意识支配机器人完成各类任务。
+    </div>
+
+    <h4 style="color:var(--accent); margin:16px 0 8px;">全球顶尖科技领袖的编程起点</h4>
+    <table>
+      <thead>
+        <tr><th>人物</th><th>公司</th><th>开始学编程年龄</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>乔布斯</td><td>Apple</td><td>12岁</td></tr>
+        <tr><td>扎克伯格</td><td>Facebook</td><td>10岁</td></tr>
+        <tr><td>拉里·佩奇 / 谢尔盖·布林</td><td>Google</td><td>14岁</td></tr>
+        <tr><td>比尔·盖茨</td><td>Microsoft</td><td>少年时期</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section id="s2">
+    <div class="section-num">第二章</div>
+    <h2 class="section-title">信息学竞赛的本质：算法而非语言</h2>
+
+    <div class="alert alert-danger">
+      <strong>关键纠偏：学编程 ≠ 学语言</strong>
+      很多机构将"算法"偷换为"编程"，再将"编程"偷换为"语言"（Scratch、Python、C++），导致学生花费数年只学了语言语法，而未触及算法核心。
+    </div>
+
+    <p><strong>算法是一种思想，一种解决问题的能力。</strong>它以数学为基础，通过数学建模将想法转化为计算机可执行的程序。国家在选拔人才时看重的也是算法能力，而非编程语言本身。</p>
+
+    <div class="card">
+      <h4>语言 vs 算法：一个类比</h4>
+      <p>重庆话、英语、普通话是不同的语言——正如C++、Python、Scratch是不同的编程语言。选拔人才时，不能因为一个人说的是重庆话就判断他没有能力。真正重要的是通过语言表达出来的<strong>思想、逻辑与解决问题的能力</strong>，这才是算法。</p>
+    </div>
+
+    <p><strong>信息学竞赛</strong>属于五大理科竞赛之一（数学、物理、化学、生物、信息），其本质是以数学的核心思想和逻辑推理（特别是运筹学）为基础，用计算机语言和数据结构来实现解题方案。</p>
+
+    <div class="alert alert-info">
+      <strong>学习内容的本质</strong>
+      信息学竞赛所学内容实际上是大学级别的知识，包括：程序设计语言、数据结构、数论、函数、大学数学等。课堂上看似是编程课，实际上是数学课。
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section id="s3">
+    <div class="section-num">第三章</div>
+    <h2 class="section-title">成功案例与行业影响力</h2>
+
+    <div class="two-col">
+      <div class="card">
+        <h4>姚期智（姚班）相关案例</h4>
+        <p>姚顺雨，27岁，腾讯AI首席科学家。2014年通过NOI银牌+高考高分进入清华姚班，后赴普林斯顿攻读博士，曾在OpenAI工作一年，现年薪上千万。</p>
+      </div>
+      <div class="card">
+        <h4>蒋凡</h4>
+        <p>阿里巴巴CEO。通过NOI省一等奖保送进入复旦大学，现为阿里巴巴掌舵人。</p>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h4>梁文锋（DeepSeek创始人）</h4>
+        <p>信息学竞赛出身，毕业于浙江大学。DeepSeek未融外部资金，估值已达万亿级别，梁文锋个人持股85%。其量化私募基金幻方今年收益率超50%，管理资金规模达千亿。</p>
+      </div>
+      <div class="card">
+        <h4>张小川（搜狗前CEO）</h4>
+        <p>同样通过信息学竞赛保送进入名校，后成为搜狗总裁。</p>
+      </div>
+    </div>
+
+    <div class="alert alert-success">
+      <strong>行业薪资水平</strong>
+      清华姚班和北大图灵班本科毕业生就业中位数约<strong>100万元/年</strong>，博士毕业生年薪普遍不低于200万元。顶尖AI人才的年薪可达上千万级别。
+    </div>
+
+    <div class="card">
+      <h4>陈立杰：从网吧少年到理论计算机科学家</h4>
+      <p>初一、初二就读普通学校，成绩中等偏上，沉迷游戏。初二时偶然在网吧了解到信息学竞赛可保送清华北大，遂自学编程。高二时收到清华保送通知书，学校一片哗然——因其近一年未到校上课。</p>
+      <p>进入清华后，本科期间以交换生身份赴美，跟随图灵奖级别科学家研究课题，两个月内解决了一个长期未攻克的难题。本科毕业时获特等奖学金，班主任称其为"<strong>年轻的中国理论计算机科学家</strong>"。</p>
+    </div>
+
+    <div class="card">
+      <h4>楼天成（小马智行CTO）</h4>
+      <p>各种编程比赛"打遍天下无敌手"。在大学期间基于《三国志》创造了一款桌游——即后来广为人知的《三国杀》。现为小马智行CTO，该公司是智能驾驶领域核心技术的主要输出方，个人资产上亿。</p>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section id="s4">
+    <div class="section-num">第四章</div>
+    <h2 class="section-title">升学价值与选拔机制</h2>
+
+    <div class="alert alert-gold">
+      <strong>国家保送政策</strong>
+      清华、北大等顶尖高校只认可<strong>五大学科竞赛</strong>（数学、物理、化学、生物、信息学）的保送资格。其他竞赛、科创大赛、机器人比赛均不被认可用于保送。
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <h4>普及组（初中组）竞赛</h4>
+        <p>适合小学生学习的起步阶段内容，学习大学级别的程序设计语言、数据结构与基础数学。初一前可完成学习。</p>
+      </div>
+      <div class="flow-item">
+        <h4>提高组（高中组）竞赛</h4>
+        <p>初二至初三参加。获得一等奖后，可参加清华、北大冬令营/夏令营；一等奖中的高分选手可参加省选和全国赛。</p>
+      </div>
+      <div class="flow-item">
+        <h4>省队与国家集训队</h4>
+        <p><strong>进入省队 → 必读清华北大。</strong>进入国家集训队（NOI前四名）→ 直接保送清华北大，走上"人生巅峰"。</p>
+      </div>
+    </div>
+
+    <p><strong>升学路径说明：</strong></p>
+    <ul>
+      <li><strong>小升初：</strong>信息学竞赛对小升初无直接作用（机器人更是毫无用处）。但学好算法后，可在校内编程社团、兴趣班中展现特长。</li>
+      <li><strong>初中升高中：</strong>获得竞赛奖项可进入名校竞赛班。</li>
+      <li><strong>高中升大学：</strong>提高组一等奖可参加清华北大冬夏令营；省队成员可保送清华北大。</li>
+      <li><strong>大学与就业：</strong>竞赛经历可等同学历用于面试筛选。国际比赛金牌可等同博士学历。</li>
+    </ul>
+
+    <div class="alert alert-danger">
+      <strong>12岁以下政策变动</strong>
+      CSP（原信息学竞赛）目前不允许12岁以下学生参加，学生只能先参加GESP考级。但教学内容仍按竞赛标准进行，考级只是过渡。
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section id="s5">
+    <div class="section-num">第五章</div>
+    <h2 class="section-title">学科能力的附带收益</h2>
+
+    <div class="card">
+      <h4>收益一：数学成绩突飞猛进</h4>
+      <p>学习过程中涉及大量高中数学和大学数学内容（数论、函数等），能显著提升数学思维能力。信息学竞赛选手的数学成绩通常非常优秀。</p>
+    </div>
+
+    <div class="card">
+      <h4>收益二：英语能力显著提升</h4>
+      <ul>
+        <li>高阶学习需要阅读英文论文（国际顶刊论文均为英文）</li>
+        <li>全球编程比赛（如Codeforces）题目全为英文</li>
+        <li>大量接触英文技术文档和开源项目</li>
+        <li>长期使用英文键盘，对字母更敏感，有助于词汇记忆</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>收益三：培养极强的细心习惯</h4>
+      <p>编程考试中，一道题100分，代码必须完全正确才能得分——0分或100分之间没有中间状态。计算机不讲情面，对了就是对了，错了就是错了。大量练习使学生养成极其细心的思维习惯。</p>
+    </div>
+
+    <div class="card">
+      <h4>收益四：跨学科融合优势</h4>
+      <p>当前一流高校中，无论是医学、生物学还是材料学，最热门的课题都是<strong>人工智能+本专业</strong>的交叉研究。具备编程和算法基础的学生，在科研能力和发展潜力上具有明显优势。不具备编程基础的学生只能学习传统方向。</p>
+    </div>
+
+    <div class="card">
+      <h4>收益五：就业竞争力</h4>
+      <ul>
+        <li>理工科面试由一线科学家主持，<strong>面试中直接要求手写代码</strong>，无法伪装</li>
+        <li>竞赛奖项在筛选简历时可等同学历（金牌等同博士学历）</li>
+        <li>顶尖科技公司（腾讯、华为、Meta等）以千万级年薪争夺AI人才</li>
+        <li>算法能力者可自主创业，获得风投青睐（如红杉资本主动接触）</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-purple">
+      <strong>本科即可拿到百万年薪</strong>
+      以清华姚班和北大图灵班为例，本科毕业生就业中位数约100万元/年。这是因为这些学生从小学开始学习算法，经过多年训练，能力已超越多数硕士甚至博士水平。
+    </div>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section id="s6">
+    <div class="section-num">第六章</div>
+    <h2 class="section-title">对虚假机构与课程的识别</h2>
+
+    <div class="alert alert-danger">
+      <strong>警惕三类常见骗局</strong>
+    </div>
+
+    <div class="card">
+      <h4>骗局一：机器人/科创类课程</h4>
+      <ul>
+        <li>卖硬件设备，带学生参加比赛赚取参赛费</li>
+        <li>十年前的自主招生时代，机器人比赛和科创大赛曾可降分录取，但<strong>现在国家已全部取消，不再认可</strong></li>
+        <li>只认可五大学科竞赛</li>
+        <li>儿童无法理解神经网络、数学算法等核心知识，学习机器人没有实际意义</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>骗局二：Scratch/图形化编程</h4>
+      <ul>
+        <li>"边玩边学"类课程（如核桃编程等）实质是游戏化的表面课程</li>
+        <li>Scratch、图形化编程与算法竞赛无直接关系</li>
+        <li>无法帮助升学，也无法培养核心能力</li>
+        <li>家长花费大量时间和金钱，最终没有实质收获</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>骗局三：只教语言不教算法</h4>
+      <ul>
+        <li>机构口头声称课程与算法竞赛、升学相关，但实际只教授Scratch → Python → C++的语法</li>
+        <li>从一年级教到五年级，<strong>只赚了语言教学的钱，从未教到算法核心</strong></li>
+        <li>当学生面临小升初时，已来不及回头</li>
+        <li>外面的培训班十多节课就能教会一门语言，但算法需要长期训练</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>如何判断机构是否靠谱</strong>
+      正宗的信息学竞赛教学必须以<strong>算法</strong>为核心，而非语言语法。教学内容应包含：数据结构、数论、运筹学等数学知识，而非仅教授Scratch、Python或C++语法。
+    </div>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section id="s7">
+    <div class="section-num">第七章</div>
+    <h2 class="section-title">学习门槛与适龄规划</h2>
+
+    <table>
+      <thead>
+        <tr><th>年级</th><th>是否适合</th><th>条件说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>一年级及以下</td><td style="color:var(--danger);font-weight:600;">不适合</td><td>数学基础不足（加减乘除尚未熟练），无法理解算法概念。极个别顶尖天才除外。</td></tr>
+        <tr><td>二年级</td><td style="color:var(--danger);font-weight:600;">不建议</td><td>同上，数学数论基础不够。</td></tr>
+        <tr><td>三年级</td><td style="color:var(--success);font-weight:600;">适合起步</td><td>校内成绩95分以上，数学能力强，动手能力强，有探索欲望。</td></tr>
+        <tr><td>四年级</td><td style="color:var(--success);font-weight:600;">适合起步</td><td>同上。多数清华北大竞赛生为四五年级起步。</td></tr>
+        <tr><td>五年级</td><td style="color:var(--success);font-weight:600;">可以学习</td><td>数学成绩尚可即可尝试，拓展思维，对长远发展有益。</td></tr>
+        <tr><td>六年级</td><td style="color:var(--gold);font-weight:600;">可以但目标不同</td><td>已考上名校的学生可拓展学科特长；未上岸者难以通过竞赛升学，但对长期发展仍有帮助。</td></tr>
+        <tr><td>初一</td><td style="color:var(--danger);font-weight:600;">最后窗口期</td><td>初一之后再起步<strong>来不及</strong>。数学和信息学两科竞争激烈，起步时间至关重要。</td></tr>
+        <tr><td>初二及以上</td><td style="color:var(--danger);font-weight:600;">不建议起步</td><td>时间不够，竞争过于激烈。</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-purple">
+      <strong>核心门槛：数学能力</strong>
+      学生校内数学成绩需达到95分以上。数学不好、逻辑思维弱的学生，不可能学好算法。语言人人都能学会，但算法需要思维基础。
+    </div>
+  </section>
+
+  <!-- SECTION 8 -->
+  <section id="s8">
+    <div class="section-num">第八章</div>
+    <h2 class="section-title">学习路径与阶段规划</h2>
+
+    <div class="flow">
+      <div class="flow-item">
+        <h4>第一阶段：语言入门（第1期）</h4>
+        <p>从零基础开始，学习编程语言基础语法。重点不在语言本身，而为后续算法学习做准备。</p>
+      </div>
+      <div class="flow-item">
+        <h4>第二阶段：语言与数据结构进阶（第2期）</h4>
+        <p>在语言基础上引入数据结构知识，开始接触算法思维。</p>
+      </div>
+      <div class="flow-item">
+        <h4>第三阶段：核心算法（第3-4期）</h4>
+        <p>深入学习核心算法（数论、搜索、动态规划等），同步学习相关数学知识。约50-60次课完成初中组竞赛内容。</p>
+      </div>
+      <div class="flow-item">
+        <h4>第四阶段：竞赛集训（寒暑假）</h4>
+        <p>利用寒暑假进行比赛集训，由清华北大选手指导，备战CSP等正式比赛。</p>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>总时长约一年多</strong>
+      整个初中组竞赛内容约需一年多完成。六年级到初一期间可跟随学校进行高阶学习。初二参加提高组竞赛。若初三仍无法获得一等奖，建议高中阶段放弃竞赛路线。
+    </div>
+
+    <div class="alert alert-gold">
+      <strong>与奥数的关系</strong>
+      信息学与奥数相互促进、相辅相成。信息学本身以数学为核心，学习过程中数学能力会大幅提升。两者都属于理科竞赛体系，不冲突。
+    </div>
+  </section>
+
+  <!-- SECTION 9 -->
+  <section id="s9">
+    <div class="section-num">第九章</div>
+    <h2 class="section-title">师资条件与教学保障</h2>
+
+    <p><strong>能教授正宗信息学竞赛算法的师资极为稀缺。</strong>全国范围内，具备如下条件的教师方可胜任：</p>
+
+    <table>
+      <thead>
+        <tr><th>师资类型</th><th>说明</th><th>现实情况</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>学校金牌教练</td><td>在中学担任竞赛教练</td><td>在职教师管理严格，不敢外出授课</td></tr>
+        <tr><td>清华北大竞赛毕业生</td><td>集训队级别选手</td><td>本身薪资极高，缺乏教学意愿</td></tr>
+        <tr><td>本土机构核心教师</td><td>拥有课程体系和题库资源</td><td>数量极少，全国不超过三家</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-success">
+      <strong>教学保障</strong>
+      正规的信息学竞赛教学应具备：与四大名校同步的课程体系与题库、具备实战经验的核心教师（学校金牌教练或清北竞赛毕业生）、寒暑假集训由清北选手指导。
+    </div>
+  </section>
+
+  <!-- SECTION 10 -->
+  <section id="s10">
+    <div class="section-num">第十章</div>
+    <h2 class="section-title">费用参考与理性消费建议</h2>
+
+    <div class="alert alert-danger">
+      <strong>警惕超高价课程</strong>
+      小学阶段花费超过3万元、或累计花费超过12-13万元的，极有可能被"割韭菜"。有家长在小学阶段花费10万以上，属于纯粹被骗。
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>阶段</th><th>合理费用参考</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>小学阶段</td><td>约2万元</td><td>包含初中组竞赛核心内容学习</td></tr>
+        <tr><td>初中阶段</td><td>约2-3万元</td><td>跟随学校学习 + 适当参加外训</td></tr>
+        <tr><td>高中阶段</td><td>约4-5万元</td><td>包含外训及比赛费用</td></tr>
+        <tr><td>累计总计</td><td>约10-13万元</td><td>从入门到高中出成绩的合理总投入</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-gold">
+      <strong>关于跨报与预缴费的警告</strong>
+      近期多家机构经营困难，存在倒闭风险。切勿一次性缴纳大额费用，尤其警惕"寒假暑假一起报"的跨报推销。多家知名机构已出现教师转兼职、拖欠工资、资金链断裂等问题。
+    </div>
+
+    <p><strong>体验课安排：</strong>正式课程约3800元/12次课（另加2次免费体验课，体验课仅收199元）。体验课用于双向评估——教师评估学生是否适合，学生评估是否有兴趣。不适合的学生不会被强行留下。</p>
+
+    <div class="alert alert-success">
+      <strong>最终建议</strong>
+      AI时代已来，信息学竞赛教育的价值不仅在于升学，更在于培养面向未来的核心能力。建议三年级以上、数学成绩优异的学生尝试入门学习。即使最终不走竞赛路线，算法思维的训练对大学学习、科研能力和就业竞争力都有巨大帮助。给娃儿一次机会，让他尝试——如果适合，不学就亏大了。
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

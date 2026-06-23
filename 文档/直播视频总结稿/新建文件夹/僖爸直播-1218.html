@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小升初规划分享会 — 核心纪要</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --surface: #ffffff;
+      --accent: #6b2d5b;
+      --accent-light: #8e4585;
+      --accent-bg: #f5eef3;
+      --gold: #b8860b;
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #7a7570;
+      --border: #e2ddd6;
+      --highlight: #fff3cd;
+      --success: #2d6b3f;
+      --danger: #8b2500;
+      --info: #1a5276;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      background: linear-gradient(135deg, #6b2d5b 0%, #8e4585 50%, #a0587a 100%);
+      padding: 56px 32px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(184, 134, 11, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .page-header::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -5%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .page-header h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 2.2em;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-header .subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1em;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    .tag-purple {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .tag-gold {
+      background: rgba(184, 134, 11, 0.25);
+      color: #ffd700;
+      border: 1px solid rgba(184, 134, 11, 0.4);
+    }
+
+    .tag-white {
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav-wrapper {
+      max-width: 960px;
+      margin: -28px auto 0;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .toc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      position: relative;
+    }
+
+    .toc-card::before {
+      content: '目录';
+      position: absolute;
+      top: -10px;
+      left: 24px;
+      background: var(--accent);
+      color: #fff;
+      padding: 2px 14px;
+      border-radius: 6px;
+      font-size: 0.75em;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+      margin-top: 8px;
+    }
+
+    .toc-grid a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      font-size: 0.92em;
+      transition: all 0.2s ease;
+    }
+
+    .toc-grid a:hover {
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+
+    .toc-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: var(--accent-bg);
+      color: var(--accent);
+      border-radius: 6px;
+      font-size: 0.8em;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* ===== CONTENT AREA ===== */
+    .content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ===== SECTION ===== */
+    section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header .accent-bar {
+      width: 4px;
+      min-height: 32px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .section-header .section-num {
+      font-size: 0.72em;
+      color: var(--accent-light);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .section-header h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.5em;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    h3 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.15em;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 28px 0 14px;
+      padding-left: 14px;
+      border-left: 3px solid var(--gold);
+    }
+
+    h4 {
+      font-size: 1em;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 20px 0 10px;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== ALERT BOXES ===== */
+    .alert {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 18px 0;
+      font-size: 0.95em;
+      line-height: 1.7;
+    }
+
+    .alert-gold {
+      background: var(--highlight);
+      border-left: 4px solid var(--gold);
+      color: #665200;
+    }
+
+    .alert-success {
+      background: #eaf5ed;
+      border-left: 4px solid var(--success);
+      color: #1a4a2a;
+    }
+
+    .alert-danger {
+      background: #fdf0ec;
+      border-left: 4px solid var(--danger);
+      color: #5a1a00;
+    }
+
+    .alert-info {
+      background: #eaf2f8;
+      border-left: 4px solid var(--info);
+      color: #0e3a56;
+    }
+
+    .alert-purple {
+      background: var(--accent-bg);
+      border-left: 4px solid var(--accent);
+      color: #4a1942;
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    /* ===== LISTS ===== */
+    ul, ol {
+      padding-left: 24px;
+      margin: 10px 0 16px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    li strong {
+      color: var(--text-primary);
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin: 16px 0;
+    }
+
+    .card-title {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 600;
+      font-size: 1.05em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    /* ===== TWO COLUMN ===== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    /* ===== TABLE ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.92em;
+    }
+
+    thead th {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    thead th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    thead th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:hover {
+      background: var(--accent-bg);
+    }
+
+    tbody tr:last-child td:first-child {
+      border-radius: 0 0 0 8px;
+    }
+
+    tbody tr:last-child td:last-child {
+      border-radius: 0 0 8px 0;
+    }
+
+    /* ===== DIFF BAR ===== */
+    .diff-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0;
+    }
+
+    .diff-label {
+      font-size: 0.85em;
+      font-weight: 500;
+      color: var(--text-primary);
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .diff-track {
+      flex: 1;
+      height: 10px;
+      background: #eee;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .diff-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .diff-fill-low {
+      background: linear-gradient(90deg, #2d6b3f, #4caf50);
+      width: 30%;
+    }
+
+    .diff-fill-mid {
+      background: linear-gradient(90deg, #b8860b, #daa520);
+      width: 60%;
+    }
+
+    .diff-fill-high {
+      background: linear-gradient(90deg, #8b2500, #c0392b);
+      width: 90%;
+    }
+
+    .diff-fill-critical {
+      background: linear-gradient(90deg, #6b2d5b, #8e4585);
+      width: 100%;
+    }
+
+    /* ===== FLOW TIMELINE ===== */
+    .flow {
+      position: relative;
+      padding-left: 32px;
+      margin: 20px 0;
+    }
+
+    .flow::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .flow-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .flow-item::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 8px;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+      box-shadow: 0 0 0 2px var(--accent-bg);
+    }
+
+    .flow-title {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .flow-desc {
+      font-size: 0.92em;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ===== TAG INLINE ===== */
+    .tag-inline {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: 500;
+      margin: 0 4px 4px 0;
+    }
+
+    .tag-purple {
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+
+    .tag-gold {
+      background: #fef3d0;
+      color: #8a6400;
+    }
+
+    .tag-green {
+      background: #eaf5ed;
+      color: var(--success);
+    }
+
+    .tag-red {
+      background: #fdf0ec;
+      color: var(--danger);
+    }
+
+    .tag-blue {
+      background: #eaf2f8;
+      color: var(--info);
+    }
+
+    /* ===== QUOTE ===== */
+    .quote-block {
+      border-left: 4px solid var(--gold);
+      padding: 16px 20px;
+      margin: 18px 0;
+      background: #fffdf5;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    .quote-block .quote-source {
+      display: block;
+      margin-top: 8px;
+      font-style: normal;
+      font-size: 0.85em;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .page-header {
+        padding: 40px 20px 36px;
+      }
+
+      .page-header h1 {
+        font-size: 1.5em;
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 28px 16px 60px;
+      }
+
+      .section-header h2 {
+        font-size: 1.25em;
+      }
+
+      table {
+        font-size: 0.82em;
+      }
+
+      thead th, tbody td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="page-header">
+    <h1>小升初规划分享会 · 核心纪要</h1>
+    <p class="subtitle">基于内部分享会议的结构化整理，涵盖政策形势、学习规划、家长实战经验与机构体系介绍</p>
+    <div class="tag-bar">
+      <span class="tag tag-gold">内部会议</span>
+      <span class="tag tag-white">小升初专题</span>
+      <span class="tag tag-purple">经验分享</span>
+      <span class="tag tag-white">重庆地区</span>
+    </div>
+  </header>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav-wrapper">
+    <div class="toc-card">
+      <div class="toc-grid">
+        <a href="#s1"><span class="toc-num">01</span>政策形势与核心判断</a>
+        <a href="#s2"><span class="toc-num">02</span>各年级学习规划路线</a>
+        <a href="#s3"><span class="toc-num">03</span>学习方法与提分策略</a>
+        <a href="#s4"><span class="toc-num">04</span>家长实战经验分享</a>
+        <a href="#s5"><span class="toc-num">05</span>AI与科技赋能教育</a>
+        <a href="#s6"><span class="toc-num">06</span>机构体系与师资介绍</a>
+        <a href="#s7"><span class="toc-num">07</span>寒假安排与报名须知</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="content">
+
+    <!-- ===== SECTION 1 ===== -->
+    <section id="s1">
+      <div class="section-header">
+        <div class="accent-bar"></div>
+        <div>
+          <div class="section-num">SECTION 01</div>
+          <h2>政策形势与核心判断</h2>
+        </div>
+      </div>
+
+      <h3>一、当前政策背景</h3>
+      <p>近期小升初相关政策收紧，主要涉及以下方面：</p>
+      <ul>
+        <li><strong>整顿招生乱象：</strong>部分机构参与违规收费、制造"飞机票"（虚假通行证）、大额收取考试费等行为，已触及经济和纪律层面，由纪检部门介入调查。</li>
+        <li><strong>舆论事件叠加：</strong>个别社会舆论事件与招生乱象交织，导致阶段性收紧。此类收紧通常出现在<strong>每年11—12月</strong>，延续至寒假后逐步恢复。</li>
+        <li><strong>周期性规律：</strong>每年年底至次年春节前后为政策敏感窗口期，三四月份摇号前为另一个窗口期。</li>
+      </ul>
+
+      <div class="alert alert-gold">
+        <strong>核心判断</strong>
+        七龙珠名校不可能只看校内成绩而不考奥数思维。顶尖名校（一中、三中、八中、巴蜀、西附、一外、育才等）<strong>离不开顶尖生源</strong>，选拔机制不会根本改变。"摇号划片"人人可读的好学校不存在；真正优质的班级（如前班、竞赛班等）需要通过多轮选拔才能组建。
+      </div>
+
+      <h3>二、不变的核心逻辑</h3>
+      <div class="alert alert-purple">
+        <strong>一句话忠告</strong>
+        不管政策如何变化，<strong>只要孩子成绩足够优秀，一定会有好学校录取</strong>。个人修炼到位是根本。成绩好的孩子在任何选拔体系下都不会被埋没。
+      </div>
+
+      <h3>三、区内推优与直升</h3>
+      <ul>
+        <li><strong>区内推优的入围条件：</strong>以四五年级校内成绩为主，英语成绩在区内推优中也有一定权重。</li>
+        <li><strong>校内成绩定位：</strong>大多数区重点可通过校内成绩入围；部分直属校（如两江巴蜀等）在校内成绩特别拔尖时可直签，但绝大多数直属校的校内成绩仅是<strong>第一道门槛</strong>，还需通过小升初选拔。</li>
+        <li><strong>"4+2"路径：</strong>四年级完成小学内容，五六年级转入早培学习初中课程，适用于有学区房兜底或教育系统子弟等特定情况。</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>补充说明</strong>
+        入学政策要求提供居住证明（租房或居住证）、社保/个体工商证明、或房产证明等材料之一即可，学籍在区县但户口在主城区的学生按各校要求提交文件。
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2 ===== -->
+    <section id="s2">
+      <div class="section-header">
+        <div class="accent-bar"></div>
+        <div>
+          <div class="section-num">SECTION 02</div>
+          <h2>各年级学习规划路线</h2>
+        </div>
+      </div>
+
+      <h3>一、学科权重分配</h3>
+      <table>
+        <thead>
+          <tr><th>学科</th><th>权重建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>数学（小奥）</strong></td><td>100%（核心）</td><td>小升初选拔的主要依据，必须系统攻克</td></tr>
+          <tr><td><strong>语文</strong></td><td>50%</td><td>低年级重积累，三四五年级重视阅读写作，五六年级控制时间</td></tr>
+          <tr><strong>英语</strong></td><td>小升初中权重较低</td><td>校内抓好即可；但初中难度骤增，面试环节有英语要求</td></tr>
+        </tbody>
+      </table>
+
+      <h3>二、年级阶段规划</h3>
+
+      <div class="flow">
+        <div class="flow-item">
+          <div class="flow-title">一~二年级：习惯养成期</div>
+          <div class="flow-desc">把字写好，培养学习习惯。不必急于接触竞赛内容。</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-title">三年级：起步准备期</div>
+          <div class="flow-desc">该背的内容背到位；三年级暑假可开始系统学习奥数，建议每周一节课，循序渐进。语文注重积累。</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-title">四年级：核心攻坚期（上）</div>
+          <div class="flow-desc">重点推进阅读与写作。奥数板块学习应在四年级暑假前完成。校内四五年级成绩开始影响区内推优，需同步抓好。</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-title">五年级：核心攻坚期（下）</div>
+          <div class="flow-desc">全面进入刷题阶段。建议专攻数学和语文两科，其余非必要课程可暂停。五六年级控制时间，集中精力。</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-title">六年级：冲刺/早培分流期</div>
+          <div class="flow-desc">已完成小升初目标的学生转入早培（初中内容）；未上岸学生继续冲刺，抓住六七月初试窗口。</div>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <strong>关键警示</strong>
+        绝不建议六年级脱产到机构全日制学习。保持在校学习习惯、尊重学校和老师非常重要。除非已有学校接收，否则不鼓励脱离学校。
+      </div>
+
+      <h3>三、语文专项规划</h3>
+      <ul>
+        <li><strong>一二年级：</strong>练好书写习惯</li>
+        <li><strong>三四年级：</strong>完成该背诵的积累，开始阅读训练</li>
+        <li><strong>四五年级：</strong>重点推进阅读理解和写作能力</li>
+        <li><strong>五六年级：</strong>控制语文时间，将精力集中于数学冲刺</li>
+      </ul>
+
+      <h3>四、竞赛与早培判断</h3>
+      <ul>
+        <li><strong>不建议走竞赛的情况：</strong>数学基础不扎实的学生，不应分心学竞赛（含信息学竞赛）。</li>
+        <li><strong>适合竞赛的情况：</strong>理科思维极其突出——例如在一二三中等名校中，校内考试能稳定在年级前一百名。</li>
+        <li><strong>学校早培的价值：</strong>若目标是竞赛，学校早培有参与必要；若不走竞赛路线，学校早培更多是"占时间"和"选竞赛苗子"，实际价值有限。</li>
+      </ul>
+    </section>
+
+    <!-- ===== SECTION 3 ===== -->
+    <section id="s3">
+      <div class="section-header">
+        <div class="accent-bar"></div>
+        <div>
+          <div class="section-num">SECTION 03</div>
+          <h2>学习方法与提分策略</h2>
+        </div>
+      </div>
+
+      <h3>一、"边复习边刷题"原则</h3>
+      <div class="alert alert-purple">
+        <strong>核心方法论</strong>
+        <strong>边复习边刷题是效果最佳的模式。</strong>纯刷题会因知识遗忘而卡在低分段；纯复习则刷题时问题再次暴露。两者交替进行，形成"刷题暴露问题 → 复习解决问题 → 刷题验证复习效果"的正向循环。
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">误区：只刷不复习</div>
+          <p>刷到一定程度分数卡住，提升停滞，浪费时间。孩子因反复受挫丧失信心。</p>
+        </div>
+        <div class="card">
+          <div class="card-title">误区：只复习不刷</div>
+          <p>复习时看似搞懂了，但刷题时遗忘再现，无法验证复习效果，进度缓慢。</p>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <strong>实践效果</strong>
+        采用"上午复习 + 下午刷题"的模式，一个板块的复习可带来约<strong>10分</strong>的提升。从二班30分起步，系统复习后可跃升至六七十分，总提升幅度可达40分。
+      </div>
+
+      <h3>二、错题处理策略</h3>
+      <p>错题是提分的关键抓手，但处理方式因人而异：</p>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">传统方式</div>
+          <ul>
+            <li>手抄错题 → 耗时过大</li>
+            <li>勾出错题反复做 → 至少3遍</li>
+            <li>适用于题量较少、有时间整理的情况</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">AI仿错练习</div>
+          <ul>
+            <li>利用AI系统自动识别薄弱知识点</li>
+            <li>推送同类型变式题强化训练</li>
+            <li>省去人工整理时间，效率更高</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="quote-block">
+        "孩子的错题，他以为自己会了，但隔一个月换个方式出，他还是做不对。与其整理错题，不如多见同类型题。"
+        <span class="quote-source">—— 家长实战经验</span>
+      </div>
+
+      <h3>三、考试技巧</h3>
+      <ol>
+        <li><strong>第一遍：</strong>先把确定会做的简单题全部做完，确保拿到基础分。</li>
+        <li><strong>第二遍：</strong>回头做有把握但需要思考的中档题。</li>
+        <li><strong>第三遍：</strong>最后攻克难题和压轴题。</li>
+      </ol>
+
+      <div class="alert alert-gold">
+        <strong>注意</strong>
+        低年级学生往往从头到尾按顺序做题，遇到不会的题目长时间思考，浪费大量时间。教会孩子合理分配考试时间至关重要。
+      </div>
+
+      <h3>四、自主消化的重要性</h3>
+      <p>课堂学习仅是起点，回家后的自主消化决定最终效果。如果在家不复习、不练习，学习进度会非常缓慢。建议利用课间、延时课等碎片时间完成校内作业，腾出晚间时间进行拓展和消化。</p>
+
+      <h3>五、目标校专场集训</h3>
+      <p>针对特定目标学校的专场集训和刷题，如果该学校是心仪目标，<strong>一定要参加</strong>。实战后的反馈显示，专场训练内容与真实考试的匹配度非常高。</p>
+    </section>
+
+    <!-- ===== SECTION 4 ===== -->
+    <section id="s4">
+      <div class="section-header">
+        <div class="accent-bar"></div>
+        <div>
+          <div class="section-num">SECTION 04</div>
+          <h2>家长实战经验分享</h2>
+        </div>
+      </div>
+
+      <!-- 李妈妈 -->
+      <h3>一、李妈妈经验（六年级家长，孩子已上岸）</h3>
+
+      <div class="diff-bar">
+        <span class="diff-label">起步水平</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-low"></div></div>
+      </div>
+      <div class="diff-bar">
+        <span class="diff-label">上岸水平</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-mid"></div></div>
+      </div>
+
+      <h4>关键经验提炼</h4>
+      <ul>
+        <li><strong>建立目标意识：</strong>三年级开始学奥数时，需要向孩子解释学习的目的——好的初中基本只能通过奥数选拔这条路。高中面临五五分流，奥数是进入好班、好初中的核心通道。</li>
+        <li><strong>持续鼓励，建立信心：</strong>五年级刷题阶段，孩子长期在三四十分徘徊，压力很大。家长需要坚定地给予鼓励，帮助孩子建立信心坚持下去。</li>
+        <li><strong>瓶颈期突破方法：</strong>当刷题分数停滞时，将做过的卷子保留空白卷，勾出错题，让孩子至少反复做<strong>3遍以上</strong>。错题掌握后，遇到同类型题目才能正确应对。</li>
+        <li><strong>五年级节奏调整：</strong>五年级起暂停延时课（利用延时课自习时间复习刷题内容），专攻数学和语文两科，其余非必要课程暂停。</li>
+      </ul>
+
+      <div class="alert alert-success">
+        <strong>关于校内成绩</strong>
+        校内数学保持90分以上即可学好奥数，大部分孩子校内达到98分并不困难。关键在于认真对待。停延时课不等于放弃校内——学校正课正常上，仅利用延时自习时间自主安排复习。
+      </div>
+
+      <!-- 宋妈妈 -->
+      <h3>二、宋妈妈经验（六年级家长，孩子同时获得多个录取通知）</h3>
+
+      <div class="diff-bar">
+        <span class="diff-label">二班起步</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-low"></div></div>
+      </div>
+      <div class="diff-bar">
+        <span class="diff-label">一班稳线</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-high"></div></div>
+      </div>
+
+      <h4>学习时间轴</h4>
+      <table>
+        <thead>
+          <tr><th>时间节点</th><th>阶段</th><th>刷题分数</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>四年级暑假</td><td>小奥板块学习结束</td><td>—</td></tr>
+          <tr><td>五年级上·开始</td><td>进入二班刷题</td><td>约30分</td></tr>
+          <tr><td>国庆节期间</td><td>连续三次刷题</td><td>稳定50分</td></tr>
+          <tr><td>11月底</td><td>二班高分段</td><td>70+分</td></tr>
+          <tr><td>12月</td><td>升入一班</td><td>十几分~三十几分（不稳定）</td></tr>
+          <tr><td>五下3月</td><td>一班稳定</td><td>不下30分</td></tr>
+          <tr><td>5月</td><td>加量训练后</td><td>稳定50分</td></tr>
+          <tr><td>6月</td><td>爸爸全面介入</td><td>一班黄线前，60~70分</td></tr>
+          <tr><td>暑假~7月中</td><td>冲刺结束</td><td>持续高位</td></tr>
+        </tbody>
+      </table>
+
+      <h4>关键经验提炼</h4>
+      <ul>
+        <li><strong>板块学习不扎实时的应对：</strong>采用"综合复习 + 刷题"同步进行的模式，每复习一个板块，分数提升约<strong>10分</strong>。</li>
+        <li><strong>不拘泥于传统错题整理：</strong>发现孩子对整理好的错题并不真正掌握，转向利用AI仿错练习多见同类型题，效果更佳。</li>
+        <li><strong>爸爸深度参与：</strong>五下3月后爸爸全方位介入，组建2~4人的小组刷题，互相竞争 + 精准讲解薄弱题和难题，进步显著。</li>
+        <li><strong>暑假冲刺节奏：</strong>隔一到两天到机构刷题一次 + 在家消化错题 + 每天自主刷一套真题卷。</li>
+      </ul>
+
+      <div class="alert alert-gold">
+        <strong>时间节点建议</strong>
+        六月份前必须将成绩提起来。多数学校初试在六七月：把握住六月，七至八月签约；把握住七月，签约推至九至十月。越早达标，选择余地越大。
+      </div>
+
+      <h4>多渠道尝试</h4>
+      <ul>
+        <li>参加目标校的专场集训</li>
+        <li>关注各类竞赛通道（如"西药""四青"等）</li>
+        <li>填写学校二维码报名表</li>
+        <li>校门口等渠道投递简历</li>
+        <li>部分学生通过密电直接进入复试</li>
+      </ul>
+
+      <!-- 朱爸爸 -->
+      <h3>三、朱爸爸经验（六年级家长，孩子九月底上岸）</h3>
+
+      <div class="diff-bar">
+        <span class="diff-label">入班起步</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-low"></div></div>
+      </div>
+      <div class="diff-bar">
+        <span class="diff-label">上岸水平</span>
+        <div class="diff-track"><div class="diff-fill diff-fill-mid"></div></div>
+      </div>
+
+      <h4>学习历程</h4>
+      <ul>
+        <li><strong>入班分数：</strong>五年级上首次刷题仅<strong>21分</strong>，处于班级后20%。</li>
+        <li><strong>寒假阶段：</strong>提升至约30分，进步约10分。</li>
+        <li><strong>加课突破：</strong>针对行程问题、浓度问题等薄弱板块，加报拔高课专项提升。</li>
+        <li><strong>AI系统上线后：</strong>利用AI针对错题的训练功能，提分效果明显。</li>
+        <li><strong>最终上岸：</strong>九月底接到录取通知。</li>
+      </ul>
+
+      <h4>两条核心感悟</h4>
+      <div class="alert alert-purple">
+        <strong>感悟一：选择相信，相信选择</strong>
+        选择机构后坚持信任，不被外界信息干扰。最终所有成功考取的学校均在本机构考试获得。花大价钱通过"串串"报名的考试反而没有任何回音。
+      </div>
+
+      <div class="alert alert-purple">
+        <strong>感悟二：不死磕单一目标校</strong>
+        初始一心瞄准八系学校（精细化管理），但多次考试后发现不符合筛选方向。最终在原本未报名的学校（NY）仅考了一次便成功上岸。广撒网、有票先拿到，最终五月仍有选择余地。
+      </div>
+
+      <h4>关于英语面试</h4>
+      <p>NY学校面试环节包含英语面试，要求用英语自我介绍并回答老师英语提问。据校方反馈：</p>
+      <ul>
+        <li>当前初中英语难度已提前一学期至一年，部分老师认为初二英语难度相当于过去高一水平。</li>
+        <li>以往初中分水岭在初二（物理介入），<strong>现在初一开始分层，主因是英语难度提升</strong>。</li>
+        <li>建议五年级、六年级家长在有余力的情况下重视英语学习，尤其是目标为金刚校的学生。</li>
+      </ul>
+    </section>
+
+    <!-- ===== SECTION 5 ===== -->
+    <section id="s5">
+      <div class="section-header">
+        <div class="accent-bar"></div>
+        <div>
+          <div class="section-num">SECTION 05</div>
+          <h2>AI与科技赋能教育</h2>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <strong>重要趋势</strong>
+        三位家长分享中均高频提及AI系统。AI辅助学习正在成为小升初提分的核心工具之一。
+      </div>
+
+      <h3>一、AI系统核心功能</h3>
+      <ul>
+        <li><strong>知识点分布图：</strong>分析孩子在各知识点上的掌握情况和得分率。</li>
+        <li><strong>错题分析与AI仿错练习：</strong>针对个人薄弱知识点自动推送变式题，避免人工整理错题的时间成本。</li>
+        <li><strong>个性化学习计划：</strong>输入目标校后，系统分析该校过往三年自主招生的分数分布和知识点分布，制定针对性学习方案。</li>
+        <li><strong>AI视频辅助解题：</strong>提供思维方式引导而非直接给答案。</li>
+        <li><strong>积分排名系统：</strong>做题数量、难度、正确率等影响积分，未来可在本区乃至全市看到同年级排名。</li>
+      </ul>
+
+      <h3>二、数字化教学支撑</h3>
+      <ul>
+        <li>课堂黑板为高价智能设备，所有内容自带视频回放，学生回家后可温习。</li>
+        <li>教务老师的每一次电话、每一条消息均可追溯，服务透明化。</li>
+      </ul>
+
+      <div class="alert alert-gold">
+        <strong>AI系统进展</strong>
+        目前部分功能仅对五、六年级学生开放测试，产品成熟后将<strong>全学段全覆盖</strong>（小学 + 初中）。机构已投入巨资建设自有IT和AI团队，该系统为核心竞争壁垒。
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6 ===== -->
+    <section id="s6">
+      <div class="section-header">
+        <div class="accent-bar"></div>
+        <div>
+          <div class="section-num">SECTION 06</div>
+          <h2>机构体系与师资介绍</h2>
+        </div>
+      </div>
+
+      <h3>一、机构概况</h3>
+      <table>
+        <thead>
+          <tr><th>项目</th><th>内容</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>成立时间</td><td>2019年，与原八中聂校长共同创立</td></tr>
+          <tr><td>办学定位</td><td>精英教育，小班制（8人/班）</td></tr>
+          <tr><td>托管中心数量</td><td>7个（覆盖重庆核心商圈）</td></tr>
+          <tr><td>中心分布</td><td>金沙天街、渝北、南坪万达、巴南万达、江北观音桥、大学城维景园、九龙坡万象城</td></tr>
+          <tr><td>过往三年入园率</td><td>约90%（今年约70%，因政策收紧整体偏低）</td></tr>
+        </tbody>
+      </table>
+
+      <h3>二、核心特色</h3>
+      <ul>
+        <li><strong>先校内后拓展：</strong>体系设计第一阶段即确保校内成绩扎实，再进入奥数板块学习。</li>
+        <li><strong>不降难度：</strong>不降低教学难度以适应更多学生，仅根据个人情况区分进度。</li>
+        <li><strong>系统化高效教学：</strong>课程更系统，总课时量更少，效率更高。</li>
+        <li><strong>涵盖初中重难点：</strong>部分初中知识提前纳入教学范围，应对部分学校的选拔要求。</li>
+        <li><strong>规划先行：</strong>教学与个性化规划紧密结合，针对每个孩子的具体情况制定路线。</li>
+      </ul>
+
+      <h3>三、师资团队（部分展示）</h3>
+      <div class="alert alert-info">
+        <strong>师资标准</strong>
+        全职教师以985/211院校毕业为主，少部分为学而思、新东方等机构资深教师。硕士研究生占比高。
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>教师</th><th>背景</th><th>任职校区</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>吴老师</td><td>理科全能，物理竞赛获奖，信号处理方向</td><td>三坝</td></tr>
+          <tr><td>杨校长</td><td>哈工大毕业，S级教师</td><td>大学城</td></tr>
+          <tr><td>大海老师</td><td>原学而思知名教师，数学学科</td><td>巴南</td></tr>
+          <tr><td>张老师</td><td>西安交大</td><td>—</td></tr>
+          <tr><td>王老师</td><td>重大</td><td>渝北</td></tr>
+          <tr><td>张老师</td><td>南开大学</td><td>—</td></tr>
+          <tr><td>冉老师</td><td>重大</td><td>—</td></tr>
+          <tr><td>刘老师</td><td>兰州大学</td><td>九龙坡</td></tr>
+          <tr><td>郑老师</td><td>硕士研究生</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ===== SECTION 7 ===== -->
+    <section id="s7">
+      <div class="section-header">
+        <div class="accent-bar"></div>
+        <div>
+          <div class="section-num">SECTION 07</div>
+          <h2>寒假安排与报名须知</h2>
+        </div>
+      </div>
+
+      <h3>一、寒假托管安排</h3>
+      <div class="alert alert-purple">
+        <strong>寒假重要性</strong>
+        四五年级家长务必认真对待寒假，这是关键的追赶和提升窗口。提前达到目标水平的学生已经获得了大量机会。
+      </div>
+
+      <ul>
+        <li><strong>登记方式：</strong>扫描指定二维码进行登记（免费）。</li>
+        <li><strong>必须带孩子到场：</strong>登记后需预约时间带孩子到校进行测评，不接受无登记的直接到访。</li>
+        <li><strong>测评后规划：</strong>根据测评结果了解孩子水平，制定个性化学习规划。</li>
+        <li><strong>校区选择：</strong>可选择就近校区（渝北赵母山、江北观音桥、南坪万达、巴南万达、九龙坡万象城、大学城高新天安等）。</li>
+      </ul>
+
+      <h3>二、特别提醒</h3>
+      <ul>
+        <li><strong>在读学员：</strong>直接联系教务老师，不重复登记。</li>
+        <li><strong>不接受无登记的陌生拜访：</strong>需先了解孩子年级、水平、学习能力等情况后才能有效沟通。</li>
+        <li><strong>各年级均可登记：</strong>不限于小升初年级，初中及二娃家庭同样适用。</li>
+      </ul>
+
+      <div class="alert alert-danger">
+        <strong>重要警示</strong>
+        如有机构建议六年级脱产进行全日制学习以冲刺"2+4"等项目，请保持警惕。多位牛娃案例证明，半脱产学习同样可以成功，脱产全日制并非必要条件。保持正常学校学习节奏更为重要。
+      </div>
+
+      <h3>三、给不同年级家长的建议</h3>
+      <table>
+        <thead>
+          <tr><th>年级</th><th>核心建议</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>三~四年级</td><td>抓好校内成绩基础，开始系统学习奥数板块，语文注重积累</td></tr>
+          <tr><td>五年级</td><td>寒假认真规划，集中精力进入刷题阶段，暂停非必要课程</td></tr>
+          <tr><td>六年级（未上岸）</td><td>认真准备不轻言放弃，密切关注各校动态，抓紧窗口期</td></tr>
+          <tr><td>六年级（已上岸）</td><td>转入初中内容早培，为初中学习做准备</td></tr>
+        </tbody>
+      </table>
+
+      <div class="quote-block">
+        "所有的老师、所有的人都可以怀疑你的孩子，唯独你不能。永远不要怀疑自己的孩子。"
+        <span class="quote-source">—— 会议核心观点</span>
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>

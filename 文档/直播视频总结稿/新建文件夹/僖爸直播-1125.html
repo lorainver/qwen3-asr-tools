@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育规划与升学策略实录</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf9f6;
+            --surface: #ffffff;
+            --accent: #6b2d5b;
+            --accent-light: #8e4585;
+            --accent-bg: #f5eef3;
+            --gold: #b8860b;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #7a7570;
+            --border: #e2ddd6;
+            --highlight: #fff3cd;
+            --success: #2d6b3f;
+            --danger: #8b2500;
+            --info: #1a5276;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #6b2d5b 0%, #4a1a3e 40%, #2d0f25 100%);
+            padding: 56px 24px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(184,134,11,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-family: 'Noto Serif SC', serif;
+            color: #ffffff;
+            font-size: 2.2em;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .header .subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 1em;
+            font-weight: 300;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header .tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.78em;
+            font-weight: 500;
+        }
+
+        .tag-purple {
+            background: rgba(110,45,91,0.35);
+            color: #e8c8e0;
+            border: 1px solid rgba(142,69,133,0.4);
+        }
+
+        .tag-gold {
+            background: rgba(184,134,11,0.2);
+            color: #e8d5a0;
+            border: 1px solid rgba(184,134,11,0.35);
+        }
+
+        .tag-white {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Navigation */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            margin: -28px auto 32px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .nav-card .nav-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-card .nav-title::before {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 16px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+        }
+
+        .nav-grid a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9em;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-grid a .nav-num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.75em;
+            color: var(--accent-light);
+            font-weight: 600;
+            min-width: 20px;
+        }
+
+        .nav-grid a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Section */
+        section {
+            margin-bottom: 36px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header .sec-num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.7em;
+            color: var(--accent-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            margin-top: 4px;
+        }
+
+        .section-header h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.45em;
+            font-weight: 700;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent);
+            padding-left: 14px;
+            line-height: 1.4;
+        }
+
+        /* Alert boxes */
+        .alert {
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.92em;
+            line-height: 1.7;
+        }
+
+        .alert-gold {
+            background: var(--highlight);
+            border-left: 4px solid var(--gold);
+            color: #7a6200;
+        }
+
+        .alert-success {
+            background: #eaf5ed;
+            border-left: 4px solid var(--success);
+            color: #1a4a28;
+        }
+
+        .alert-danger {
+            background: #fdf0ec;
+            border-left: 4px solid var(--danger);
+            color: #6b1a00;
+        }
+
+        .alert-info {
+            background: #eaf2f8;
+            border-left: 4px solid var(--info);
+            color: #12394f;
+        }
+
+        .alert-purple {
+            background: var(--accent-bg);
+            border-left: 4px solid var(--accent);
+            color: #4a1a3e;
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 16px 0;
+        }
+
+        .card h3 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.05em;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        /* Two column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        li strong {
+            color: var(--accent);
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.92em;
+        }
+
+        thead {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        thead th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        tbody td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: var(--accent-bg);
+        }
+
+        /* Diff bar */
+        .diff-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .diff-label {
+            font-size: 0.85em;
+            font-weight: 500;
+            min-width: 80px;
+            color: var(--text-secondary);
+        }
+
+        .diff-track {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .diff-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent-light), var(--gold));
+        }
+
+        /* Flow timeline */
+        .flow {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .flow-item {
+            position: relative;
+            padding-left: 28px;
+            padding-bottom: 24px;
+            border-left: 2px solid var(--border);
+        }
+
+        .flow-item:last-child {
+            border-left: 2px solid transparent;
+            padding-bottom: 0;
+        }
+
+        .flow-item::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--surface);
+        }
+
+        .flow-item h4 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .flow-item p {
+            font-size: 0.88em;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Paragraph */
+        p {
+            margin-bottom: 12px;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .header {
+                padding: 40px 16px 36px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 1.2em;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            table {
+                font-size: 0.82em;
+            }
+
+            thead th, tbody td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<div class="header">
+    <h1>教育规划与升学策略实录</h1>
+    <p class="subtitle">从真实案例出发，解读规划逻辑、避坑要点与资源选择</p>
+    <div class="tags">
+        <span class="tag tag-purple">升学规划</span>
+        <span class="tag tag-gold">真实案例</span>
+        <span class="tag tag-white">小升初</span>
+        <span class="tag tag-white">初升高</span>
+        <span class="tag tag-purple">竞赛策略</span>
+    </div>
+</div>
+
+<!-- ==================== NAVIGATION ==================== -->
+<div class="container">
+    <nav>
+        <div class="nav-card">
+            <div class="nav-title">目录导航</div>
+            <div class="nav-grid">
+                <a href="#s1"><span class="nav-num">01</span>核心理念：适合才是最好的</a>
+                <a href="#s2"><span class="nav-num">02</span>真实案例：竞赛与升学的正反启示</a>
+                <a href="#s3"><span class="nav-num">03</span>混编班型：被误解的最优解</a>
+                <a href="#s4"><span class="nav-num">04</span>信息差与规划误区</a>
+                <a href="#s5"><span class="nav-num">05</span>自招签约的运作逻辑</a>
+                <a href="#s6"><span class="nav-num">06</span>各阶段学习路径规划</a>
+                <a href="#s7"><span class="nav-num">07</span>小升初：奥数学习与刷题策略</a>
+                <a href="#s8"><span class="nav-num">08</span>语文备考：积累与应试并重</a>
+                <a href="#s9"><span class="nav-num">09</span>初升高：目标分数与备考要点</a>
+                <a href="#s10"><span class="nav-num">10</span>教育观念：多元发展与幸福导向</a>
+                <a href="#s11"><span class="nav-num">11</span>学习资源总览</a>
+                <a href="#s12"><span class="nav-num">12</span>图论基础概念速览</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== S1 ==================== -->
+    <section id="s1">
+        <div class="section-header">
+            <span class="sec-num">第一章</span>
+            <h2>核心理念：适合才是最好的</h2>
+        </div>
+
+        <div class="alert alert-purple">
+            <strong>核心观点</strong>
+            学习是一场长跑，而非阶段性冲刺。即使考入清华北大，人生也远未定论。<strong>恰恰适合孩子的才是最好的</strong>——这一判断需要基于对孩子能力、心理状态和发展阶段的理性评估。
+        </div>
+
+        <p>直播者以大量亲身接触的案例反复强调一个核心理念：<strong>择校与培养的核心不是"越高越好"，而是"越适合越好"</strong>。盲目追求顶级学校和顶级班型，往往适得其反。真正的规划，是根据孩子的实际水平、心理承受力和长期发展，匹配最合适的平台。</p>
+
+        <div class="alert alert-gold">
+            <strong>关键提醒</strong>
+            能够做到理性择校的家长极为稀少。多数人被焦虑驱使，倾向于将孩子推向"最高平台"，而忽视了孩子在高压环境下的适应能力。
+        </div>
+    </section>
+
+    <!-- ==================== S2 ==================== -->
+    <section id="s2">
+        <div class="section-header">
+            <span class="sec-num">第二章</span>
+            <h2>真实案例：竞赛与升学的正反启示</h2>
+        </div>
+
+        <div class="card">
+            <h3>案例一：竞赛退赛后逆袭清华直博</h3>
+            <p>一名学生高三时参与竞赛，在竞赛班中垫底，文化成绩也一般，心理压力极大，一度出现胡言乱语等异常状态。最终竞赛退赛，高考成绩不理想，仅考入<strong>重庆大学</strong>——在全班一半以上进入清华北大的环境中，几乎是唯一一个。</p>
+            <p>然而，进入大学后，该生凭借扎实的基础条件，以<strong>碾压式成绩获得接近满绩点</strong>，最终<strong>推免清华大学直博</strong>。坏事变成了好事。</p>
+        </div>
+
+        <div class="card">
+            <h3>案例二：竞赛省队第一名 vs 班级倒数第一名</h3>
+            <p><strong>反面案例：</strong>某科竞赛<strong>重庆市第一名</strong>，通过国家集训队保送北京大学。入大学后未专注学业，有科目挂科，导致无法推免，后续求职困难，可能回重庆教书且无编制。</p>
+            <p><strong>正面案例：</strong>同一竞赛中<strong>班级倒数第一名</strong>的学生，很早退出竞赛，成绩不如前者，考入<strong>华中科技大学</strong>计算机专业。毕业后被各学校争抢，直接攻读<strong>人工智能方向博士</strong>，前景广阔。</p>
+
+            <div class="alert alert-danger">
+                <strong>警示</strong>
+                竞赛第一名与倒数第一名的结局完全逆转，充分说明：一时的排名和录取学校不决定终身，持续学习能力和发展路径的选择更为关键。
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>案例三：南开学生未做备选规划的教训</h3>
+            <p>一名南开中学学生，年级排名两百多名，成绩尚可。规划建议其参加多所学校的自招考试作为备选（巴蜀、一中等），但学生和家长仅执着于南开，拒绝其他方案。次年四月踢足球时<strong>脚骨折</strong>，体育考试（满分50分）仅得30分。最终<strong>两江南开和融侨南开均未录取</strong>。</p>
+
+            <div class="alert alert-danger">
+                <strong>关键判断</strong>
+                不要将命运全部寄托在单一学校的立场上。学校的立场与家长的立场不一定一致，务必保留多条路径作为备选。
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== S3 ==================== -->
+    <section id="s3">
+        <div class="section-header">
+            <span class="sec-num">第三章</span>
+            <h2>混编班型：被误解的最优解</h2>
+        </div>
+
+        <div class="alert alert-purple">
+            <strong>核心策略</strong>
+            对于<strong>中等偏上的学生</strong>，混编班是最佳选择。这一结论来自对多所学校教学实践的长期观察，与多数家长的直觉认知相反。
+        </div>
+
+        <p>以<strong>重庆八中</strong>为例，其整体优秀的核心秘密之一就是"混编"制度——将不同水平的学生混合编班。多数家长听到"混编"或"综合班"时，往往感到失望和焦虑，但实际上这是最符合教学规律的做法。</p>
+
+        <div class="two-col">
+            <div class="card">
+                <h3>混编班的优势</h3>
+                <ul>
+                    <li>班级老师有精力<strong>关注到每个学生</strong></li>
+                    <li>孩子在班级中显得较优秀，<strong>自信心更强</strong></li>
+                    <li>获得更多<strong>资源倾斜</strong>和老师关注</li>
+                    <li>班风积极向上，形成<strong>正向循环</strong></li>
+                    <li>孩子不会因跟不上而产生<strong>极度自卑</strong></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>顶级班型的风险</h3>
+                <ul>
+                    <li>60人以上的大班，老师<strong>无法兼顾</strong></li>
+                    <li>教学进度极快，不自觉的学生<strong>完全跟不上</strong></li>
+                    <li>周围全是"大牛"，容易产生<strong>严重自卑感</strong></li>
+                    <li>大量学生沦为<strong>"炮灰"和"陪跑"</strong></li>
+                    <li>心理层面出问题的比例更高</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>反面案例：鲁能巴蜀业主班</h3>
+            <p>鲁能巴蜀外招班办得好，但<strong>业主班长期表现很差</strong>。原因在于：将所有业主生集中在一起，学风差，教师缺乏教学积极性，问题集中爆发。这说明<strong>生源分层过细反而不利于教学</strong>。</p>
+        </div>
+
+        <div class="alert alert-info">
+            <strong>补充说明</strong>
+            只有极少数<strong>聪明过人、自驱力极强、自律主动、习惯好、反应快</strong>的孩子，才适合进入顶尖大班。即便如此，仍有大量孩子会在其中沦为陪跑，甚至出现心理问题。
+        </div>
+    </section>
+
+    <!-- ==================== S4 ==================== -->
+    <section id="s4">
+        <div class="section-header">
+            <span class="sec-num">第四章</span>
+            <h2>信息差与规划误区</h2>
+        </div>
+
+        <div class="card">
+            <h3>案例：南开学生转学裕才的建议被拒</h3>
+            <p>一名学生在南开就读，数学竞赛排名年级前四、前五，文化成绩年级前80名。规划建议其<strong>转学至裕才中学</strong>，原因是裕才即将成为某竞赛决赛的主办方，拥有单独的省队名额，且新聘的金牌教练急需生源，转学后<strong>几乎确定能进省队</strong>。而在南开，以当时的竞争格局，进入省队的可能性极低。</p>
+            <p>家长和班主任拒绝了这一建议，认为"南开是名校，怎能转去差学校"。最终结果：该生<strong>大量停课备战竞赛却未能进入省队</strong>，仅获省一等奖；文化课排名从年级前列跌至<strong>七八百名</strong>。</p>
+
+            <div class="alert alert-gold">
+                <strong>关键提醒</strong>
+                择校决策需要综合考虑<strong>竞争格局、名额分配、教练资源</strong>等信息，而非仅凭学校名气做判断。信息差是规划失误的主要原因。
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>常见规划误区</h3>
+            <ol>
+                <li><strong>盲目追求顶级学校和班型</strong>——忽视孩子的实际适应能力</li>
+                <li><strong>不做备选规划</strong>——将所有赌注押在单一目标上</li>
+                <li><strong>受情绪和焦虑驱使</strong>——看到政策变化就放弃准备</li>
+                <li><strong>缺乏对考试难度的准确认知</strong>——校内排名高但校外竞争力不足</li>
+                <li><strong>将命运完全交给学校</strong>——忽视学校立场与家庭立场的差异</li>
+            </ol>
+        </div>
+
+        <div class="alert alert-danger">
+            <strong>警示</strong>
+            当政策出现波动（如竞赛或升学考试暂停）时，至少有<strong>20%~50%的家长会选择放弃准备</strong>。恰恰此时，坚持准备的人将获得巨大竞争优势——"别人在退，你在进，你就赢了"。
+        </div>
+    </section>
+
+    <!-- ==================== S5 ==================== -->
+    <section id="s5">
+        <div class="section-header">
+            <span class="sec-num">第五章</span>
+            <h2>自招签约的运作逻辑</h2>
+        </div>
+
+        <p>关于自主招生签约的<strong>"5%"限制</strong>，需要正确理解其实际运作方式：</p>
+
+        <div class="alert alert-info">
+            <strong>补充说明</strong>
+            5%是真实存在的政策红线，但并不意味着招生名额仅为5%。实际签约数量远大于此。
+        </div>
+
+        <div class="card">
+            <h3>签约数量远超5%的原因</h3>
+            <ol>
+                <li><strong>大多数签约学生能通过中考</strong>：签约的两百名学生中，约160人能正常考上线，仅30~40人占用自招名额</li>
+                <li><strong>利用集团校名额兜底</strong>：未过线的学生学籍放在分校（如张家花园），实际在本校上课，不占用本校自招名额</li>
+                <li><strong>仅"低于分数线且学籍在本校"</strong>的情况才会真正占用自招名额</li>
+            </ol>
+        </div>
+
+        <div class="alert alert-gold">
+            <strong>关键提醒</strong>
+            即使学校签了"死约"要求第一志愿填报，家长也拥有最终选择权。万一考砸，有托底保障；但考好了，可以选择更好的去处。<strong>切勿放弃主动权</strong>。
+        </div>
+    </section>
+
+    <!-- ==================== S6 ==================== -->
+    <section id="s6">
+        <div class="section-header">
+            <span class="sec-num">第六章</span>
+            <h2>各阶段学习路径规划</h2>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <h3>一、二年级</h3>
+                <ul>
+                    <li>以兴趣培养为主，不追求满分</li>
+                    <li>数学、英语保持<strong>90分以上</strong>即可</li>
+                    <li>重点抓<strong>书写规范</strong>和<strong>阅读习惯</strong></li>
+                    <li>每天睡前坚持阅读</li>
+                    <li>计算能力打好基础</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>三年级~五年级</h3>
+                <ul>
+                    <li>开始系统学习奥数板块</li>
+                    <li>关注学习<strong>难度和进度</strong>是否匹配考试要求</li>
+                    <li>边学边刷题，及时检测学习效果</li>
+                    <li>发现薄弱板块及时补强</li>
+                    <li>不盲目依赖机构，自己要对娃儿学习情况<strong>了如指掌</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <h3>六年级（冲刺期）</h3>
+                <ul>
+                    <li>未上岸者<strong>绝不要放弃</strong></li>
+                    <li>保持系统刷题节奏</li>
+                    <li>关注政策动向，但不受情绪左右</li>
+                    <li>至少保证区重点以上的保底</li>
+                    <li>利用政策波动期的竞争者退出优势</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>初中阶段</h3>
+                <ul>
+                    <li><strong>初一</strong>：目标二加四保送；普通学生追求双科140+</li>
+                    <li><strong>初二</strong>：准备自主招生考试</li>
+                    <li><strong>初三</strong>：冲刺签约和自招</li>
+                    <li>初一、初二均存在<strong>转学机会</strong></li>
+                    <li>充分利用大考成绩争取签约</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== S7 ==================== -->
+    <section id="s7">
+        <div class="section-header">
+            <span class="sec-num">第七章</span>
+            <h2>小升初：奥数学习与刷题策略</h2>
+        </div>
+
+        <div class="alert alert-danger">
+            <strong>警示</strong>
+            多数机构的常见问题：<br>
+            ① 按层次分班教学，导致<strong>中低层次班的难度远低于考试要求</strong>，学生"学了个寂寞"<br>
+            ② 故意拖进度（螺旋式教学），方便插班招生，但导致<strong>知识不成体系</strong><br>
+            ③ 学生到五六年级才发现所学内容与考试严重脱节，<strong>时间已被耽误</strong>
+        </div>
+
+        <div class="card">
+            <h3>奥数七大板块与分值分布</h3>
+            <p>小升初考试奥数约占100分，核心分为以下板块：</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>季别</th>
+                        <th>核心板块</th>
+                        <th>分值占比</th>
+                        <th>适用对象</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>第一季</strong></td>
+                        <td>计算、应用题（分数/比例/经济/浓度/工程）、行程</td>
+                        <td>约60~70分</td>
+                        <td>大多数学生；板块复习主力</td>
+                    </tr>
+                    <tr>
+                        <td><strong>第二季</strong></td>
+                        <td>数论、组合计数、几何、创新题</td>
+                        <td>约30~40分</td>
+                        <td>顶尖牛娃；冲刺顶级班型</td>
+                    </tr>
+                    <tr>
+                        <td><strong>第三季</strong></td>
+                        <td>四大金刚复试真题（压轴难度）</td>
+                        <td>综合</td>
+                        <td>已系统复习、准备立即参考的学生</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert alert-purple">
+            <strong>核心策略</strong>
+            <strong>边复习边刷题</strong>，二者相辅相成，缺一不可。<br>
+            刷题的核心作用是<strong>诊断</strong>——发现薄弱板块；复习的核心作用是<strong>补强</strong>——系统提升。<br>
+            刚开始刷题配合系统复习后，一般可<strong>涨20分左右</strong>。
+        </div>
+
+        <div class="card">
+            <h3>复习与刷题的正确关系</h3>
+            <ol>
+                <li><strong>刷题诊断</strong>：发现哪些板块学得好，哪些薄弱</li>
+                <li><strong>复习补强</strong>：针对薄弱板块进行系统复习</li>
+                <li><strong>刷题验证</strong>：通过再次刷题检验复习效果</li>
+                <li><strong>定位差距</strong>：评估与目标学校之间的距离</li>
+            </ol>
+            <p>切忌光复习不刷题——容易"做跷跷板"，复习前面忘了后面。也切忌光刷题不复习——只改错题，不补板块漏洞。</p>
+        </div>
+    </section>
+
+    <!-- ==================== S8 ==================== -->
+    <section id="s8">
+        <div class="section-header">
+            <span class="sec-num">第八章</span>
+            <h2>语文备考：积累与应试并重</h2>
+        </div>
+
+        <div class="alert alert-gold">
+            <strong>关键数据</strong>
+            小升初语文满分50分，多数学生仅得<strong>10~20分</strong>。语文是积累型学科，越早准备越有利。
+        </div>
+
+        <div class="card">
+            <h3>语文考试三大核心板块</h3>
+            <div class="flow">
+                <div class="flow-item">
+                    <h4>文学积累（必拿分）</h4>
+                    <p>古诗词按题材分类背诵（爱国、秋天、月亮等）；小学必背75首古诗；成语摘抄与辨析（错别字、用法、含义）。<strong>成语和古诗分值最重，绝对不能丢。</strong></p>
+                </div>
+                <div class="flow-item">
+                    <h4>现代文阅读（答题技巧）</h4>
+                    <p>掌握各类题型的答题模板（句子作用、文本分析等），做成思维导图。中考题型的系统训练。</p>
+                </div>
+                <div class="flow-item">
+                    <h4>文言文阅读（专项训练）</h4>
+                    <p>初中水平的文言文精讲与训练，大量真题练习。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>书写训练</h3>
+            <p>书写是语文最容易出问题的地方——字迹潦草、错别字多、字类少。建议：每周练字两篇，每篇400~500字，同时摘抄成语6~8个，理解含义。坚持一年可积累<strong>700~800个成语</strong>。</p>
+        </div>
+    </section>
+
+    <!-- ==================== S9 ==================== -->
+    <section id="s9">
+        <div class="section-header">
+            <span class="sec-num">第九章</span>
+            <h2>初升高：目标分数与备考要点</h2>
+        </div>
+
+        <p>初升高中考录取分（以138系为例）约在680~690分，总分扣除空间极为有限。以下为各分数段对应的学校层次：</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>数学/英语目标分</th>
+                    <th>对应学校层次</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>140分以上</strong></td>
+                    <td>直属本部</td>
+                    <td>基准要求；语文扣30分，数英各扣10分，其余科共扣约10分</td>
+                </tr>
+                <tr>
+                    <td><strong>135分</strong></td>
+                    <td>直属分校 / 优质初中点</td>
+                    <td>分水岭线</td>
+                </tr>
+                <tr>
+                    <td><strong>125分</strong></td>
+                    <td>联招学校</td>
+                    <td>低于此线可能无法就读普高</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="alert alert-info">
+            <strong>补充说明</strong>
+            自招考试真题卷（各校月考、期中、期末卷）是备考的最佳资料。不同学校考试风格各异：西附倾向跟月考、一中用往年卷、巴蜀偏挑难题。刷本校真题是争取保送和签约最有效的途径。
+        </div>
+    </section>
+
+    <!-- ==================== S10 ==================== -->
+    <section id="s10">
+        <div class="section-header">
+            <span class="sec-num">第十章</span>
+            <h2>教育观念：多元发展与幸福导向</h2>
+        </div>
+
+        <div class="alert alert-purple">
+            <strong>核心观点</strong>
+            让孩子接受良好教育的本质目的是<strong>获得幸福</strong>。对于普通家庭而言，中等偏上的学术水平和学历，是通往幸福的最佳路径。
+        </div>
+
+        <div class="card">
+            <h3>学霸的三种典型状态</h3>
+            <div class="flow">
+                <div class="flow-item">
+                    <h4>第一类：纯粹学术型</h4>
+                    <p>对学术极度热爱，但对社交、生活、情感等毫无兴趣。属于天才，但"是国家的，不是家庭的"。</p>
+                </div>
+                <div class="flow-item">
+                    <h4>第二类：痛苦名校型</h4>
+                    <p>名校毕业，但整个成长过程压抑、痛苦。有名誉但不幸福不快乐。</p>
+                </div>
+                <div class="flow-item">
+                    <h4>第三类：幸福选择型</h4>
+                    <p>拥有良好平台后能追求真正喜欢的事，有所选择，有所热爱。<strong>这是最理想的状态。</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>关于陪伴的感悟</h3>
+            <p>从小升初到高中毕业，大约<strong>十年</strong>——这是父母与孩子共同成长的"黄金陪伴期"。孩子成年后（尤其是离家求学后），亲子关系将从"朝夕相处"转变为"节日相聚"。这十年虽然焦虑，但本质是<strong>家庭并肩作战的珍贵时光</strong>。</p>
+            <p>"不是你们在陪伴孩子，而是孩子在陪伴你。珍惜当下的角色。"</p>
+        </div>
+    </section>
+
+    <!-- ==================== S11 ==================== -->
+    <section id="s11">
+        <div class="section-header">
+            <span class="sec-num">第十一章</span>
+            <h2>学习资源总览</h2>
+        </div>
+
+        <p>以下为直播中介绍的各类学习资源，按适用场景分类：</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>内容</th>
+                    <th>适用对象</th>
+                    <th>价格</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>小升初刷题卷</strong></td>
+                    <td>20套真题卷 + 视频讲解（第一季/第二季/第三季）</td>
+                    <td>三~六年级</td>
+                    <td>228元/季</td>
+                </tr>
+                <tr>
+                    <td><strong>板块复习课</strong></td>
+                    <td>七大板块系统讲解 + 视频课（约30节）</td>
+                    <td>学完部分板块、需系统梳理的学生</td>
+                    <td>详见链接</td>
+                </tr>
+                <tr>
+                    <td><strong>板块学习课</strong></td>
+                    <td>从零基础逐步展开的分板块课程（百节课）</td>
+                    <td>学得较少或起步晚的学生</td>
+                    <td>698元</td>
+                </tr>
+                <tr>
+                    <td><strong>初升高真题卷</strong></td>
+                    <td>各校月考/期中/期末真题（M数学/P物理/C化学）</td>
+                    <td>初中各年级</td>
+                    <td>99元</td>
+                </tr>
+                <tr>
+                    <td><strong>初中压轴题</strong></td>
+                    <td>数学压轴专项 + 物理自主招生集训课（含视频）</td>
+                    <td>初二~初三</td>
+                    <td>99元/科</td>
+                </tr>
+                <tr>
+                    <td><strong>语文备考三件套</strong></td>
+                    <td>文学积累 + 现代文阅读 + 文言文阅读（含视频课）</td>
+                    <td>三~六年级</td>
+                    <td>198元</td>
+                </tr>
+                <tr>
+                    <td><strong>一对一规划</strong></td>
+                    <td>含一次面对面测评规划 + 会员资格 + 全科资源</td>
+                    <td>全年级</td>
+                    <td>398元</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="alert alert-success">
+            <strong>配套服务</strong>
+            所有资料均配套视频课程；收到书后联系助理可进年级群和会员群；会员享受一对一规划、全年级学习资源（含初一到高三各科视频课程）及持续咨询服务。
+        </div>
+    </section>
+
+    <!-- ==================== S12 ==================== -->
+    <section id="s12">
+        <div class="section-header">
+            <span class="sec-num">第十二章</span>
+            <h2>图论基础概念速览</h2>
+        </div>
+
+        <p>以下为直播末段附带的图论基础教学内容，涵盖核心定义与概念：</p>
+
+        <div class="card">
+            <h3>度数概念</h3>
+            <ul>
+                <li><strong>入度</strong>：指向该顶点的边的数量</li>
+                <li><strong>出度</strong>：从该顶点出发的边的数量</li>
+                <li><strong>度数</strong> = 入度 + 出度（有向图）；= 连接该点的边数（无向图）</li>
+                <li>有向图中所有顶点的<strong>出度之和等于入度之和</strong></li>
+            </ul>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <h3>完全图</h3>
+                <ul>
+                    <li><strong>无向完全图 Kn</strong>：n个点的简单图，每两点之间有边相连；边数 = n(n-1)/2</li>
+                    <li><strong>有向完全图</strong>：每对顶点之间双向各有一条边；边数 = n(n-1)</li>
+                    <li>必须是<strong>简单图</strong>（无自环、无重边）</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>竞赛图</h3>
+                <ul>
+                    <li>基于n阶无向完全图，给每条边定一个方向</li>
+                    <li>概念源自体育/棋类比赛（无平局）</li>
+                    <li>即：每对选手之间必然有一方获胜</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>子图与相关概念</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>概念</th>
+                        <th>定义</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>子图</strong></td>
+                        <td>点集和边集均为原图子集的图</td>
+                    </tr>
+                    <tr>
+                        <td><strong>生成子图</strong></td>
+                        <td>点集与原图相同，边集为原图子集</td>
+                    </tr>
+                    <tr>
+                        <td><strong>真子图</strong></td>
+                        <td>是子图，且不等于原图（点集或边集严格小于原图）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>补图</strong></td>
+                        <td>点集与原图相同，边集为"完全图有但原图没有的边"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>同构</strong></td>
+                        <td>两图存在顶点间的一一映射，且映射保持边的存在性</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>路径相关概念</h3>
+            <div class="flow">
+                <div class="flow-item">
+                    <h4>通路</h4>
+                    <p>顶点与边交替的序列，长度为边数，点数 = 边数 + 1</p>
+                </div>
+                <div class="flow-item">
+                    <h4>回路</h4>
+                    <p>起点与终点相同的通路</p>
+                </div>
+                <div class="flow-item">
+                    <h4>环</h4>
+                    <p>起点与终点相同、其余所有顶点两两不同的通路</p>
+                </div>
+                <div class="flow-item">
+                    <h4>迹</h4>
+                    <p>所有边两两不同的通路（点可重复）</p>
+                </div>
+                <div class="flow-item">
+                    <h4>路径</h4>
+                    <p>所有顶点两两不同的通路（边自然也不同）</p>
+                </div>
+                <div class="flow-item">
+                    <h4>距离</h4>
+                    <p>两点之间最短路径的长度</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>连通性</h3>
+            <ul>
+                <li><strong>连通</strong>：两点之间存在通路（或路径）</li>
+                <li><strong>连通图</strong>：图中任意两点均连通</li>
+                <li><strong>连通块（连通分量）</strong>：极大连通子图——即不能再加入任何点或边使其仍保持连通的连通子图</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Footer spacer -->
+    <div style="height: 48px;"></div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球金融危机倒计时：AI泡沫、能源战争与世界秩序重构</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --surface: #ffffff;
+            --surface-alt: #f3efe9;
+            --accent: #8b2500;
+            --accent-light: #c2511a;
+            --text-primary: #2c2420;
+            --text-secondary: #5a524a;
+            --text-muted: #8a8278;
+            --border: #e0d9cf;
+            --border-light: #ece7df;
+            --quote-bg: #f9f5ee;
+            --quote-border: #c9a96e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.9;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 纹理覆盖层 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 文章头部 */
+        .article-header {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .article-category {
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 4px 14px;
+            border-radius: 2px;
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .article-title {
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+            font-size: 2.4em;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .article-subtitle {
+            font-size: 1.05em;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 560px;
+            margin: 0 auto 32px;
+            font-weight: 300;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .meta-dot {
+            width: 3px;
+            height: 3px;
+            background: var(--text-muted);
+            border-radius: 50%;
+        }
+
+        /* 章节标题 */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 56px 0;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border), transparent);
+        }
+
+        .section-divider .ornament {
+            font-size: 14px;
+            color: var(--accent);
+            opacity: 0.6;
+        }
+
+        h2 {
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+            font-size: 1.55em;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 52px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        h3 {
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 36px 0 16px;
+            padding-left: 16px;
+            border-left: 3px solid var(--accent-light);
+        }
+
+        /* 正文段落 */
+        p {
+            margin-bottom: 1.5em;
+            text-align: justify;
+            text-indent: 0;
+            color: var(--text-primary);
+        }
+
+        /* 引用块 */
+        .quote-block {
+            background: var(--quote-bg);
+            border-left: 4px solid var(--quote-border);
+            padding: 24px 28px;
+            margin: 32px 0;
+            border-radius: 0 6px 6px 0;
+            position: relative;
+        }
+
+        .quote-block p {
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+            font-size: 1.02em;
+            color: var(--text-secondary);
+            margin-bottom: 0.8em;
+            font-style: italic;
+            line-height: 2;
+        }
+
+        .quote-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .quote-block .quote-source {
+            font-style: normal;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-top: 12px;
+            display: block;
+        }
+
+        /* 重点提示框 */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--surface) 0%, #faf6ef 100%);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 28px 30px;
+            margin: 32px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 30px;
+            right: 30px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light), transparent);
+            border-radius: 0 0 4px 4px;
+        }
+
+        .highlight-box .label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0.8em;
+            font-size: 0.97em;
+        }
+
+        /* 要点列表 */
+        .key-points {
+            list-style: none;
+            padding: 0;
+            margin: 24px 0;
+        }
+
+        .key-points li {
+            padding: 12px 0 12px 32px;
+            position: relative;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.98em;
+            line-height: 1.8;
+        }
+
+        .key-points li:last-child {
+            border-bottom: none;
+        }
+
+        .key-points li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        /* 逻辑链条图示 */
+        .logic-chain {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 28px 0;
+            padding: 24px;
+            background: var(--surface-alt);
+            border-radius: 8px;
+        }
+
+        .logic-chain .chain-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .logic-chain .chain-arrow {
+            color: var(--accent);
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        /* 时间线 */
+        .timeline {
+            margin: 32px 0;
+            padding-left: 24px;
+            border-left: 2px solid var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 0 0 28px 24px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+
+        .timeline-item .time-label {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .timeline-item .time-desc {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* 电影推荐卡片 */
+        .movie-card {
+            display: flex;
+            gap: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 28px 0;
+            align-items: flex-start;
+        }
+
+        .movie-card .movie-icon {
+            font-size: 2.5em;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .movie-card .movie-info h4 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1em;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .movie-card .movie-info p {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+        /* 文章尾部 */
+        .article-footer {
+            margin-top: 64px;
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-ornament {
+            font-size: 18px;
+            color: var(--accent);
+            opacity: 0.5;
+            margin-bottom: 16px;
+        }
+
+        .footer-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 响应式 */
+        @media (max-width: 640px) {
+            .article-title {
+                font-size: 1.7em;
+            }
+
+            .article-header {
+                padding: 48px 0 40px;
+            }
+
+            .logic-chain {
+                flex-direction: column;
+            }
+
+            .movie-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ===== 文章头部 ===== -->
+        <header class="article-header">
+            <span class="article-category">深度分析</span>
+            <h1 class="article-title">全球金融危机倒计时：<br>AI泡沫、能源战争与世界秩序重构</h1>
+            <p class="article-subtitle">从霍尔木兹海峡到东京贫民窟——一场规模空前的金融风暴正在酝酿</p>
+            <div class="article-meta">
+                <span>深度观点整理</span>
+                <span class="meta-dot"></span>
+                <span>2026年6月</span>
+                <span class="meta-dot"></span>
+                <span>约25分钟阅读</span>
+            </div>
+        </header>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第一章 ===== -->
+        <h2>一、总论：资本主义进入生命倒计时</h2>
+
+        <p>资本主义制度已经发展了五百年，它已经走到头了。当前资本主义国家信用的破产，正是其进入历史死胡同的标志性事件。然而，资本集团并不会以国家主权实体的形式消亡——它们将继续寄生于现有体系之中，不以国家为依托地延续下去。这意味着，西方世界的混乱才刚刚开始。</p>
+
+        <div class="quote-block">
+            <p>"资本主义制度进入生命倒计时了，已经进入历史的死胡同了。毕竟它已经发展了五百年了，它已经走到头了，它已经快死了。"</p>
+        </div>
+
+        <p>当前的全球危机并非突如其来，而是多重因素长期累积的结果。高教授在《经济危机》中提出的逻辑框架，与本文的核心判断高度吻合：从美国AI泡沫的形成，到能源危机的点燃，再到各国流动性枯竭——一条完整的危机传导链条正在展开。</p>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第二章 ===== -->
+        <h2>二、美国AI泡沫：巨大无比的空中楼阁</h2>
+
+        <p>美国在推动其版本的人工智能方面，已经吹起了一个巨大无比的泡沫。这个泡沫要消化，必须实现一个前提条件：把中国打垮。然而中国已经表明不可能被其打垮，因此美国无法通过击垮中国来填平AI泡沫。</p>
+
+        <p>填平泡沫只有两条路径：</p>
+
+        <ul class="key-points">
+            <li><strong>路径一：创造巨大收益</strong>——创造足以匹配估值的巨大收益，从而填平泡沫。但从目前来看，一年两年、五年十年都做不到。</li>
+            <li><strong>路径二：外力引爆</strong>——由外力使得泡沫破灭。这就是金融危机的来历。</li>
+        </ul>
+
+        <h3>美股AI估值：地上悬河</h3>
+
+        <p>美股的骨干是AI，所谓的"四朵金花"以AI为支撑。但美股的AI估值之高、泡沫化之严重，在生产力上无法兑现，这种现实问题如同地上悬河。而美股的性质是"百万操工衣食之所系"，一旦出问题，影响将波及美国国家信用和普通老百姓。</p>
+
+        <h3>SpaceX上市：逃生舱启动</h3>
+
+        <p>SpaceX上市本质上是一个危机转嫁和风险规避的池子。马斯克给美股提供了这么一个避险通道——SpaceX确实有实体技术，有专利，能转化成新增生产力，所以它在美股中属于少数不会崩的标的。但普通投资者想买到SpaceX，门槛极高。这实际上是一个为资本集团准备的逃生舱。</p>
+
+        <div class="highlight-box">
+            <div class="label">核心观点</div>
+            <p>美股的AI估值泡沫如同地上悬河，其崩盘的转折点已经发生。但到目前为止资本市场发生的所有风暴，都只是序幕，高潮尚未到来。</p>
+        </div>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第三章 ===== -->
+        <h2>三、霍尔木兹海峡：引爆危机的引线</h2>
+
+        <p>2026年2月28日起，美国发动了对伊朗的侵略战争，已经造成了能源危机。能源危机叠加经济危机，这两把火会把美国的人工智能泡沫给点燃。在此观点发表后数日，美国、日本、韩国股市暴跌，日元暴跌。</p>
+
+        <h3>危机传导的完整逻辑链</h3>
+
+        <div class="logic-chain">
+            <span class="chain-item">霍尔木兹海峡冲突</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-item">能源价格上涨</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-item">工业成本上涨</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-item">企业竞争力下降</span>
+        </div>
+
+        <div class="logic-chain">
+            <span class="chain-item">CPI上涨</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-item">民生负担增长</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-item">市场需要低价优质产品</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-item">中国工业品替代</span>
+        </div>
+
+        <p>霍尔木兹海峡是引爆危机的引线和催化剂。如果没有霍尔木兹事件，时间可能延后一年，但危机早晚要爆发。它给每个主权国家留下的时间已经不多。</p>
+
+        <h3>粮食安全：石油农业的软肋</h3>
+
+        <p>全世界农粮安全的基础系于石油农业，油价上涨必然导致粮食价格上涨。中国不是一个粮食出口国，所以在食品领域不存在替代方案，全球粮食价格飙涨将是一个确定性事件。</p>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第四章 ===== -->
+        <h2>四、中国的不对称优势</h2>
+
+        <p>国际金融危机之所以成型，关键变量在中国。中国经济的成长解决了几个重大的国际经济命题：</p>
+
+        <ul class="key-points">
+            <li><strong>原材料议价权</strong>——过去掌握原材料议价权的是殖民帝国，而近年来中国拿到了国际原材料的定价权。</li>
+            <li><strong>战略能源通道</strong>——中国掌握的战略能源通道数量已远远超出其经济安全所需。</li>
+            <li><strong>工业品定价能力</strong>——通过原材料议价能力压低价格，加之国家牵头、政府补贴的模式，使中国的工业品能够覆盖所有市场。</li>
+            <li><strong>外汇良性循环</strong>——中国付出的原材料外汇少，而高附加值工业品带来的回报多，外汇盈余被用于海外投资、矿权收购和基建工业再投入，避免了通货膨胀。</li>
+        </ul>
+
+        <div class="highlight-box">
+            <div class="label">关键指标</div>
+            <p>最健康的经济发展状态是：PPI在下降，CPI在上涨——证明生产成本在降低，人民生活越来越好，通胀水平略微为正。这正是中国当前的经济特征。</p>
+        </div>
+
+        <p>过去中国经济不具备巨大市场份额时，国际货币体系围绕美元运转是均衡的——大家面临相同的价格波动，如同高考同一道题大家都选C，等于没出这道题。但中国的崛起打破了这个均衡，形成了不对称优势。</p>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第五章 ===== -->
+        <h2>五、各国经济告急：流动性枯竭</h2>
+
+        <h3>日本：岌岌可危</h3>
+
+        <p>日本的能源几乎全部依赖进口。日元暴跌后，日本需要动用大量外汇来拖住日元，同时开始出售黄金。此外，中国从2026年1月6日起对日本实施两用物资制裁，其中重要的一项是稀土管制。日本从2025年底到1月6日之间进行了大量囤货，据称能支撑半年，到2026年7月存货将用完。届时日本的工业能力和出口创汇能力将受到严重制约。</p>
+
+        <div class="quote-block">
+            <p>"我们对日本进行限购和控制，是防止新日本法西斯的复变，防止日本想搞原子弹。"</p>
+        </div>
+
+        <p>中国对日本的两用物资制裁，本质上是抽干日本的流动性——让你只出不进。经济如水流动，原材料被抽走，日本的工业体系就无法运转。</p>
+
+        <h3>土耳其：已经崩了</h3>
+
+        <p>土耳其没有足够的外汇购买石油和天然气，已开始变卖黄金储备。土耳其的外汇即将枯竭，而黄金储备不可能取之不尽。不过，土耳其面积大、人口少、耕地面积大、有两条海岸线，因此虽然里拉早已崩溃，但至今未出现饥荒。土耳其是一个"已经崩过"的国家，但这些年来反复挣扎。</p>
+
+        <h3>韩国与欧洲</h3>
+
+        <p>韩国经济同样水深火热。欧洲的情况更为严峻——瑞士、瑞典等国能源危机严重，经济危机正在发生。</p>
+
+        <h3>黄金抛售：危机倒计时信号</h3>
+
+        <p>全球流动性出现问题时，各国只能出售黄金来兑换流动性。埃塞俄比亚等地区大国、中型国家开始卖黄金，意味着危机正式进入倒计时。第二个开始大规模抛售黄金的国家值得关注。</p>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第六章 ===== -->
+        <h2>六、危机时间表与传导路径</h2>
+
+        <p>综合各方分析，从2026年1月1日开始的十二到十八个月内，将发生一场规模几乎前所未有的金融危机。</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="time-label">2026年2月28日</div>
+                <div class="time-desc">美国发动对伊朗侵略战争，能源危机爆发。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">2026年6月</div>
+                <div class="time-desc">资本市场风暴开始，但仅为序幕。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">2026年7月—9月</div>
+                <div class="time-desc">日本稀土储备耗尽，工业出口能力大幅下降；各国黄金储备加速消耗。</div>
+            </div>
+            <div class="timeline-item">
+                <div class="time-label">2026年下半年—2027年上半年</div>
+                <div class="time-desc">危机高潮期：美股AI泡沫破裂，美元霸权地位面临根本性质疑，多国主权信用崩溃。</div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="label">预言者的共同特征</div>
+            <p>值得注意的是，高教授此次的危机预测与2008年次贷危机前宋鸿兵（《货币战争》作者）的预警有共同点：吹哨人都有在美国金融机构深耕的专业背景，且都在危机发生前一年提出了警告。</p>
+        </div>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第七章 ===== -->
+        <h2>七、资本集团的避险与国家信用的抛弃</h2>
+
+        <p>高教授可能把资本主义想得太好了。资本集团已经完成了避险操作，尤其是大国的资本集团。危机将通过国家信用破产的方式，完完全全传递给普通老百姓。</p>
+
+        <h3>资本集团已完成避险</h3>
+
+        <ul class="key-points">
+            <li><strong>德国</strong>——通过大众等企业大量投资中国，资本集团已经完成着陆。</li>
+            <li><strong>日本</strong>——财阀、天皇持股的企业已完成避险。日本国的国家招牌可以死，但集团财阀不能死。</li>
+            <li><strong>美国</strong>——SpaceX等实体资产构成了避险池子，资本集团提前布局。</li>
+            <li><strong>中国布局</strong>——马斯克等美国富豪很早就布局了中国，不需要为他们操心。</li>
+        </ul>
+
+        <h3>主权信用破产 ≠ 资本集团破产</h3>
+
+        <p>必须分清：主权国家信用破产不代表资本集团信用破产。资本集团将会不以国家主权实体为存在，继续寄生下去。这如同更换一个营业执照、更换一个统一社会信用代码，重新开始。老百姓才是真正承受后果的人。</p>
+
+        <h3>东京：未来的巨型贫民窟</h3>
+
+        <p>东京是一个巨大的城市集群，地理面积超过北京、上海、深圳、广州，过去有高附加值产业、高新科技产业和最高端的第三产业作为依托。当打工族和月光族无力支付房租时，东京将沦为一个更繁华的里约热内卢——一个巨大的贫民窟。</p>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第八章 ===== -->
+        <h2>八、美元的命运与中国的机遇</h2>
+
+        <p>这场危机中，核心问题之一是美元：它是否还能继续在国际上享受霸凌地位，还是将经历一个根本性的转折？</p>
+
+        <p>对于中国而言：</p>
+
+        <ul class="key-points">
+            <li><strong>长期来看是重大机遇</strong>——全军出击，直接收购目标国家的优质资产。被收购国家只有两个选择：公营中资入股挽救危机，或者原地崩溃。</li>
+            <li><strong>短期会造成一定混乱</strong>——大量避险资金会以各种手段进入中国，同时有人会做空中国资产。央妈将面临极其复杂的管控挑战。</li>
+        </ul>
+
+        <p>过去美国制造危机时没有这一出，但今天不同了——因为有了中国这个选项。当资本集团带着危机转移过来时，目标国的老百姓可以在中美之间做出选择。中国或许不是救星，但一定是比美国更好的选择。</p>
+
+        <h3>收购机会</h3>
+
+        <p>当资产价格破净后，就是收购的最佳时机。日本的游戏动漫产业、大型商业设施，甚至大型风俗业——后者能创造源源不断的现金流，且便于资金运作。中资企业届时将有大量出手的机会。</p>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第九章 ===== -->
+        <h2>九、人工智能治理：攸关全人类命运</h2>
+
+        <p>人工智能既可向善，又可向恶。它需要一个强力的主权国家为其背书——这就像比特币只有一些末流国家愿意为其背书一样。加密货币一次一次被洗劫的教训证明，逃避监管、逃避主权国家追索并不是万能之路。</p>
+
+        <p>AI军事化是必然趋势。很多工具向的科技研发，在成为工具的那一刻并没有违背人类社会的公序良俗，而是由执掌工具的主体决定其善恶。主体的恶性越大，新工具所带来的伤害就越大。</p>
+
+        <div class="highlight-box">
+            <div class="label">政策信号</div>
+            <p>国新办发表《构建更加公正合理的全球治理体系：中国的理念、倡议与行动》白皮书，着重阐述人工智能治理——攸关全人类的命运。这表明中国正在积极参与全球AI治理框架的构建。</p>
+        </div>
+
+        <h3>推荐影片：《创战神》系列</h3>
+
+        <div class="movie-card">
+            <div class="movie-icon">🎬</div>
+            <div class="movie-info">
+                <h4>《创战神》（Tron: Ares, 2025）</h4>
+                <p>迪士尼出品，虽然全球票房仅1.4亿，但被视为照进现实的划时代作品。影片中蓝色阵营（英康公司）造福人类，红色阵营（迪林杰公司）将数字空间物理化并走向军事化。值得注意的是，英康的CEO为华裔，副手为印度裔——映射了美国民主党认可华裔和印度裔主导新科技项目与共和党竞争的现实。</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-icon">🎬</div>
+            <div class="movie-info">
+                <h4>《创战纪》（Tron: Legacy, 2010）</h4>
+                <p>2010年上映，当时智能手机尚未普及。影片预见了数字空间中涌现自主性智能（AI自主化）的问题。好的电影具有时代前瞻属性，承载的内容超出当时的时代性，往往需要多年后才能被充分理解。如同陶喆九十年代末的音乐作品，在二十多年后才真正契合时代。</p>
+            </div>
+        </div>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 第十章 ===== -->
+        <h2>十、关于日本核问题的思考</h2>
+
+        <p>面对日本可能发展核武器的威胁，正确的思路不是阻止其拥核——阻止没有意义。正确的思路是：保障在日本拥核的情况下，我们能够让它无法发射核弹的同时，无伤地消灭它。不接受日本拥核之后的任何损失与代价，且能完整地消灭——这才是应有之策。</p>
+
+        <div class="section-divider"><span class="ornament">◆</span></div>
+
+        <!-- ===== 尾部 ===== -->
+        <div class="article-footer">
+            <div class="footer-ornament">— ◆ —</div>
+            <p class="footer-note">
+                以上内容为对相关讨论观点的结构化整理。<br>
+                观点仅代表讨论者个人分析，不构成任何投资建议。<br>
+                请读者结合多方信息独立判断。
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>
