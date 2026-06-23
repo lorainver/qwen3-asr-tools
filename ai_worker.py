@@ -65,6 +65,8 @@ else:
 app.include_router(kb_router)
 from knowledge_api import set_summarizer as _set_kb_summarizer
 _set_kb_summarizer(summarizer)
+# 初始化知识库（读取已有索引，使 KB API 立即可用）
+init_knowledge_base(summarizer=summarizer)
 logger.info("📚 知识库路由已挂载: /api/kb/*")
 
 # ========== Pydantic 模型 (简化版,避免 Pydantic 验证错误) ==========
