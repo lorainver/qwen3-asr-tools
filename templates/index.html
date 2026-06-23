@@ -1991,6 +1991,17 @@
         }
 
         // --- 知识库 Markdown 渲染（独立于 main.js 闭包内的 renderMarkdown） ---
+        function kbFriendlyName(filename) {
+            // 把 '_raw.standard.md' 等后缀去掉，显示简洁的群名
+            let name = filename
+                .replace(/_raw\.standard\.md$/g, '')
+                .replace(/_raw\.md$/g, '')
+                .replace(/_standard\.md$/g, '')
+                .replace(/\.(md|txt|pdf|docx)$/g, '');
+            // 截取过长名字
+            return name.length > 30 ? name.slice(0, 27) + '…' : name;
+        }
+
         function kbRenderMarkdown(text) {
             if (!text) return '';
             try {
@@ -2095,10 +2106,22 @@
                 if (loader) loader.remove();
 
                 // 添加 AI 回复（Markdown + KaTeX 渲染）
-                const sourcesHtml = data.sources && data.sources.length
-                    ? `<div class="kb-chat-sources">📎 参考来源：${data.sources.map(s => escapeHtml(s.filename)).join('、')}</div>`
-                    : '';
                 const answerHtml = kbRenderMarkdown(data.answer || data.message || '无回复');
+                let sourcesHtml = '';
+                if (data.sources && data.sources.length) {
+                    const items = data.sources.map((s, i) => {
+                        const name = kbFriendlyName(s.filename);
+                        const snippet = s.text ? s.text.slice(0, 120).replace(/\*\*/g, '').replace(/\n/g, ' ') : '';
+                        const cat = s.category ? s.category.replace(/^(.{12}).*$/, '$1…') : '';
+                        return `<div class="kb-chat-source-item">` +
+                            `<span class="kb-chat-source-idx">#${i + 1}</span>` +
+                            `<span class="kb-chat-source-name" title="${escapeHtml(s.filename)}">${escapeHtml(name)}</span>` +
+                            (cat ? `<span class="kb-chat-source-cat">${escapeHtml(cat)}</span>` : '') +
+                            (snippet ? `<span class="kb-chat-source-snippet">${escapeHtml(snippet)}</span>` : '') +
+                            `</div>`;
+                    }).join('');
+                    sourcesHtml = `<div class="kb-chat-sources"><div class="kb-chat-sources-title">📎 参考来源</div>${items}</div>`;
+                }
                 box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">🤖 AI：</span><div class="markdown-content">${answerHtml}</div>${sourcesHtml}</div>`;
                 
                 // 触发 Mermaid 图表渲染
