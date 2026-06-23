@@ -245,6 +245,149 @@ class TextChunker:
         )
 
 
+class WeChatChunker(TextChunker):
+    """微信聊天记录专用分块器"""
+    
+    def __init__(self, chunk_size: int = 500, overlap: int = 50, time_window_minutes: int = 5):
+        """
+        初始化微信聊天记录分块器
+        
+        Args:
+            chunk_size: 分块大小（字符数）
+            overlap: 重叠字符数
+            time_window_minutes: 时间窗口（分钟），同一发言人在此窗口内的消息合并
+        """
+        super().__init__(chunk_size, overlap)
+        self.time_window_minutes = time_window_minutes
+    
+    def chunk_wechat_md(self, md_path: str) -> List[Chunk]:
+        """
+        分块微信聊天记录 Markdown 文件
+        
+        策略：
+        - 同一话题的多轮对话合并为一个 chunk（直到 chunk_size 溢出或空闲超时）
+        - 每个 chunk 带有发言人和时间范围元数据
+        - 跳过无意义内容（纯 [图片] / [链接/文件] 等）
+        """
+        with open(md_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        chunks = []
+        chunk_index = 0
+        
+        # 解析所有消息
+        messages = self._parse_messages(content)
+        if not messages:
+            return chunks
+        
+        # 按主题窗口分组
+        group = []
+        for msg in messages:
+            text = msg['text']
+            if not text or text.strip() in ('[图片]', '[链接/文件]', ''):
+                continue
+            
+            need_new_group = False
+            if not group:
+                need_new_group = True
+            else:
+                prev = group[-1]
+                gap_minutes = self._time_diff(prev['timestamp'], msg['timestamp'])
+                if gap_minutes > self.time_window_minutes:
+                    need_new_group = True
+                elif sum(len(m['raw']) for m in group) + len(msg['raw']) > self.chunk_size:
+                    need_new_group = True
+            
+            if need_new_group and group:
+                chunk = self._build_group_chunk(md_path, group, chunk_index)
+                if chunk:
+                    chunks.append(chunk)
+                    chunk_index += 1
+                group = []
+            
+            group.append(msg)
+        
+        if group:
+            chunk = self._build_group_chunk(md_path, group, chunk_index)
+            if chunk:
+                chunks.append(chunk)
+        
+        return chunks
+    
+    def _parse_messages(self, content: str) -> List[Dict]:
+        """解析标准格式的微信聊天记录"""
+        messages = []
+        current_msg = None
+        
+        for line in content.split('\n'):
+            match = re.match(r'\*\*(.+?)\*\* \((.+?)\):', line)
+            if match:
+                if current_msg:
+                    messages.append(current_msg)
+                current_msg = {
+                    'speaker': match.group(1),
+                    'timestamp': match.group(2),
+                    'raw': line,
+                    'text': ''
+                }
+            elif current_msg is not None:
+                stripped = line.strip()
+                if stripped:
+                    current_msg['text'] += stripped
+                    current_msg['raw'] += '\n' + line
+        
+        if current_msg:
+            messages.append(current_msg)
+        
+        return messages
+    
+    def _build_group_chunk(self, md_path: str, messages: List[Dict], idx: int) -> Optional[Chunk]:
+        """将一组消息构建为一个 Chunk"""
+        if not messages:
+            return None
+        
+        text = '\n'.join(m['raw'] for m in messages)
+        speakers = list(dict.fromkeys(m['speaker'] for m in messages))
+        time_start = messages[0]['timestamp']
+        time_end = messages[-1]['timestamp']
+        
+        speakers_str = '、'.join(speakers[:4])
+        if len(speakers) > 4:
+            speakers_str += f' 等{len(speakers)}人'
+        
+        # 生成基于文件路径的唯一 doc_id（避免不同文档的 chunk 互相覆盖 ChromaDB）
+        chunk_doc_id = hashlib.md5(md_path.encode()).hexdigest()[:12]
+        return Chunk(
+            chunk_id=f"wechat_{chunk_doc_id}_c{idx}",
+            doc_id=chunk_doc_id,
+            text=text,
+            chunk_index=idx,
+            metadata={
+                "chunk_index": idx,
+                "char_count": len(text),
+                "speaker": speakers_str,
+                "speakers": ','.join(speakers),
+                "timestamp": time_start,
+                "time_start": time_start,
+                "time_end": time_end,
+                "msg_count": len(messages),
+                "source": "wechat"
+            }
+        )
+    
+    def _time_diff(self, t1_str: str, t2_str: str) -> int:
+        """计算时间差（分钟）"""
+        if not t1_str or not t2_str:
+            return 0
+        try:
+            t1 = datetime.strptime(t1_str, '%Y-%m-%d %H:%M:%S')
+            t2 = datetime.strptime(t2_str, '%Y-%m-%d %H:%M:%S')
+            return abs((t2 - t1).total_seconds()) / 60
+        except:
+            return 0
+
+
+
 # ========== 3. Embedding 模型封装 ==========
 
 class Embedder:
@@ -424,6 +567,59 @@ class VectorStore:
         except Exception as e:
             logger.error(f"删除文档块失败: {e}")
 
+    def delete_by_filename(self, filename: str, category: str = None) -> int:
+        """删除指定文件名的所有块（用于去重）
+        
+        Args:
+            filename: 文件名（如群名、文档名）
+            category: 可选，限定只删除特定 category 的数据（如 "微信聊天记录_echotrace"）
+                     如果为 None，则删除所有来源的匹配数据（旧行为，不推荐）
+                     推荐传具体 category 避免误删其他来源的数据
+            
+        Returns:
+            删除的块数
+        
+        使用场景：
+            - 重新导入同一来源的同一群聊 → 传 category 确保只删该来源
+            - 清除某群聊的所有数据 → 不传 category
+        """
+        try:
+            # 获取所有数据
+            results = self.collection.get(include=["metadatas"])
+            if not results or not results['metadatas']:
+                return 0
+            
+            # 找到所有匹配的 chunk IDs
+            ids_to_delete = []
+            for i, meta in enumerate(results['metadatas']):
+                fn = meta.get('filename', '')
+                cat = meta.get('category', '')
+                
+                # 1. 文件名匹配（三种方式）
+                fn_base = fn.replace('_raw.standard.md', '').replace('.standard.md', '').replace('.md', '')
+                name_match = (fn == filename or filename in fn or filename in fn_base or fn_base == filename)
+                
+                if not name_match:
+                    continue
+                
+                # 2. category 过滤（如果指定了 category，只删同来源的）
+                if category is not None and cat != category:
+                    continue
+                
+                ids_to_delete.append(results['ids'][i])
+            
+            if ids_to_delete:
+                self.collection.delete(ids=ids_to_delete)
+                label = f"'{filename}'"
+                if category:
+                    label += f" (category={category})"
+                logger.info(f"🗑️ 已删除 {label} 的 {len(ids_to_delete)} 个块")
+                return len(ids_to_delete)
+            return 0
+        except Exception as e:
+            logger.error(f"删除文档块失败: {e}")
+            return 0
+
     def count(self) -> int:
         """向量库中的总块数"""
         return self.collection.count()
@@ -578,7 +774,7 @@ _rag_chain: Optional[RAGChain] = None
 _summarizer_ref: Any = None
 
 
-def init_knowledge_base(summarizer: Any,
+def init_knowledge_base(summarizer: Any = None,
                         chunk_size: int = 500,
                         overlap: int = 50,
                         embed_provider: str = "ollama",
@@ -608,7 +804,10 @@ def init_knowledge_base(summarizer: Any,
         _chunker = TextChunker(chunk_size=chunk_size, overlap=overlap)
         _embedder = Embedder(provider=embed_provider, model=embed_model)
         _vectorstore = VectorStore(collection_name="knowledge_base")
-        _rag_chain = RAGChain(_embedder, _vectorstore, summarizer)
+        if summarizer is not None:
+            _rag_chain = RAGChain(_embedder, _vectorstore, summarizer)
+        else:
+            _rag_chain = None
 
         logger.info("✅ 知识库模块初始化完成")
         return True
@@ -660,12 +859,41 @@ def get_rag_chain() -> RAGChain:
     return _rag_chain
 
 
+def delete_by_filename(filename: str, category: str = None) -> int:
+    """删除指定文件名的所有块（用于去重）
+    
+    Args:
+        filename: 文件名（如群名、文档名）
+        category: 可选，限定只删除特定 category 的数据
+    
+    Returns:
+        删除的块数
+    """
+    if _vectorstore is None:
+        raise RuntimeError("知识库未初始化，请先调用 init_knowledge_base()")
+    return _vectorstore.delete_by_filename(filename, category=category)
+
+
 def is_initialized() -> bool:
     """检查知识库是否已初始化"""
     return _rag_chain is not None
 
 
 # ========== 辅助函数 ==========
+
+def _is_wechat_record(file_path: str) -> bool:
+    """检测文件是否为微信聊天记录（标准格式）"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for i, line in enumerate(f):
+                if i > 20:
+                    break
+                if re.match(r'\*\*.+?\*\* \(.+?\):', line):
+                    return True
+        return False
+    except:
+        return False
+
 
 def index_document(file_path: str, category: str = "默认") -> Dict:
     """
@@ -679,7 +907,6 @@ def index_document(file_path: str, category: str = "默认") -> Dict:
         索引结果信息
     """
     loader = get_loader()
-    chunker = get_chunker()
     embedder = get_embedder()
     vectorstore = get_vectorstore()
 
@@ -697,9 +924,25 @@ def index_document(file_path: str, category: str = "默认") -> Dict:
     shutil.copy2(file_path, dest_path)
     doc.metadata['stored_path'] = str(dest_path)
 
-    # 2. 分块
-    chunks = chunker.chunk(doc)
-    doc.chunk_count = len(chunks)
+    # 2. 分块（微信聊天记录用专用分块器）
+    if _is_wechat_record(file_path):
+        logger.info("💬 检测到微信聊天记录，使用 WeChatChunker")
+        wc = WeChatChunker(chunk_size=800, overlap=50, time_window_minutes=10)
+        chunks = wc.chunk_wechat_md(file_path)
+        # 注入 doc_id 和 category 到每个 chunk 的元数据
+        for i, c in enumerate(chunks):
+            c.doc_id = doc.doc_id
+            c.metadata['doc_id'] = doc.doc_id
+            c.metadata['category'] = category
+            c.metadata['filename'] = doc.filename
+            # 修复: chunk_id 必须包含 doc_id 以避免不同文档的 chunk 互相覆盖
+            c.chunk_id = f"wechat_{doc.doc_id}_c{i}"
+        doc.chunk_count = len(chunks)
+    else:
+        chunker = get_chunker()
+        chunks = chunker.chunk(doc)
+        doc.chunk_count = len(chunks)
+
     logger.info(f"📄 文档 '{doc.filename}' 已分块: {len(chunks)} 个块")
 
     # 3. 向量化
