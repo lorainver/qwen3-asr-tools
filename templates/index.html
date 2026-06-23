@@ -1989,6 +1989,63 @@
             }
         }
 
+        // --- 知识库 Markdown 渲染（独立于 main.js 闭包内的 renderMarkdown） ---
+        function kbRenderMarkdown(text) {
+            if (!text) return '';
+            try {
+                // 保护 Mermaid 代码块
+                const mermaidBlocks = [];
+                text = text.replace(/```mermaid\n([\s\S]*?)```/g, (match, code) => {
+                    const placeholder = `%%MERMAID_${mermaidBlocks.length}%%`;
+                    mermaidBlocks.push(code.trim());
+                    return placeholder;
+                });
+
+                // 保护数学公式
+                const mathBlocks = [];
+                text = text.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+                    const placeholder = `%%MATH_BLOCK_${mathBlocks.length}%%`;
+                    mathBlocks.push({ formula: formula.trim(), display: true });
+                    return placeholder;
+                });
+                text = text.replace(/\$([^$\n]+?)\$/g, (match, formula) => {
+                    const placeholder = `%%MATH_INLINE_${mathBlocks.length}%%`;
+                    mathBlocks.push({ formula: formula.trim(), display: false });
+                    return placeholder;
+                });
+
+                // 用 marked 渲染
+                let html = marked.parse(text);
+
+                // 还原 KaTeX
+                mathBlocks.forEach((item, i) => {
+                    const key = item.display ? `%%MATH_BLOCK_${i}%%` : `%%MATH_INLINE_${i}%%`;
+                    try {
+                        const rendered = katex.renderToString(item.formula, {
+                            displayMode: item.display, throwOnError: false, trust: true
+                        });
+                        html = html.replace(key, rendered);
+                    } catch (e) {
+                        html = html.replace(key, item.display ? `$$${item.formula}$$` : `$${item.formula}$`);
+                    }
+                });
+
+                // 还原 Mermaid
+                mermaidBlocks.forEach((code, i) => {
+                    const placeholder = `%%MERMAID_${i}%%`;
+                    const containerId = `mermaid-${Date.now()}-${i}`;
+                    const container = `<div class="mermaid-container" id="${containerId}" data-mermaid-code="${encodeURIComponent(code)}">` +
+                        `<div class="mermaid-loading">🔄 图表加载中...</div></div>`;
+                    html = html.replace(placeholder, container);
+                });
+
+                return html;
+            } catch (e) {
+                // fallback: 纯文本
+                return escapeHtml(text);
+            }
+        }
+
         // --- RAG 对话 ---
         async function ragChat() {
             const input = document.getElementById('kb-chat-input');
@@ -2027,7 +2084,7 @@
                 const sourcesHtml = data.sources && data.sources.length
                     ? `<div class="kb-chat-sources">📎 参考来源：${data.sources.map(s => escapeHtml(s.filename)).join('、')}</div>`
                     : '';
-                const answerHtml = renderMarkdown(data.answer || data.message || '无回复');
+                const answerHtml = kbRenderMarkdown(data.answer || data.message || '无回复');
                 box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">🤖 AI：</span><div class="markdown-content">${answerHtml}</div>${sourcesHtml}</div>`;
                 
                 // 触发 Mermaid 图表渲染
