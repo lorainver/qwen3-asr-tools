@@ -476,11 +476,11 @@ class Embedder:
     Embedding 模型封装
 
     支持：
-    1. Ollama 本地模型（nomic-embed-text）- 首选
+    1. Ollama 本地模型（bge-m3）- 首选
     2. HuggingFace 本地模型（text2vec-base-chinese 等）- 备选
     """
 
-    def __init__(self, provider: str = "ollama", model: str = "nomic-embed-text"):
+    def __init__(self, provider: str = "ollama", model: str = "bge-m3"):
         self.provider = provider
         self.model = model
         self._session = None
@@ -519,17 +519,17 @@ class Embedder:
                 if response.status_code != 200:
                     logger.error(f"Ollama embedding 失败: {response.status_code} - {response.text}")
                     # 返回零向量作为降级
-                    embeddings.append([0.0] * 768)
+                    embeddings.append([0.0] * 1024)
                     continue
                 data = response.json()
                 embedding = data.get('embedding', [])
                 if not embedding:
-                    embeddings.append([0.0] * 768)
+                    embeddings.append([0.0] * 1024)
                 else:
                     embeddings.append(embedding)
             except Exception as e:
                 logger.error(f"Ollama embedding 请求异常: {e}")
-                embeddings.append([0.0] * 768)
+                embeddings.append([0.0] * 1024)
 
         return embeddings
 
@@ -613,7 +613,7 @@ class VectorStore:
 
         logger.info(f"📦 已添加 {len(chunks)} 个文本块到向量库")
 
-    def search(self, query_embedding: List[float], top_k: int = 5,
+    def search(self, query_embedding: List[float], top_k: int = 8,
                where: Optional[Dict] = None) -> List[SearchHit]:
         """
         语义检索
@@ -643,7 +643,7 @@ class VectorStore:
                         text=results['documents'][0][i],
                         metadata=results['metadatas'][0][i],
                         distance=dist,
-                        score=max(0.0, 1.0 - dist)  # 余弦距离转相似度
+                        score=1.0 / (1.0 + dist)  # 距离转相似度（兼容 L2 / 余弦）
                     ))
 
             return hits
@@ -710,7 +710,7 @@ class VectorStore:
                         text=results['documents'][0][i],
                         metadata=results['metadatas'][0][i],
                         distance=dist,
-                        score=max(0.0, 1.0 - dist)
+                        score=1.0 / (1.0 + dist)  # 距离转相似度（兼容 L2 / 余弦）
                     ))
 
             return hits
@@ -865,7 +865,7 @@ class RAGChain:
         self.vectorstore = vectorstore
         self.summarizer = summarizer  # LongTextSummarizer 实例
 
-    def _retrieve(self, question: str, top_k: int = 5,
+    def _retrieve(self, question: str, top_k: int = 8,
                  where: Optional[Dict] = None) -> List[SearchHit]:
         """
         检索阶段（方案 C：消息级检索 + Chunk 上下文）
@@ -896,11 +896,11 @@ class RAGChain:
         return hits
 
     def _retrieve_via_messages(self, query_embedding: List[float],
-                                top_k: int = 5,
+                                top_k: int = 8,
                                 where: Optional[Dict] = None) -> List[SearchHit]:
         """消息级检索 → 按 chunk 去重 → 取完整上下文"""
         # 1. 搜更多消息，确保覆盖足够的 chunk
-        search_k = max(top_k * 3, 20)
+        search_k = max(top_k * 4, 32)
         msg_hits = self.vectorstore.search_messages(
             query_embedding=query_embedding,
             top_k=search_k,
@@ -991,7 +991,7 @@ class RAGChain:
 
         return answer
 
-    def query(self, question: str, top_k: int = 5,
+    def query(self, question: str, top_k: int = 8,
               filter_category: Optional[str] = None,
               where: Optional[Dict] = None) -> Tuple[str, List[SearchHit]]:
         """
@@ -1053,7 +1053,7 @@ def init_knowledge_base(summarizer: Any = None,
                         chunk_size: int = 500,
                         overlap: int = 50,
                         embed_provider: str = "ollama",
-                        embed_model: str = "nomic-embed-text") -> bool:
+                        embed_model: str = "bge-m3") -> bool:
     """
     初始化知识库模块
 

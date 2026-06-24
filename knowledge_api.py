@@ -27,14 +27,14 @@ logger = logging.getLogger(__name__)
 
 class KBSearchRequest(BaseModel):
     query: str
-    top_k: int = 5
+    top_k: int = 8
     filter_category: Optional[str] = None
     filter_filename: Optional[str] = None
 
 
 class KBChatRequest(BaseModel):
     question: str
-    top_k: int = 5
+    top_k: int = 8
     filter_category: Optional[str] = None
     filter_filename: Optional[str] = None
     model_id: Optional[str] = None
@@ -116,11 +116,17 @@ def _build_source_list(hits) -> List[dict]:
             continue
         seen_filenames.add(filename)
         text_preview = hit.text[:200] + "..." if len(hit.text) > 200 else hit.text
+        extra = {}
+        if hit.metadata.get('_matched_sender'):
+            extra['_matched_sender'] = hit.metadata['_matched_sender']
+            extra['_matched_time'] = hit.metadata.get('_matched_time', '')
+            extra['_matched_text'] = hit.metadata.get('_matched_text', '')[:300]
         sources.append({
             "filename": filename,
             "category": hit.metadata.get('category', ''),
             "text": text_preview,
-            "score": round(hit.score, 4)
+            "score": round(hit.score, 4),
+            **extra
         })
     return sources
 
@@ -131,8 +137,8 @@ def _build_source_list(hits) -> List[dict]:
 async def init_knowledge_base():
     """初始化知识库（重建 Embedding 模型和 VectorStore 连接）"""
     try:
-        from knowledge_store import initialize_knowledge_base
-        result = initialize_knowledge_base()
+        from knowledge_store import init_knowledge_base as _kb_init
+        result = _kb_init(summarizer=_external_summarizer)
         return {"status": "ok", "message": "知识库初始化成功", "result": result}
     except Exception as e:
         logger.error(f"知识库初始化失败: {e}")
@@ -315,7 +321,7 @@ async def delete_kb_doc(doc_id: str):
 @router.get("/search")
 async def search_knowledge(
     q: str = Query(..., description="搜索查询", min_length=1),
-    top_k: int = Query(default=5, ge=1, le=20),
+    top_k: int = Query(default=8, ge=1, le=20),
     category: Optional[str] = Query(default=None),
     filename: Optional[str] = Query(default=None, description="按文件名/群名过滤")
 ):
