@@ -28,7 +28,16 @@
 * **横向溢出滚动机制**：为渲染结果设置了专属滚动条，超宽表格、长代码块或复杂图表只在卡片内横向滑动，**绝不撑开网页，保持页面整体宽度纹丝不动**。
 * **悬浮随动复制按钮**：在右上方部署了解耦的复制按钮。当您上下拉动长文本滚动条时，**复制按钮将始终悬浮在卡片右上角**，随时可点，且鼠标移开后优雅淡出。
 
-### 3. 🎬 视频转录与文本提取 (GPU-Accelerated ASR & Streaming RAM-Safety)
+### 3. 📚 知识库（RAG）(Knowledge Base)
+* **向量化文档管理**：支持上传 `.md/.txt/.docx/.pdf/.html/.epub` 文档，自动分块、向量化存储（ChromaDB + bge-m3 Embedding）。
+* **语义搜索**：基于 bge-m3（1024 维）的高精度中文语义检索，支持 `@群名` 过滤语法。
+* **RAG 对话**：检索知识库 + LLM 生成，回答附带参考来源（发言人、时间、匹配原文）。
+* **群聊总结**：`POST /api/kb/summarize` — 按群名 + 时间范围全量拉取消息，LLM 生成结构化总结报告（话题/关键内容/活跃人物/关注信息）。
+* **人物画像**：`POST /api/kb/person` — 跨群搜索某人全部发言，生成人物画像（擅长话题/发言风格/社交关系/关注重点）。
+* **微信聊天记录批量导入**：`wechat-cli` 导出 → `WeChatChunker` 按话题窗口分块 → 消息级 + chunk 级双索引。
+* **前端知识库 UI**：独立标签页，支持文档管理、搜索、RAG 对话，Markdown + KaTeX 数学公式渲染。
+
+### 4. 🎬 视频转录与文本提取 (GPU-Accelerated ASR & Streaming RAM-Safety)
 * **💾 大音视频极省内存加载 (Zero-Copy np.memmap)**：重构了视频音频预提取逻辑，将 PyAV 提取的 PCM 音频流实时以追加模式二进制写盘（`.raw`），并在读取时采用 `np.memmap` 虚拟内存映射，实现 **0 字节物理内存开销** 处理 2-3 小时超长视频。
 * **Windows 独占锁优雅解除**：在收尾阶段显式关闭 mmap 虚拟文件句柄并强制垃圾回收，完美打通 Windows 操作系统下临时目录无法删除的文件锁顽疾。
 * **⏱️ 自适应标点停顿平滑对齐 (Adaptive Silence Alignment)**：抛弃了粗糙的文本线性字数均分算法。系统采用高精度正则匹配捕获 `。！？\n` 等强分隔符（分配 `0.45s` ~ `0.5s` 停顿）与 `，、；` 等弱分隔符（分配 `0.2s` ~ `0.25s` 停顿）。在发音停顿处**物理留白隐去字幕**，带来影院级智能“空轨”对齐体验。
@@ -36,19 +45,19 @@
 * **极速 GPU 批处理**：基于 Whisper / Qwen3-ASR 核心，深度压榨显卡算力，支持极速音频/字幕提取。
 * **零空间占用本地直读**：支持本地视频文件绝对路径一键读取，免去了繁琐的网页上传过程，读取百 G 视频无需消耗任何额外 C 盘空间。
 
-### 4. 🧠 侧车守护生命周期自愈与实时资源监控 (Auto-Respawn & Resource Monitor)
+### 5. 🧠 侧车守护生命周期自愈与实时资源监控 (Auto-Respawn & Resource Monitor)
 * **🛡️ 侧车子进程生命周期守护 (Auto-Respawn)**：在 `AIWorkerManager` 的管道流式读取线程中加入 EOF 进程结束检测。当检测到 AI Worker 因驱动或 OOM 意外退出时，**在 3 次限制内自动触发 Respawn 自愈拉起**。
 * **1.5s 端口释放防抖**：自动拉起前加入 `1.5s` 防抖，确保端口（8001）与资源得到完全解绑。并在系统关机（`shutdown_event`）时主动禁用自愈，防止悬空挂载。
 * **🚨 暖色呼吸告警灯与 Toast 联动**：前端轮询接口，若侧车挂掉立即闪烁**橙黄色警告灯**，面板文字显示“自动恢复中”并发出 Toast 温和告警；自愈恢复成功后瞬间转为生机绿，并弹出 Toast 提示恢复报喜。
 * **零显存无感轮询**：通过 CPU 侧的极其轻量的 `/api/ps` 服务级心跳包，以 **0% GPU 计算占用率** 实时监测模型状态。
 * **高科技状态看板**：侧边栏实时呈现当前在线模型名字，并以**高饱和度青蓝渐变比例条**直观呈现该模型在显存（VRAM）与物理内存（RAM）中的具体分配比例。
 
-### 5. 📊 GPU 实时看板与秒退释放
+### 6. 📊 GPU 实时看板与秒退释放
 * **硬件级实时监测**：实时捕获 NVIDIA 显卡的显存使用率、核心利用率以及核心温度。
 * **OS 信号信号级秒退拦截**：重新编写了 Uvicorn 退出管道，按下 `Ctrl+C` 的微秒瞬间强行掐断流式连接，**3秒内强制优雅关闭**，绝不假死。
 * **[一键释放显存] 按钮**：在侧边栏一键安全关停后台服务，瞬间释放显存以供其他 3D 游戏或训练任务使用。
 
-### 6. 🔊 多引擎语音合成朗读 (TTS Engine)
+### 7. 🔊 多引擎语音合成朗读 (TTS Engine)
 * **🌐 微软在线引擎 (Edge-TTS)**：提供云端超高拟真度、情感充沛的流式语音合成，首字响应在 100ms 以内。
 * **🏠 本地离线引擎 (Sherpa-ONNX)**：基于 `vits-icefall-zh-aishell3` 模型，100% 离线，无网环境下完美平替。
 * **[自动朗读] 联动**：可切换开启状态，当 AI 生成回复完毕后自动触发朗读。
@@ -87,6 +96,32 @@ D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\download_tts_model.py
 * **系统声音直接录制 (无翻译)**：
   ```powershell
   D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 1.0
+  ```
+
+### 3. 📚 知识库 API (Knowledge Base)
+* **初始化知识库**：
+  ```powershell
+  curl -X POST "http://127.0.0.1:8000/api/kb/init"
+  ```
+* **上传文档**：
+  ```powershell
+  curl -F "file=@文档.md" "http://127.0.0.1:8000/api/kb/upload"
+  ```
+* **语义搜索**：
+  ```powershell
+  curl "http://127.0.0.1:8000/api/kb/search?q=CSP竞赛&top_k=5"
+  ```
+* **RAG 对话（支持 @群名 过滤）**：
+  ```powershell
+  curl -X POST "http://127.0.0.1:8000/api/kb/chat" -H "Content-Type: application/json" -d '{"question":"@信竞家长交流群 梦熊20连测是什么"}'
+  ```
+* **群聊总结**：
+  ```powershell
+  curl -X POST "http://127.0.0.1:8000/api/kb/summarize" -H "Content-Type: application/json" -d '{"group_name":"信竞家长交流群","days":30}'
+  ```
+* **人物画像**：
+  ```powershell
+  curl -X POST "http://127.0.0.1:8000/api/kb/person" -H "Content-Type: application/json" -d '{"person_name":"清崇","days":30}'
   ```
 
 ---
