@@ -1,1 +1,0 @@
-invalid type: string "t):\n    messages = trim_messages(request.messages)\n\nif request.enable_search:          # ← 前端决定\n        if request.optimize_search:    # ← 前端决定\n            keywords = llm.optimize(query)  # ← 固定两步\n        results = searcher.search(keywords)\n        messages = inject_search(messages, results)\n\nresponse = summarizer.chat_stream(messages)\n
