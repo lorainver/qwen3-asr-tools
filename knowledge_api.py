@@ -8,7 +8,7 @@ import os
 import re
 import sys
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -37,6 +37,21 @@ class KBChatRequest(BaseModel):
     top_k: int = 8
     filter_category: Optional[str] = None
     filter_filename: Optional[str] = None
+    model_id: Optional[str] = None
+
+
+class KBSummarizeRequest(BaseModel):
+    group_name: str          # 群名（子串匹配文件名）
+    days: int = 30           # 最近 N 天
+    prompt: Optional[str] = None  # 自定义总结提示词
+    model_id: Optional[str] = None
+
+
+class KBPersonRequest(BaseModel):
+    person_name: str         # 人名（精确匹配 sender）
+    groups: Optional[List[str]] = None  # 限定搜索的群名列表（子串匹配）
+    days: int = 90           # 最近 N 天
+    prompt: Optional[str] = None
     model_id: Optional[str] = None
 
 
@@ -453,3 +468,218 @@ async def kb_stats():
     except Exception as e:
         logger.error(f"获取统计信息失败: {e}")
         raise HTTPException(status_code=500, detail=f"获取统计失败: {str(e)}")
+
+
+# ==================== 群聊总结 ====================
+
+def _format_messages_text(msgs: List[Dict]) -> str:
+    """将消息列表格式化为可读文本"""
+    lines = []
+    for m in msgs:
+        ts = m.get('time', '')
+        sender = m.get('sender', '?')
+        text = m.get('text', '')
+        # 去掉 text 中已包含的 "sender (time): " 前缀（如果有）
+        if text.startswith(f"{sender} ({ts}): "):
+            text = text[len(f"{sender} ({ts}): "):] 
+        lines.append(f"[{ts}] {sender}: {text}")
+    return '\n'.join(lines)
+
+
+def _chunk_messages_for_llm(msgs: List[Dict], max_chars: int = 6000) -> List[str]:
+    """将消息按字符数分块，每块不超过 max_chars"""
+    chunks = []
+    current = []
+    current_len = 0
+    for m in msgs:
+        line = f"[{m.get('time','')}] {m.get('sender','?')}: {m.get('text','')}"
+        if current_len + len(line) > max_chars and current:
+            chunks.append(current)
+            current = []
+            current_len = 0
+        current.append(m)
+        current_len += len(line)
+    if current:
+        chunks.append(current)
+    return chunks
+
+
+@router.post("/summarize")
+async def summarize_group(request: KBSummarizeRequest):
+    """群聊总结：按群名 + 时间范围，全量拉取消息后 LLM 总结"""
+    if not is_initialized():
+        raise HTTPException(status_code=500, detail="知识库未初始化")
+
+    try:
+        vectorstore = get_vectorstore()
+
+        # 计算时间范围
+        since = (datetime.now() - timedelta(days=request.days)).strftime("%Y-%m-%d")
+
+        # 拉取消息
+        msgs = vectorstore.query_messages(
+            filename=request.group_name,
+            since=since,
+            limit=5000
+        )
+
+        if not msgs:
+            return {"answer": f"未找到群 '{request.group_name}' 在最近 {request.days} 天的消息。", "message_count": 0, "sources": []}
+
+        logger.info(f"群聊总结: {request.group_name}, {len(msgs)} 条消息, since={since}")
+
+        # 分块总结
+        rag_chain = get_rag_chain()
+        system_prompt = "你是一个群聊分析助手。请根据提供的群聊记录，生成结构化的总结报告。"
+
+        if request.prompt:
+            user_prompt_base = request.prompt
+        else:
+            user_prompt_base = "请对以下群聊记录进行总结，要求：\n1. 列出讨论的主要话题（按时间顺序）\n2. 每个话题的关键内容摘要\n3. 重要的决定或结论\n4. 活跃发言人的特点\n5. 值得关注的信息"
+
+        message_chunks = _chunk_messages_for_llm(msgs, max_chars=6000)
+        chunk_summaries = []
+
+        for i, chunk in enumerate(message_chunks):
+            chat_text = _format_messages_text(chunk)
+            if len(message_chunks) > 1:
+                part_info = f"\n\n（这是第 {i+1}/{len(message_chunks)} 部分，共 {len(msgs)} 条消息）"
+            else:
+                part_info = ""
+
+            llm_messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"{user_prompt_base}{part_info}\n\n{chat_text}"}
+            ]
+
+            try:
+                summary = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+                chunk_summaries.append(summary)
+            except Exception as e:
+                logger.error(f"LLM 总结第 {i+1} 块失败: {e}")
+                chunk_summaries.append(f"（第 {i+1} 部分总结失败: {str(e)}）")
+
+        # 多块时合并
+        if len(chunk_summaries) > 1:
+            merge_prompt = f"请将以下 {len(chunk_summaries)} 段群聊总结合并为一份完整的总结报告，去除重复内容，按话题重新组织：\n\n"
+            for i, s in enumerate(chunk_summaries):
+                merge_prompt += f"--- 第 {i+1} 部分 ---\n{s}\n\n"
+
+            llm_messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": merge_prompt}
+            ]
+            try:
+                final_answer = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+            except Exception as e:
+                final_answer = "\n\n---\n\n".join(chunk_summaries)
+        else:
+            final_answer = chunk_summaries[0] if chunk_summaries else "无内容"
+
+        # 来源信息
+        sources = [{"group": request.group_name, "message_count": len(msgs), "time_range": f"{since} ~ {datetime.now().strftime('%Y-%m-%d')}"}]
+
+        return {"answer": final_answer, "message_count": len(msgs), "sources": sources}
+
+    except Exception as e:
+        logger.error(f"群聊总结失败: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"群聊总结失败: {str(e)}")
+
+
+# ==================== 人物画像 ====================
+
+@router.post("/person")
+async def person_profile(request: KBPersonRequest):
+    """跨群搜索某人的发言，生成人物画像"""
+    if not is_initialized():
+        raise HTTPException(status_code=500, detail="知识库未初始化")
+
+    try:
+        vectorstore = get_vectorstore()
+        since = (datetime.now() - timedelta(days=request.days)).strftime("%Y-%m-%d")
+
+        # 如果指定了群，逐群搜索
+        if request.groups:
+            all_msgs = []
+            for g in request.groups:
+                msgs = vectorstore.query_messages(
+                    filename=g, sender=request.person_name,
+                    since=since, limit=2000
+                )
+                all_msgs.extend(msgs)
+        else:
+            all_msgs = vectorstore.query_messages(
+                sender=request.person_name, since=since, limit=2000
+            )
+
+        if not all_msgs:
+            return {"answer": f"未找到 '{request.person_name}' 在最近 {request.days} 天的发言。", "message_count": 0, "groups": []}
+
+        # 按群分组统计
+        group_stats = {}
+        for m in all_msgs:
+            g = m['filename'].replace('_raw.standard.md', '').replace('_wechat-cli-20260109', '')
+            if g not in group_stats:
+                group_stats[g] = 0
+            group_stats[g] += 1
+
+        logger.info(f"人物画像: {request.person_name}, {len(all_msgs)} 条消息, 群: {list(group_stats.keys())}")
+
+        # 分块总结
+        rag_chain = get_rag_chain()
+        system_prompt = "你是一个群聊分析助手。请根据某人在多个微信群中的发言记录，生成人物画像分析。"
+
+        if request.prompt:
+            user_prompt_base = request.prompt
+        else:
+            user_prompt_base = f"请根据 '{request.person_name}' 的发言记录，分析此人：\n1. 主要活跃在哪些群\n2. 擅长的话题和专业领域\n3. 发言风格和性格特点\n4. 社交关系（与谁互动多）\n5. 关注的重点问题\n\n发言记录如下："
+
+        message_chunks = _chunk_messages_for_llm(all_msgs, max_chars=6000)
+        chunk_summaries = []
+
+        for i, chunk in enumerate(message_chunks):
+            chat_text = _format_messages_text(chunk)
+            part_info = f"\n\n（第 {i+1}/{len(message_chunks)} 部分，共 {len(all_msgs)} 条消息）" if len(message_chunks) > 1 else ""
+
+            llm_messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"{user_prompt_base}{part_info}\n\n{chat_text}"}
+            ]
+            try:
+                summary = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+                chunk_summaries.append(summary)
+            except Exception as e:
+                chunk_summaries.append(f"（第 {i+1} 部分总结失败: {str(e)}）")
+
+        if len(chunk_summaries) > 1:
+            merge_prompt = f"请将以下关于 '{request.person_name}' 的 {len(chunk_summaries)} 段分析合并为一份完整的人物画像：\n\n"
+            for i, s in enumerate(chunk_summaries):
+                merge_prompt += f"--- 第 {i+1} 部分 ---\n{s}\n\n"
+            llm_messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": merge_prompt}
+            ]
+            try:
+                final_answer = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+            except Exception as e:
+                final_answer = "\n\n---\n\n".join(chunk_summaries)
+        else:
+            final_answer = chunk_summaries[0] if chunk_summaries else "无内容"
+
+        sources = [{"group": g, "count": c} for g, c in group_stats.items()]
+
+        return {
+            "answer": final_answer,
+            "message_count": len(all_msgs),
+            "active_groups": list(group_stats.keys()),
+            "group_stats": group_stats,
+            "sources": sources
+        }
+
+    except Exception as e:
+        logger.error(f"人物画像失败: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"人物画像失败: {str(e)}")

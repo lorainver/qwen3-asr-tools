@@ -780,6 +780,58 @@ class VectorStore:
         """消息集合中的总消息数"""
         return self.msg_collection.count()
 
+    def query_messages(self, filename: str = None, sender: str = None,
+                       since: str = None, until: str = None,
+                       limit: int = 5000) -> List[Dict]:
+        """按条件查询消息（非向量检索，直接过滤 metadata）
+
+        Args:
+            filename: 文件名子串匹配
+            sender: 发言人精确匹配
+            since: 起始时间 (ISO 格式字符串，如 '2026-06-01')
+            until: 结束时间
+            limit: 最大返回条数
+        """
+        try:
+            results = self.msg_collection.get(
+                include=['documents', 'metadatas']
+            )
+            if not results or not results['ids']:
+                return []
+
+            msgs = []
+            for i, meta in enumerate(results['metadatas']):
+                # 文件名过滤
+                if filename and filename not in meta.get('filename', ''):
+                    continue
+                # 发言人过滤
+                if sender and meta.get('sender', '') != sender:
+                    continue
+                # 时间过滤
+                msg_time = meta.get('time', '')
+                if since and msg_time and msg_time < since:
+                    continue
+                if until and msg_time and msg_time > until:
+                    continue
+
+                msgs.append({
+                    'id': results['ids'][i],
+                    'text': results['documents'][i] if results['documents'] else '',
+                    'sender': meta.get('sender', ''),
+                    'time': meta.get('time', ''),
+                    'filename': meta.get('filename', ''),
+                    'chunk_id': meta.get('chunk_id', ''),
+                    'category': meta.get('category', ''),
+                })
+
+            # 按时间排序
+            msgs.sort(key=lambda x: x['time'])
+            return msgs[:limit]
+
+        except Exception as e:
+            logger.error(f"查询消息失败: {e}")
+            return []
+
     def get_stats(self) -> Dict:
         """获取知识库统计信息（含消息级）"""
         stats = {
