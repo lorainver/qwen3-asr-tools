@@ -86,3 +86,11 @@ scripts/
 # 忽略测试文件
 magic11.in
 
+
+# ChromaDB binary artifacts (auto-generated)
+chroma_db/
+knowledge_base/chroma_db/data_level0.bin
+knowledge_base/chroma_db/header.bin
+knowledge_base/chroma_db/index_metadata.pickle
+knowledge_base/chroma_db/length.bin
+knowledge_base/chroma_db/link_lists.bin

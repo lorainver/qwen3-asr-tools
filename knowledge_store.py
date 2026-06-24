@@ -386,6 +386,87 @@ class WeChatChunker(TextChunker):
         except:
             return 0
 
+    def extract_messages(self, md_path: str, chunk_results: List[Chunk]) -> List[Dict]:
+        """从微信聊天记录中提取单条消息（方案 C：消息级索引）
+        
+        Args:
+            md_path: 微信聊天记录 Markdown 文件路径
+            chunk_results: 已分块的 Chunk 列表（用于建立消息→chunk 的映射）
+        
+        Returns:
+            消息列表，每项格式:
+            {
+                'id': 'msg_{md5_hash}',
+                'text': '消息文本',
+                'metadata': {
+                    'filename': '',
+                    'sender': '发言人',
+                    'time': '时间戳',
+                    'chunk_id': '所属 chunk 的 ID',
+                    'category': ''
+                }
+            }
+        """
+        with open(md_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # 解析所有消息
+        raw_messages = self._parse_messages(content)
+        if not raw_messages:
+            return []
+
+        # 为每条消息找到所属的 chunk
+        # 构建 chunk 索引：chunk 的文本覆盖范围
+        chunk_map = []
+        for chunk in chunk_results:
+            first_line = chunk.text.split('\n')[0] if chunk.text else ''
+            last_line = chunk.text.split('\n')[-1] if chunk.text else ''
+            chunk_map.append({
+                'chunk_id': chunk.chunk_id,
+                'chunk': chunk,
+                'first': first_line,
+                'last': last_line
+            })
+
+        messages = []
+        filename = Path(md_path).name
+        chunk_doc_id = hashlib.md5(md_path.encode()).hexdigest()[:12]
+
+        for msg_idx, msg in enumerate(raw_messages):
+            msg_raw = msg['raw']
+            msg_text = msg['text']
+            if not msg_text or msg_text.strip() in ('[图片]', '[链接/文件]', ''):
+                continue
+
+            # 找到所属 chunk：通过消息 raw 文本在 chunk 中出现的位置
+            assigned_chunk_id = None
+            for cm in chunk_map:
+                if msg_raw in cm['chunk'].text:
+                    assigned_chunk_id = cm['chunk_id']
+                    break
+
+            if assigned_chunk_id is None:
+                continue
+
+            # 生成唯一消息 ID（用序号而非 hash，避免碰撞）
+            msg_id = f"msg_{chunk_doc_id}_{msg_idx}"
+
+            # 消息文本只包含本条消息（不包含上下文），保证向量检索精准
+            short_text = f"{msg['speaker']} ({msg['timestamp']}): {msg_text}"
+
+            messages.append({
+                'id': msg_id,
+                'text': short_text,
+                'metadata': {
+                    'filename': filename,
+                    'sender': msg['speaker'],
+                    'time': msg['timestamp'],
+                    'chunk_id': assigned_chunk_id,
+                    'category': ''  # 由调用方填充
+                }
+            })
+
+        return messages
 
 
 # ========== 3. Embedding 模型封装 ==========
@@ -473,9 +554,15 @@ class Embedder:
 # ========== 4. ChromaDB 向量存储 ==========
 
 class VectorStore:
-    """ChromaDB 向量存储封装"""
+    """ChromaDB 向量存储封装
+    
+    双集合架构（方案 C）：
+    - `knowledge_base`（主集合）：chunk 级存储，用于生成回答时的上下文
+    - `knowledge_base_messages`（消息集合）：消息级存储，用于精准检索
+    """
 
-    def __init__(self, collection_name: str = "knowledge_base"):
+    def __init__(self, collection_name: str = "knowledge_base",
+                 msg_collection_name: str = "knowledge_base_messages"):
         import chromadb
         from chromadb.config import Settings
 
@@ -486,11 +573,19 @@ class VectorStore:
             path=str(CHROMA_PATH),
             settings=Settings(anonymized_telemetry=False)
         )
+        # 主集合：chunk 级
         self.collection = self.client.get_or_create_collection(
             name=collection_name,
-            metadata={"description": "qwen3-asr 知识库"}
+            metadata={"description": "qwen3-asr 知识库 — Chunk 级（上下文用）"}
         )
-        logger.info(f"✅ ChromaDB 初始化完成，Collection: {collection_name}, 当前块数: {self.collection.count()}")
+        # 消息集合：消息级（精准检索用）
+        self.msg_collection = self.client.get_or_create_collection(
+            name=msg_collection_name,
+            metadata={"description": "qwen3-asr 知识库 — 消息级（检索用）"}
+        )
+        logger.info(f"✅ ChromaDB 初始化完成")
+        logger.info(f"   - Chunk 集合 '{collection_name}': {self.collection.count()} 块")
+        logger.info(f"   - 消息集合 '{msg_collection_name}': {self.msg_collection.count()} 条")
 
     def add_chunks(self, chunks: List[Chunk], embeddings: List[List[float]]):
         """批量添加文本块"""
@@ -567,62 +662,148 @@ class VectorStore:
         except Exception as e:
             logger.error(f"删除文档块失败: {e}")
 
-    def delete_by_filename(self, filename: str, category: str = None) -> int:
-        """删除指定文件名的所有块（用于去重）
+    def add_messages(self, messages: List[Dict], embeddings: List[List[float]]):
+        """批量添加消息级索引（用于精准检索）
         
         Args:
-            filename: 文件名（如群名、文档名）
-            category: 可选，限定只删除特定 category 的数据（如 "微信聊天记录_echotrace"）
-                     如果为 None，则删除所有来源的匹配数据（旧行为，不推荐）
-                     推荐传具体 category 避免误删其他来源的数据
-            
-        Returns:
-            删除的块数
+            messages: 消息列表，每项包含 id, text, metadata
+            embeddings: 对应的向量列表
+        """
+        if not messages:
+            return
+
+        ids = [m['id'] for m in messages]
+        texts = [m['text'] for m in messages]
+        metadatas = [m['metadata'] for m in messages]
+
+        batch_size = 100
+        for i in range(0, len(messages), batch_size):
+            self.msg_collection.add(
+                ids=ids[i:i + batch_size],
+                embeddings=embeddings[i:i + batch_size],
+                documents=texts[i:i + batch_size],
+                metadatas=metadatas[i:i + batch_size]
+            )
+
+        logger.info(f"📋 已添加 {len(messages)} 条消息索引")
+
+    def search_messages(self, query_embedding: List[float], top_k: int = 10,
+                        where: Optional[Dict] = None) -> List[SearchHit]:
+        """消息级检索
         
-        使用场景：
-            - 重新导入同一来源的同一群聊 → 传 category 确保只删该来源
-            - 清除某群聊的所有数据 → 不传 category
+        搜索消息集合，返回每条消息的命中结果。
         """
         try:
-            # 获取所有数据
-            results = self.collection.get(include=["metadatas"])
-            if not results or not results['metadatas']:
-                return 0
-            
-            # 找到所有匹配的 chunk IDs
-            ids_to_delete = []
-            for i, meta in enumerate(results['metadatas']):
-                fn = meta.get('filename', '')
-                cat = meta.get('category', '')
-                
-                # 1. 文件名匹配（三种方式）
-                fn_base = fn.replace('_raw.standard.md', '').replace('.standard.md', '').replace('.md', '')
-                name_match = (fn == filename or filename in fn or filename in fn_base or fn_base == filename)
-                
-                if not name_match:
-                    continue
-                
-                # 2. category 过滤（如果指定了 category，只删同来源的）
-                if category is not None and cat != category:
-                    continue
-                
-                ids_to_delete.append(results['ids'][i])
-            
-            if ids_to_delete:
-                self.collection.delete(ids=ids_to_delete)
-                label = f"'{filename}'"
-                if category:
-                    label += f" (category={category})"
-                logger.info(f"🗑️ 已删除 {label} 的 {len(ids_to_delete)} 个块")
-                return len(ids_to_delete)
-            return 0
+            results = self.msg_collection.query(
+                query_embeddings=[query_embedding],
+                n_results=top_k,
+                where=where,
+                include=["documents", "metadatas", "distances"]
+            )
+
+            hits = []
+            if results and results['ids'] and len(results['ids']) > 0:
+                for i in range(len(results['ids'][0])):
+                    dist = results['distances'][0][i]
+                    hits.append(SearchHit(
+                        chunk_id=results['ids'][0][i],
+                        text=results['documents'][0][i],
+                        metadata=results['metadatas'][0][i],
+                        distance=dist,
+                        score=max(0.0, 1.0 - dist)
+                    ))
+
+            return hits
         except Exception as e:
-            logger.error(f"删除文档块失败: {e}")
-            return 0
+            logger.error(f"消息级检索失败: {e}")
+            return []
+
+    def get_chunk_by_id(self, chunk_id: str) -> Optional[SearchHit]:
+        """通过 chunk_id 获取完整的 chunk 文本（用于上下文）"""
+        try:
+            results = self.collection.get(
+                ids=[chunk_id],
+                include=["documents", "metadatas"]
+            )
+            if results and results['ids'] and len(results['ids']) > 0:
+                return SearchHit(
+                    chunk_id=results['ids'][0],
+                    text=results['documents'][0],
+                    metadata=results['metadatas'][0],
+                    distance=0.0,
+                    score=1.0
+                )
+        except Exception as e:
+            pass
+        return None
+
+    def delete_by_filename(self, filename: str, category: str = None) -> int:
+        """删除指定文件名的所有块和消息（用于去重）"""
+        total = 0
+        for coll, label in [(self.collection, '块'), (self.msg_collection, '消息')]:
+            try:
+                results = coll.get(include=["metadatas"])
+                if not results or not results['metadatas']:
+                    continue
+
+                ids_to_delete = []
+                for i, meta in enumerate(results['metadatas']):
+                    fn = meta.get('filename', '')
+                    cat = meta.get('category', '')
+
+                    fn_base = fn.replace('_raw.standard.md', '').replace('.standard.md', '').replace('.md', '')
+                    name_match = (fn == filename or filename in fn or filename in fn_base or fn_base == filename)
+
+                    if not name_match:
+                        continue
+                    if category is not None and cat != category:
+                        continue
+
+                    ids_to_delete.append(results['ids'][i])
+
+                if ids_to_delete:
+                    coll.delete(ids=ids_to_delete)
+                    label_full = f"'{filename}'"
+                    if category:
+                        label_full += f" (category={category})"
+                    logger.info(f"🗑️ 已删除 {label_full} 的 {len(ids_to_delete)} 个{label}")
+                    total += len(ids_to_delete)
+            except Exception as e:
+                logger.error(f"删除 {label} 失败: {e}")
+        return total
 
     def count(self) -> int:
         """向量库中的总块数"""
         return self.collection.count()
+
+    def msg_count(self) -> int:
+        """消息集合中的总消息数"""
+        return self.msg_collection.count()
+
+    def get_stats(self) -> Dict:
+        """获取知识库统计信息（含消息级）"""
+        stats = {
+            "total_chunks": self.collection.count(),
+            "total_messages": self.msg_collection.count(),
+            "total_docs": 0,
+            "categories": []
+        }
+        try:
+            results = self.collection.get(include=["metadatas"])
+            if results and results['metadatas']:
+                seen_docs = set()
+                seen_cats = set()
+                for meta in results['metadatas']:
+                    doc_id = meta.get('doc_id', '')
+                    cat = meta.get('category', '默认')
+                    if doc_id:
+                        seen_docs.add(doc_id)
+                    seen_cats.add(cat)
+                stats['total_docs'] = len(seen_docs)
+                stats['categories'] = list(seen_cats)
+        except Exception as e:
+            logger.error(f"获取统计信息失败: {e}")
+        return stats
 
     def get_all_docs(self) -> List[Dict]:
         """获取所有文档的元数据"""
@@ -684,36 +865,107 @@ class RAGChain:
         self.vectorstore = vectorstore
         self.summarizer = summarizer  # LongTextSummarizer 实例
 
-    def query(self, question: str, top_k: int = 5,
-              filter_category: Optional[str] = None) -> Tuple[str, List[SearchHit]]:
+    def _retrieve(self, question: str, top_k: int = 5,
+                 where: Optional[Dict] = None) -> List[SearchHit]:
         """
-        执行 RAG 查询
-
-        Returns:
-            (回答文本, 检索到的相关片段列表)
+        检索阶段（方案 C：消息级检索 + Chunk 上下文）
+        
+        流程：
+        1. 先在消息集合中做精准检索（找到最相关的单条消息）
+        2. 按 chunk_id 去重，取父 chunk 的完整上下文
+        3. 如果消息集合为空（旧数据等），回退到 chunk 级检索
         """
-        # 1. 向量化问题
         try:
             query_embedding = self.embedder.embed_query(question)
         except Exception as e:
             logger.error(f"问题向量化失败: {e}")
-            return f"抱歉，检索过程中出现错误：{str(e)}", []
+            return []
 
-        # 2. 语义检索
-        where = None
-        if filter_category:
-            where = {"category": filter_category}
+        # ---- 方案 C：消息级检索 ----
+        msg_count = self.vectorstore.msg_collection.count()
+        if msg_count > 0:
+            return self._retrieve_via_messages(query_embedding, top_k, where)
 
+        # ---- 回退：传统 chunk 级检索 ----
+        logger.info("ℹ️ 消息集合为空，回退到 chunk 级检索")
         hits = self.vectorstore.search(
             query_embedding=query_embedding,
             top_k=top_k,
             where=where
         )
+        return hits
 
+    def _retrieve_via_messages(self, query_embedding: List[float],
+                                top_k: int = 5,
+                                where: Optional[Dict] = None) -> List[SearchHit]:
+        """消息级检索 → 按 chunk 去重 → 取完整上下文"""
+        # 1. 搜更多消息，确保覆盖足够的 chunk
+        search_k = max(top_k * 3, 20)
+        msg_hits = self.vectorstore.search_messages(
+            query_embedding=query_embedding,
+            top_k=search_k,
+            where=where
+        )
+
+        if not msg_hits:
+            return []
+
+        # 2. 按 chunk_id 去重，保留匹配度最高的消息信息
+        chunk_best = {}  # chunk_id → {best_msg, chunk_hit}
+        for hit in msg_hits:
+            chunk_id = hit.metadata.get('chunk_id', '')
+            if not chunk_id:
+                continue
+
+            if chunk_id not in chunk_best or hit.score > chunk_best[chunk_id]['score']:
+                # 获取完整 chunk 文本
+                chunk_hit = self.vectorstore.get_chunk_by_id(chunk_id)
+                if chunk_hit:
+                    chunk_best[chunk_id] = {
+                        'best_msg': hit,
+                        'chunk_hit': chunk_hit,
+                        'score': hit.score
+                    }
+
+        if not chunk_best:
+            return []
+
+        # 3. 按匹配度排序，取 top_k 个 chunk
+        sorted_chunks = sorted(chunk_best.values(), key=lambda x: -x['score'])
+        sorted_chunks = sorted_chunks[:top_k]
+
+        # 4. 构建返回：用 chunk 文本 + 消息级元数据
+        result = []
+        for item in sorted_chunks:
+            chunk_hit = item['chunk_hit']
+            best_msg = item['best_msg']
+
+            # 在 chunk 元数据中注入消息级信息
+            enriched_meta = {
+                **chunk_hit.metadata,
+                '_matched_sender': best_msg.metadata.get('sender', ''),
+                '_matched_time': best_msg.metadata.get('time', ''),
+                '_matched_text': best_msg.text[:120],  # 命中的消息预览
+            }
+
+            result.append(SearchHit(
+                chunk_id=chunk_hit.chunk_id,
+                text=chunk_hit.text,
+                metadata=enriched_meta,
+                distance=best_msg.distance,
+                score=best_msg.score
+            ))
+
+        logger.info(f"🔍 消息级检索: {len(msg_hits)} hits → "
+                    f"{len(chunk_best)} unique chunks → {len(result)} top")
+        return result
+
+    def _generate(self, question: str, hits: List[SearchHit],
+                  model_id: Optional[str] = None) -> str:
+        """仅执行生成阶段，基于给定的 hits 生成回答"""
         if not hits:
-            return "抱歉，知识库中没有找到与您问题相关的内容。", []
+            return "抱歉，知识库中没有找到与您问题相关的内容。"
 
-        # 3. 构建提示词并调用 LLM
         context = self._build_context(hits)
         prompt = self._build_prompt(question, context)
 
@@ -736,6 +988,29 @@ class RAGChain:
         except Exception as e:
             logger.error(f"LLM 生成失败: {e}")
             answer = f"抱歉，生成回答时出现错误：{str(e)}"
+
+        return answer
+
+    def query(self, question: str, top_k: int = 5,
+              filter_category: Optional[str] = None,
+              where: Optional[Dict] = None) -> Tuple[str, List[SearchHit]]:
+        """
+        完整 RAG 查询（检索 + 生成）
+
+        Args:
+            where: 直接传入元数据过滤条件（比 filter_category 更灵活）
+        """
+        # 1. 检索
+        if where is None and filter_category:
+            where = {"category": filter_category}
+
+        hits = self._retrieve(question, top_k, where)
+
+        if not hits:
+            return "抱歉，知识库中没有找到与您问题相关的内容。", []
+
+        # 2. 生成
+        answer = self._generate(question, hits)
 
         return answer, hits
 
@@ -945,12 +1220,26 @@ def index_document(file_path: str, category: str = "默认") -> Dict:
 
     logger.info(f"📄 文档 '{doc.filename}' 已分块: {len(chunks)} 个块")
 
-    # 3. 向量化
+    # 3. 向量化（chunk 级）
     texts = [c.text for c in chunks]
     embeddings = embedder.embed_texts(texts)
 
-    # 4. 存入向量库
+    # 4. 存入向量库（chunk 集合）
     vectorstore.add_chunks(chunks, embeddings)
+
+    # 方案 C：如果是微信聊天记录，同时创建消息级索引
+    message_entries = []
+    if _is_wechat_record(file_path):
+        wc = WeChatChunker(chunk_size=800, overlap=50, time_window_minutes=10)
+        message_entries = wc.extract_messages(file_path, chunks)
+        for m in message_entries:
+            m['metadata']['category'] = category
+        
+    if message_entries:
+        msg_texts = [m['text'] for m in message_entries]
+        msg_embeddings = embedder.embed_texts(msg_texts)
+        vectorstore.add_messages(message_entries, msg_embeddings)
+        logger.info(f"📋 同时创建了 {len(message_entries)} 条消息级索引")
 
     # 5. 更新索引文件
     _update_index_file(doc)

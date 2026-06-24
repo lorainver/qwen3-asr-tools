@@ -1,69 +1,42 @@
 """
-knowledge_api.py - 知识库 API（挂载到 ai_worker.py）
-
-API 端点：
-    POST /api/kb/upload          - 上传并索引文档
-    POST /api/kb/index           - 从目录批量索引
-    GET  /api/kb/search          - 语义搜索
-    POST /api/kb/chat            - RAG 对话
-    GET  /api/kb/docs            - 列出文档
-    DELETE /api/kb/doc/{doc_id}  - 删除文档
-    GET  /api/kb/stats            - 统计信息
-    DELETE /api/kb/clear         - 清空知识库
+Knowledge Base API — Qwen3-ASR 知识库
+提供知识库的文档管理、语义搜索、RAG对话等 API
 """
 
+import json
 import os
+import re
 import sys
-import shutil
-import logging
-import tempfile
+import uuid
+from datetime import datetime
 from pathlib import Path
-from typing import Optional, List
-from fastapi import APIRouter, UploadFile, File, Query, HTTPException, Form
-from pydantic import BaseModel
+from typing import List, Optional, Tuple
 
-# 添加项目根目录到 path
-BASE_DIR = Path(__file__).parent
-if str(BASE_DIR) not in sys.path:
-    sys.path.insert(0, str(BASE_DIR))
+from fastapi import APIRouter, HTTPException, Query, UploadFile, File, Form
+from pydantic import BaseModel
+import logging
 
 from knowledge_store import (
-    init_knowledge_base,
-    index_document,
-    get_last_init_error,
-    get_loader,
-    get_vectorstore,
-    get_embedder,
-    get_rag_chain,
-    is_initialized,
-    KB_ROOT,
-    DOCS_PATH
+    get_embedder, get_vectorstore, get_rag_chain, is_initialized,
+    index_document, delete_by_filename
 )
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/kb", tags=["knowledge_base"])
 
-# 外部注入的 summarizer 引用（由 ai_worker.py 在挂载路由后设置）
-_external_summarizer = None
-
-
-def set_summarizer(summarizer):
-    """由 ai_worker.py 调用，注入全局 summarizer 实例"""
-    global _external_summarizer
-    _external_summarizer = summarizer
-
-# ========== 数据模型 ==========
+# ==================== 数据模型 ====================
 
 class KBSearchRequest(BaseModel):
     query: str
     top_k: int = 5
     filter_category: Optional[str] = None
+    filter_filename: Optional[str] = None
 
 
 class KBChatRequest(BaseModel):
     question: str
     top_k: int = 5
     filter_category: Optional[str] = None
+    filter_filename: Optional[str] = None
     model_id: Optional[str] = None
 
 
@@ -80,6 +53,7 @@ class KBChatResponse(BaseModel):
 
 class KBStatsResponse(BaseModel):
     total_chunks: int
+    total_messages: int
     total_docs: int
     categories: List[str]
 
@@ -89,171 +63,261 @@ class KBDocResponse(BaseModel):
     count: int
 
 
-class KBSourceItem(BaseModel):
-    filename: str
-    text: str
-    score: float
+# ==================== 路由 ====================
+
+router = APIRouter(prefix="/api/kb", tags=["知识库"])
 
 
-# ========== API 端点 ==========
+def _filter_hits_by_filename(hits, filename_substr: str, top_k: int):
+    """Python 后置过滤：按文件名子串匹配（ChromaDB $contains 不支持中文）"""
+    if not filename_substr or not hits:
+        return hits
+    filtered = [h for h in hits if filename_substr in h.metadata.get('filename', '')]
+    return filtered[:top_k]
+
+
+def _extract_mention(text: str) -> Tuple[str, str]:
+    """
+    从问题文本中提取 @群名 语法。
+    
+    例如 "@信竞群 最近主要讨论了什么" → ("信竞群", "最近主要讨论了什么")
+    如果没有 @群名，返回 (None, 原文本)
+    
+    Returns:
+        (群名子串, 清理后的提问文本)
+    """
+    import re
+    # 匹配 @后跟中文/英文/数字，直到遇到空格或标点
+    m = re.search(r'@([^\s，。！？,。!?]+)', text)
+    if m:
+        group = m.group(1).strip()
+        cleaned = text[:m.start()] + text[m.end():]
+        cleaned = cleaned.strip()
+        return group, cleaned
+    return None, text
+
+
+_external_summarizer = None
+
+
+def set_summarizer(summarizer):
+    """由 ai_worker.py 调用，注入全局 summarizer 实例"""
+    global _external_summarizer
+    _external_summarizer = summarizer
+
+
+def _build_source_list(hits) -> List[dict]:
+    """将 hit 列表转换为 sources 列表（按文件名去重）"""
+    seen_filenames = set()
+    sources = []
+    for hit in hits:
+        filename = hit.metadata.get('filename', '')
+        if filename in seen_filenames:
+            continue
+        seen_filenames.add(filename)
+        text_preview = hit.text[:200] + "..." if len(hit.text) > 200 else hit.text
+        sources.append({
+            "filename": filename,
+            "category": hit.metadata.get('category', ''),
+            "text": text_preview,
+            "score": round(hit.score, 4)
+        })
+    return sources
+
+
+# ==================== 初始化 ====================
 
 @router.post("/init")
-async def init_kb(
-    chunk_size: int = Query(default=500, ge=100, le=2000, description="分块大小（字符数）"),
-    overlap: int = Query(default=50, ge=0, le=500, description="重叠字符数"),
-    embed_provider: str = Query(default="ollama", description="Embedding 提供者 (ollama/huggingface)"),
-    embed_model: str = Query(default="nomic-embed-text", description="Embedding 模型名称")
-):
-    """初始化知识库模块"""
-    from knowledge_store import init_knowledge_base as _init
-
-    # 优先使用外部注入的 summarizer（ai_worker.py 全局实例）
-    if _external_summarizer is not None:
-        summarizer = _external_summarizer
-    else:
-        from summarizer import LongTextSummarizer
-        summarizer = LongTextSummarizer()
-
+async def init_knowledge_base():
+    """初始化知识库（重建 Embedding 模型和 VectorStore 连接）"""
     try:
-        success = init_knowledge_base(
-            summarizer=summarizer,
-            chunk_size=chunk_size,
-            overlap=overlap,
-            embed_provider=embed_provider,
-            embed_model=embed_model
-        )
+        from knowledge_store import initialize_knowledge_base
+        result = initialize_knowledge_base()
+        return {"status": "ok", "message": "知识库初始化成功", "result": result}
     except Exception as e:
-        logger.error(f"KB init exception: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"知识库初始化异常: {str(e)}")
-
-    if success:
-        vs = get_vectorstore()
-        return {
-            "status": "ok",
-            "message": "知识库初始化成功",
-            "stats": {
-                "total_chunks": vs.count(),
-                "total_docs": len(vs.get_all_docs())
-            }
-        }
-    else:
-        err = get_last_init_error()
-        raise HTTPException(status_code=500, detail=f"知识库初始化失败: {err}")
+        logger.error(f"知识库初始化失败: {e}")
+        raise HTTPException(status_code=500, detail=f"初始化失败: {str(e)}")
 
 
-@router.post("/upload")
+# ==================== 文档管理 ====================
+
+@router.post("/upload", response_model=dict)
 async def upload_document(
     file: UploadFile = File(...),
-    category: str = Form(default="默认", description="文档分类")
+    category: str = Form(default="default")
 ):
     """上传并索引文档"""
     if not is_initialized():
         raise HTTPException(status_code=500, detail="知识库未初始化，请先调用 /api/kb/init")
 
-    if not file.filename:
-        raise HTTPException(status_code=400, detail="文件名为空")
+    try:
+        docs_root = Path("D:/qwen3-asr/knowledge_base/documents")
+        docs_root.mkdir(parents=True, exist_ok=True)
 
-    # 检查格式
-    ext = Path(file.filename).suffix.lower()
-    supported = get_loader().SUPPORTED_EXTENSIONS
-    if ext not in supported:
-        raise HTTPException(
-            status_code=400,
-            detail=f"不支持的格式: {ext}，支持的格式: {', '.join(supported)}"
-        )
-
-    # 保存到临时文件
-    suffix = ext
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        file_path = docs_root / file.filename
         content = await file.read()
-        tmp.write(content)
-        tmp_path = tmp.name
+        with open(file_path, "wb") as f:
+            f.write(content)
+
+        result = index_document(str(file_path), category=category)
+        return {"status": "ok", "message": f"文档 {file.filename} 上传并索引成功", "result": result}
+    except Exception as e:
+        logger.error(f"文档上传失败: {e}")
+        raise HTTPException(status_code=500, detail=f"上传失败: {str(e)}")
+
+
+@router.get("/docs", response_model=KBDocResponse)
+async def list_kb_docs():
+    """列出知识库中的所有文档"""
+    if not is_initialized():
+        raise HTTPException(status_code=500, detail="知识库未初始化")
 
     try:
-        # 索引文档
-        result = index_document(tmp_path, category=category)
+        from knowledge_store import get_vectorstore
+        store = get_vectorstore()
+
+        # 获取 chunks 统计
+        all_chunks = store.collection.get(include=["metadatas"])
+        # 获取消息级统计
+        all_msgs = store.msg_collection.get(include=["metadatas"])
+
+        # 按文件名聚合 chunk 统计
+        file_map = {}
+        for meta in all_chunks.get("metadatas", []):
+            filename = meta.get("filename", "unknown")
+            if filename not in file_map:
+                file_map[filename] = {
+                    "filename": filename,
+                    "category": meta.get("category", ""),
+                    "chunks": 0,
+                    "messages": 0
+                }
+            file_map[filename]["chunks"] += 1
+
+        # 按文件名聚合消息统计
+        if all_msgs and all_msgs.get("metadatas"):
+            for meta in all_msgs["metadatas"]:
+                filename = meta.get("filename", "unknown")
+                if filename in file_map:
+                    file_map[filename]["messages"] += 1
+
+        docs = list(file_map.values())
+        return KBDocResponse(docs=docs, count=len(docs))
+    except Exception as e:
+        logger.error(f"列出文档失败: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"列出文档失败: {str(e)}")
+
+
+@router.post("/reindex_messages")
+async def reindex_messages():
+    """重建消息级索引（从已有 chunks 重建）"""
+    if not is_initialized():
+        raise HTTPException(status_code=500, detail="知识库未初始化")
+
+    try:
+        from knowledge_store import get_vectorstore, get_embedder, WeChatChunker, CHROMA_PATH
+        import hashlib
+        from pathlib import Path
+
+        store = get_vectorstore()
+        embedder = get_embedder()
+
+        # 清空旧的消息集合
+        old_msg = store.msg_collection.get(include=["metadatas"])
+        if old_msg and old_msg['ids']:
+            store.msg_collection.delete(ids=old_msg['ids'])
+            logger.info(f"🗑️ 已清空 {len(old_msg['ids'])} 条旧消息索引")
+
+        # 获取所有 chunks
+        all_chunks = store.collection.get(include=["documents", "metadatas"])
+        if not all_chunks or not all_chunks['ids']:
+            return {"status": "ok", "message": "知识库为空，无需重建", "total_messages": 0}
+
+        # 按文件名分组 chunks
+        file_chunks = {}
+        for i, chunk_id in enumerate(all_chunks['ids']):
+            meta = all_chunks['metadatas'][i]
+            fn = meta.get('filename', 'unknown')
+            if fn not in file_chunks:
+                file_chunks[fn] = {'chunks': [], 'category': meta.get('category', '默认')}
+            # 重建简单的 chunk 对象
+            from knowledge_store import Chunk
+            file_chunks[fn]['chunks'].append(Chunk(
+                chunk_id=chunk_id,
+                doc_id=meta.get('doc_id', ''),
+                text=all_chunks['documents'][i],
+                chunk_index=meta.get('chunk_index', 0),
+                metadata=meta
+            ))
+
+        # 找到对应的源文件路径
+        total_messages = 0
+        for fn, data in file_chunks.items():
+            # 尝试在 DOCS_PATH 下找源文件
+            found_path = None
+            for root, dirs, files in os.walk(str(CHROMA_PATH.parent / "documents")):
+                if fn in files:
+                    found_path = os.path.join(root, fn)
+                    break
+            if not found_path:
+                logger.warning(f"⚠️ 找不到源文件 '{fn}'，跳过消息重建")
+                continue
+
+            # 检查是否为微信聊天记录
+            with open(found_path, 'r', encoding='utf-8') as f:
+                sample = f.read()[:1000]
+            if not re.search(r'\*\*.+?\*\* \(.+?\):', sample):
+                continue
+
+            wc = WeChatChunker(chunk_size=800, overlap=50, time_window_minutes=10)
+            messages = wc.extract_messages(found_path, data['chunks'])
+            if not messages:
+                continue
+
+            for m in messages:
+                m['metadata']['category'] = data['category']
+
+            msg_texts = [m['text'] for m in messages]
+            msg_embeddings = embedder.embed_texts(msg_texts)
+            store.add_messages(messages, msg_embeddings)
+            total_messages += len(messages)
+            logger.info(f"📋 '{fn}' 消息重建完成: {len(messages)} 条")
 
         return {
             "status": "ok",
-            "message": f"文档 '{file.filename}' 索引成功",
-            "doc_id": result["doc_id"],
-            "filename": result["filename"],
-            "chunk_count": result["chunk_count"],
-            "category": category
+            "message": f"消息级索引重建完成，共 {total_messages} 条消息",
+            "total_messages": total_messages
         }
     except Exception as e:
-        logger.error(f"文档索引失败: {e}")
-        raise HTTPException(status_code=500, detail=f"索引失败: {str(e)}")
-    finally:
-        # 删除临时文件
-        try:
-            os.unlink(tmp_path)
-        except Exception:
-            pass
+        logger.error(f"消息索引重建失败: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"消息索引重建失败: {str(e)}")
 
 
-@router.post("/index")
-async def index_directory(
-    directory: str = Query(..., description="目录路径"),
-    category: str = Query(default="默认", description="分类标签"),
-    recursive: bool = Query(default=True, description="是否递归扫描子目录")
-):
-    """从目录批量索引文档"""
+@router.delete("/docs/{doc_id}")
+async def delete_kb_doc(doc_id: str):
+    """删除文档"""
     if not is_initialized():
-        raise HTTPException(status_code=500, detail="知识库未初始化，请先调用 /api/kb/init")
+        raise HTTPException(status_code=500, detail="知识库未初始化")
 
-    dir_path = Path(directory)
-    if not dir_path.exists():
-        raise HTTPException(status_code=400, detail=f"目录不存在: {directory}")
+    try:
+        return {"status": "ok", "message": f"文档 {doc_id} 删除功能暂不可用"}
+    except Exception as e:
+        logger.error(f"删除文档失败: {e}")
+        raise HTTPException(status_code=500, detail=f"删除失败: {str(e)}")
 
-    if not dir_path.is_dir():
-        raise HTTPException(status_code=400, detail=f"不是有效目录: {directory}")
 
-    loader = get_loader()
-    supported = loader.SUPPORTED_EXTENSIONS
-
-    # 收集文件
-    files = []
-    pattern = "**/*" if recursive else "*"
-    for f in dir_path.glob(pattern):
-        if f.is_file() and f.suffix.lower() in supported:
-            files.append(f)
-
-    if not files:
-        return {
-            "status": "ok",
-            "message": "未找到可索引的文档",
-            "indexed": 0
-        }
-
-    # 批量索引
-    results = []
-    errors = []
-
-    for f in files:
-        try:
-            result = index_document(str(f), category=category)
-            results.append(result)
-        except Exception as e:
-            errors.append({"file": str(f), "error": str(e)})
-            logger.error(f"索引失败 {f}: {e}")
-
-    return {
-        "status": "ok",
-        "message": f"批量索引完成",
-        "total_files": len(files),
-        "indexed": len(results),
-        "failed": len(errors),
-        "results": results,
-        "errors": errors
-    }
-
+# ==================== 搜索 ====================
 
 @router.get("/search")
 async def search_knowledge(
     q: str = Query(..., description="搜索查询", min_length=1),
     top_k: int = Query(default=5, ge=1, le=20),
-    category: Optional[str] = Query(default=None)
+    category: Optional[str] = Query(default=None),
+    filename: Optional[str] = Query(default=None, description="按文件名/群名过滤")
 ):
     """语义搜索知识库"""
     if not is_initialized():
@@ -266,13 +330,19 @@ async def search_knowledge(
         # 向量化查询
         query_embedding = embedder.embed_query(q)
 
-        # 检索
+        # 检索（ChromaDB 过滤 + Python 后置过滤）
+        retrieve_k = top_k * 3 if filename else top_k
         where = {"category": category} if category else None
         hits = vectorstore.search(
             query_embedding=query_embedding,
-            top_k=top_k,
+            top_k=retrieve_k,
             where=where
         )
+
+        # Python 后置过滤：按文件名子串匹配（ChromaDB $contains 不支持中文）
+        if filename:
+            hits = [h for h in hits if filename in h.metadata.get('filename', '')]
+            hits = hits[:top_k]
 
         results = []
         for hit in hits:
@@ -297,6 +367,8 @@ async def search_knowledge(
         raise HTTPException(status_code=500, detail=f"搜索失败: {str(e)}")
 
 
+# ==================== RAG 对话 ====================
+
 @router.post("/chat", response_model=KBChatResponse)
 async def rag_chat(request: KBChatRequest):
     """RAG 对话：检索 + 生成"""
@@ -305,145 +377,73 @@ async def rag_chat(request: KBChatRequest):
 
     try:
         rag_chain = get_rag_chain()
-        answer, hits = rag_chain.query(
-            question=request.question,
-            top_k=request.top_k,
-            filter_category=request.filter_category
+
+        # ---- 解析 @群名 语法 ----
+        mention_group, clean_question = _extract_mention(request.question)
+        effective_filter = None
+        if mention_group:
+            effective_filter = mention_group
+        elif request.filter_filename:
+            effective_filter = request.filter_filename
+
+        logger.info(f"RAG 对话: question='{clean_question[:50]}...' filter='{effective_filter}' mention='{mention_group}'")
+
+        # 检索（多取一些供 Python 后置过滤）
+        retrieve_k = request.top_k * 3 if effective_filter else request.top_k
+        where = {"category": request.filter_category} if request.filter_category else None
+        hits = rag_chain._retrieve(
+            question=clean_question,
+            top_k=retrieve_k,
+            where=where
         )
 
-        # 按文件名去重，避免同一文档的多个 chunk 重复显示
-        seen_filenames = set()
-        sources = []
-        for hit in hits:
-            filename = hit.metadata.get('filename', '')
-            if filename in seen_filenames:
-                continue
-            seen_filenames.add(filename)
-            
-            text_preview = hit.text[:200] + "..." if len(hit.text) > 200 else hit.text
-            sources.append({
-                "filename": filename,
-                "category": hit.metadata.get('category', ''),
-                "text": text_preview,
-                "score": round(hit.score, 4)
-            })
+        # Python 后置过滤
+        if effective_filter:
+            hits = [h for h in hits if effective_filter in h.metadata.get('filename', '')]
+            hits = hits[:request.top_k]
 
-        return KBChatResponse(
-            answer=answer,
-            sources=sources
+        if not hits:
+            return KBChatResponse(
+                answer="抱歉，知识库中没有找到与您问题相关的内容。",
+                sources=[]
+            )
+
+        # 生成回答
+        answer = rag_chain._generate(
+            question=clean_question,
+            hits=hits,
+            model_id=request.model_id
         )
+
+        # 构建 sources（按文件名去重）
+        sources = _build_source_list(hits)
+
+        return KBChatResponse(answer=answer, sources=sources)
 
     except Exception as e:
         logger.error(f"RAG 对话失败: {e}")
-        raise HTTPException(status_code=500, detail=f"对话失败: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"RAG 对话失败: {str(e)}")
 
 
-@router.get("/docs", response_model=KBDocResponse)
-async def list_docs():
-    """列出所有已索引的文档"""
-    if not is_initialized():
-        raise HTTPException(status_code=500, detail="知识库未初始化，请先调用 /api/kb/init")
-
-    try:
-        vectorstore = get_vectorstore()
-        docs = vectorstore.get_all_docs()
-        return KBDocResponse(docs=docs, count=len(docs))
-    except Exception as e:
-        logger.error(f"获取文档列表失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.delete("/doc/{doc_id}")
-async def delete_document(doc_id: str):
-    """删除文档（从向量库中移除）"""
-    if not is_initialized():
-        raise HTTPException(status_code=500, detail="知识库未初始化，请先调用 /api/kb/init")
-
-    try:
-        vectorstore = get_vectorstore()
-        vectorstore.delete_by_doc_id(doc_id)
-
-        # 同时从原始文件目录删除（如果存在）
-        docs = vectorstore.get_all_docs()
-        # 重新检查是否真的删除了
-
-        return {
-            "status": "ok",
-            "message": f"文档 {doc_id} 已删除",
-            "doc_id": doc_id
-        }
-    except Exception as e:
-        logger.error(f"删除文档失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
+# ==================== 统计 ====================
 
 @router.get("/stats", response_model=KBStatsResponse)
-async def get_stats():
+async def kb_stats():
     """获取知识库统计信息"""
     if not is_initialized():
-        # 返回默认状态
-        return KBStatsResponse(
-            total_chunks=0,
-            total_docs=0,
-            categories=[]
-        )
+        raise HTTPException(status_code=500, detail="知识库未初始化")
 
     try:
         vectorstore = get_vectorstore()
-        docs = vectorstore.get_all_docs()
-
-        # 统计分类
-        categories = list(set(d.get('category', '默认') for d in docs))
-
+        stats = vectorstore.get_stats()
         return KBStatsResponse(
-            total_chunks=vectorstore.count(),
-            total_docs=len(docs),
-            categories=categories
+            total_chunks=stats.get("total_chunks", 0),
+            total_messages=stats.get("total_messages", 0),
+            total_docs=stats.get("total_docs", 0),
+            categories=stats.get("categories", [])
         )
     except Exception as e:
         logger.error(f"获取统计信息失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.delete("/clear")
-async def clear_knowledge_base():
-    """清空知识库（危险操作）"""
-    if not is_initialized():
-        raise HTTPException(status_code=500, detail="知识库未初始化，请先调用 /api/kb/init")
-
-    try:
-        vectorstore = get_vectorstore()
-        chunk_count = vectorstore.count()
-        vectorstore.clear_all()
-
-        return {
-            "status": "ok",
-            "message": f"已清空知识库，删除了 {chunk_count} 个文本块"
-        }
-    except Exception as e:
-        logger.error(f"清空知识库失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.get("/status")
-async def get_status():
-    """获取知识库状态"""
-    initialized = is_initialized()
-    stats = {"total_chunks": 0, "total_docs": 0, "categories": []}
-
-    if initialized:
-        try:
-            vectorstore = get_vectorstore()
-            docs = vectorstore.get_all_docs()
-            stats = {
-                "total_chunks": vectorstore.count(),
-                "total_docs": len(docs),
-                "categories": list(set(d.get('category', '默认') for d in docs))
-            }
-        except Exception:
-            pass
-
-    return {
-        "initialized": initialized,
-        "stats": stats
-    }
+        raise HTTPException(status_code=500, detail=f"获取统计失败: {str(e)}")
