@@ -766,6 +766,7 @@
                 <button class="tab-btn" data-tab="assistant">💬 AI 助理</button>
                 <button class="tab-btn" data-tab="docs">📄 文档</button>
                 <button class="tab-btn" data-tab="knowledge">📚 知识库</button>
+                <button class="tab-btn" data-tab="analysis">📊 群聊分析</button>
             </div>
 
             <!-- 页面1：工作站 -->
@@ -1234,6 +1235,101 @@
                         <div class="kb-chat-input-row">
                             <input type="text" id="kb-chat-input" class="kb-input" placeholder="输入问题..." onkeydown="if(event.key==='Enter') document.getElementById('kb-btn-chat').click()">
                             <button class="kb-btn kb-btn-primary" id="kb-btn-chat">➡️ 发送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面5：群聊分析 -->
+            <div id="page-analysis" class="tab-page">
+                <div class="analysis-container glass-panel">
+                    <!-- 顶部 -->
+                    <div class="analysis-header">
+                        <div class="analysis-header-left">
+                            <h2>📊 群聊分析</h2>
+                            <span class="analysis-badge" id="analysis-stats-badge">🔄 加载中...</span>
+                        </div>
+                        <div class="analysis-header-actions">
+                            <button class="kb-btn kb-btn-secondary" onclick="loadAnalysisGroups()">🔄 刷新群列表</button>
+                        </div>
+                    </div>
+
+                    <!-- 群聊总结 -->
+                    <div class="analysis-section">
+                        <div class="analysis-section-header">
+                            <h3>📝 群聊总结</h3>
+                            <span class="analysis-section-desc">按群名 + 时间范围拉取消息，LLM 生成结构化总结</span>
+                        </div>
+                        <div class="analysis-controls">
+                            <div class="analysis-control-row">
+                                <label>选择群聊</label>
+                                <select id="analysis-summarize-group" class="analysis-select">
+                                    <option value="">-- 请选择群聊 --</option>
+                                </select>
+                            </div>
+                            <div class="analysis-control-row">
+                                <label>时间范围</label>
+                                <select id="analysis-summarize-days" class="analysis-select analysis-select-sm">
+                                    <option value="7">最近 7 天</option>
+                                    <option value="15">最近 15 天</option>
+                                    <option value="30" selected>最近 30 天</option>
+                                    <option value="60">最近 60 天</option>
+                                    <option value="90">最近 90 天</option>
+                                    <option value="0">全部</option>
+                                </select>
+                                <input type="number" id="analysis-summarize-days-custom" class="analysis-input analysis-input-sm" placeholder="自定义天数" min="1" style="width:100px;display:none">
+                                <label class="analysis-checkbox">
+                                    <input type="checkbox" id="analysis-summarize-custom-days" onchange="toggleCustomDays(this, 'analysis-summarize-days')"> 自定义
+                                </label>
+                            </div>
+                            <div class="analysis-control-row">
+                                <label>自定义提示词（可选）</label>
+                                <textarea id="analysis-summarize-prompt" class="analysis-textarea" placeholder="例如：请重点分析群里讨论的竞赛课程信息，列出推荐的和不推荐的" rows="2"></textarea>
+                            </div>
+                            <div class="analysis-action-row">
+                                <button class="kb-btn kb-btn-primary" id="analysis-btn-summarize" onclick="runSummarize()">📝 生成总结</button>
+                                <span class="analysis-status" id="analysis-summarize-status"></span>
+                            </div>
+                        </div>
+                        <div class="analysis-result" id="analysis-summarize-result">
+                            <div class="analysis-result-placeholder">点击「生成总结」开始分析</div>
+                        </div>
+                    </div>
+
+                    <!-- 人物画像 -->
+                    <div class="analysis-section">
+                        <div class="analysis-section-header">
+                            <h3>👤 人物画像</h3>
+                            <span class="analysis-section-desc">跨群搜索某人发言，生成人物画像分析</span>
+                        </div>
+                        <div class="analysis-controls">
+                            <div class="analysis-control-row">
+                                <label>输入昵称</label>
+                                <input type="text" id="analysis-person-name" class="analysis-input" placeholder="输入群友昵称（精确匹配）...">
+                            </div>
+                            <div class="analysis-control-row">
+                                <label>限定群聊（可选）</label>
+                                <div class="analysis-group-chips" id="analysis-person-groups">
+                                    <span class="analysis-chip analysis-chip-all analysis-chip-active" data-group="" onclick="togglePersonGroup(this)">全部群</span>
+                                </div>
+                            </div>
+                            <div class="analysis-control-row">
+                                <label>时间范围</label>
+                                <select id="analysis-person-days" class="analysis-select analysis-select-sm">
+                                    <option value="30">最近 30 天</option>
+                                    <option value="60">最近 60 天</option>
+                                    <option value="90" selected>最近 90 天</option>
+                                    <option value="180">最近 180 天</option>
+                                    <option value="0">全部</option>
+                                </select>
+                            </div>
+                            <div class="analysis-action-row">
+                                <button class="kb-btn kb-btn-primary" id="analysis-btn-person" onclick="runPerson()">👤 生成画像</button>
+                                <span class="analysis-status" id="analysis-person-status"></span>
+                            </div>
+                        </div>
+                        <div class="analysis-result" id="analysis-person-result">
+                            <div class="analysis-result-placeholder">点击「生成画像」开始分析</div>
                         </div>
                     </div>
                 </div>
@@ -1831,6 +1927,7 @@
             assistant: document.getElementById('page-assistant'),
             docs: document.getElementById('page-docs'),
             knowledge: document.getElementById('page-knowledge'),
+            analysis: document.getElementById('page-analysis'),
         };
 
         if (tabBar) {
@@ -2176,10 +2273,262 @@
             return text.substring(0, maxLen) + '...';
         }
 
+        // ========== 群聊分析 (Analysis) ==========
+
+        // --- 加载群列表 ---
+        async function loadAnalysisGroups() {
+            try {
+                const res = await fetch(`${KB_API_BASE}/list`);
+                const data = await res.json();
+                if (!data.success) return;
+
+                const docs = data.documents || [];
+                // 提取群名（wechat_ 前缀的文档）
+                const groups = [];
+                for (const doc of docs) {
+                    const fn = doc.filename || '';
+                    if (fn.startsWith('wechat_') || fn.startsWith('wx_')) {
+                        // 清理文件名作为群名
+                        let name = fn.replace(/^wechat_/, '').replace(/^wx_/, '');
+                        name = name.replace(/\.md$|\.txt$/, '').replace(/_raw$/, '').replace(/\.standard$/, '');
+                        groups.push({ name, filename: fn, chunks: doc.chunks || 0 });
+                    }
+                }
+
+                // 更新总结下拉框
+                const selectSummarize = document.getElementById('analysis-summarize-group');
+                if (selectSummarize) {
+                    const current = selectSummarize.value;
+                    selectSummarize.innerHTML = '<option value="">-- 请选择群聊 --</option>';
+                    for (const g of groups) {
+                        const opt = document.createElement('option');
+                        opt.value = g.filename;
+                        opt.textContent = `${friendlyGroupName(g.name)} (${g.chunks} 条)`;
+                        selectSummarize.appendChild(opt);
+                    }
+                    if (current) selectSummarize.value = current;
+                }
+
+                // 更新人物画像群选择 chips
+                const chipsContainer = document.getElementById('analysis-person-groups');
+                if (chipsContainer) {
+                    chipsContainer.innerHTML = '<span class="analysis-chip analysis-chip-all analysis-chip-active" data-group="" onclick="togglePersonGroup(this)">全部群</span>';
+                    for (const g of groups) {
+                        const chip = document.createElement('span');
+                        chip.className = 'analysis-chip';
+                        chip.dataset.group = g.filename;
+                        chip.onclick = function() { togglePersonGroup(this); };
+                        chip.innerHTML = `${friendlyGroupName(g.name)} <span class="analysis-chip-count">(${g.chunks})</span>`;
+                        chipsContainer.appendChild(chip);
+                    }
+                }
+
+                // 更新状态
+n                const badge = document.getElementById('analysis-stats-badge');
+                if (badge) badge.textContent = `✅ ${groups.length} 个群聊`;
+            } catch (err) {
+                console.error('加载群列表失败:', err);
+            }
+        }
+
+        function friendlyGroupName(name) {
+            return name
+                .replace(/_raw\.standard$/, '')
+                .replace(/\.standard$/, '')
+                .replace(/\.md$/, '')
+                .replace(/^微信聊天记录_/, '')
+                .replace(/^wechat_/, '')
+                .replace(/_/g, ' ')
+                .trim();
+        }
+
+        // --- 群聊总结 ---
+        async function runSummarize() {
+            const groupSelect = document.getElementById('analysis-summarize-group');
+            const filename = groupSelect.value;
+            if (!filename) { alert('请先选择群聊'); return; }
+
+            // 天数
+            const customDaysCheck = document.getElementById('analysis-summarize-custom-days');
+            let days;
+            if (customDaysCheck && customDaysCheck.checked) {
+                days = parseInt(document.getElementById('analysis-summarize-days-custom').value) || 30;
+            } else {
+                days = parseInt(document.getElementById('analysis-summarize-days').value) || 30;
+            }
+            if (days === 0) days = 9999; // 全部
+
+            const prompt = document.getElementById('analysis-summarize-prompt').value.trim();
+
+            const btn = document.getElementById('analysis-btn-summarize');
+            const status = document.getElementById('analysis-summarize-status');
+            const resultDiv = document.getElementById('analysis-summarize-result');
+
+            btn.disabled = true;
+            btn.textContent = '⏳ 生成中...';
+            status.className = 'analysis-status loading';
+            status.textContent = '正在分析消息，请稍候...';
+            resultDiv.innerHTML = '<div class="analysis-result-placeholder">⏳ 正在调用 LLM 分析，请耐心等待...</div>';
+
+            const startTime = Date.now();
+            try {
+                const body = { filename, days };
+                if (prompt) body.prompt = prompt;
+
+                const res = await fetch(`${KB_API_BASE}/summarize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+
+                if (data.error) {
+                    status.className = 'analysis-status error';
+                    status.textContent = `❌ 错误: ${data.error}`;
+                    resultDiv.innerHTML = `<div class="analysis-result-placeholder">❌ ${data.error}</div>`;
+                } else {
+                    status.className = 'analysis-status done';
+                    status.textContent = `✅ 完成（耗时 ${elapsed}s，${data.message_count || '?'} 条消息）`;
+
+                    // 渲染结果
+                    let html = '<div class="analysis-result-stats">';
+                    html += `<span class="analysis-stat-item"><strong>${data.message_count || '?'}</strong> 条消息</span>`;
+                    if (data.source_groups) {
+                        for (const g of data.source_groups) {
+                            html += `<span class="analysis-stat-item"><strong>${g.message_count}</strong> ${friendlyGroupName(g.group || g.filename)}</span>`;
+                        }
+                    }
+                    html += '</div>';
+                    html += kbRenderMarkdown(data.answer || '无结果');
+                    resultDiv.innerHTML = html;
+                }
+            } catch (err) {
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+                status.className = 'analysis-status error';
+                status.textContent = `❌ 请求失败: ${err.message}`;
+                resultDiv.innerHTML = `<div class="analysis-result-placeholder">❌ 请求失败: ${err.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📝 生成总结';
+            }
+        }
+
+        // --- 人物画像 ---
+        function togglePersonGroup(chip) {
+            const isAll = chip.dataset.group === '';
+            const container = document.getElementById('analysis-person-groups');
+
+            if (isAll) {
+                // 点击「全部群」，取消其他
+                container.querySelectorAll('.analysis-chip').forEach(c => c.classList.remove('analysis-chip-active'));
+                chip.classList.add('analysis-chip-active');
+            } else {
+                // 点击具体群，取消「全部群」
+                container.querySelector('.analysis-chip-all').classList.remove('analysis-chip-active');
+                chip.classList.toggle('analysis-chip-active');
+                // 如果没有任何选中，恢复「全部群」
+                const active = container.querySelectorAll('.analysis-chip-active:not(.analysis-chip-all)');
+                if (active.length === 0) {
+                    container.querySelector('.analysis-chip-all').classList.add('analysis-chip-active');
+                }
+            }
+        }
+
+        function getSelectedPersonGroups() {
+            const container = document.getElementById('analysis-person-groups');
+            const allChip = container.querySelector('.analysis-chip-all');
+            if (allChip.classList.contains('analysis-chip-active')) return [];
+
+            const selected = [];
+            container.querySelectorAll('.analysis-chip-active:not(.analysis-chip-all)').forEach(c => {
+                if (c.dataset.group) selected.push(c.dataset.group);
+            });
+            return selected;
+        }
+
+        async function runPerson() {
+            const nameInput = document.getElementById('analysis-person-name');
+            const personName = nameInput.value.trim();
+            if (!personName) { alert('请输入群友昵称'); return; }
+
+            const days = parseInt(document.getElementById('analysis-person-days').value) || 90;
+            const selectedGroups = getSelectedPersonGroups();
+
+            const btn = document.getElementById('analysis-btn-person');
+            const status = document.getElementById('analysis-person-status');
+            const resultDiv = document.getElementById('analysis-person-result');
+
+            btn.disabled = true;
+            btn.textContent = '⏳ 生成中...';
+            status.className = 'analysis-status loading';
+            status.textContent = '正在搜索发言记录...';
+            resultDiv.innerHTML = '<div class="analysis-result-placeholder">⏳ 正在搜索并分析，请耐心等待...</div>';
+
+            const startTime = Date.now();
+            try {
+                const body = { person_name: personName, days };
+                if (selectedGroups.length > 0) body.groups = selectedGroups;
+
+                const res = await fetch(`${KB_API_BASE}/person`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+
+                if (data.error) {
+                    status.className = 'analysis-status error';
+                    status.textContent = `❌ 错误: ${data.error}`;
+                    resultDiv.innerHTML = `<div class="analysis-result-placeholder">❌ ${data.error}</div>`;
+                } else {
+                    status.className = 'analysis-status done';
+                    status.textContent = `✅ 完成（耗时 ${elapsed}s，${data.message_count || '?'} 条消息）`;
+
+                    // 渲染结果
+                    let html = '<div class="analysis-result-stats">';
+                    html += `<span class="analysis-stat-item"><strong>${data.message_count || '?'}</strong> 条消息</span>`;
+                    if (data.active_groups) {
+                        for (const g of data.active_groups) {
+                            const count = (data.group_stats || {})[g] || '?';
+                            html += `<span class="analysis-stat-item"><strong>${count}</strong> ${friendlyGroupName(g)}</span>`;
+                        }
+                    }
+                    html += '</div>';
+                    html += kbRenderMarkdown(data.answer || '无结果');
+                    resultDiv.innerHTML = html;
+                }
+            } catch (err) {
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+                status.className = 'analysis-status error';
+                status.textContent = `❌ 请求失败: ${err.message}`;
+                resultDiv.innerHTML = `<div class="analysis-result-placeholder">❌ 请求失败: ${err.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '👤 生成画像';
+            }
+        }
+
+        function toggleCustomDays(checkbox, selectId) {
+            const select = document.getElementById(selectId);
+            const customInput = document.getElementById(selectId + '-custom');
+            if (checkbox.checked) {
+                select.style.display = 'none';
+                customInput.style.display = '';
+                customInput.focus();
+            } else {
+                select.style.display = '';
+                customInput.style.display = 'none';
+            }
+        }
+
         // --- 绑定事件 ---
         document.addEventListener('DOMContentLoaded', () => {
             // 加载知识库
             loadKbDocs();
+            // 加载群聊分析群列表
+            loadAnalysisGroups();
 
             // 绑定按钮事件
             const btnRefresh = document.getElementById('kb-btn-refresh');
