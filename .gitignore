@@ -94,3 +94,18 @@ knowledge_base/chroma_db/header.bin
 knowledge_base/chroma_db/index_metadata.pickle
 knowledge_base/chroma_db/length.bin
 knowledge_base/chroma_db/link_lists.bin
+
+# 临时测试/调试脚本
+_check.py
+_index_all.py
+_reindex_kb.py
+_reindex_messages.py
+_test_benchmark.py
+_test_docs.py
+_test_rag.py
+_test_reindex.py
+_test_scenarios.py
+_test_search.py
+_test_step1.py
+_test_targeted.py
+ai_worker_debug.err
