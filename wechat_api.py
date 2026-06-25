@@ -218,3 +218,29 @@ async def analyze_chat(req: ChatAnalyzeRequest):
     if result["success"]:
         return result
     raise HTTPException(status_code=500, detail=result.get("error", "AI 分析失败"))
+
+@router.post("/cache/clear")
+async def clear_ai_cache():
+    """清除 AI 分析缓存"""
+    try:
+        wechat_ai_analyzer.cache = {}
+        return {"success": True, "message": "缓存已清除"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/cache/status")
+async def get_cache_status():
+    """获取缓存状态"""
+    try:
+        cache_count = len(wechat_ai_analyzer.cache)
+        cache_keys = list(wechat_ai_analyzer.cache.keys())
+        return {
+            "success": True,
+            "data": {
+                "count": cache_count,
+                "keys": cache_keys,
+                "ttl": wechat_ai_analyzer.cache_ttl
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
