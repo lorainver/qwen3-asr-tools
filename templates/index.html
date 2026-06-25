@@ -1704,6 +1704,22 @@
             border-color: rgba(239, 68, 68, 0.5);
         }
 
+        /* 搜索结果加载更多按钮样式 */
+        #wechat-load-more-btn {
+            animation: fadeIn 0.3s ease;
+        }
+        #wechat-load-more-btn button {
+            transition: all 0.2s ease;
+        }
+        #wechat-load-more-btn button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* 执行控件样式 */
         .run-control-row {
             display: flex;
@@ -3058,7 +3074,12 @@
             keyword: '',
             sender: '',
             startTime: null,
-            endTime: null
+            endTime: null,
+            // 搜索结果分页状态
+            searchLimit: 50,
+            searchOffset: 0,
+            searchTotal: 0,
+            searchResults: []
         };
 
         function getSelectedStartTime() {
@@ -3291,7 +3312,7 @@
         }
 
         // 检索消息 (FTS + Senders)
-        async function searchWechatMessages() {
+        async function searchWechatMessages(loadMore = false) {
             const keyword = document.getElementById('wechat-keyword-input').value.trim();
             const sender = document.getElementById('wechat-sender-input').value.trim();
             const sessionId = document.getElementById('wechat-session-select').value;
@@ -3303,18 +3324,29 @@
                 return;
             }
 
-            wechatState.isSearchMode = true;
-            wechatState.keyword = keyword;
-            wechatState.sender = sender;
+            if (!loadMore) {
+                // 新搜索，重置状态
+                wechatState.isSearchMode = true;
+                wechatState.keyword = keyword;
+                wechatState.sender = sender;
+                wechatState.searchOffset = 0;
+                wechatState.searchResults = [];
+                
+                stats.textContent = '🔍 正在检索...';
+                feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在执行全文检索中...</div>';
+            } else {
+                // 加载更多，追加结果
+                if (wechatState.isLoading) return;
+                stats.textContent = '🔍 正在加载更多...';
+            }
             
-            stats.textContent = '🔍 正在检索...';
-            feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在执行全文检索中...</div>';
+            wechatState.isLoading = true;
 
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
 
             try {
-                let url = `/api/wechat/search/keyword?keyword=${encodeURIComponent(keyword)}&only_sender=${sender ? 'true' : 'false'}`;
+                let url = `/api/wechat/search/keyword?keyword=${encodeURIComponent(keyword)}&only_sender=${sender ? 'true' : 'false'}&limit=${wechatState.searchLimit}&offset=${wechatState.searchOffset}`;
                 if (sessionId) {
                     url += `&session_id=${sessionId}`;
                 }
@@ -3329,17 +3361,59 @@
                 if (!result.success) {
                     stats.textContent = '❌ 检索失败';
                     feed.innerHTML = '<div style="text-align: center; color: #ef4444; margin-top: 60px;">检索失败</div>';
+                    wechatState.isLoading = false;
                     return;
                 }
 
                 const items = result.data.results || [];
-                stats.textContent = `共搜索到 ${result.data.total} 条匹配结果`;
-                renderWechatBubbles(items, keyword, true);
-                feed.scrollTop = feed.scrollHeight;
+                wechatState.searchTotal = result.data.total;
+                
+                if (loadMore) {
+                    // 追加结果
+                    wechatState.searchResults = wechatState.searchResults.concat(items);
+                } else {
+                    // 新搜索
+                    wechatState.searchResults = items;
+                }
+                
+                // 计算分页状态
+                const loadedCount = wechatState.searchResults.length;
+                const hasMore = loadedCount < wechatState.searchTotal;
+                
+                stats.textContent = `共搜索到 ${wechatState.searchTotal} 条匹配结果，已加载 ${loadedCount} 条`;
+                
+                // 渲染消息
+                renderWechatBubbles(wechatState.searchResults, keyword, true);
+                
+                // 添加"加载更多"按钮（如果还有更多结果）
+                if (hasMore) {
+                    const loadMoreBtn = document.createElement('div');
+                    loadMoreBtn.id = 'wechat-load-more-btn';
+                    loadMoreBtn.style.cssText = 'text-align: center; padding: 20px; margin-top: 10px;';
+                    loadMoreBtn.innerHTML = `
+                        <button class="kb-btn kb-btn-secondary" onclick="searchWechatMessages(true)" style="min-width: 150px;">
+                            📥 加载更多 (${wechatState.searchTotal - loadedCount} 条剩余)
+                        </button>
+                        <div style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted, #64748b);">
+                            当前: 第 ${Math.ceil(loadedCount / wechatState.searchLimit)} 页 / 共 ${Math.ceil(wechatState.searchTotal / wechatState.searchLimit)} 页
+                        </div>
+                    `;
+                    feed.appendChild(loadMoreBtn);
+                }
+                
+                // 更新偏移量
+                wechatState.searchOffset = wechatState.searchResults.length;
+                
+                // 滚动到底部（新搜索时）
+                if (!loadMore) {
+                    feed.scrollTop = feed.scrollHeight;
+                }
             } catch(err) {
                 console.error('全文检索失败:', err);
                 stats.textContent = '❌ 检索异常';
                 feed.innerHTML = '<div style="text-align: center; color: #ef4444; margin-top: 60px;">网络异常，请重试</div>';
+            } finally {
+                wechatState.isLoading = false;
             }
         }
 
