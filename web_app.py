@@ -1472,26 +1472,46 @@ async def open_recordings():
 
 @app.middleware("http")
 async def proxy_kb_api(request: Request, call_next):
-    """拦截 /api/kb/* 请求并代理到 AI Worker"""
-    if not request.url.path.startswith("/api/kb/"):
+    """拦截 /api/kb/* 与 /api/wechat/* 请求并代理到 AI Worker"""
+    if not request.url.path.startswith("/api/kb/") and not request.url.path.startswith("/api/wechat/"):
         return await call_next(request)
     
     try:
         if not ai_worker.ensure_running():
             return JSONResponse({"error": "AI Worker 未运行"}, status_code=503)
         
-        # 构建目标 URL
         target_path = request.url.path
         if request.url.query:
             target_path = f"{target_path}?{request.url.query}"
         url = f"{AI_WORKER_URL}{target_path}"
-        
-        # 读取请求体并转发
         body = await request.body()
-        
+
+        # SSE 流式端点：逐字节转发，不缓冲
+        if "_stream" in request.url.path:
+            req = http_client.build_request(
+                request.method, url,
+                content=body or None,
+                headers={"Content-Type": request.headers.get("content-type", "application/json")}
+            )
+            resp = await http_client.send(req, stream=True)
+
+            async def stream_gen():
+                try:
+                    async for chunk in resp.aiter_bytes():
+                        if chunk:
+                            yield chunk
+                finally:
+                    await resp.aclose()
+
+            return StreamingResponse(
+                stream_gen(),
+                media_type="text/event-stream",
+                headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
+            )
+
+        # 普通请求：等待完整响应
         resp = await http_client.request(
-            request.method,
-            url,
+            request.method, url,
             content=body or None,
             headers={"Content-Type": request.headers.get("content-type", "application/json")}
         )

@@ -1,0 +1,367 @@
+import hashlib
+import json
+import time
+import logging
+from datetime import datetime
+from typing import Dict, List, Optional, Any
+
+from wechat_db import wechat_db
+
+logger = logging.getLogger(__name__)
+
+class WechatAIAnalyzer:
+    def __init__(self):
+        self.summarizer = None
+        self.cache = {}
+        self.cache_ttl = 3600  # 缓存 1 小时
+
+    def set_summarizer(self, summarizer):
+        self.summarizer = summarizer
+
+    def _get_from_cache(self, cache_key: str) -> Optional[Dict]:
+        if cache_key in self.cache:
+            cached_data = self.cache[cache_key]
+            if time.time() - cached_data["timestamp"] < self.cache_ttl:
+                return cached_data["data"]
+            else:
+                del self.cache[cache_key]
+        return None
+
+    def _save_to_cache(self, cache_key: str, data: Dict):
+        self.cache[cache_key] = {
+            "data": data,
+            "timestamp": time.time()
+        }
+        # 清理过期缓存
+        current_time = time.time()
+        expired_keys = [k for k, v in self.cache.items() if current_time - v["timestamp"] >= self.cache_ttl]
+        for k in expired_keys:
+            del self.cache[k]
+
+    def _generate_cache_key(self, analysis_type: str, identifier: str, start_time: Optional[int], end_time: Optional[int]) -> str:
+        key_data = f"{analysis_type}:{identifier}:{start_time}:{end_time}"
+        return hashlib.md5(key_data.encode()).hexdigest()
+
+    def _format_messages(self, messages: List[Dict], limit: int = 150) -> str:
+        formatted = []
+        for msg in messages[:limit]:
+            formatted.append(
+                f"[{msg.get('formatted_time', '')}] {msg.get('sender_display_name', '未知')}: {msg.get('content', '')}"
+            )
+        return "\n".join(formatted)
+
+    def _call_model(self, system_prompt: str, user_prompt: str) -> str:
+        if not self.summarizer:
+            return "❌ 本地大模型未加载，无法执行分析"
+        
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+        try:
+            return self.summarizer.chat(messages)
+        except Exception as e:
+            logger.error(f"AI 分析大模型调用失败: {e}")
+            return f"❌ AI 分析大模型调用失败: {str(e)}"
+
+    def analyze_session(self, session_id: int, start_time: Optional[int] = None, end_time: Optional[int] = None, use_cache: bool = True) -> Dict:
+        try:
+            session_info = wechat_db.get_session_info(session_id)
+            if not session_info:
+                return {"success": False, "error": "会话不存在"}
+            
+            cache_key = self._generate_cache_key("session", str(session_id), start_time, end_time)
+            if use_cache:
+                cached = self._get_from_cache(cache_key)
+                if cached:
+                    return {"success": True, "data": cached, "from_cache": True}
+            
+            messages = wechat_db.get_session_messages(
+                session_id, 
+                limit=0, 
+                start_time=start_time, 
+                end_time=end_time
+            )
+            
+            if not messages:
+                return {"success": False, "error": "该时间段内无聊天记录"}
+
+            # 发言人频次统计作为前缀
+            user_stats = {}
+            for msg in messages:
+                sender = msg.get("sender_display_name", "未知")
+                user_stats[sender] = user_stats.get(sender, 0) + 1
+            sorted_users = sorted(user_stats.items(), key=lambda x: x[1], reverse=True)
+            stats_text = "\n".join([f"- {name}: {count}条消息" for name, count in sorted_users[:15]])
+
+            system_prompt = """你是一个专业的聊天记录分析助手。你的任务是分析群聊记录，提供深入的洞察和分析。
+请从以下维度进行分析：
+1. 活跃度分析：整体参与度、活跃时间段
+2. 主题分析：讨论的主要话题、关键词提取
+3. 焦点辩论与冲突检测：若存在不同观点、争议或热烈讨论，提炼出争议主题与核心论据；若无则简要说明
+4. 值得关注的信息"""
+
+            user_prompt = f"""请分析以下群聊记录：
+
+群聊名称：{session_info.get('display_name', '未知')}
+消息总数：{len(messages)}
+发言人活跃排行（前15名）：
+{stats_text}
+
+消息记录（前150条）：
+{self._format_messages(messages, limit=150)}
+
+请提供详细的分析报告。"""
+
+            ai_analysis = self._call_model(system_prompt, user_prompt)
+            result = {
+                "session_info": {
+                    "id": session_info["id"],
+                    "name": session_info["display_name"],
+                    "type": session_info["type"]
+                },
+                "statistics": {
+                    "total_messages": len(messages),
+                    "total_users": len(sorted_users),
+                },
+                "top_users": [{"name": u[0], "count": u[1]} for u in sorted_users[:10]],
+                "ai_analysis": ai_analysis,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            self._save_to_cache(cache_key, result)
+            return {"success": True, "data": result, "from_cache": False}
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def analyze_user(self, username: str, start_time: Optional[int] = None, end_time: Optional[int] = None, use_cache: bool = True) -> Dict:
+        try:
+            cache_key = self._generate_cache_key("user", username, start_time, end_time)
+            if use_cache:
+                cached = self._get_from_cache(cache_key)
+                if cached:
+                    return {"success": True, "data": cached, "from_cache": True}
+            
+            search_result = wechat_db.search_by_username(username, limit=0)
+            if not search_result.get("results"):
+                return {"success": False, "error": "未找到该用户的聊天记录"}
+            
+            # 汇集该用户所有的消息
+            user_messages = []
+            for item in search_result["results"]:
+                session_name = item["session"]["display_name"]
+                for msg in item["messages"]:
+                    msg["session_name"] = session_name
+                    # 过滤时间段
+                    if start_time and msg.get("create_time", 0) < start_time:
+                        continue
+                    if end_time and msg.get("create_time", 0) > end_time:
+                        continue
+                    user_messages.append(msg)
+            
+            if not user_messages:
+                return {"success": False, "error": "该时间段内此用户无发言记录"}
+
+            # 计算跨群统计
+            session_stats = {}
+            for msg in user_messages:
+                sname = msg.get("session_name", "未知会话")
+                session_stats[sname] = session_stats.get(sname, 0) + 1
+            sorted_sessions = sorted(session_stats.items(), key=lambda x: x[1], reverse=True)
+            stats_text = "\n".join([f"- {name}: {count}条发言" for name, count in sorted_sessions])
+
+            system_prompt = """你是一个专业的用户行为分析助手。你的任务是分析特定用户的聊天记录，提供深入的用户画像和行为分析。
+请从以下维度进行分析：
+1. 跨群发言特征：对比用户在不同群中发言的多样性及专注点
+2. 角色定位：此人是推广者、答疑专家，还是普通闲聊者？
+3. 兴趣偏好：常讨论的话题、关注的核心领域
+4. 沟通情感：用词态度、情绪倾向"""
+
+            user_prompt = f"""请分析以下用户的聊天记录：
+
+用户名称：{username}
+消息总数：{len(user_messages)}
+跨群发言活跃度：
+{stats_text}
+
+具体发言记录（前150条）：
+{self._format_messages(user_messages, limit=150)}
+
+请提供详细的画像对比分析报告。"""
+
+            ai_analysis = self._call_model(system_prompt, user_prompt)
+            result = {
+                "username": username,
+                "statistics": {
+                    "total_messages": len(user_messages),
+                    "total_sessions": len(sorted_sessions),
+                },
+                "top_sessions": [{"name": s[0], "count": s[1]} for s in sorted_sessions],
+                "ai_analysis": ai_analysis,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            self._save_to_cache(cache_key, result)
+            return {"success": True, "data": result, "from_cache": False}
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def analyze_group_theme(self, group_name: str, start_time: Optional[int] = None, end_time: Optional[int] = None, use_cache: bool = True) -> Dict:
+        try:
+            # 找到 session
+            cursor = wechat_db.conn.cursor()
+            cursor.execute("SELECT id FROM sessions WHERE display_name = ?", (group_name,))
+            row = cursor.fetchone()
+            if not row:
+                return {"success": False, "error": f"未找到群聊：{group_name}"}
+            session_id = row["id"]
+
+            cache_key = self._generate_cache_key("group_theme", group_name, start_time, end_time)
+            if use_cache:
+                cached = self._get_from_cache(cache_key)
+                if cached:
+                    return {"success": True, "data": cached, "from_cache": True}
+
+            messages = wechat_db.get_session_messages(
+                session_id, limit=0, start_time=start_time, end_time=end_time
+            )
+            if not messages:
+                return {"success": False, "error": "该时间段内群里无消息"}
+
+            system_prompt = """你是一个专业的群聊主题分析助手。你的任务是分析特定群聊在某个时间段的聊天主题，提供详细的主题分析报告。
+请从以下维度进行分析：
+1. 主题识别：识别主要讨论主题，并用关键词或短语概括
+2. 主题热度：讨论热度（消息数、热烈程度）
+3. 讨论脉络与关键结论：群友得出了什么重要结论或分享了什么干货"""
+
+            user_prompt = f"""请分析以下群聊记录的讨论主题：
+
+群聊名称：{group_name}
+总消息数：{len(messages)}
+
+具体消息记录（前150条）：
+{self._format_messages(messages, limit=150)}
+
+请生成主题分析报告。"""
+
+            ai_analysis = self._call_model(system_prompt, user_prompt)
+            result = {
+                "group_name": group_name,
+                "total_messages": len(messages),
+                "ai_analysis": ai_analysis,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            self._save_to_cache(cache_key, result)
+            return {"success": True, "data": result, "from_cache": False}
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def analyze_user_relations(self, username: str, start_time: Optional[int] = None, end_time: Optional[int] = None, use_cache: bool = True) -> Dict:
+        try:
+            cache_key = self._generate_cache_key("user_relations", username, start_time, end_time)
+            if use_cache:
+                cached = self._get_from_cache(cache_key)
+                if cached:
+                    return {"success": True, "data": cached, "from_cache": True}
+
+            search_result = wechat_db.search_by_username(username, limit=0)
+            if not search_result.get("results"):
+                return {"success": False, "error": "未找到该用户的发言记录"}
+
+            # 收集该用户所有相关的消息及会话消息
+            all_relevant_msgs = []
+            for item in search_result["results"]:
+                session_id = item["session"]["id"]
+                messages = wechat_db.get_session_messages(
+                    session_id, limit=0, start_time=start_time, end_time=end_time
+                )
+                all_relevant_msgs.extend(messages)
+            
+            if not all_relevant_msgs:
+                return {"success": False, "error": "该时间段内无相关互动记录"}
+
+            # 简易计算关系频次
+            # 统计谁提到了该用户，或者该用户和谁互动最为频繁（在同一会话中先后发言）
+            interactions = {}
+            for i, msg in enumerate(all_relevant_msgs):
+                sender = msg.get("sender_display_name", "")
+                if sender == username:
+                    # 获取前两条和后两条消息的发送者作为可能互动人
+                    indices = [i-2, i-1, i+1, i+2]
+                    for idx in indices:
+                        if 0 <= idx < len(all_relevant_msgs):
+                            other = all_relevant_msgs[idx].get("sender_display_name", "")
+                            if other and other != username:
+                                interactions[other] = interactions.get(other, 0) + 1
+            
+            sorted_interactions = sorted(interactions.items(), key=lambda x: x[1], reverse=True)
+            stats_text = "\n".join([f"- {name}: 临近发言互动 {count} 次" for name, count in sorted_interactions[:15]])
+
+            # 用 Mermaid 语法表示网络图谱
+            mermaid_nodes = [f'    center["👤 {username}"]']
+            for name, count in sorted_interactions[:8]:
+                mermaid_nodes.append(f'    center ===|互动 {count}次| {name}["👤 {name}"]')
+            mermaid_chart = "graph TD\n" + "\n".join(mermaid_nodes)
+
+            system_prompt = """你是一个专业的用户关系网络分析助手。你的任务是分析特定用户与其他用户的关系网络，提供详细的关系分析报告。
+请基于互动频率数据和消息内容：
+1. 评估该用户与其他用户的亲密度和交流特点
+2. 总结其主要互动圈层和关注方向
+3. 给出网络互动关系结论"""
+
+            user_prompt = f"""请分析用户 '{username}' 与其他群友的关系网络：
+
+用户名称：{username}
+预统计互动频度：
+{stats_text}
+
+Mermaid 关系网草图：
+```mermaid
+{mermaid_chart}
+```
+
+请给出详细的关系报告。"""
+
+            ai_analysis = self._call_model(system_prompt, user_prompt)
+            result = {
+                "username": username,
+                "mermaid_chart": mermaid_chart,
+                "ai_analysis": ai_analysis,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            self._save_to_cache(cache_key, result)
+            return {"success": True, "data": result, "from_cache": False}
+
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def chat_analyze(self, query: str, context: List[Dict], use_cache: bool = True) -> Dict:
+        try:
+            # 简易识别意图：根据关键字匹配
+            # "主题" 或 "讨论" -> analyze_group_theme
+            # "关系" 或 "圈子" -> analyze_user_relations
+            # "画像" 或 "跨群" -> analyze_user
+            # 否则做对话分析
+            system_prompt = "你是一个专业的聊天记录分析助手，能够处理用户的各种查询请求。"
+            
+            # 使用本地模型分析
+            ai_result = self._call_model(system_prompt, f"用户提问：{query}\n\n上下文信息：{json.dumps(context, ensure_ascii=False)}")
+            
+            return {
+                "success": True,
+                "data": {
+                    "query": query,
+                    "result": ai_result,
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+
+wechat_ai_analyzer = WechatAIAnalyzer()

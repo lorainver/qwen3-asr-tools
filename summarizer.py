@@ -3,6 +3,7 @@ import logging
 import gc
 import json
 import requests
+import threading
 from model_manager import model_manager
 from config_loader import config
 
@@ -21,6 +22,7 @@ class LongTextSummarizer:
         self.model = None
         self.api_url = None
         self.is_remote = False
+        self._lock = threading.Lock()
         
         # 启动时立即同步模型状态（确保远程标志被正确设置）
         self.switch_model(self.current_model_id)
@@ -270,28 +272,29 @@ class LongTextSummarizer:
         if self.is_remote:
             return self._chat_remote(messages, max_new_tokens, enable_think=enable_think)
             
-        self._load_model()
-        import torch
-        from qwen_vl_utils import process_vision_info
-        local_max_tokens = max_new_tokens or 8192
-        try:
-            if self.current_model_id == 'qwen-vl':
-                text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-                image_inputs, video_inputs = process_vision_info(messages)
-                inputs = self.processor(text=[text], images=image_inputs, videos=video_inputs, padding=True, return_tensors="pt").to(self.model.device)
-            else:
-                prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-                inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
-            
-            with torch.no_grad():
-                output_ids = self.model.generate(**inputs, max_new_tokens=local_max_tokens, do_sample=True, temperature=0.7)
-            
-            if self.current_model_id == 'qwen-vl':
-                generated_ids = [oid[len(iids):] for iids, oid in zip(inputs.input_ids, output_ids)]
-                return self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
-            return self.tokenizer.decode(output_ids[0][len(inputs.input_ids[0]):], skip_special_tokens=True).strip()
-        finally:
-            model_manager.set_processing(False)
+        with self._lock:
+            self._load_model()
+            import torch
+            from qwen_vl_utils import process_vision_info
+            local_max_tokens = max_new_tokens or 8192
+            try:
+                if self.current_model_id == 'qwen-vl':
+                    text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+                    image_inputs, video_inputs = process_vision_info(messages)
+                    inputs = self.processor(text=[text], images=image_inputs, videos=video_inputs, padding=True, return_tensors="pt").to(self.model.device)
+                else:
+                    prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+                    inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
+                
+                with torch.no_grad():
+                    output_ids = self.model.generate(**inputs, max_new_tokens=local_max_tokens, do_sample=True, temperature=0.7)
+                
+                if self.current_model_id == 'qwen-vl':
+                    generated_ids = [oid[len(iids):] for iids, oid in zip(inputs.input_ids, output_ids)]
+                    return self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
+                return self.tokenizer.decode(output_ids[0][len(inputs.input_ids[0]):], skip_special_tokens=True).strip()
+            finally:
+                model_manager.set_processing(False)
 
     def _chat_remote(self, messages, max_new_tokens=None, enable_think=True):
         is_ollama = self._is_ollama_model(self.current_model_id)
@@ -360,31 +363,32 @@ class LongTextSummarizer:
             yield from self._chat_stream_remote(messages, enable_think=enable_think, max_new_tokens=max_new_tokens)
             return
 
-        self._load_model()
-        import torch
-        from transformers import TextIteratorStreamer
-        from threading import Thread
-        local_max_tokens = max_new_tokens or 8192
-        try:
-            if self.current_model_id == 'qwen-vl':
-                text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-                image_inputs, video_inputs = process_vision_info(messages)
-                inputs = self.processor(text=[text], images=image_inputs, videos=video_inputs, padding=True, return_tensors="pt").to(self.model.device)
-            else:
-                prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-                inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
+        with self._lock:
+            self._load_model()
+            import torch
+            from transformers import TextIteratorStreamer
+            from threading import Thread
+            local_max_tokens = max_new_tokens or 8192
+            try:
+                if self.current_model_id == 'qwen-vl':
+                    text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+                    image_inputs, video_inputs = process_vision_info(messages)
+                    inputs = self.processor(text=[text], images=image_inputs, videos=video_inputs, padding=True, return_tensors="pt").to(self.model.device)
+                else:
+                    prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+                    inputs = self.tokenizer([prompt], return_tensors="pt").to(self.model.device)
 
-            streamer = TextIteratorStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
-            generation_kwargs = dict(**inputs, max_new_tokens=local_max_tokens, do_sample=True, temperature=0.7, streamer=streamer)
-            thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
-            thread.start()
-            
-            for new_text in streamer:
-                if new_text:
-                    yield new_text
-            thread.join()
-        finally:
-            model_manager.set_processing(False)
+                streamer = TextIteratorStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
+                generation_kwargs = dict(**inputs, max_new_tokens=local_max_tokens, do_sample=True, temperature=0.7, streamer=streamer)
+                thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
+                thread.start()
+                
+                for new_text in streamer:
+                    if new_text:
+                        yield new_text
+                thread.join()
+            finally:
+                model_manager.set_processing(False)
 
     def _chat_stream_remote(self, messages, enable_think=True, max_new_tokens=None):
         is_ollama = self._is_ollama_model(self.current_model_id)

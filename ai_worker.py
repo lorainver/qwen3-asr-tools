@@ -69,6 +69,13 @@ _set_kb_summarizer(summarizer)
 init_knowledge_base(summarizer=summarizer)
 logger.info("📚 知识库路由已挂载: /api/kb/*")
 
+# 挂载微信分析 API 路由与分析器初始化
+from wechat_api import router as wechat_router
+from wechat_ai_analyzer import wechat_ai_analyzer
+wechat_ai_analyzer.set_summarizer(summarizer)
+app.include_router(wechat_router)
+logger.info("💬 微信分析路由已挂载: /api/wechat/*")
+
 # ========== Pydantic 模型 (简化版,避免 Pydantic 验证错误) ==========
 
 class OpenAIModelInfo(BaseModel):

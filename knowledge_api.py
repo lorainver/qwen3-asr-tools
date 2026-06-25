@@ -479,11 +479,22 @@ def _format_messages_text(msgs: List[Dict]) -> str:
         ts = m.get('time', '')
         sender = m.get('sender', '?')
         text = m.get('text', '')
-        # 去掉 text 中已包含的 "sender (time): " 前缀（如果有）
+        # 去掉 text 中已包含 of "sender (time): " 前缀（如果有）
         if text.startswith(f"{sender} ({ts}): "):
             text = text[len(f"{sender} ({ts}): "):] 
         lines.append(f"[{ts}] {sender}: {text}")
     return '\n'.join(lines)
+
+
+def _get_speaker_stats_text(msgs: List[Dict]) -> str:
+    """计算消息列表的发言人活跃度统计，返回结构化文本"""
+    stats = {}
+    for m in msgs:
+        sender = m.get('sender', '?')
+        stats[sender] = stats.get(sender, 0) + 1
+    sorted_stats = sorted(stats.items(), key=lambda x: -x[1])
+    lines = [f"- {s}: {c}条消息" for s, c in sorted_stats[:15]]
+    return "【本期群聊发言人活跃度统计（100% 真实数据）】\n" + "\n".join(lines) + "\n\n"
 
 
 def _chunk_messages_for_llm(msgs: List[Dict], max_chars: int = 6000) -> List[str]:
@@ -528,14 +539,17 @@ async def summarize_group(request: KBSummarizeRequest):
 
         logger.info(f"群聊总结: {request.group_name}, {len(msgs)} 条消息, since={since}")
 
+        # 计算发言统计
+        stats_header = _get_speaker_stats_text(msgs)
+
         # 分块总结
         rag_chain = get_rag_chain()
         system_prompt = "你是一个群聊分析助手。请根据提供的群聊记录，生成结构化的总结报告。"
 
         if request.prompt:
-            user_prompt_base = request.prompt
+            user_prompt_base = stats_header + request.prompt
         else:
-            user_prompt_base = "请对以下群聊记录进行总结，要求：\n1. 列出讨论的主要话题（按时间顺序）\n2. 每个话题的关键内容摘要\n3. 重要的决定或结论\n4. 活跃发言人的特点\n5. 值得关注的信息"
+            user_prompt_base = stats_header + "请对以下群聊记录进行总结，要求：\n1. 列出讨论的主要话题（按时间顺序）\n2. 每个话题的关键内容摘要\n3. 重要的决定或结论\n4. 活跃发言人的特点\n5. 焦点辩论与冲突检测（若存在不同观点、争议或热烈讨论，请详细提炼出争议主题、双方立场与核心论据；若无明显争论则简要说明）\n6. 值得关注的信息"
 
         message_chunks = _chunk_messages_for_llm(msgs, max_chars=6000)
         chunk_summaries = []
@@ -588,6 +602,143 @@ async def summarize_group(request: KBSummarizeRequest):
         raise HTTPException(status_code=500, detail=f"群聊总结失败: {str(e)}")
 
 
+@router.post("/summarize_stream")
+async def summarize_group_stream(request: KBSummarizeRequest):
+    """群聊总结（SSE 流式进度版）"""
+    from fastapi.responses import StreamingResponse
+    import json, time
+
+    def generate():
+        def sse(data):
+            return f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+        try:
+            if not is_initialized():
+                yield sse({"step": "error", "msg": "知识库未初始化"})
+                return
+
+            vectorstore = get_vectorstore()
+            yield sse({"step": "start", "msg": "🔍 正在从知识库检索消息..."})
+
+            since = (datetime.now() - timedelta(days=request.days)).strftime("%Y-%m-%d")
+            msgs = vectorstore.query_messages(
+                filename=request.group_name,
+                since=since,
+                limit=5000
+            )
+
+            if not msgs:
+                yield sse({"step": "error", "msg": f"未找到群 '{request.group_name}' 在最近 {request.days} 天的消息。"})
+                return
+
+            yield sse({"step": "retrieved", "msg": f"✅ 检索到 {len(msgs)} 条消息（{since} 至今）", "count": len(msgs)})
+
+            # 计算发言统计
+            stats_header = _get_speaker_stats_text(msgs)
+            stats_text = stats_header.replace("【本期群聊发言人活跃度统计（100% 真实数据）】\n", "").strip()
+            yield sse({"step": "stats", "msg": f"📊 本期群聊发言人活跃度统计（100% 真实数据）：\n{stats_text}"})
+
+            rag_chain = get_rag_chain()
+            if not rag_chain or not rag_chain.summarizer:
+                yield sse({"step": "error", "msg": "未检测到可用的总结模型，请先在控制台切换/加载模型"})
+                return
+
+            system_prompt = "你是一个群聊分析助手。请根据提供的群聊记录，生成结构化的总结报告。"
+
+            if request.prompt:
+                user_prompt_base = stats_header + request.prompt
+            else:
+                user_prompt_base = stats_header + "请对以下群聊记录进行总结，要求：\n1. 列出讨论的主要话题（按时间顺序）\n2. 每个话题的关键内容摘要\n3. 重要的决定或结论\n4. 活跃发言人的特点\n5. 焦点辩论与冲突检测（若存在不同观点、争议或热烈讨论，请详细提炼出争议主题、双方立场与核心论据；若无明显争论则简要说明）\n6. 值得关注的信息"
+
+            message_chunks = _chunk_messages_for_llm(msgs, max_chars=6000)
+            total_chunks = len(message_chunks)
+
+            # --- 并行分块处理 ---
+            from concurrent.futures import ThreadPoolExecutor, as_completed
+
+            MAX_WORKERS = 2  # 同时推理 2 块
+
+            def process_chunk(idx_chunk):
+                idx, chunk = idx_chunk
+                t0 = time.time()
+                chat_text = _format_messages_text(chunk)
+                if total_chunks > 1:
+                    part_info = f"\n\n（这是第 {idx+1}/{total_chunks} 部分，共 {len(msgs)} 条消息）"
+                else:
+                    part_info = ""
+                llm_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": f"{user_prompt_base}{part_info}\n\n{chat_text}"}
+                ]
+                try:
+                    summary = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+                    elapsed = time.time() - t0
+                    return (idx, summary, elapsed, None)
+                except Exception as e:
+                    elapsed = time.time() - t0
+                    return (idx, f"（第 {idx+1} 部分总结失败: {str(e)}）", elapsed, str(e))
+
+            if total_chunks == 1:
+                yield sse({"step": "chunking", "msg": "✂️ 1 个分析块，直接处理...", "total": 1})
+            else:
+                yield sse({"step": "chunking", "msg": f"✂️ {total_chunks} 个分析块，{MAX_WORKERS} 路并行推理", "total": total_chunks, "parallel": MAX_WORKERS})
+
+            # 提交所有块到线程池
+            chunk_results = {}
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                futures = {
+                    executor.submit(process_chunk, (i, chunk)): i
+                    for i, chunk in enumerate(message_chunks)
+                }
+                # 发出「开始」事件
+                for i in range(total_chunks):
+                    yield sse({"step": "llm", "msg": f"🤖 第 {i+1}/{total_chunks} 块已提交队列", "current": i+1, "total": total_chunks})
+
+                completed_count = 0
+                for future in as_completed(futures):
+                    idx, summary, elapsed, error = future.result()
+                    chunk_results[idx] = summary
+                    completed_count += 1
+                    if error:
+                        yield sse({"step": "llm_error", "msg": f"⚠️ 第 {idx+1} 块失败（{elapsed:.0f}秒）: {error}", "current": idx+1, "elapsed": round(elapsed, 1)})
+                    else:
+                        yield sse({"step": "llm_done", "msg": f"✅ 第 {idx+1}/{total_chunks} 块完成（{elapsed:.0f}秒）", "current": idx+1, "total": total_chunks, "elapsed": round(elapsed, 1), "done": completed_count})
+
+            # 按原始顺序拼接
+            chunk_summaries = [chunk_results[i] for i in range(total_chunks)]
+
+            # 多块合并
+            if len(chunk_summaries) > 1:
+                yield sse({"step": "merge", "msg": f"🔗 正在合并 {len(chunk_summaries)} 块总结..."})
+                merge_prompt = f"请将以下 {len(chunk_summaries)} 段群聊总结合并为一份完整的总结报告，去除重复内容，按话题重新组织：\n\n"
+                for i, s in enumerate(chunk_summaries):
+                    merge_prompt += f"--- 第 {i+1} 部分 ---\n{s}\n\n"
+
+                llm_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": merge_prompt}
+                ]
+                try:
+                    t0 = time.time()
+                    final_answer = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+                    elapsed = time.time() - t0
+                    yield sse({"step": "merge_done", "msg": f"✅ 合并完成（{elapsed:.0f}秒）"})
+                except Exception as e:
+                    final_answer = "\n\n---\n\n".join(chunk_summaries)
+                    yield sse({"step": "merge_error", "msg": f"⚠️ 合并失败，使用分块结果拼接"})
+            else:
+                final_answer = chunk_summaries[0] if chunk_summaries else "无内容"
+
+            sources = [{"group": request.group_name, "message_count": len(msgs), "time_range": f"{since} ~ {datetime.now().strftime('%Y-%m-%d')}"}]
+            yield sse({"step": "done", "msg": "🎉 分析完成！", "answer": final_answer, "message_count": len(msgs), "sources": sources})
+
+        except Exception as e:
+            logger.error(f"群聊总结流式失败: {e}")
+            yield sse({"step": "error", "msg": f"❌ 分析失败: {str(e)}"})
+
+    return StreamingResponse(generate(), media_type="text/event-stream")
+
+
 # ==================== 人物画像 ====================
 
 @router.post("/person")
@@ -625,6 +776,10 @@ async def person_profile(request: KBPersonRequest):
                 group_stats[g] = 0
             group_stats[g] += 1
 
+        sorted_groups = sorted(group_stats.items(), key=lambda x: -x[1])
+        groups_text = "\n".join([f"- {g}: {c}条消息" for g, c in sorted_groups])
+        stats_header = f"【跨群发言活跃度统计（100% 真实数据）】\n此人在各群的发言次数如下：\n{groups_text}\n\n请在分析此人的画像时，着重对比此人在不同社群中讨论话题的侧重点、专业度以及所扮演角色（如：是课程推广者、技术答疑专家，还是普通闲聊者）的差异。\n\n"
+
         logger.info(f"人物画像: {request.person_name}, {len(all_msgs)} 条消息, 群: {list(group_stats.keys())}")
 
         # 分块总结
@@ -632,9 +787,9 @@ async def person_profile(request: KBPersonRequest):
         system_prompt = "你是一个群聊分析助手。请根据某人在多个微信群中的发言记录，生成人物画像分析。"
 
         if request.prompt:
-            user_prompt_base = request.prompt
+            user_prompt_base = stats_header + request.prompt
         else:
-            user_prompt_base = f"请根据 '{request.person_name}' 的发言记录，分析此人：\n1. 主要活跃在哪些群\n2. 擅长的话题和专业领域\n3. 发言风格和性格特点\n4. 社交关系（与谁互动多）\n5. 关注的重点问题\n\n发言记录如下："
+            user_prompt_base = stats_header + f"请根据 '{request.person_name}' 的发言记录，分析此人：\n1. 主要活跃在哪些群\n2. 擅长的话题和专业领域\n3. 发言风格和性格特点\n4. 社交关系（与谁互动多）\n5. 关注的重点问题\n\n发言记录如下："
 
         message_chunks = _chunk_messages_for_llm(all_msgs, max_chars=6000)
         chunk_summaries = []
@@ -683,3 +838,142 @@ async def person_profile(request: KBPersonRequest):
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"人物画像失败: {str(e)}")
+
+
+@router.post("/person_stream")
+async def person_profile_stream(request: KBPersonRequest):
+    """人物画像（SSE 流式进度版）"""
+    from fastapi.responses import StreamingResponse
+    import json, time
+
+    def generate():
+        def sse(data):
+            return f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+        try:
+            if not is_initialized():
+                yield sse({"step": "error", "msg": "知识库未初始化"})
+                return
+
+            vectorstore = get_vectorstore()
+            since = (datetime.now() - timedelta(days=request.days)).strftime("%Y-%m-%d")
+            yield sse({"step": "start", "msg": f"🔍 正在检索 '{request.person_name}' 的发言..."})
+
+            if request.groups:
+                all_msgs = []
+                for g in request.groups:
+                    msgs = vectorstore.query_messages(
+                        filename=g, sender=request.person_name,
+                        since=since, limit=2000
+                    )
+                    all_msgs.extend(msgs)
+            else:
+                all_msgs = vectorstore.query_messages(
+                    sender=request.person_name, since=since, limit=2000
+                )
+
+            if not all_msgs:
+                yield sse({"step": "error", "msg": f"未找到 '{request.person_name}' 的发言。"})
+                return
+
+            group_stats = {}
+            for m in all_msgs:
+                g = m['filename'].replace('_raw.standard.md', '').replace('_wechat-cli-20260109', '')
+                if g not in group_stats:
+                    group_stats[g] = 0
+                group_stats[g] += 1
+
+            groups_info = ', '.join([f"{g}({c}条)" for g, c in group_stats.items()])
+            yield sse({"step": "retrieved", "msg": f"✅ 检索到 {len(all_msgs)} 条消息，来自 {len(group_stats)} 个群: {groups_info}", "count": len(all_msgs)})
+
+            sorted_groups = sorted(group_stats.items(), key=lambda x: -x[1])
+            groups_text = "\n".join([f"- {g}: {c}条消息" for g, c in sorted_groups])
+            stats_header = f"【跨群发言活跃度统计（100% 真实数据）】\n此人在各群的发言次数如下：\n{groups_text}\n\n请在分析此人的画像时，着重对比此人在不同社群中讨论话题的侧重点、专业度以及所扮演角色（如：是课程推广者、技术答疑专家，还是普通闲聊者）的差异。\n\n"
+            yield sse({"step": "stats", "msg": f"📊 跨群发言活跃度统计（100% 真实数据）：\n{groups_text}"})
+
+            rag_chain = get_rag_chain()
+            if not rag_chain or not rag_chain.summarizer:
+                yield sse({"step": "error", "msg": "未检测到可用的总结模型，请先在控制台切换/加载模型"})
+                return
+
+            system_prompt = "你是一个群聊分析助手。请根据某人在多个微信群中的发言记录，生成人物画像分析。"
+
+            if request.prompt:
+                user_prompt_base = stats_header + request.prompt
+            else:
+                user_prompt_base = stats_header + f"请根据 '{request.person_name}' 的发言记录，分析此人：\n1. 主要活跃在哪些群\n2. 擅长的话题和专业领域\n3. 发言风格和性格特点\n4. 社交关系（与谁互动多）\n5. 关注的重点问题\n\n发言记录如下："
+
+            message_chunks = _chunk_messages_for_llm(all_msgs, max_chars=6000)
+            total_chunks = len(message_chunks)
+
+            from concurrent.futures import ThreadPoolExecutor, as_completed
+            MAX_WORKERS = 2
+
+            def process_chunk(idx_chunk):
+                idx, chunk = idx_chunk
+                t0 = time.time()
+                chat_text = _format_messages_text(chunk)
+                part_info = f"\n\n（第 {idx+1}/{total_chunks} 部分，共 {len(all_msgs)} 条消息）" if total_chunks > 1 else ""
+                llm_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": f"{user_prompt_base}{part_info}\n\n{chat_text}"}
+                ]
+                try:
+                    summary = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+                    elapsed = time.time() - t0
+                    return (idx, summary, elapsed, None)
+                except Exception as e:
+                    elapsed = time.time() - t0
+                    return (idx, f"（第 {idx+1} 部分总结失败: {str(e)}）", elapsed, str(e))
+
+            if total_chunks == 1:
+                yield sse({"step": "chunking", "msg": "✂️ 1 个分析块，直接处理...", "total": 1})
+            else:
+                yield sse({"step": "chunking", "msg": f"✂️ {total_chunks} 个分析块，{MAX_WORKERS} 路并行推理", "total": total_chunks, "parallel": MAX_WORKERS})
+
+            chunk_results = {}
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                futures = {executor.submit(process_chunk, (i, chunk)): i for i, chunk in enumerate(message_chunks)}
+                for i in range(total_chunks):
+                    yield sse({"step": "llm", "msg": f"🤖 第 {i+1}/{total_chunks} 块已提交队列", "current": i+1, "total": total_chunks})
+
+                completed_count = 0
+                for future in as_completed(futures):
+                    idx, summary, elapsed, error = future.result()
+                    chunk_results[idx] = summary
+                    completed_count += 1
+                    if error:
+                        yield sse({"step": "llm_error", "msg": f"⚠️ 第 {idx+1} 块失败（{elapsed:.0f}秒）: {error}", "current": idx+1, "elapsed": round(elapsed, 1)})
+                    else:
+                        yield sse({"step": "llm_done", "msg": f"✅ 第 {idx+1}/{total_chunks} 块完成（{elapsed:.0f}秒）", "current": idx+1, "total": total_chunks, "elapsed": round(elapsed, 1), "done": completed_count})
+
+            chunk_summaries = [chunk_results[i] for i in range(total_chunks)]
+
+            if len(chunk_summaries) > 1:
+                yield sse({"step": "merge", "msg": f"🔗 正在合并 {len(chunk_summaries)} 块分析..."})
+                merge_prompt = f"请将以下关于 '{request.person_name}' 的 {len(chunk_summaries)} 段分析合并为一份完整的人物画像：\n\n"
+                for i, s in enumerate(chunk_summaries):
+                    merge_prompt += f"--- 第 {i+1} 部分 ---\n{s}\n\n"
+                llm_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": merge_prompt}
+                ]
+                try:
+                    t0 = time.time()
+                    final_answer = rag_chain.summarizer.chat(llm_messages, max_new_tokens=2048)
+                    elapsed = time.time() - t0
+                    yield sse({"step": "merge_done", "msg": f"✅ 合并完成（{elapsed:.0f}秒）"})
+                except Exception as e:
+                    final_answer = "\n\n---\n\n".join(chunk_summaries)
+                    yield sse({"step": "merge_error", "msg": "⚠️ 合并失败，使用分块结果拼接"})
+            else:
+                final_answer = chunk_summaries[0] if chunk_summaries else "无内容"
+
+            sources = [{"group": g, "count": c} for g, c in group_stats.items()]
+            yield sse({"step": "done", "msg": "🎉 画像生成完成！", "answer": final_answer, "message_count": len(all_msgs), "active_groups": list(group_stats.keys()), "group_stats": group_stats, "sources": sources})
+
+        except Exception as e:
+            logger.error(f"人物画像流式失败: {e}")
+            yield sse({"step": "error", "msg": f"❌ 分析失败: {str(e)}"})
+
+    return StreamingResponse(generate(), media_type="text/event-stream")

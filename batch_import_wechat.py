@@ -135,6 +135,18 @@ if __name__ == "__main__":
         
         # 3. 导入知识库（标记来源便于合并）
         result = import_to_kb(std_path, name, export_source="wechat-cli-20260109")
+        
+        # 4. 同步导入 SQLite 结构化数据库
+        try:
+            from wechat_db import wechat_db
+            db_ok = wechat_db.import_markdown_file(raw_path)
+            if db_ok:
+                print(f"  📊 导入 SQLite 数据库成功")
+            else:
+                print(f"  ❌ 导入 SQLite 数据库失败")
+        except Exception as db_err:
+            print(f"  ❌ 导入 SQLite 数据库发生异常: {db_err}")
+            
         if result:
             results.append({"group": name, **result})
     
