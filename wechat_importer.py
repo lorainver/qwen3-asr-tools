@@ -156,7 +156,7 @@ def import_session(chat_name, start_time="2026-01-09"):
     print(f"📊 [4/4] 正在导入 SQLite 数据库 (D:/Work/Useful_Tools/chat_record_analyzer/data/chat_records.db)...")
     try:
         # import_markdown_file 解析 raw 格式 md，并在内部写入 sessions, users, messages 表并触发 FTS5
-        db_ok = wechat_db.import_markdown_file(raw_path)
+        db_ok = wechat_db.import_markdown_file(raw_path, wxid_override=username)
         if db_ok:
             print(f"   ✅ SQLite 数据库导入成功！会话已入库，全文检索索引已更新。")
             return True

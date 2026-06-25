@@ -1547,6 +1547,15 @@
                                 <h4>⚙️ 查询与分析控制器</h4>
                                 <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
                                     <label style="font-weight: 500;">选择微信会话 (Session)</label>
+                                    <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 6px; box-sizing: border-box;">
+                                        <input type="text" id="wechat-session-search" class="analysis-input" placeholder="🔍 检索会话..." style="flex: 1; min-width: 0; box-sizing: border-box;">
+                                        <select id="wechat-session-type-filter" class="analysis-select" style="width: 90px; box-sizing: border-box;">
+                                            <option value="all">全部</option>
+                                            <option value="群聊">群聊</option>
+                                            <option value="私聊">私聊</option>
+                                            <option value="公众号">公众号</option>
+                                        </select>
+                                    </div>
                                     <select id="wechat-session-select" class="analysis-select" style="width: 100%;">
                                         <option value="">-- 正在读取 --</option>
                                     </select>
@@ -2921,6 +2930,8 @@
             }
         }
 
+        let allWechatSessions = [];
+
         // 获取微信会话列表
         async function loadWechatSessions() {
             try {
@@ -2928,21 +2939,65 @@
                 const result = await res.json();
                 if (!result.success) return;
 
-                const select = document.getElementById('wechat-session-select');
-                select.innerHTML = '<option value="">-- 请选择会话 --</option>';
-                
-                result.data.forEach(session => {
-                    const opt = document.createElement('option');
-                    opt.value = session.id;
-                    const typeLabel = session.type ? `[${session.type}] ` : '';
-                    opt.textContent = `${typeLabel}${session.display_name} (${session.message_count}条)`;
-                    select.appendChild(opt);
-                });
+                allWechatSessions = result.data || [];
+                renderWechatSessionOptions();
             } catch(err) {
                 console.error('加载微信会话列表失败:', err);
                 const select = document.getElementById('wechat-session-select');
                 select.innerHTML = '<option value="">❌ 加载失败</option>';
             }
+        }
+
+        function renderWechatSessionOptions() {
+            const select = document.getElementById('wechat-session-select');
+            const searchQuery = (document.getElementById('wechat-session-search')?.value || '').toLowerCase().trim();
+            const typeFilter = document.getElementById('wechat-session-type-filter')?.value || 'all';
+
+            // 过滤会话
+            const filtered = allWechatSessions.filter(session => {
+                const matchesSearch = !searchQuery || 
+                    (session.display_name && session.display_name.toLowerCase().includes(searchQuery)) ||
+                    (session.wxid && session.wxid.toLowerCase().includes(searchQuery));
+                
+                const matchesType = typeFilter === 'all' || session.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+
+            // 按类型对会话进行分组
+            const groups = {
+                '群聊': [],
+                '私聊': [],
+                '公众号': [],
+                '未分类': []
+            };
+
+            filtered.forEach(session => {
+                const type = session.type || '未分类';
+                if (groups[type]) {
+                    groups[type].push(session);
+                } else {
+                    groups['未分类'].push(session);
+                }
+            });
+
+            select.innerHTML = '<option value="">-- 请选择会话 --</option>';
+
+            // 渲染分组后的会话
+            const groupOrder = ['群聊', '私聊', '公众号', '未分类'];
+            groupOrder.forEach(groupName => {
+                const list = groups[groupName];
+                if (list && list.length > 0) {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = `${groupName} (${list.length})`;
+                    list.forEach(session => {
+                        const opt = document.createElement('option');
+                        opt.value = session.id;
+                        opt.textContent = `${session.display_name} (${session.message_count}条)`;
+                        optgroup.appendChild(opt);
+                    });
+                    select.appendChild(optgroup);
+                }
+            });
         }
 
         // 加载指定会话的消息
@@ -3152,6 +3207,16 @@
             loadAnalysisGroups();
             // 加载微信会话列表
             loadWechatSessions();
+            
+            // 绑定微信会话过滤与检索事件
+            const searchSessionInput = document.getElementById('wechat-session-search');
+            if (searchSessionInput) {
+                searchSessionInput.addEventListener('input', renderWechatSessionOptions);
+            }
+            const filterSessionType = document.getElementById('wechat-session-type-filter');
+            if (filterSessionType) {
+                filterSessionType.addEventListener('change', renderWechatSessionOptions);
+            }
             
             // 绑定微信会话下拉框切换事件
             const selectWechatSession = document.getElementById('wechat-session-select');

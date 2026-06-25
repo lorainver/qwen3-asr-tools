@@ -583,7 +583,7 @@ class WechatDatabaseManager:
             'position': position_result['position']
         }
 
-    def import_markdown_file(self, md_path: str) -> bool:
+    def import_markdown_file(self, md_path: str, wxid_override: Optional[str] = None) -> bool:
         import re
         from pathlib import Path
         path = Path(md_path)
@@ -597,7 +597,7 @@ class WechatDatabaseManager:
         display_name = path.stem.replace('_raw', '').replace('.standard', '')
         session_type = "群聊"
         message_count = 0
-        wxid = path.stem
+        wxid = wxid_override if wxid_override else path.stem
         
         for line in lines[:20]:
             line_str = line.strip()
@@ -610,6 +610,10 @@ class WechatDatabaseManager:
                     message_count = int(line_str.replace("**消息数量:**", "").strip())
                 except:
                     pass
+
+        # If it's a WeChat Official Account, force type to "公众号"
+        if wxid.startswith('gh_') or (session_type == "私聊" and wxid.startswith('gh_')):
+            session_type = "公众号"
 
         session_data = {
             "wxid": wxid,
