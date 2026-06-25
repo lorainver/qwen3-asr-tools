@@ -3091,7 +3091,19 @@
                 status.className = 'analysis-status done';
                 status.textContent = '✅ 分析完成';
                 
-                const reportContent = data.analysis || data.data || '无分析数据返回';
+                let reportContent = '无分析数据返回';
+                if (data.analysis) {
+                    reportContent = data.analysis;
+                } else if (data.data) {
+                    if (typeof data.data === 'object') {
+                        reportContent = data.data.ai_analysis || '无分析数据返回';
+                        if (data.data.mermaid_chart) {
+                            reportContent = "### 🕸️ 关系网络图谱\n\n```mermaid\n" + data.data.mermaid_chart + "\n```\n\n" + reportContent;
+                        }
+                    } else {
+                        reportContent = data.data;
+                    }
+                }
                 resultDiv.innerHTML = kbRenderMarkdown(reportContent);
 
                 // 异步渲染 Mermaid 图表
