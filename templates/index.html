@@ -1570,6 +1570,18 @@
                                 </div>
                                 <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px; width: 100%;">
                                     <label style="font-weight: 500;">日期筛选 (可选)</label>
+                                    <!-- 快捷日期选择按钮 -->
+                                    <div class="date-quick-buttons" style="display: flex; flex-wrap: wrap; gap: 6px; width: 100%; margin-bottom: 4px;">
+                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('today')" title="今天的消息">今天</button>
+                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('yesterday')" title="昨天的消息">昨天</button>
+                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisWeek')" title="本周的消息">本周</button>
+                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last7days')" title="最近7天的消息">近7天</button>
+                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last30days')" title="最近30天的消息">近30天</button>
+                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisMonth')" title="本月的消息">本月</button>
+                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('lastMonth')" title="上月的消息">上月</button>
+                                        <button type="button" class="date-quick-btn danger" onclick="setQuickDateRange('clear')" title="清除日期筛选">清除</button>
+                                    </div>
+                                    <!-- 自定义日期范围选择 -->
                                     <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
                                         <input type="date" id="wechat-start-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="开始日期">
                                         <span style="align-self: center; color: var(--text-muted, #64748b);">至</span>
@@ -1651,6 +1663,45 @@
         .wechat-jump-btn:hover {
             background: rgba(56, 189, 248, 0.2);
             color: #fff;
+        }
+
+        /* 日期快捷按钮样式 */
+        .date-quick-buttons {
+            margin-bottom: 6px;
+        }
+        .date-quick-btn {
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            background: rgba(56, 189, 248, 0.05);
+            color: #38bdf8;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .date-quick-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-1px);
+        }
+        .date-quick-btn:active {
+            transform: translateY(0);
+        }
+        .date-quick-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            font-weight: 600;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+        }
+        .date-quick-btn.danger {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.08);
+            color: #ef4444;
+        }
+        .date-quick-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.5);
         }
 
         /* 执行控件样式 */
@@ -2904,6 +2955,97 @@
             return `linear-gradient(135deg, hsl(${h}, 70%, 45%), hsl(${(h + 40) % 360}, 75%, 60%))`;
         }
 
+        // ========== 日期快捷选择功能 ==========
+        
+        /**
+         * 设置快捷日期范围
+         * @param {string} rangeType - 日期范围类型
+         */
+        function setQuickDateRange(rangeType) {
+            const startDateInput = document.getElementById('wechat-start-date');
+            const endDateInput = document.getElementById('wechat-end-date');
+            
+            if (!startDateInput || !endDateInput) return;
+            
+            // 清除所有按钮的 active 状态
+            document.querySelectorAll('.date-quick-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (rangeType === 'clear') {
+                // 清除日期选择
+                startDateInput.value = '';
+                endDateInput.value = '';
+                return;
+            }
+            
+            // 设置当前按钮为 active
+            const currentBtn = document.querySelector(`.date-quick-btn[onclick*="'${rangeType}'"]`);
+            if (currentBtn) {
+                currentBtn.classList.add('active');
+            }
+            
+            const now = new Date();
+            let startDate, endDate;
+            
+            switch (rangeType) {
+                case 'today':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'yesterday':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                    break;
+                    
+                case 'thisWeek':
+                    // 本周一到今天
+                    const dayOfWeek = now.getDay() || 7; // 周日为 7
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'last7days':
+                    // 最近7天（包括今天）
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'last30days':
+                    // 最近30天（包括今天）
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'thisMonth':
+                    // 本月1日到今天
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'lastMonth':
+                    // 上月1日到上月最后一天
+                    startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), 0); // 0 表示上月最后一天
+                    break;
+                    
+                default:
+                    return;
+            }
+            
+            // 格式化为 YYYY-MM-DD
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            startDateInput.value = formatDate(startDate);
+            endDateInput.value = formatDate(endDate);
+        }
+
         // 微信状态管理器
         let wechatState = {
             sessionId: null,
@@ -3434,6 +3576,24 @@
             if (selectWechatSession) {
                 selectWechatSession.addEventListener('change', function() {
                     loadWechatSessionMessages(this.value);
+                });
+            }
+            
+            // 绑定日期输入框变化事件（清除快捷按钮 active 状态）
+            const wechatStartDate = document.getElementById('wechat-start-date');
+            const wechatEndDate = document.getElementById('wechat-end-date');
+            if (wechatStartDate) {
+                wechatStartDate.addEventListener('change', function() {
+                    document.querySelectorAll('.date-quick-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                });
+            }
+            if (wechatEndDate) {
+                wechatEndDate.addEventListener('change', function() {
+                    document.querySelectorAll('.date-quick-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
                 });
             }
 
