@@ -92,7 +92,7 @@
         }
         .prompt-preview-textarea {
             width: 100%;
-            height: 80px; /* 固定高度，完美控制页面长度 */
+            height: 80px; /* 固定高度,完美控制页面长度 */
             min-height: 80px;
             max-height: 120px;
             background: rgba(0, 0, 0, 0.2);
@@ -102,7 +102,7 @@
             padding: var(--space-sm) var(--space-md);
             font-family: inherit;
             font-size: 0.82rem;
-            resize: vertical; /* 允许高度拉伸，但限制 max-height */
+            resize: vertical; /* 允许高度拉伸,但限制 max-height */
             line-height: 1.5;
             overflow-y: auto; /* 自动增加上下滚动条 */
             margin-bottom: 0;
@@ -496,7 +496,7 @@
             border-color: #0ea5e9;
             transform: scale(1.02);
         }
-        
+
         /* ── 新建/编辑表单 ── */
         .prompt-form-container {
             background: rgba(15, 23, 42, 0.4);
@@ -555,7 +555,7 @@
             justify-content: flex-end;
             gap: 8px;
         }
-        
+
         .prompt-card-menu-btn {
             background: none;
             border: none;
@@ -748,6 +748,40 @@
             max-height: 380px;
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
+        
+        /* 虚拟滚动样式 */
+        .wechat-virtual-container {
+            position: relative;
+            height: 100%;
+            overflow: auto;
+            will-change: scroll-position;
+        }
+        .wechat-virtual-spacer {
+            position: relative;
+            will-change: contents;
+        }
+        .wechat-virtual-viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        .wechat-virtual-tip {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #fff;
+            z-index: 100;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         /* WeChat bubble styling */
         .wechat-time-tag {
             align-self: center;
@@ -832,8 +866,8 @@
             border-color: rgba(14, 165, 233, 0.15);
             box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
         }
-        .light-mode .wechat-panel-left, 
-        .light-mode .wechat-feed-card, 
+        .light-mode .wechat-panel-left,
+        .light-mode .wechat-feed-card,
         .light-mode .wechat-ai-card {
             background: rgba(255, 255, 255, 0.9);
             border-color: rgba(148, 163, 184, 0.15);
@@ -865,7 +899,7 @@
 
 <body>
     <div class="app-container">
-        <!-- 侧边栏：GPU 监控 -->
+        <!-- 侧边栏:GPU 监控 -->
         <aside class="sidebar glass-panel" id="sidebar">
             <div class="logo">
                 <div class="logo-icon"></div>
@@ -956,7 +990,7 @@
                 <button class="tab-btn" data-tab="analysis">📊 群聊分析</button>
             </div>
 
-            <!-- 页面1：工作站 -->
+            <!-- 页面1:工作站 -->
             <div id="page-workstation" class="tab-page active">
                 <div class="cards-grid">
                     <!-- 总结卡片 -->
@@ -966,7 +1000,7 @@
                             <h3>AI 智库摘要</h3>
                         </div>
                         <div class="card-body">
-                            <p class="subtitle">粘贴长文本，自动提炼“一页纸精华”。</p>
+                            <p class="subtitle">粘贴长文本,自动提炼"一页纸精华"。</p>
                             <textarea id="meeting-text" placeholder="在此粘贴长文本..."></textarea>
                             <div class="summary-controls">
                                 <select id="prompt-type" class="form-select">
@@ -982,11 +1016,11 @@
                                     <option value="fr">→ Français</option>
                                     <option value="de">→ Deutsch</option>
                                 </select>
-                                <label class="switch-container" title="开启并行分块加速，多线程并发总结，速度提升数倍（推荐搭配远程/Ollama并发模型）">
+                                <label class="switch-container" title="开启并行分块加速,多线程并发总结,速度提升数倍(推荐搭配远程/Ollama并发模型)">
                                     <input type="checkbox" id="sum-parallel" checked>
                                     <span class="switch-label">⚡ 并发加速</span>
                                 </label>
-                                <div class="chunk-size-option" style="display: flex; align-items: center; gap: 8px;" title="自定义文本分块字符长度，超长文本将按此长度拆分为多段进行处理。默认从配置文件读取。">
+                                <div class="chunk-size-option" style="display: flex; align-items: center; gap: 8px;" title="自定义文本分块字符长度,超长文本将按此长度拆分为多段进行处理。默认从配置文件读取。">
                                     <span style="font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap;">分块大小:</span>
                                     <input type="number" id="sum-chunk-size" class="chunk-size-input" value="{{ config.summarization.get('chunk_size', 10000) }}" placeholder="10000">
                                 </div>
@@ -994,7 +1028,7 @@
                             </div>
                             <!-- 💡 提示词模板预览框 -->
                             <div id="prompt-preview-container" class="prompt-preview-container">
-                                <div class="prompt-preview-header">📋 当前选择提示词模板内容（可直接编辑自定义）:</div>
+                                <div class="prompt-preview-header">📋 当前选择提示词模板内容(可直接编辑自定义):</div>
                                 <textarea id="prompt-preview" class="prompt-preview-textarea" placeholder="当前提示词模板内容将在此显示..."></textarea>
                             </div>
                              <!-- 🎙️ 声音设计合成专属高颜值水晶播放控制面板 -->
@@ -1037,7 +1071,7 @@
                             <h3>视频提取文本 (Qwen3-ASR)</h3>
                         </div>
                         <div class="card-body">
-                            <p class="subtitle">支持拖拽视频上传，或直接输入本地路径（免上传）。</p>
+                            <p class="subtitle">支持拖拽视频上传,或直接输入本地路径(免上传)。</p>
                             <div id="drop-zone" class="drop-zone">
                                 <div class="upload-icon">📁</div>
                                 <p>点击选择或将视频文件拖拽到这里</p>
@@ -1064,7 +1098,7 @@
                             </div>
 
                             <div class="path-input-mode">
-                                <div>直接输入视频绝对路径（原地读取，不占用额外空间）：
+                                <div>直接输入视频绝对路径(原地读取,不占用额外空间):
                                 </div>
                                 <div style="display: flex; gap: 10px;">
                                     <input type="text" id="local-video-path" placeholder="例如 F:\录制\视频.mp4">
@@ -1124,7 +1158,7 @@
                                 <h4>🎤 实时同声传译 (混合引擎)</h4>
                                 <div class="run-control-row">
                                     <div class="code-block" style="flex: 1; border: 1px solid rgba(56, 189, 248, 0.35); background: rgba(56, 189, 248, 0.04);"
-                                        data-tooltip="🏆 殿堂级最优推荐：ASR 1.7B 高精版 + 本地 Qwen2.5-1.5B GPU 4-bit 离线翻译。响应小于 0.2 秒，极致流畅，零时延跟手感，完全无幻觉废话！">
+                                        data-tooltip="🏆 殿堂级最优推荐:ASR 1.7B 高精版 + 本地 Qwen2.5-1.5B GPU 4-bit 离线翻译。响应小于 0.2 秒,极致流畅,零时延跟手感,完全无幻觉废话!">
                                         <span class="label" style="color: #38bdf8; font-weight: 700;">🏆 殿堂级最优推荐 (本地 GPU 4-bit 闪电加速版):</span>
                                         <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 2.5 --model_size 1.7B --model_type 1.5b</code>
                                     </div>
@@ -1134,13 +1168,13 @@
                                     </div>
                                 </div>
                                 <div class="code-block"
-                                    data-tooltip="推荐配置：Ollama 3B 翻译 + 0.6B ASR。VRAM 极省（仅占 500MB），智商在线，延迟极低。">
+                                    data-tooltip="推荐配置:Ollama 3B 翻译 + 0.6B ASR。VRAM 极省(仅占 500MB),智商在线,延迟极低。">
                                     <span class="label">🚀 黄金组合 (Ollama 加速版):</span>
                                     <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime_trans.py --device_id 30 --chunk 1.5 --model_size 0.6B --model_type ollama --ollama_model qwen2.5:3b</code>
                                 </div>
                                 <div class="run-control-row">
                                     <div class="code-block" style="flex: 1;"
-                                        data-tooltip="专业级推荐：1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景，精度最高。">
+                                        data-tooltip="专业级推荐:1.7B ASR 听力敏锐 + Ollama 3B 智能翻译。适合复杂新闻、政论场景,精度最高。">
                                         <span class="label">💎 专业全能版 (1.7B + Ollama):</span>
                                         <code>... --model_size 1.7B --model_type ollama --ollama_model qwen2.5:3b</code>
                                     </div>
@@ -1149,13 +1183,13 @@
                                         <button class="btn-run" onclick="runScript('trans')">⚡ 执行</button>
                                     </div>
                                 </div>
-                                <div class="code-block" data-tooltip="极致配置：1.7B ASR + 本地 3B。全本地离线运行，无需依赖外部 API。">
+                                <div class="code-block" data-tooltip="极致配置:1.7B ASR + 本地 3B。全本地离线运行,无需依赖外部 API。">
                                     <span class="label">🛡️ 全本地离线版 (1.7B + 3B):</span>
                                     <code>... --model_size 1.7B --model_type 3b</code>
                                 </div>
                                 <div class="cli-params-box">
                                     <strong>核心参数:</strong>
-                                    <span><code>--model_size [0.6B|1.7B]</code>: 识别引擎（推荐 1.7B 精度更高）</span>
+                                    <span><code>--model_size [0.6B|1.7B]</code>: 识别引擎(推荐 1.7B 精度更高)</span>
                                     <span><code>--model_type [1.5b|3b|ollama]</code>: 翻译引擎选择</span>
                                 </div>
                             </div>
@@ -1164,7 +1198,7 @@
                             <div class="cli-section">
                                 <h4>📝 实时语音转录 (仅字幕 / 无翻译)</h4>
                                 <div class="run-control-row">
-                                    <div class="code-block" style="flex: 1;" data-tooltip="纯净转录：仅显示原文，不进行翻译，适合中文讲座或速记。">
+                                    <div class="code-block" style="flex: 1;" data-tooltip="纯净转录:仅显示原文,不进行翻译,适合中文讲座或速记。">
                                         <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --device_id 30 --chunk 2.5 --model_size 1.7B</code>
                                     </div>
                                     <div class="run-actions">
@@ -1175,15 +1209,15 @@
                                 </div>
                                 <div class="cli-params-box">
                                     <strong>Flag 详细说明:</strong>
-                                    <span><code>--device_id [int]</code>: 声卡 ID（使用上方按钮查询）</span>
-                                    <span><code>--chunk [float]</code>: 语音切片长度，默认/推荐 2.5 秒（保证长句语义连贯，吐字精度更高）。</span>
+                                    <span><code>--device_id [int]</code>: 声卡 ID(使用上方按钮查询)</span>
+                                    <span><code>--chunk [float]</code>: 语音切片长度,默认/推荐 2.5 秒(保证长句语义连贯,吐字精度更高)。</span>
                                 </div>
                             </div>
 
                             <!-- 2. 离线字幕提取 -->
                             <div class="cli-section mt-15">
                                 <h4>🎬 离线字幕提取 (SRT)</h4>
-                                <div class="code-block" data-tooltip="Qwen3-ASR 高精度智能 VAD 极速版。转录 1 小时视频仅需几分钟，完美保留长句语义。">
+                                <div class="code-block" data-tooltip="Qwen3-ASR 高精度智能 VAD 极速版。转录 1 小时视频仅需几分钟,完美保留长句语义。">
                                     <span class="label">🔥 Qwen3 GPU 极速转录:</span>
                                     <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_full_srt.py "视频路径" --language Japanese --model_size 1.7B</code>
                                 </div>
@@ -1193,17 +1227,17 @@
                                 </div>
                                 <div class="cli-params-box">
                                     <strong>核心参数说明:</strong>
-                                    <span><code>--language [lang]</code>: 锁定识别语言（如 Japanese, Chinese, English），避免多语种混淆</span>
-                                    <span><code>--model_size [size]</code>: ASR大模型尺寸，可选 1.7B（高精度版，推荐）或 0.6B（轻量快速版）</span>
-                                    <span><code>--chunk [10]</code>: 智能 VAD 最大分块长度(秒)，默认 10 秒</span>
-                                    <span><code>--batch [8]</code>: 推理并发Batch大小，默认 8（显存充裕时可调大）</span>
+                                    <span><code>--language [lang]</code>: 锁定识别语言(如 Japanese, Chinese, English),避免多语种混淆</span>
+                                    <span><code>--model_size [size]</code>: ASR大模型尺寸,可选 1.7B(高精度版,推荐)或 0.6B(轻量快速版)</span>
+                                    <span><code>--chunk [10]</code>: 智能 VAD 最大分块长度(秒),默认 10 秒</span>
+                                    <span><code>--batch [8]</code>: 推理并发Batch大小,默认 8(显存充裕时可调大)</span>
                                 </div>
                             </div>
 
                             <!-- 3. 基础工具 -->
                             <div class="cli-section mt-15">
                                 <h4>🛠️ 基础工具</h4>
-                                <div class="code-block" data-tooltip="列出系统所有音频输入设备。在运行实时脚本前，必须先确认 device_id。">
+                                <div class="code-block" data-tooltip="列出系统所有音频输入设备。在运行实时脚本前,必须先确认 device_id。">
                                     <span class="label">查询音频设备 ID:</span>
                                     <code>D:\qwen3-asr\venv\Scripts\python.exe D:\qwen3-asr\qwen3_realtime.py --list</code>
                                 </div>
@@ -1213,7 +1247,7 @@
                 </div><!-- end cards-grid -->
             </div><!-- end page-workstation -->
 
-            <!-- 页面2：AI 助理（全屏聊天） -->
+            <!-- 页面2:AI 助理(全屏聊天) -->
             <div id="page-assistant" class="tab-page">
                 <div class="chat-fullscreen glass-panel">
                     <div class="chat-header-bar">
@@ -1265,8 +1299,8 @@
 
                             <!-- 历史管理组 -->
                             <div class="header-action-group">
-                                <button id="btn-copy-last-answer" class="btn-small" title="复制最新回答的正文内容（不含思考过程）">📋 复制正文</button>
-                                <button id="btn-save-chat" class="btn-small" title="覆盖保存当前对话（保存当前为草稿）">💾 保存当前</button>
+                                <button id="btn-copy-last-answer" class="btn-small" title="复制最新回答的正文内容(不含思考过程)">📋 复制正文</button>
+                                <button id="btn-save-chat" class="btn-small" title="覆盖保存当前对话(保存当前为草稿)">💾 保存当前</button>
                                 <button id="btn-toggle-history" class="btn-small btn-premium" title="查看历史对话记录">📜 历史对话</button>
                                 <button id="btn-new-chat" class="btn-small">🧹 新建对话</button>
                             </div>
@@ -1275,7 +1309,7 @@
                     <div id="chat-history" class="chat-history-full">
                         <div class="msg-wrapper assistant">
                             <div class="msg-content assistant"><span class="markdown-content">
-                                    <p>你好！我是你的本地 AI 助理。你可以问我任何问题，或者让我帮你分析处理过的文本。</p>
+                                    <p>你好!我是你的本地 AI 助理。你可以问我任何问题,或者让我帮你分析处理过的文本。</p>
                                 </span></div>
                             <div class="msg-toolbar"><button class="btn-icon btn-copy-inline">📋 复制</button><button
                                     class="btn-icon">🔊 朗读</button></div>
@@ -1305,12 +1339,12 @@
                             <button id="btn-remove-image" class="btn-remove-image" title="移除图片">×</button>
                         </div>
                         <textarea id="chat-input-expanded" class="chat-input-expanded hidden"
-                            placeholder="多行输入... Shift+Enter 换行，Enter 发送" rows="4"></textarea>
+                            placeholder="多行输入... Shift+Enter 换行,Enter 发送" rows="4"></textarea>
                     </div>
                 </div>
             </div><!-- end page-assistant -->
 
-            <!-- 页面3：文档浏览 -->
+            <!-- 页面3:文档浏览 -->
             <div id="page-docs" class="tab-page">
                 <div class="docs-viewer glass-panel">
                     <div class="docs-sidebar">
@@ -1340,14 +1374,14 @@
                         <div id="docs-empty-state" class="docs-empty-state">
                             <div class="docs-empty-icon">📄</div>
                             <p>选择左侧文档查看</p>
-                            <small>支持 HTML 和 Markdown 文件，MD 自动渲染数学公式</small>
+                            <small>支持 HTML 和 Markdown 文件,MD 自动渲染数学公式</small>
                         </div>
                         <div id="docs-viewer-container" class="docs-viewer-container hidden">
                             <div class="docs-viewer-header">
                                 <h4 id="docs-viewer-title"></h4>
                                 <div class="docs-viewer-actions">
                                     <button id="btn-docs-copy" class="btn-small" title="复制源文件内容">📋 复制</button>
-                                    <!-- 【新增】在新窗口/标签页中手动打开文档的按钮。配合 JS 逻辑，点击左侧列表时仅加载预览，不再自动弹窗，从而提供更舒适的预览体验 -->
+                                    <!-- 【新增】在新窗口/标签页中手动打开文档的按钮。配合 JS 逻辑,点击左侧列表时仅加载预览,不再自动弹窗,从而提供更舒适的预览体验 -->
                                     <button id="btn-docs-view" class="btn-small" title="在新页面打开">🌐 打开</button>
                                     <button id="btn-docs-raw" class="btn-small" title="查看源码/渲染切换">🔤 源码</button>
                                     <button id="btn-docs-maximize" class="btn-small" title="最大化/还原">⛶ 最大化</button>
@@ -1362,7 +1396,7 @@
                 </div>
             </div><!-- end page-docs -->
 
-            <!-- 页面4：知识库 -->
+            <!-- 页面4:知识库 -->
             <div id="page-knowledge" class="tab-page">
                 <div class="kb-container glass-panel">
                     <!-- 顶部状态栏 -->
@@ -1381,7 +1415,7 @@
                     <div class="kb-upload-area">
                         <div class="kb-upload-row">
                             <input type="file" id="kb-file-input" class="kb-file-input" multiple>
-                            <input type="text" id="kb-category-input" class="kb-input kb-input-sm" placeholder="分类（可选）" style="width:120px">
+                            <input type="text" id="kb-category-input" class="kb-input kb-input-sm" placeholder="分类(可选)" style="width:120px">
                             <button class="kb-btn kb-btn-primary" id="kb-btn-upload">📤 上传并索引</button>
                         </div>
                         <div id="kb-upload-progress" class="kb-progress hidden"></div>
@@ -1394,7 +1428,7 @@
                             <span id="kb-doc-count" class="kb-count">0 篇</span>
                         </div>
                         <div id="kb-doc-list" class="kb-doc-list">
-                            <div class="kb-empty">暂无文档，请上传文件</div>
+                            <div class="kb-empty">暂无文档,请上传文件</div>
                         </div>
                     </div>
 
@@ -1417,7 +1451,7 @@
                             <button class="kb-btn-maximize" id="kb-btn-maximize" title="最大化/还原对话框" onclick="toggleKbMaximize()">⬜</button>
                         </div>
                         <div class="kb-chat-box" id="kb-chat-box">
-                            <div class="kb-chat-placeholder">输入问题，AI 将结合知识库内容回答</div>
+                            <div class="kb-chat-placeholder">输入问题,AI 将结合知识库内容回答</div>
                         </div>
                         <div class="kb-chat-input-row">
                             <input type="text" id="kb-chat-input" class="kb-input" placeholder="输入问题..." onkeydown="if(event.key==='Enter') document.getElementById('kb-btn-chat').click()">
@@ -1427,7 +1461,7 @@
                 </div>
             </div>
 
-            <!-- 页面5：群聊分析 -->
+            <!-- 页面5:群聊分析 -->
             <div id="page-analysis" class="tab-page">
                 <div class="analysis-container glass-panel">
                     <!-- 顶部 -->
@@ -1445,7 +1479,7 @@
                     <div class="analysis-section">
                         <div class="analysis-section-header">
                             <h3>📝 群聊总结</h3>
-                            <span class="analysis-section-desc">按群名 + 时间范围拉取消息，LLM 生成结构化总结</span>
+                            <span class="analysis-section-desc">按群名 + 时间范围拉取消息,LLM 生成结构化总结</span>
                         </div>
                         <div class="analysis-controls">
                             <div class="analysis-control-row">
@@ -1470,18 +1504,18 @@
                                 </label>
                             </div>
                             <div class="analysis-control-row" style="align-items: flex-start;">
-                                <label style="margin-top: 8px;">自定义提示词（可选）</label>
+                                <label style="margin-top: 8px;">自定义提示词(可选)</label>
                                 <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; width: 100%;">
-                                    <textarea id="analysis-summarize-prompt" class="analysis-textarea" placeholder="例如：请重点分析群里讨论的竞赛课程信息，列出推荐的和不推荐的" rows="2" style="width: 100%; box-sizing: border-box;"></textarea>
+                                    <textarea id="analysis-summarize-prompt" class="analysis-textarea" placeholder="例如:请重点分析群里讨论的竞赛课程信息,列出推荐的和不推荐的" rows="2" style="width: 100%; box-sizing: border-box;"></textarea>
                                     <div class="analysis-tip-box" style="font-size: 12px; color: var(--text-secondary, #888); width: 100%;">
                                         <details style="cursor: pointer; width: 100%;">
-                                            <summary style="font-weight: 500; color: #38bdf8; outline: none; user-select: none; font-size: 11px;">💡 查看 AI 默认分析指令（系统在此基础上追加自定义提示词）</summary>
-                                            <pre style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px; padding: 8px 12px; margin-top: 6px; font-family: inherit; white-space: pre-wrap; line-height: 1.6; color: #aaa; font-size: 11px; margin-bottom: 0;">请对以下群聊记录进行总结，要求：
-1. 列出讨论的主要话题（按时间顺序）
+                                            <summary style="font-weight: 500; color: #38bdf8; outline: none; user-select: none; font-size: 11px;">💡 查看 AI 默认分析指令(系统在此基础上追加自定义提示词)</summary>
+                                            <pre style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px; padding: 8px 12px; margin-top: 6px; font-family: inherit; white-space: pre-wrap; line-height: 1.6; color: #aaa; font-size: 11px; margin-bottom: 0;">请对以下群聊记录进行总结,要求:
+1. 列出讨论的主要话题(按时间顺序)
 2. 每个话题的关键内容摘要
 3. 重要的决定或结论
-4. 活跃发言人的特点（系统自动计算 100% 真实活跃度排行作为参考）
-5. 焦点辩论与冲突检测（若存在不同观点、争议或热烈讨论，详细提炼出争议主题、双方立场与核心论据；若无明显争论则简要说明）
+4. 活跃发言人的特点(系统自动计算 100% 真实活跃度排行作为参考)
+5. 焦点辩论与冲突检测(若存在不同观点、争议或热烈讨论,详细提炼出争议主题、双方立场与核心论据;若无明显争论则简要说明)
 6. 值得关注的信息</pre>
                                         </details>
                                     </div>
@@ -1501,15 +1535,15 @@
                     <div class="analysis-section">
                         <div class="analysis-section-header">
                             <h3>👤 人物画像</h3>
-                            <span class="analysis-section-desc">跨群搜索某人发言，生成人物画像分析</span>
+                            <span class="analysis-section-desc">跨群搜索某人发言,生成人物画像分析</span>
                         </div>
                         <div class="analysis-controls">
                             <div class="analysis-control-row">
                                 <label>输入昵称</label>
-                                <input type="text" id="analysis-person-name" class="analysis-input" placeholder="输入群友昵称（精确匹配）...">
+                                <input type="text" id="analysis-person-name" class="analysis-input" placeholder="输入群友昵称(精确匹配)...">
                             </div>
                             <div class="analysis-control-row">
-                                <label>限定群聊（可选）</label>
+                                <label>限定群聊(可选)</label>
                                 <div class="analysis-group-chips" id="analysis-person-groups">
                                     <span class="analysis-chip analysis-chip-all analysis-chip-active" data-group="" onclick="togglePersonGroup(this)">全部群</span>
                                 </div>
@@ -1538,9 +1572,9 @@
                     <div class="analysis-section wechat-console-section">
                         <div class="analysis-section-header">
                             <h3>💬 微信聊天检索与分析控制台</h3>
-                            <span class="analysis-section-desc">直接读取本地 SQLite 微信数据库，实现全文检索、气泡还原式渲染与 AI 深度研判</span>
+                            <span class="analysis-section-desc">直接读取本地 SQLite 微信数据库,实现全文检索、气泡还原式渲染与 AI 深度研判</span>
                         </div>
-                        
+
                         <div class="wechat-console-grid">
                             <!-- Left Column: Controls & Filters -->
                             <div class="wechat-panel-left">
@@ -1562,7 +1596,7 @@
                                 </div>
                                 <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
                                     <label style="font-weight: 500;">全文检索关键字 (FTS5)</label>
-                                    <input type="text" id="wechat-keyword-input" class="analysis-input" placeholder="输入关键字搜索（支持拼音/英文/汉字）..." style="width: 100%; box-sizing: border-box;">
+                                    <input type="text" id="wechat-keyword-input" class="analysis-input" placeholder="输入关键字搜索(支持拼音/英文/汉字)..." style="width: 100%; box-sizing: border-box;">
                                 </div>
                                 <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
                                     <label style="font-weight: 500;">发言人筛选 (可选)</label>
@@ -1591,9 +1625,9 @@
                                 <div class="analysis-action-row" style="margin-top: 10px;">
                                     <button class="kb-btn kb-btn-primary" id="wechat-btn-search" onclick="searchWechatMessages()" style="width: 100%;">🔍 检索消息</button>
                                 </div>
-                                
+
                                 <hr style="border: 0; border-top: 1px dashed rgba(255, 255, 255, 0.1); width: 100%; margin: 10px 0;">
-                                
+
                                 <h4>🧠 AI 研判控制面板</h4>
                                 <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
                                     <label style="font-weight: 500;">分析模式</label>
@@ -1631,7 +1665,7 @@
                                         <span id="wechat-feed-stats" style="font-size: 0.8rem; color: var(--text-secondary, #94a3b8);">未加载数据</span>
                                     </div>
                                     <div id="wechat-bubble-feed" class="wechat-bubble-container">
-                                        <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">请在左侧选择会话，或者输入关键字检索消息</div>
+                                        <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">请在左侧选择会话,或者输入关键字检索消息</div>
                                     </div>
                                 </div>
 
@@ -1851,11 +1885,11 @@
         // 1. 将后端的 prompts 预设安全注入为前端全局 JS 对象
         window.promptPresets = {{ config.prompts | tojson }};
 
-        // 2. 绑定下拉框 change 事件，动态刷新提示词内容
+        // 2. 绑定下拉框 change 事件,动态刷新提示词内容
         document.addEventListener('DOMContentLoaded', () => {
             const promptSelect = document.getElementById('prompt-type');
             const promptPreview = document.getElementById('prompt-preview');
-            
+
             function updatePromptPreview() {
                 if (!promptSelect || !promptPreview || !window.promptPresets) return;
                 const selectedKey = promptSelect.value;
@@ -1866,12 +1900,12 @@
                     promptPreview.value = '';
                 }
             }
-            
+
             // 绑定事件
             if (promptSelect) {
                 promptSelect.addEventListener('change', updatePromptPreview);
             }
-            
+
             // 首次加载初始化显示
             updatePromptPreview();
 
@@ -1880,7 +1914,7 @@
             const chatInput = document.getElementById('chat-input');
             const chatInputExpanded = document.getElementById('chat-input-expanded');
             const btnExpandInput = document.getElementById('btn-expand-input');
-            
+
             if (chatPromptSelect) {
                 chatPromptSelect.addEventListener('change', () => {
                     const selectedKey = chatPromptSelect.value;
@@ -1888,7 +1922,7 @@
                     const preset = window.promptPresets[selectedKey];
                     if (preset && preset.content) {
                         const promptContent = preset.content.trim() + "\n";
-                        
+
                         // 1. 检查多行输入框是否处于显示状态
                         const isExpanded = chatInputExpanded && !chatInputExpanded.classList.contains('hidden');
                         if (!isExpanded) {
@@ -1897,14 +1931,14 @@
                                 btnExpandInput.click();
                             }
                         }
-                        
-                        // 3. 填入多行输入框，并自动聚焦在末尾
+
+                        // 3. 填入多行输入框,并自动聚焦在末尾
                         if (chatInputExpanded) {
                             chatInputExpanded.value = promptContent;
                             chatInputExpanded.focus();
                         }
-                        
-                        // 4. 重置下拉选择框为默认的“💡 快捷模板”
+
+                        // 4. 重置下拉选择框为默认的"💡 快捷模板"
                         chatPromptSelect.value = '';
                     }
                 });
@@ -1947,7 +1981,7 @@
                 <button class="prompt-tab-btn" data-tab="system">🏠 系统预设</button>
                 <button class="prompt-tab-btn" data-tab="custom">✍️ 我的自定义</button>
             </div>
-            
+
             <!-- 新增/编辑提示词的表单容器 (默认隐藏) -->
             <div id="prompt-form-container" class="prompt-form-container hidden">
                 <h4 id="prompt-form-title">➕ 新建自定义提示词</h4>
@@ -1985,7 +2019,7 @@
             const btnSavePrompt = document.getElementById('btn-save-prompt');
             const promptCardsGrid = document.getElementById('prompt-cards-grid');
             const promptTabBtns = document.querySelectorAll('.prompt-tab-btn');
-            
+
             // 缓存与状态管理
             let customPrompts = {};
             let starredPrompts = [];
@@ -2050,16 +2084,16 @@
             function renderPromptCards() {
                 if (!promptCardsGrid) return;
                 promptCardsGrid.innerHTML = '';
-                
+
                 const allPrompts = getAllPrompts();
-                
+
                 // 过滤逻辑
                 let filtered = allPrompts.filter(p => {
                     // Tab 过滤
                     if (currentTab === 'star' && !p.isStarred) return false;
                     if (currentTab === 'system' && !p.isSystem) return false;
                     if (currentTab === 'custom' && p.isSystem) return false;
-                    
+
                     // 关键词搜索过滤
                     if (searchQuery) {
                         const q = searchQuery.toLowerCase();
@@ -2070,7 +2104,7 @@
                     return true;
                 });
 
-                // 置顶排序逻辑：已收藏的排在未收藏的前面
+                // 置顶排序逻辑:已收藏的排在未收藏的前面
                 filtered.sort((a, b) => {
                     if (a.isStarred && !b.isStarred) return -1;
                     if (!a.isStarred && b.isStarred) return 1;
@@ -2137,7 +2171,7 @@
                     const contentDiv = card.querySelector('.prompt-card-content');
                     contentDiv.addEventListener('click', (e) => {
                         navigator.clipboard.writeText(p.content).then(() => {
-                            window.showToast("📋 提示词内容已成功复制到剪贴板！");
+                            window.showToast("📋 提示词内容已成功复制到剪贴板!");
                         });
                     });
 
@@ -2156,13 +2190,13 @@
                         // 4. 删除事件
                         card.querySelector('.action-del').addEventListener('click', (e) => {
                             e.stopPropagation();
-                            if (confirm(`确定要删除自定义提示词“${p.name}”吗？`)) {
+                            if (confirm(`确定要删除自定义提示词"${p.name}"吗?`)) {
                                 delete customPrompts[p.key];
                                 const starIdx = starredPrompts.indexOf(p.key);
                                 if (starIdx > -1) starredPrompts.splice(starIdx, 1);
                                 saveUserData();
                                 renderPromptCards();
-                                window.showToast("🗑️ 提示词删除成功！");
+                                window.showToast("🗑️ 提示词删除成功!");
                             }
                         });
                     }
@@ -2172,44 +2206,44 @@
                         e.stopPropagation();
                         const chatInputExpanded = document.getElementById('chat-input-expanded');
                         const btnExpandInput = document.getElementById('btn-expand-input');
-                        
+
                         // 触展开多行输入
                         const isExpanded = chatInputExpanded && !chatInputExpanded.classList.contains('hidden');
                         if (!isExpanded && btnExpandInput) {
                             btnExpandInput.click();
                         }
-                        
+
                         if (chatInputExpanded) {
                             chatInputExpanded.value = p.content + "\n";
                             chatInputExpanded.focus();
                         }
                         promptModal.classList.remove('active');
-                        window.showToast(`🚀 已成功填入 AI 助理对话框！`);
+                        window.showToast(`🚀 已成功填入 AI 助理对话框!`);
                     });
 
                     // 6. 填入总结模板
                     card.querySelector('.action-summary').addEventListener('click', (e) => {
                         e.stopPropagation();
-                        
+
                         // 切换 Tab 到工作站
                         const tabBtnWork = document.querySelector('.tab-btn[data-tab="workstation"]');
                         if (tabBtnWork) tabBtnWork.click();
-                        
+
                         // 填入提示词预览框
                         const promptPreview = document.getElementById('prompt-preview');
                         if (promptPreview) {
                             promptPreview.value = p.content.trim();
-                            // 手动触发展开提示词预览框，以保证显示出来
+                            // 手动触发展开提示词预览框,以保证显示出来
                             const previewContainer = document.getElementById('prompt-preview-container');
                             if (previewContainer) previewContainer.classList.remove('hidden');
                         }
-                        
+
                         // 重置工作站里的 select 下拉框
                         const promptSelect = document.getElementById('prompt-type');
                         if (promptSelect) promptSelect.value = '';
-                        
+
                         promptModal.classList.remove('active');
-                        window.showToast(`📄 已成功导入 AI 智库执行模板！`);
+                        window.showToast(`📄 已成功导入 AI 智库执行模板!`);
                     });
 
                     promptCardsGrid.appendChild(card);
@@ -2282,12 +2316,12 @@
                 const editKey = promptFormEditKey.value;
 
                 if (!name) {
-                    alert("请填写提示词名称！");
+                    alert("请填写提示词名称!");
                     promptFormName.focus();
                     return;
                 }
                 if (!content) {
-                    alert("请填写提示词内容 Prompt！");
+                    alert("请填写提示词内容 Prompt!");
                     promptFormContent.focus();
                     return;
                 }
@@ -2295,12 +2329,12 @@
                 if (editKey) {
                     // 编辑原有
                     customPrompts[editKey] = { name, content };
-                    window.showToast("✓ 自定义提示词修改保存成功！");
+                    window.showToast("✓ 自定义提示词修改保存成功!");
                 } else {
                     // 新增提示词
                     const key = 'custom_' + Date.now();
                     customPrompts[key] = { name, content };
-                    window.showToast("✓ 新建自定义提示词成功！");
+                    window.showToast("✓ 新建自定义提示词成功!");
                 }
 
                 saveUserData();
@@ -2363,7 +2397,7 @@
                 if (count) count.textContent = `${docs.length} 篇`;
 
                 if (docs.length === 0) {
-                    list.innerHTML = '<div class="kb-empty">暂无文档，请上传文件</div>';
+                    list.innerHTML = '<div class="kb-empty">暂无文档,请上传文件</div>';
                     return;
                 }
 
@@ -2423,15 +2457,15 @@
                 });
                 const data = await res.json();
                 if (data.status === 'ok') {
-                    progress.textContent = `✅ 索引成功：${data.chunk_count || '?'} 个块`;
+                    progress.textContent = `✅ 索引成功:${data.chunk_count || '?'} 个块`;
                     window.showToast && window.showToast(`✅ ${data.message}`);
                     fileInput.value = '';
                     loadKbDocs();
                 } else {
-                    progress.textContent = `❌ 上传失败：${data.message || data.error || '未知错误'}`;
+                    progress.textContent = `❌ 上传失败:${data.message || data.error || '未知错误'}`;
                 }
             } catch (err) {
-                progress.textContent = `❌ 网络错误：${err.message}`;
+                progress.textContent = `❌ 网络错误:${err.message}`;
             }
 
             setTimeout(() => {
@@ -2472,20 +2506,20 @@
                     </div>
                 `).join('');
             } catch (err) {
-                results.innerHTML = `<div class="kb-empty">❌ 搜索失败：${err.message}</div>`;
+                results.innerHTML = `<div class="kb-empty">❌ 搜索失败:${err.message}</div>`;
             }
         }
 
-        // --- 知识库 Markdown 渲染（独立于 main.js 闭包内的 renderMarkdown） ---
+        // --- 知识库 Markdown 渲染(独立于 main.js 闭包内的 renderMarkdown) ---
         function kbFriendlyName(filename) {
-            // 把 '_raw.standard.md' 等后缀去掉，显示简洁的群名
+            // 把 '_raw.standard.md' 等后缀去掉,显示简洁的群名
             let name = filename
                 .replace(/_raw\.standard\.md$/g, '')
                 .replace(/_raw\.md$/g, '')
                 .replace(/_standard\.md$/g, '')
                 .replace(/\.(md|txt|pdf|docx)$/g, '');
             // 截取过长名字
-            return name.length > 30 ? name.slice(0, 27) + '…' : name;
+            return name.length > 30 ? name.slice(0, 27) + '...' : name;
         }
 
         function kbRenderMarkdown(text) {
@@ -2571,7 +2605,7 @@
             if (placeholder) placeholder.remove();
 
             // 添加用户消息
-            box.innerHTML += `<div class="kb-chat-msg user"><span class="label">🧑 你：</span>${escapeHtml(q)}</div>`;
+            box.innerHTML += `<div class="kb-chat-msg user"><span class="label">🧑 你:</span>${escapeHtml(q)}</div>`;
             input.value = '';
 
             // 添加加载状态
@@ -2591,14 +2625,14 @@
                 const loader = document.getElementById(loaderId);
                 if (loader) loader.remove();
 
-                // 添加 AI 回复（Markdown + KaTeX 渲染）
+                // 添加 AI 回复(Markdown + KaTeX 渲染)
                 const answerHtml = kbRenderMarkdown(data.answer || data.message || '无回复');
                 let sourcesHtml = '';
                 if (data.sources && data.sources.length) {
                     const items = data.sources.map((s, i) => {
                         const name = kbFriendlyName(s.filename);
                         const snippet = s.text ? s.text.slice(0, 120).replace(/\*\*/g, '').replace(/\n/g, ' ') : '';
-                        const cat = s.category ? s.category.replace(/^(.{12}).*$/, '$1…') : '';
+                        const cat = s.category ? s.category.replace(/^(.{12}).*$/, '$1...') : '';
                         return `<div class="kb-chat-source-item">` +
                             `<span class="kb-chat-source-idx">#${i + 1}</span>` +
                             `<span class="kb-chat-source-name" title="${escapeHtml(s.filename)}">${escapeHtml(name)}</span>` +
@@ -2608,8 +2642,8 @@
                     }).join('');
                     sourcesHtml = `<div class="kb-chat-sources"><div class="kb-chat-sources-title">📎 参考来源</div>${items}</div>`;
                 }
-                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">🤖 AI：</span><div class="markdown-content">${answerHtml}</div>${sourcesHtml}</div>`;
-                
+                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">🤖 AI:</span><div class="markdown-content">${answerHtml}</div>${sourcesHtml}</div>`;
+
                 // 触发 Mermaid 图表渲染
                 setTimeout(() => {
                     if (window.mermaid) {
@@ -2627,7 +2661,7 @@
             } catch (err) {
                 const loader = document.getElementById(loaderId);
                 if (loader) loader.remove();
-                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">❌ 错误：</span>${escapeHtml(err.message)}</div>`;
+                box.innerHTML += `<div class="kb-chat-msg assistant"><span class="label">❌ 错误:</span>${escapeHtml(err.message)}</div>`;
             }
 
             box.scrollTop = box.scrollHeight;
@@ -2635,7 +2669,7 @@
 
         // --- 清空知识库 ---
         async function clearKb() {
-            if (!confirm('确定清空所有知识库数据？此操作不可撤销。')) return;
+            if (!confirm('确定清空所有知识库数据?此操作不可撤销。')) return;
             try {
                 const res = await fetch(`${KB_API_BASE}/clear`, { method: 'DELETE' });
                 const data = await res.json();
@@ -2672,7 +2706,7 @@
                 if (data.error) return;
 
                 const docs = data.docs || data.documents || [];
-                // 提取群名（category 为「微信聊天记录」的文档）
+                // 提取群名(category 为「微信聊天记录」的文档)
                 const groups = [];
                 for (const doc of docs) {
                     const cat = doc.category || '';
@@ -2809,7 +2843,7 @@
                 const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
                 if (finalData) {
                     status.className = 'analysis-status done';
-                    status.textContent = `✅ 完成（耗时 ${elapsed}s，${finalData.message_count || '?'} 条消息）`;
+                    status.textContent = `✅ 完成(耗时 ${elapsed}s,${finalData.message_count || '?'} 条消息)`;
                     let html = '<div class="analysis-result-stats">';
                     html += `<span class="analysis-stat-item"><strong>${finalData.message_count || '?'}</strong> 条消息</span>`;
                     if (finalData.sources) {
@@ -2842,14 +2876,14 @@
             const container = document.getElementById('analysis-person-groups');
 
             if (isAll) {
-                // 点击「全部群」，取消其他
+                // 点击「全部群」,取消其他
                 container.querySelectorAll('.analysis-chip').forEach(c => c.classList.remove('analysis-chip-active'));
                 chip.classList.add('analysis-chip-active');
             } else {
-                // 点击具体群，取消「全部群」
+                // 点击具体群,取消「全部群」
                 container.querySelector('.analysis-chip-all').classList.remove('analysis-chip-active');
                 chip.classList.toggle('analysis-chip-active');
-                // 如果没有任何选中，恢复「全部群」
+                // 如果没有任何选中,恢复「全部群」
                 const active = container.querySelectorAll('.analysis-chip-active:not(.analysis-chip-all)');
                 if (active.length === 0) {
                     container.querySelector('.analysis-chip-all').classList.add('analysis-chip-active');
@@ -2939,7 +2973,7 @@
                 const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
                 if (finalData) {
                     status.className = 'analysis-status done';
-                    status.textContent = `✅ 完成（耗时 ${elapsed}s，${finalData.message_count || '?'} 条消息）`;
+                    status.textContent = `✅ 完成(耗时 ${elapsed}s,${finalData.message_count || '?'} 条消息)`;
                     let html = '<div class="analysis-result-stats">';
                     html += `<span class="analysis-stat-item"><strong>${finalData.message_count || '?'}</strong> 条消息</span>`;
                     if (finalData.active_groups) {
@@ -2967,7 +3001,7 @@
         }
         // ========== 微信聊天记录检索与分析 (WeChat Console) ==========
 
-        // 颜色生成函数，让头像呈现质感渐变色
+        // 颜色生成函数,让头像呈现质感渐变色
         function getWechatAvatarColor(name) {
             if (!name) name = 'Unknown';
             let hash = 0;
@@ -2979,7 +3013,7 @@
         }
 
         // ========== 日期快捷选择功能 ==========
-        
+
         /**
          * 设置快捷日期范围
          * @param {string} rangeType - 日期范围类型
@@ -2987,76 +3021,76 @@
         function setQuickDateRange(rangeType) {
             const startDateInput = document.getElementById('wechat-start-date');
             const endDateInput = document.getElementById('wechat-end-date');
-            
+
             if (!startDateInput || !endDateInput) return;
-            
+
             // 清除所有按钮的 active 状态
             document.querySelectorAll('.date-quick-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             if (rangeType === 'clear') {
                 // 清除日期选择
                 startDateInput.value = '';
                 endDateInput.value = '';
                 return;
             }
-            
+
             // 设置当前按钮为 active
             const currentBtn = document.querySelector(`.date-quick-btn[onclick*="'${rangeType}'"]`);
             if (currentBtn) {
                 currentBtn.classList.add('active');
             }
-            
+
             const now = new Date();
             let startDate, endDate;
-            
+
             switch (rangeType) {
                 case 'today':
                     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     break;
-                    
+
                 case 'yesterday':
                     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
                     endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
                     break;
-                    
+
                 case 'thisWeek':
                     // 本周一到今天
                     const dayOfWeek = now.getDay() || 7; // 周日为 7
                     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
                     endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     break;
-                    
+
                 case 'last7days':
-                    // 最近7天（包括今天）
+                    // 最近7天(包括今天)
                     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
                     endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     break;
-                    
+
                 case 'last30days':
-                    // 最近30天（包括今天）
+                    // 最近30天(包括今天)
                     startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29);
                     endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     break;
-                    
+
                 case 'thisMonth':
                     // 本月1日到今天
                     startDate = new Date(now.getFullYear(), now.getMonth(), 1);
                     endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     break;
-                    
+
                 case 'lastMonth':
                     // 上月1日到上月最后一天
                     startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
                     endDate = new Date(now.getFullYear(), now.getMonth(), 0); // 0 表示上月最后一天
                     break;
-                    
+
                 default:
                     return;
             }
-            
+
             // 格式化为 YYYY-MM-DD
             const formatDate = (date) => {
                 const year = date.getFullYear();
@@ -3064,7 +3098,7 @@
                 const day = String(date.getDate()).padStart(2, '0');
                 return `${year}-${month}-${day}`;
             };
-            
+
             startDateInput.value = formatDate(startDate);
             endDateInput.value = formatDate(endDate);
         }
@@ -3100,6 +3134,34 @@
         }
 
         // 渲染气泡列表
+        // 虚拟滚动配置
+        const VIRTUAL_SCROLL = {
+            MAX_RENDER_COUNT: 200,        // 最大渲染数量（普通模式）
+            BATCH_SIZE: 50,                // 每批渲染数量
+            ITEM_HEIGHT: 80,               // 预估每条消息高度（px）
+            BUFFER_COUNT: 10,              // 缓冲区消息数量（上下各保留）
+            SEARCH_MAX_RENDER: 500,        // 搜索结果最大渲染数量
+            SCROLL_DEBOUNCE: 16            // 滚动节流时间（ms，约60fps）
+        };
+        
+        // 虚拟滚动状态
+        let virtualScrollState = {
+            isEnabled: false,             // 是否启用虚拟滚动
+            totalCount: 0,                 // 总消息数
+            renderedCount: 0,              // 已渲染消息数
+            scrollTop: 0,                  // 当前滚动位置
+            visibleStart: 0,               // 可见起始索引
+            visibleEnd: 0,                  // 可见结束索引
+            messages: [],                  // 完整消息数据
+            renderedMessages: [],           // 已渲染消息数据
+            lastScrollTime: 0             // 上次滚动时间（用于节流）
+        };
+        
+        // 虚拟滚动容器元素
+        let virtualContainer = null;
+        let virtualSpacer = null;
+        let virtualViewport = null;
+        
         function renderWechatBubbles(messages, keyword, isSearchResults = false) {
             const feed = document.getElementById('wechat-bubble-feed');
             if (!messages || messages.length === 0) {
@@ -3109,45 +3171,199 @@
                 feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">未查询到任何消息记录</div>';
                 return;
             }
-
-            let html = '';
+            
+            const totalCount = messages.length;
+            const maxRender = isSearchResults ? VIRTUAL_SCROLL.SEARCH_MAX_RENDER : VIRTUAL_SCROLL.MAX_RENDER_COUNT;
+            const needVirtualScroll = totalCount > maxRender;
+            
+            // 更新虚拟滚动状态
+            virtualScrollState = {
+                isEnabled: needVirtualScroll,
+                totalCount: totalCount,
+                renderedCount: Math.min(totalCount, maxRender),
+                scrollTop: 0,
+                visibleStart: 0,
+                visibleEnd: Math.min(totalCount, maxRender),
+                messages: messages,
+                renderedMessages: messages.slice(0, maxRender),
+                lastScrollTime: 0
+            };
+            
+            if (needVirtualScroll) {
+                // 启用虚拟滚动模式
+                renderVirtualScroll(feed, keyword, isSearchResults, maxRender);
+            } else {
+                // 普通渲染模式
+                renderNormal(messages, keyword, isSearchResults, feed);
+            }
+        }
+        
+        // 普通渲染模式
+        function renderNormal(messages, keyword, isSearchResults, feed) {
+            // 清理虚拟滚动容器
+            feed.innerHTML = '';
+            virtualContainer = null;
+            
+            // 使用 DocumentFragment 批量插入
+            const fragment = document.createDocumentFragment();
             let lastTime = 0;
             
             messages.forEach(msg => {
-                // 每隔5分钟的消息插入一个时间标签
                 const createTime = msg.create_time;
                 if (createTime - lastTime > 300) {
-                    html += `<div class="wechat-time-tag">${escapeHtml(msg.formatted_time || '')}</div>`;
+                    const timeDiv = document.createElement('div');
+                    timeDiv.className = 'wechat-time-tag';
+                    timeDiv.textContent = msg.formatted_time || '';
+                    fragment.appendChild(timeDiv);
                     lastTime = createTime;
                 }
-
-                const isSend = msg.is_send === 1;
-                const senderName = msg.sender_display_name || msg.sender_username || '未知用户';
-                const avatarChar = senderName.trim().charAt(0).toUpperCase();
-                const avatarBg = getWechatAvatarColor(senderName);
                 
-                const displayContent = highlightKeyword(msg.content || '', keyword);
-                
-                // 如果是检索模式，添加“上下文”定位跳转按钮
-                const jumpBtnHtml = isSearchResults ? 
-                    `<span class="wechat-jump-btn" onclick="jumpToMessageContext(${msg.id}, ${msg.session_id})">🔍 上下文</span>` : '';
-
-                html += `
-                    <div class="wechat-msg-row ${isSend ? 'sent' : 'received'}" data-msg-id="${msg.id}">
-                        <div class="wechat-avatar" style="background: ${avatarBg};">${escapeHtml(avatarChar)}</div>
-                        <div class="wechat-msg-content-wrapper">
-                            <span class="wechat-sender-name">
-                                ${escapeHtml(senderName)}
-                                ${jumpBtnHtml}
-                            </span>
-                            <div class="wechat-bubble">${displayContent}</div>
+                const msgElement = createMessageElement(msg, keyword, isSearchResults);
+                fragment.appendChild(msgElement);
+            });
+            
+            feed.appendChild(fragment);
+        }
+        
+        // 虚拟滚动渲染模式
+        function renderVirtualScroll(feed, keyword, isSearchResults, maxRender) {
+            // 创建虚拟滚动容器结构
+            const totalHeight = virtualScrollState.totalCount * VIRTUAL_SCROLL.ITEM_HEIGHT;
+            const renderedHeight = maxRender * VIRTUAL_SCROLL.ITEM_HEIGHT;
+            
+            feed.innerHTML = `
+                <div class="wechat-virtual-container" style="position: relative; height: 100%; overflow: auto;">
+                    <div class="wechat-virtual-spacer" style="height: ${totalHeight}px; position: relative;">
+                        <div class="wechat-virtual-viewport" style="position: absolute; top: 0; left: 0; right: 0; min-height: ${renderedHeight}px;">
+                            <!-- 动态渲染的消息 -->
                         </div>
                     </div>
-                `;
-            });
-            feed.innerHTML = html;
+                </div>
+                <div class="wechat-virtual-tip" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; color: #fff; z-index: 100; pointer-events: none;">
+                    已启用虚拟滚动，显示 ${maxRender}/${virtualScrollState.totalCount} 条消息
+                </div>
+            `;
+            
+            virtualContainer = feed.querySelector('.wechat-virtual-container');
+            virtualSpacer = feed.querySelector('.wechat-virtual-spacer');
+            virtualViewport = feed.querySelector('.wechat-virtual-viewport');
+            
+            // 初始渲染
+            renderVirtualMessages(keyword, isSearchResults);
+            
+            // 绑定滚动事件（节流）
+            virtualContainer.addEventListener('scroll', onVirtualScroll);
         }
-
+        
+        // 虚拟滚动回调
+        function onVirtualScroll() {
+            const now = Date.now();
+            if (now - virtualScrollState.lastScrollTime < VIRTUAL_SCROLL.SCROLL_DEBOUNCE) {
+                return;
+            }
+            virtualScrollState.lastScrollTime = now;
+            
+            requestAnimationFrame(() => {
+                if (!virtualContainer) return;
+                
+                const scrollTop = virtualContainer.scrollTop;
+                const viewportHeight = virtualContainer.clientHeight;
+                const itemHeight = VIRTUAL_SCROLL.ITEM_HEIGHT;
+                const bufferCount = VIRTUAL_SCROLL.BUFFER_COUNT;
+                
+                // 计算可见范围
+                const visibleStart = Math.max(0, Math.floor(scrollTop / itemHeight) - bufferCount);
+                const visibleEnd = Math.min(
+                    virtualScrollState.messages.length,
+                    Math.ceil((scrollTop + viewportHeight) / itemHeight) + bufferCount
+                );
+                
+                // 如果可见范围变化，重新渲染
+                if (visibleStart !== virtualScrollState.visibleStart || 
+                    visibleEnd !== virtualScrollState.visibleEnd) {
+                    
+                    virtualScrollState.visibleStart = visibleStart;
+                    virtualScrollState.visibleEnd = visibleEnd;
+                    virtualScrollState.scrollTop = scrollTop;
+                    
+                    renderVirtualMessages();
+                    
+                    // 更新提示信息
+                    updateVirtualTip(visibleStart, visibleEnd);
+                }
+            });
+        }
+        
+        // 渲染虚拟滚动消息
+        function renderVirtualMessages(keyword = '', isSearchResults = false) {
+            if (!virtualViewport) return;
+            
+            const startIndex = virtualScrollState.visibleStart;
+            const endIndex = virtualScrollState.visibleEnd;
+            const itemHeight = VIRTUAL_SCROLL.ITEM_HEIGHT;
+            
+            const fragment = document.createDocumentFragment();
+            let lastTime = 0;
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                const msg = virtualScrollState.messages[i];
+                if (!msg) continue;
+                
+                const createTime = msg.create_time;
+                if (createTime - lastTime > 300) {
+                    const timeDiv = document.createElement('div');
+                    timeDiv.className = 'wechat-time-tag';
+                    timeDiv.textContent = msg.formatted_time || '';
+                    timeDiv.style.cssText = `position: absolute; top: ${i * itemHeight}px; left: 0; right: 0; text-align: center;`;
+                    fragment.appendChild(timeDiv);
+                    lastTime = createTime;
+                }
+                
+                const msgElement = createMessageElement(msg, keyword, isSearchResults);
+                msgElement.style.cssText = `position: absolute; top: ${i * itemHeight}px; left: 0; right: 0;`;
+                fragment.appendChild(msgElement);
+            }
+            
+            virtualViewport.innerHTML = '';
+            virtualViewport.appendChild(fragment);
+        }
+        
+        // 更新虚拟滚动提示
+        function updateVirtualTip(start, end) {
+            const tip = document.querySelector('.wechat-virtual-tip');
+            if (tip) {
+                tip.textContent = `显示第 ${start + 1}-${end} 条 / 共 ${virtualScrollState.totalCount} 条`;
+            }
+        }
+        
+        // 创建单条消息元素
+        function createMessageElement(msg, keyword, isSearchResults) {
+            const div = document.createElement('div');
+            
+            const isSend = msg.is_send === 1;
+            const senderName = msg.sender_display_name || msg.sender_username || '未知用户';
+            const avatarChar = senderName.trim().charAt(0).toUpperCase();
+            const avatarBg = getWechatAvatarColor(senderName);
+            const displayContent = highlightKeyword(msg.content || '', keyword);
+            const jumpBtnHtml = isSearchResults ? 
+                `<span class="wechat-jump-btn" onclick="jumpToMessageContext(${msg.id}, ${msg.session_id})">🔍 上下文</span>` : '';
+            
+            div.className = `wechat-msg-row ${isSend ? 'sent' : 'received'}`;
+            div.setAttribute('data-msg-id', msg.id);
+            div.innerHTML = `
+                <div class="wechat-avatar" style="background: ${avatarBg};">${escapeHtml(avatarChar)}</div>
+                <div class="wechat-msg-content-wrapper">
+                    <span class="wechat-sender-name">
+                        ${escapeHtml(senderName)}
+                        ${jumpBtnHtml}
+                    </span>
+                    <div class="wechat-bubble">${displayContent}</div>
+                </div>
+            `;
+            
+            return div;
+        }
+        
         function highlightKeyword(text, keyword) {
             if (!keyword) return escapeHtml(text);
             try {
@@ -3185,10 +3401,10 @@
 
             // 过滤会话
             const filtered = allWechatSessions.filter(session => {
-                const matchesSearch = !searchQuery || 
+                const matchesSearch = !searchQuery ||
                     (session.display_name && session.display_name.toLowerCase().includes(searchQuery)) ||
                     (session.wxid && session.wxid.toLowerCase().includes(searchQuery));
-                
+
                 const matchesType = typeFilter === 'all' || session.type === typeFilter;
                 return matchesSearch && matchesType;
             });
@@ -3230,21 +3446,21 @@
             });
         }
 
-        // 统一获取会话消息接口（支持滚动分页）
+        // 统一获取会话消息接口(支持滚动分页)
         async function fetchSessionMessages(sessionId, offset, limit, append = false, prepend = false) {
             if (wechatState.isLoading) return;
             wechatState.isLoading = true;
-            
+
             const stats = document.getElementById('wechat-feed-stats');
             const feed = document.getElementById('wechat-bubble-feed');
-            
+
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
-            
+
             let url = `/api/wechat/session/${sessionId}?limit=${limit}&offset=${offset}`;
             if (st) url += `&start_time=${st}`;
             if (et) url += `&end_time=${et}`;
-            
+
             try {
                 const res = await fetch(url);
                 const result = await res.json();
@@ -3253,17 +3469,17 @@
                     wechatState.isLoading = false;
                     return;
                 }
-                
+
                 const msgs = result.messages || [];
                 wechatState.totalCount = result.filtered_message_count;
-                
+
                 if (prepend) {
                     const oldScrollHeight = feed.scrollHeight;
                     const oldScrollTop = feed.scrollTop;
-                    
+
                     wechatState.messages = msgs.concat(wechatState.messages);
                     renderWechatBubbles(wechatState.messages, '');
-                    
+
                     feed.scrollTop = oldScrollTop + (feed.scrollHeight - oldScrollHeight);
                 } else if (append) {
                     wechatState.messages = wechatState.messages.concat(msgs);
@@ -3273,13 +3489,13 @@
                     renderWechatBubbles(wechatState.messages, '');
                     feed.scrollTop = feed.scrollHeight;
                 }
-                
+
                 wechatState.offset = offset;
-                
+
                 const startNum = Math.min(wechatState.totalCount, wechatState.offset + 1);
                 const endNum = Math.min(wechatState.totalCount, wechatState.offset + msgs.length);
                 stats.textContent = `当前展示第 ${startNum} - ${endNum} 条 (共 ${wechatState.totalCount} 条)`;
-                
+
             } catch(e) {
                 console.error(e);
                 stats.textContent = '❌ 加载出错';
@@ -3293,16 +3509,16 @@
             if (!sessionId) return;
             const feed = document.getElementById('wechat-bubble-feed');
             feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在加载聊天记录...</div>';
-            
+
             wechatState.sessionId = sessionId;
             wechatState.isSearchMode = false;
-            
+
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
             let url = `/api/wechat/session/${sessionId}?limit=1&offset=0`;
             if (st) url += `&start_time=${st}`;
             if (et) url += `&end_time=${et}`;
-            
+
             try {
                 const res = await fetch(url);
                 const result = await res.json();
@@ -3332,21 +3548,21 @@
             }
 
             if (!loadMore) {
-                // 新搜索，重置状态
+                // 新搜索,重置状态
                 wechatState.isSearchMode = true;
                 wechatState.keyword = keyword;
                 wechatState.sender = sender;
                 wechatState.searchOffset = 0;
                 wechatState.searchResults = [];
-                
+
                 stats.textContent = '🔍 正在检索...';
                 feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在执行全文检索中...</div>';
             } else {
-                // 加载更多，追加结果
+                // 加载更多,追加结果
                 if (wechatState.isLoading) return;
                 stats.textContent = '🔍 正在加载更多...';
             }
-            
+
             wechatState.isLoading = true;
 
             const st = getSelectedStartTime();
@@ -3374,7 +3590,7 @@
 
                 const items = result.data.results || [];
                 wechatState.searchTotal = result.data.total;
-                
+
                 if (loadMore) {
                     // 追加结果
                     wechatState.searchResults = wechatState.searchResults.concat(items);
@@ -3382,17 +3598,17 @@
                     // 新搜索
                     wechatState.searchResults = items;
                 }
-                
+
                 // 计算分页状态
                 const loadedCount = wechatState.searchResults.length;
                 const hasMore = loadedCount < wechatState.searchTotal;
-                
-                stats.textContent = `共搜索到 ${wechatState.searchTotal} 条匹配结果，已加载 ${loadedCount} 条`;
-                
+
+                stats.textContent = `共搜索到 ${wechatState.searchTotal} 条匹配结果,已加载 ${loadedCount} 条`;
+
                 // 渲染消息
                 renderWechatBubbles(wechatState.searchResults, keyword, true);
-                
-                // 添加"加载更多"按钮（如果还有更多结果）
+
+                // 添加"加载更多"按钮(如果还有更多结果)
                 if (hasMore) {
                     const loadMoreBtn = document.createElement('div');
                     loadMoreBtn.id = 'wechat-load-more-btn';
@@ -3407,18 +3623,18 @@
                     `;
                     feed.appendChild(loadMoreBtn);
                 }
-                
+
                 // 更新偏移量
                 wechatState.searchOffset = wechatState.searchResults.length;
-                
-                // 滚动到底部（新搜索时）
+
+                // 滚动到底部(新搜索时)
                 if (!loadMore) {
                     feed.scrollTop = feed.scrollHeight;
                 }
             } catch(err) {
                 console.error('全文检索失败:', err);
                 stats.textContent = '❌ 检索异常';
-                feed.innerHTML = '<div style="text-align: center; color: #ef4444; margin-top: 60px;">网络异常，请重试</div>';
+                feed.innerHTML = '<div style="text-align: center; color: #ef4444; margin-top: 60px;">网络异常,请重试</div>';
             } finally {
                 wechatState.isLoading = false;
             }
@@ -3428,39 +3644,39 @@
         async function jumpToMessageContext(messageId, sessionId) {
             const sessionSelect = document.getElementById('wechat-session-select');
             sessionSelect.value = sessionId;
-            
+
             document.getElementById('wechat-keyword-input').value = '';
             document.getElementById('wechat-sender-input').value = '';
-            
+
             wechatState.sessionId = sessionId;
             wechatState.isSearchMode = false;
-            
+
             const stats = document.getElementById('wechat-feed-stats');
             stats.textContent = '⏳ 正在定位上下文...';
-            
+
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
-            
+
             let posUrl = `/api/wechat/message/${messageId}/position`;
             let queryParams = [];
             if (st) queryParams.push(`start_time=${st}`);
             if (et) queryParams.push(`end_time=${et}`);
             if (queryParams.length) posUrl += `?${queryParams.join('&')}`;
-            
+
             try {
                 const posRes = await fetch(posUrl);
                 const posResult = await posRes.json();
                 if (!posResult.success) {
-                    alert('定位失败，未找到该消息的位置');
+                    alert('定位失败,未找到该消息的位置');
                     return;
                 }
-                
+
                 const pos = posResult.data.position;
                 const half = Math.floor(wechatState.limit / 2);
                 const targetOffset = Math.max(0, pos - half);
-                
+
                 await fetchSessionMessages(sessionId, targetOffset, wechatState.limit, false, false);
-                
+
                 setTimeout(() => {
                     const targetEl = document.querySelector(`[data-msg-id="${messageId}"]`);
                     if (targetEl) {
@@ -3472,10 +3688,10 @@
                         }, 2500);
                     }
                 }, 300);
-                
+
             } catch(e) {
                 console.error(e);
-                alert('定位失败，网络异常');
+                alert('定位失败,网络异常');
             }
         }
 
@@ -3483,7 +3699,7 @@
         let _wechatAiRunning = false;
         async function runWechatAIAnalysis() {
             if (_wechatAiRunning) return;
-            
+
             const mode = document.getElementById('wechat-ai-mode').value;
             const useCache = document.getElementById('wechat-ai-cache').checked;
             const sessionId = document.getElementById('wechat-session-select').value;
@@ -3504,13 +3720,13 @@
             } else if (mode === 'user') {
                 const sender = document.getElementById('wechat-sender-input').value.trim();
                 if (!sender) {
-                    alert('个人画像研判模式下必须在左侧输入“发言人筛选”的昵称');
+                    alert('个人画像研判模式下必须在左侧输入"发言人筛选"的昵称');
                     return;
                 }
                 endpoint = '/api/wechat/analyze/user';
                 bodyPayload.username = sender;
             } else if (mode === 'theme') {
-                // 针对群聊话题演进分析，使用当前选择的会话 display_name 或者直接输入
+                // 针对群聊话题演进分析,使用当前选择的会话 display_name 或者直接输入
                 const sessionSelect = document.getElementById('wechat-session-select');
                 let groupName = '';
                 if (sessionId) {
@@ -3520,7 +3736,7 @@
                     groupName = document.getElementById('wechat-sender-input').value.trim();
                 }
                 if (!groupName) {
-                    alert('话题演进分析模式下必须选择会话或在“发言人筛选”框输入群名称');
+                    alert('话题演进分析模式下必须选择会话或在"发言人筛选"框输入群名称');
                     return;
                 }
                 endpoint = '/api/wechat/analyze/theme';
@@ -3528,7 +3744,7 @@
             } else if (mode === 'relations') {
                 const sender = document.getElementById('wechat-sender-input').value.trim();
                 if (!sender) {
-                    alert('关系网图分析模式下必须在左侧输入“发言人筛选”的姓名/昵称');
+                    alert('关系网图分析模式下必须在左侧输入"发言人筛选"的姓名/昵称');
                     return;
                 }
                 endpoint = '/api/wechat/analyze/relations';
@@ -3538,7 +3754,7 @@
             _wechatAiRunning = true;
             status.className = 'analysis-status loading';
             status.textContent = '⏳ AI 研判中...';
-            resultDiv.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">大模型研判处理中，可能耗时数十秒，请稍后...</div>';
+            resultDiv.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">大模型研判处理中,可能耗时数十秒,请稍后...</div>';
 
             try {
                 const res = await fetch(endpoint, {
@@ -3546,7 +3762,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(bodyPayload)
                 });
-                
+
                 const data = await res.json();
                 if (!res.ok || !data.success) {
                     throw new Error(data.detail || '分析失败');
@@ -3554,18 +3770,18 @@
 
                 status.className = 'analysis-status done';
                 status.textContent = '✅ 分析完成' + (data.from_cache ? ' (来自缓存)' : '');
-                
+
                 // 添加缓存状态提示
                 let cacheInfo = '';
                 if (data.from_cache) {
                     cacheInfo = `
                         <div style="margin-top: 10px; padding: 8px 12px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; font-size: 0.85rem; color: #f59e0b;">
-                            ⚠️ 此结果来自缓存（1小时内有效）
+                            ⚠️ 此结果来自缓存(1小时内有效)
                             <button onclick="clearWechatAICache()" style="margin-left: 10px; padding: 2px 8px; background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 4px; color: #f59e0b; cursor: pointer; font-size: 0.8rem;">清除缓存</button>
                         </div>
                     `;
                 }
-                
+
                 let reportContent = '无分析数据返回';
                 if (data.analysis) {
                     reportContent = data.analysis;
@@ -3621,10 +3837,10 @@
 
         // 清除 AI 分析缓存
         async function clearWechatAICache() {
-            if (!confirm('确定要清除 AI 分析缓存吗？\n\n清除后，下次分析将重新计算（耗时更长）。')) {
+            if (!confirm('确定要清除 AI 分析缓存吗?\n\n清除后,下次分析将重新计算(耗时更长)。')) {
                 return;
             }
-            
+
             try {
                 const res = await fetch('/api/wechat/cache/clear', { method: 'POST' });
                 const result = await res.json();
@@ -3632,7 +3848,7 @@
                     alert('✅ 缓存已清除');
                     // 隐藏缓存状态
                     document.getElementById('wechat-cache-status').style.display = 'none';
-                    // 重新运行分析（不使用缓存）
+                    // 重新运行分析(不使用缓存)
                     const mode = document.getElementById('wechat-ai-mode').value;
                     document.getElementById('wechat-ai-cache').checked = false;
                     await runWechatAIAnalysis();
@@ -3641,7 +3857,7 @@
                 }
             } catch(err) {
                 console.error('清除缓存失败:', err);
-                alert('❌ 清除缓存失败，请重试');
+                alert('❌ 清除缓存失败,请重试');
             }
         }
 
@@ -3653,10 +3869,10 @@
                 if (result.success) {
                     const cacheStatus = document.getElementById('wechat-cache-status');
                     const cacheCount = document.getElementById('wechat-cache-count');
-                    
+
                     cacheCount.textContent = result.data.count;
                     cacheStatus.style.display = 'block';
-                    
+
                     if (result.data.count === 0) {
                         cacheStatus.querySelector('span').textContent = '缓存状态: 无缓存';
                         cacheStatus.querySelector('button').style.display = 'none';
@@ -3679,13 +3895,13 @@
             loadAnalysisGroups();
             // 加载微信会话列表
             loadWechatSessions();
-            
+
             // 绑定滚动分页加载
             const feed = document.getElementById('wechat-bubble-feed');
             if (feed) {
                 feed.addEventListener('scroll', async () => {
                     if (wechatState.isSearchMode || !wechatState.sessionId || wechatState.isLoading) return;
-                    
+
                     // 滚动触顶时加载更早的历史记录
                     if (feed.scrollTop === 0) {
                         if (wechatState.offset > 0) {
@@ -3694,7 +3910,7 @@
                             await fetchSessionMessages(wechatState.sessionId, newOffset, countToFetch, false, true);
                         }
                     }
-                    // 滚动触底时且未展示到最新，加载更晚的历史记录
+                    // 滚动触底时且未展示到最新,加载更晚的历史记录
                     else if (Math.ceil(feed.scrollTop + feed.clientHeight) >= feed.scrollHeight - 5) {
                         const loadedCount = wechatState.offset + wechatState.messages.length;
                         if (loadedCount < wechatState.totalCount) {
@@ -3704,7 +3920,7 @@
                     }
                 });
             }
-            
+
             // 绑定微信会话过滤与检索事件
             const searchSessionInput = document.getElementById('wechat-session-search');
             if (searchSessionInput) {
@@ -3714,7 +3930,7 @@
             if (filterSessionType) {
                 filterSessionType.addEventListener('change', renderWechatSessionOptions);
             }
-            
+
             // 绑定微信会话下拉框切换事件
             const selectWechatSession = document.getElementById('wechat-session-select');
             if (selectWechatSession) {
@@ -3722,8 +3938,8 @@
                     loadWechatSessionMessages(this.value);
                 });
             }
-            
-            // 绑定日期输入框变化事件（清除快捷按钮 active 状态）
+
+            // 绑定日期输入框变化事件(清除快捷按钮 active 状态)
             const wechatStartDate = document.getElementById('wechat-start-date');
             const wechatEndDate = document.getElementById('wechat-end-date');
             if (wechatStartDate) {
