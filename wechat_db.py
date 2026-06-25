@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class WechatDatabaseManager:
-    def __init__(self, db_path: str = "D:/qwen3-asr/knowledge_base/wechat_chat_records.db"):
+    def __init__(self, db_path: str = "D:/Work/Useful_Tools/chat_record_analyzer/data/chat_records.db"):
         self.db_path = db_path
         self.conn = None
         self.init_database()
