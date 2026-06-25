@@ -1087,6 +1087,7 @@
                 <button class="tab-btn" data-tab="docs">📄 文档</button>
                 <button class="tab-btn" data-tab="knowledge">📚 知识库</button>
                 <button class="tab-btn" data-tab="analysis">📊 群聊分析</button>
+                <button class="tab-btn" data-tab="wechat">💬 微信检索</button>
             </div>
 
             <!-- 页面1:工作站 -->
@@ -1667,153 +1668,20 @@
                         </div>
                     </div>
 
-                    <!-- 微信聊天记录检索与分析控制台 -->
-                    <div class="analysis-section wechat-console-section">
-                        <div class="analysis-section-header">
-                            <h3>💬 微信聊天检索与分析控制台</h3>
-                            <span class="analysis-section-desc">直接读取本地 SQLite 微信数据库,实现全文检索、气泡还原式渲染与 AI 深度研判</span>
-                        </div>
+                </div>
+            </div>
 
-                        <div class="wechat-console-grid">
-                            <!-- Left Column: Controls & Filters -->
-                            <div class="wechat-panel-left">
-                                <h4>⚙️ 查询与分析控制器</h4>
-                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                                    <label style="font-weight: 500;">选择微信会话 (Session)</label>
-                                    <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 6px; box-sizing: border-box;">
-                                        <input type="text" id="wechat-session-search" class="analysis-input" placeholder="🔍 检索会话..." style="flex: 1; min-width: 0; box-sizing: border-box;">
-                                        <select id="wechat-session-type-filter" class="analysis-select" style="width: 90px; box-sizing: border-box;">
-                                            <option value="all">全部</option>
-                                            <option value="群聊">群聊</option>
-                                            <option value="私聊">私聊</option>
-                                            <option value="公众号">公众号</option>
-                                        </select>
-                                    </div>
-                                    <select id="wechat-session-select" class="analysis-select" style="width: 100%;">
-                                        <option value="">-- 正在读取 --</option>
-                                    </select>
-                                </div>
-                                <!-- 搜索范围切换 (全量 vs 指定会话) -->
-                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                                    <label style="font-weight: 500;">🔍 搜索范围</label>
-                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
-                                            <input type="radio" name="searchScope" value="all" checked onclick="toggleSearchScope('all')" style="accent-color:var(--accent-color,#38bdf8);"> 🌐 全量检索
-                                        </label>
-                                        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
-                                            <input type="radio" name="searchScope" value="session" onclick="toggleSearchScope('session')" style="accent-color:var(--accent-color,#38bdf8);"> 💬 指定会话
-                                        </label>
-                                    </div>
-                                    <div id="search-type-filter" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
-                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                            <input type="radio" name="searchSessionType" value="" checked onclick="toggleSearchSessionType('')" style="accent-color:var(--accent-color,#38bdf8);"> 全部
-                                        </label>
-                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                            <input type="radio" name="searchSessionType" value="群聊" onclick="toggleSearchSessionType('群聊')" style="accent-color:var(--accent-color,#38bdf8);"> 👥 群聊
-                                        </label>
-                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                            <input type="radio" name="searchSessionType" value="私聊" onclick="toggleSearchSessionType('私聊')" style="accent-color:var(--accent-color,#38bdf8);"> 👤 私聊
-                                        </label>
-                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                            <input type="radio" name="searchSessionType" value="公众号" onclick="toggleSearchSessionType('公众号')" style="accent-color:var(--accent-color,#38bdf8);"> 📢 公众号
-                                        </label>
-                                    </div>
-                                </div>
-                                <!-- 指定会话模式下显示会话选择 -->
-                                <div class="analysis-control-row" id="session-select-container" style="flex-direction:column;align-items:flex-start;gap:6px;display:none;">
-                                    <label style="font-weight:500;">选择会话</label>
-                                    <select id="wechat-search-session-select" class="analysis-select" style="width:100%;">
-                                        <option value="">-- 正在读取 --</option>
-                                    </select>
-                                </div>
-                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                                    <label style="font-weight: 500;">全文检索关键字 (FTS5)</label>
-                                    <input type="text" id="wechat-keyword-input" class="analysis-input" placeholder="输入关键字搜索(支持拼音/英文/汉字)..." style="width: 100%; box-sizing: border-box;">
-                                </div>
-                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                                    <label style="font-weight: 500;">发言人筛选 (可选)</label>
-                                    <input type="text" id="wechat-sender-input" class="analysis-input" placeholder="输入发言人显示名称..." style="width: 100%; box-sizing: border-box;">
-                                </div>
-                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px; width: 100%;">
-                                    <label style="font-weight: 500;">日期筛选 (可选)</label>
-                                    <!-- 快捷日期选择按钮 -->
-                                    <div class="date-quick-buttons" style="display: flex; flex-wrap: wrap; gap: 6px; width: 100%; margin-bottom: 4px;">
-                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('today')" title="今天的消息">今天</button>
-                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('yesterday')" title="昨天的消息">昨天</button>
-                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisWeek')" title="本周的消息">本周</button>
-                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last7days')" title="最近7天的消息">近7天</button>
-                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last30days')" title="最近30天的消息">近30天</button>
-                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisMonth')" title="本月的消息">本月</button>
-                                        <button type="button" class="date-quick-btn" onclick="setQuickDateRange('lastMonth')" title="上月的消息">上月</button>
-                                        <button type="button" class="date-quick-btn danger" onclick="setQuickDateRange('clear')" title="清除日期筛选">清除</button>
-                                    </div>
-                                    <!-- 自定义日期范围选择 -->
-                                    <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
-                                        <input type="date" id="wechat-start-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="开始日期">
-                                        <span style="align-self: center; color: var(--text-muted, #64748b);">至</span>
-                                        <input type="date" id="wechat-end-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="结束日期">
-                                    </div>
-                                </div>
-                                <div class="analysis-action-row" style="margin-top: 10px;">
-                                    <button class="kb-btn kb-btn-primary" id="wechat-btn-search" onclick="searchWechatMessages()" style="width: 100%;">🔍 检索消息</button>
-                                </div>
-
-                                <hr style="border: 0; border-top: 1px dashed rgba(255, 255, 255, 0.1); width: 100%; margin: 10px 0;">
-
-                                <h4>🧠 AI 研判控制面板</h4>
-                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                                    <label style="font-weight: 500;">分析模式</label>
-                                    <select id="wechat-ai-mode" class="analysis-select" style="width: 100%;">
-                                        <option value="session">📅 会话脉络分析 (Session)</option>
-                                        <option value="user">👤 个人画像研判 (User)</option>
-                                        <option value="theme">🏷️ 话题演进分析 (Theme)</option>
-                                        <option value="relations">🕸️ 关系网图分析 (Relations)</option>
-                                    </select>
-                                </div>
-                                <div class="analysis-control-row" style="align-items: center; gap: 8px;">
-                                    <label class="analysis-checkbox" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                        <input type="checkbox" id="wechat-ai-cache" checked> 启用分析缓存
-                                    </label>
-                                    <button onclick="checkWechatAICacheStatus()" style="padding: 2px 8px; font-size: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; color: var(--text-muted, #64748b); cursor: pointer;">查看缓存状态</button>
-                                </div>
-                                <div id="wechat-cache-status" style="margin-top: 8px; padding: 8px; background: rgba(0, 0, 0, 0.2); border-radius: 6px; font-size: 0.8rem; color: var(--text-muted, #64748b); display: none;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <span>缓存状态: <span id="wechat-cache-count">0</span> 条</span>
-                                        <button onclick="clearWechatAICache()" style="padding: 2px 8px; font-size: 0.75rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 4px; color: #ef4444; cursor: pointer;">清除全部缓存</button>
-                                    </div>
-                                </div>
-                                <div class="analysis-action-row" style="margin-top: 10px;">
-                                    <button class="kb-btn kb-btn-primary" id="wechat-btn-analyze" onclick="runWechatAIAnalysis()" style="width: 100%; background: linear-gradient(135deg, #0ea5e9, #2563eb);">🧠 启动 AI 深度研判</button>
-                                </div>
-                                <span class="analysis-status" id="wechat-action-status"></span>
-                            </div>
-
-                            <!-- Right Column: Interactive Output Display -->
-                            <div class="wechat-panel-right">
-                                <!-- Message / Bubble Feed Section -->
-                                <div class="wechat-feed-card">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px;">
-                                        <h5 style="margin: 0; font-size: 1rem; color: #38bdf8;">💬 微信聊天气泡还原流</h5>
-                                        <span id="wechat-feed-stats" style="font-size: 0.8rem; color: var(--text-secondary, #94a3b8);">未加载数据</span>
-                                    </div>
-                                    <div id="wechat-bubble-feed" class="wechat-bubble-container">
-                                        <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">请在左侧选择会话,或者输入关键字检索消息</div>
-                                    </div>
-                                </div>
-
-                                <!-- AI Output Section -->
-                                <div class="wechat-ai-card">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px;">
-                                        <h5 style="margin: 0; font-size: 1rem; color: #38bdf8;">🧠 AI 分析研判报告与可视化图谱</h5>
-                                        <button class="kb-btn kb-btn-secondary" onclick="clearWechatAIResult()" style="padding: 2px 8px; font-size: 0.75rem; min-height: 24px;">清空</button>
-                                    </div>
-                                    <div id="wechat-ai-result" class="markdown-content" style="flex: 1; overflow-y: auto; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.03); max-height: 380px;">
-                                        <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">等待 AI 深度研判分析输出结果...</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <!-- 页面6:微信检索 (跳转到独立页面) -->
+            <div id="page-wechat" class="tab-page">
+                <div class="analysis-container glass-panel" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
+                    <h2>💬 微信聊天检索与分析控制台</h2>
+                    <p style="color: var(--text-secondary, #94a3b8); font-size: 1rem; text-align: center; max-width: 500px;">
+                        微信聊天检索与分析功能已迁移到独立页面，以提供更好的性能和更大的工作空间。
+                    </p>
+                    <a href="/wechat_console" class="kb-btn kb-btn-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; font-size: 1.1rem; border-radius: 10px; text-decoration: none;">
+                        🚀 打开微信检索控制台
+                    </a>
+                    <p style="color: var(--text-muted, #64748b); font-size: 0.85rem;">将在新窗口中打开独立页面</p>
                 </div>
             </div>
         </main>
@@ -2483,6 +2351,7 @@
             docs: document.getElementById('page-docs'),
             knowledge: document.getElementById('page-knowledge'),
             analysis: document.getElementById('page-analysis'),
+            wechat: document.getElementById('page-wechat'),
         };
 
         if (tabBar) {
@@ -2490,6 +2359,12 @@
                 const btn = e.target.closest('.tab-btn');
                 if (!btn) return;
                 const tab = btn.dataset.tab;
+
+                // 微信检索标签: 跳转到独立页面而不是切换标签
+                if (tab === 'wechat') {
+                    window.location.href = '/wechat_console';
+                    return;
+                }
 
                 // 切换按钮 active 状态
                 tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -4373,9 +4248,6 @@
             loadKbDocs();
             // 加载群聊分析群列表
             loadAnalysisGroups();
-            // 加载微信会话列表
-            loadWechatSessions();
-
             // 绑定滚动分页加载
             const feed = document.getElementById('wechat-bubble-feed');
             if (feed) {

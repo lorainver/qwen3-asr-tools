@@ -1,3 +1,9 @@
+window.hljs = window.hljs || {
+    getLanguage: function () { return false; },
+    highlight: function (code) { return { value: code }; },
+    highlightAuto: function (code) { return { value: code }; }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // === 0. Markdown 渲染配置 ===
     // 配置 marked
@@ -2742,3 +2748,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+

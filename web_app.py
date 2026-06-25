@@ -579,6 +579,10 @@ async def delete_history(path: str):
 async def get_index(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"config": config})
 
+@app.get("/wechat_console", response_class=HTMLResponse)
+async def get_wechat_console(request: Request):
+    return templates.TemplateResponse(request=request, name="wechat_console.html", context={"config": config})
+
 # ========== 文档浏览端点 ==========
 
 # 允许浏览的目录（相对于 BASE_DIR）
