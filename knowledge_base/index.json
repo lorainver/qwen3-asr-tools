@@ -894,5 +894,19 @@
     },
     "chunk_count": 41,
     "indexed_at": "2026-06-24T11:11:24.552122"
+  },
+  "bf6ee7aa5c9e": {
+    "filename": "GitHubFun网站_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\GitHubFun网站_raw.standard.md",
+      "filename": "GitHubFun网站_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 26401,
+      "loaded_at": "2026-06-25T09:09:39.888028",
+      "category": "微信聊天记录_manual_import",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_manual_import\\GitHubFun网站_raw.standard.md"
+    },
+    "chunk_count": 17,
+    "indexed_at": "2026-06-25T09:09:39.888028"
   }
 }
