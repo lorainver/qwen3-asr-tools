@@ -3863,7 +3863,7 @@
         }
 
         // 按类型分组渲染搜索结果 (全量搜索时使用)
-        function renderWechatBubblesGrouped(messages, keyword, groupByType) {
+        function renderWechatBubblesGrouped(messages, keyword) {
             const feed = document.getElementById('wechat-bubble-feed');
             feed.innerHTML = '';
 
@@ -3874,11 +3874,6 @@
 
             const typeLabelMap = { '群聊': '👥', '私聊': '👤', '公众号': '📢', '未知': '❓' };
             const typeColorMap = { '群聊': '#8b5cf6', '私聊': '#38bdf8', '公众号': '#f59e0b', '未知': '#94a3b8' };
-
-            if (!groupByType) {
-                renderWechatBubbles(messages, keyword, true);
-                return;
-            }
 
             // 按 session_type 分组
             const groups = {};
@@ -3903,8 +3898,101 @@
                 header.innerHTML = `<span style="font-size:1.1rem;">${icon}</span> ${typeName} <span style="margin-left:auto;font-size:0.78rem;opacity:0.75;">${msgs.length} 条结果</span>`;
                 feed.appendChild(header);
 
-                // 渲染该组消息
-                renderWechatBubbles(msgs, keyword, true);
+                // 直接渲染该组消息（追加模式，不清空）
+                _renderWechatBubblesAppend(msgs, keyword);
+            }
+        }
+
+        // 追加模式：渲染消息但不先清空 feed
+        function _renderWechatBubblesAppend(messages, keyword) {
+            const feed = document.getElementById('wechat-bubble-feed');
+            if (!messages || messages.length === 0) return;
+
+            const MAX_RENDER_COUNT = 200;
+            const ITEM_HEIGHT = 80;
+            const BUFFER_COUNT = 10;
+            const useVirtual = messages.length > MAX_RENDER_COUNT;
+
+            const fragment = document.createDocumentFragment();
+            const toRender = useVirtual ? messages.slice(0, MAX_RENDER_COUNT) : messages;
+
+            for (const msg of toRender) {
+                const div = document.createElement('div');
+                div.className = 'wechat-bubble-item';
+                div.style.cssText = `display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.05);`;
+
+                const isMe = msg.is_me;
+                const avatar = isMe
+                    ? '<div style="width:32px;height:32px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:#fff;">我</div>'
+                    : '<div style="width:32px;height:32px;border-radius:50%;background:#475569;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:#fff;">' + (msg.sender_name ? msg.sender_name.charAt(0) : '?') + '</div>';
+
+                const time = msg.create_time ? new Date(msg.create_time * 1000).toLocaleString('zh-CN', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+                const highlight = keyword
+                    ? msg.content.replace(new RegExp('(' + keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark style="background:#fbbf24;padding:0 2px;border-radius:3px;color:#1e293b;font-weight:600;">$1</mark>')
+                    : (msg.content || '');
+
+                div.innerHTML = avatar + '<div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-weight:600;font-size:0.85rem;color:#94a3b8;">' + (msg.sender_name || '未知') + '</span><span style="font-size:0.75rem;color:#64748b;">' + time + '</span></div><div style="font-size:0.9rem;color:#e2e8f0;word-break:break-all;line-height:1.5;">' + highlight + '</div><div style="margin-top:4px;font-size:0.75rem;color:#475569;">' + (msg.session_name || '') + '</div></div>';
+
+                fragment.appendChild(div);
+            }
+
+            feed.appendChild(fragment);
+
+            if (useVirtual) {
+                const totalHeight = messages.length * ITEM_HEIGHT;
+                feed.style.height = totalHeight + 'px';
+                feed.style.overflow = 'auto';
+
+                const spacerTop = document.createElement('div');
+                spacerTop.id = 'wechat-virtual-spacer-top';
+                spacerTop.style.height = '0px';
+                feed.parentElement.insertBefore(spacerTop, feed);
+
+                feed.addEventListener('scroll', function scrollHandler() {
+                    const scrollTop = feed.scrollTop;
+                    const viewportH = feed.clientHeight;
+                    const startIdx = Math.max(0, Math.floor(scrollTop / ITEM_HEIGHT) - BUFFER_COUNT);
+                    const endIdx = Math.min(messages.length, Math.ceil((scrollTop + viewportH) / ITEM_HEIGHT) + BUFFER_COUNT);
+                    const visibleCount = endIdx - startIdx;
+
+                    const virtualSpacerTop = document.getElementById('wechat-virtual-spacer-top');
+                    if (virtualSpacerTop) virtualSpacerTop.style.height = (startIdx * ITEM_HEIGHT) + 'px';
+
+                    const existing = feed.querySelectorAll('.wechat-bubble-item');
+                    const existingSet = new Set([...existing].map(e => e.dataset.idx));
+                    const visibleSet = new Set(messages.slice(startIdx, endIdx).map(m => String(m.idx || m._sort_key)));
+
+                    for (const el of existing) {
+                        if (!visibleSet.has(el.dataset.idx)) el.remove();
+                    }
+
+                    const lastEl = feed.querySelector('.wechat-bubble-item:last-of-type');
+                    let insertAnchor = lastEl ? lastEl.nextSibling : null;
+
+                    for (let i = startIdx; i < endIdx; i++) {
+                        const m = messages[i];
+                        if (existingSet.has(String(m.idx || m._sort_key))) continue;
+
+                        const div = document.createElement('div');
+                        div.className = 'wechat-bubble-item';
+                        div.dataset.idx = String(m.idx || m._sort_key);
+                        div.style.cssText = `display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.05);position:absolute;left:0;right:0;height:${ITEM_HEIGHT}px;top:${i * ITEM_HEIGHT}px;box-sizing:border-box;`;
+
+                        const isMe = m.is_me;
+                        const avatar = isMe
+                            ? '<div style="width:32px;height:32px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:#fff;">我</div>'
+                            : '<div style="width:32px;height:32px;border-radius:50%;background:#475569;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:#fff;">' + (m.sender_name ? m.sender_name.charAt(0) : '?') + '</div>';
+                        const time = m.create_time ? new Date(m.create_time * 1000).toLocaleString('zh-CN', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+                        const highlight = keyword
+                            ? m.content.replace(new RegExp('(' + keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark style="background:#fbbf24;padding:0 2px;border-radius:3px;color:#1e293b;font-weight:600;">$1</mark>')
+                            : (m.content || '');
+
+                        div.innerHTML = avatar + '<div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-weight:600;font-size:0.85rem;color:#94a3b8;">' + (m.sender_name || '未知') + '</span><span style="font-size:0.75rem;color:#64748b;">' + time + '</span></div><div style="font-size:0.9rem;color:#e2e8f0;word-break:break-all;line-height:1.5;">' + highlight + '</div></div>';
+
+                        feed.insertBefore(div, insertAnchor);
+                        insertAnchor = div.nextSibling;
+                    }
+                });
             }
         }
 
@@ -3917,7 +4005,6 @@
             const sessionId = (scope === 'session')
                 ? (document.getElementById('wechat-search-session-select') || {value:''}).value
                 : '';
-            const sessionType = wechatState.searchSessionType;
             const sessionType = wechatState.searchSessionType;
             const stats = document.getElementById('wechat-feed-stats');
             const feed = document.getElementById('wechat-bubble-feed');
