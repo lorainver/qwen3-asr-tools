@@ -235,7 +235,7 @@ class WechatDatabaseManager:
             'sender_stats': sender_stats
         }
 
-    def search_by_keyword(self, keyword: str, session_id: Optional[int] = None, sender_display_name: Optional[str] = None, context_lines: int = 3, limit: int = 50, offset: int = 0, filters: Optional[List[str]] = None, sort_by: str = "time", sort_order: str = "desc", start_time: Optional[int] = None, end_time: Optional[int] = None, show_context: bool = False, only_sender: bool = False) -> Dict:
+    def search_by_keyword(self, keyword: str, session_id: Optional[int] = None, sender_display_name: Optional[str] = None, context_lines: int = 3, limit: int = 50, offset: int = 0, filters: Optional[List[str]] = None, sort_by: str = "time", sort_order: str = "desc", start_time: Optional[int] = None, end_time: Optional[int] = None, show_context: bool = False, only_sender: bool = False, session_type: Optional[str] = None) -> Dict:
         import re
         
         cursor = self.conn.cursor()
@@ -250,7 +250,7 @@ class WechatDatabaseManager:
         # 构建SQL查询
         if only_sender:
             base_query = """
-                SELECT m.id, m.session_id, s.display_name as session_name, m.content, 
+                SELECT m.id, m.session_id, s.display_name as session_name, s.type as session_type, m.content, 
                        m.sender_display_name, m.formatted_time, m.create_time
                 FROM messages m
                 JOIN sessions s ON m.session_id = s.id
@@ -262,7 +262,7 @@ class WechatDatabaseManager:
             
             if has_chinese:
                 base_query = """
-                    SELECT m.id, m.session_id, s.display_name as session_name, m.content, 
+                    SELECT m.id, m.session_id, s.display_name as session_name, s.type as session_type, m.content, 
                            m.sender_display_name, m.formatted_time, m.create_time
                     FROM messages m
                     JOIN sessions s ON m.session_id = s.id
@@ -271,7 +271,7 @@ class WechatDatabaseManager:
                 params = [f"%{keyword}%"]
             else:
                 base_query = """
-                    SELECT m.id, m.session_id, s.display_name as session_name, m.content, 
+                    SELECT m.id, m.session_id, s.display_name as session_name, s.type as session_type, m.content, 
                            m.sender_display_name, m.formatted_time, m.create_time
                     FROM messages m
                     JOIN sessions s ON m.session_id = s.id
@@ -285,6 +285,10 @@ class WechatDatabaseManager:
         if session_id:
             base_query += " AND m.session_id = ?"
             params.append(session_id)
+
+        if session_type and session_type != '全部':
+            base_query += " AND s.type = ?"
+            params.append(session_type)
         
         if sender_display_name:
             base_query += " AND m.sender_display_name LIKE ?"
@@ -361,6 +365,7 @@ class WechatDatabaseManager:
         session_stats = {}
         sender_stats = {}
         
+        # 统计: 按会话
         for match in filtered_matches:
             if match['session_id']:
                 session_key = f"{match['session_id']}-{match['session_name']}"
@@ -368,9 +373,18 @@ class WechatDatabaseManager:
                     session_stats[session_key] = {
                         'id': match['session_id'],
                         'name': match['session_name'],
+                        'type': match.get('session_type', ''),
                         'count': 0
                     }
                 session_stats[session_key]['count'] += 1
+
+        # 统计: 按聊天类型 (群聊/私聊/公众号)
+        type_stats = {}
+        for match in filtered_matches:
+            t = match.get('session_type') or '未知'
+            if t not in type_stats:
+                type_stats[t] = 0
+            type_stats[t] += 1
             
             if match['sender_display_name']:
                 sender_name = match['sender_display_name']
@@ -382,13 +396,15 @@ class WechatDatabaseManager:
         sender_stats_list = sorted(sender_stats.items(), key=lambda x: x[1], reverse=True)
         sender_stats_list = [{'name': name, 'count': count} for name, count in sender_stats_list]
         
+        type_stats_list = [{'type': t, 'count': c} for t, c in sorted(type_stats.items(), key=lambda x: x[1], reverse=True)]
         return {
             "total": total_results,
             "results": paginated_results,
             "limit": limit,
             "offset": offset,
             "session_stats": session_stats_list,
-            "sender_stats": sender_stats_list
+            "sender_stats": sender_stats_list,
+            "type_stats": type_stats_list
         }
 
     def get_message_context(self, message_id: int, context_lines: int = 3, filters: Optional[List[str]] = None) -> Dict:

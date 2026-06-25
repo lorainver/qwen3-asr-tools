@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日期快捷选择功能测试</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 40px;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #38bdf8;
+        }
+        .test-section {
+            margin: 20px 0;
+        }
+        label {
+            font-weight: 500;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .date-quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .date-quick-btn {
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            background: rgba(56, 189, 248, 0.05);
+            color: #38bdf8;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .date-quick-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+        .date-quick-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            font-weight: 600;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+        }
+        .date-quick-btn.danger {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.08);
+            color: #ef4444;
+        }
+        .date-inputs {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        input[type="date"] {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+        .test-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-family: 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+        }
+        .test-result h4 {
+            margin: 0 0 10px 0;
+            color: #34d399;
+        }
+        .test-item {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        .test-item.pass {
+            border-left: 3px solid #34d399;
+        }
+        .test-item.fail {
+            border-left: 3px solid #ef4444;
+        }
+        span.divider {
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h2>📅 日期快捷选择功能测试</h2>
+        
+        <div class="test-section">
+            <label>日期筛选</label>
+            <div class="date-quick-buttons">
+                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('today')">今天</button>
+                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('yesterday')">昨天</button>
+                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisWeek')">本周</button>
+                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last7days')">近7天</button>
+                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last30days')">近30天</button>
+                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisMonth')">本月</button>
+                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('lastMonth')">上月</button>
+                <button type="button" class="date-quick-btn danger" onclick="setQuickDateRange('clear')">清除</button>
+            </div>
+            <div class="date-inputs">
+                <input type="date" id="wechat-start-date" title="开始日期">
+                <span class="divider">至</span>
+                <input type="date" id="wechat-end-date" title="结束日期">
+            </div>
+        </div>
+        
+        <div class="test-result">
+            <h4>✓ 测试结果</h4>
+            <div id="test-results"></div>
+        </div>
+    </div>
+
+    <script>
+        function setQuickDateRange(rangeType) {
+            const startDateInput = document.getElementById('wechat-start-date');
+            const endDateInput = document.getElementById('wechat-end-date');
+            
+            if (!startDateInput || !endDateInput) return;
+            
+            // 清除所有按钮的 active 状态
+            document.querySelectorAll('.date-quick-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (rangeType === 'clear') {
+                startDateInput.value = '';
+                endDateInput.value = '';
+                runTests();
+                return;
+            }
+            
+            // 设置当前按钮为 active
+            const currentBtn = document.querySelector(`.date-quick-btn[onclick*="'${rangeType}'"]`);
+            if (currentBtn) {
+                currentBtn.classList.add('active');
+            }
+            
+            const now = new Date();
+            let startDate, endDate;
+            
+            switch (rangeType) {
+                case 'today':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'yesterday':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                    break;
+                    
+                case 'thisWeek':
+                    const dayOfWeek = now.getDay() || 7;
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'last7days':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'last30days':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'thisMonth':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                    
+                case 'lastMonth':
+                    startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                    break;
+                    
+                default:
+                    return;
+            }
+            
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            startDateInput.value = formatDate(startDate);
+            endDateInput.value = formatDate(endDate);
+            
+            runTests();
+        }
+        
+        function runTests() {
+            const start = document.getElementById('wechat-start-date').value;
+            const end = document.getElementById('wechat-end-date').value;
+            const now = new Date();
+            
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            const todayStr = formatDate(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+            const yesterdayStr = formatDate(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1));
+            
+            const results = [];
+            
+            // 测试：今天
+            results.push({
+                name: '今天日期格式',
+                pass: start === todayStr && end === todayStr,
+                detail: `开始: ${start}, 结束: ${end}, 预期: ${todayStr}`
+            });
+            
+            // 显示结果
+            const resultDiv = document.getElementById('test-results');
+            resultDiv.innerHTML = results.map(r => `
+                <div class="test-item ${r.pass ? 'pass' : 'fail'}">
+                    ${r.pass ? '✓' : '✗'} ${r.name}: ${r.detail}
+                </div>
+            `).join('');
+        }
+        
+        // 初始化测试
+        document.addEventListener('DOMContentLoaded', () => {
+            // 绑定日期输入框变化事件
+            const startDate = document.getElementById('wechat-start-date');
+            const endDate = document.getElementById('wechat-end-date');
+            
+            if (startDate) {
+                startDate.addEventListener('change', () => {
+                    document.querySelectorAll('.date-quick-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                });
+            }
+            if (endDate) {
+                endDate.addEventListener('change', () => {
+                    document.querySelectorAll('.date-quick-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                });
+            }
+            
+            // 自动测试
+            setTimeout(() => {
+                console.log('自动测试开始...');
+                
+                // 测试今天
+                setQuickDateRange('today');
+                const start = document.getElementById('wechat-start-date').value;
+                const end = document.getElementById('wechat-end-date').value;
+                const now = new Date();
+                const expected = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+                
+                if (start === expected && end === expected) {
+                    console.log('✅ 今天测试通过');
+                } else {
+                    console.error('❌ 今天测试失败', { start, end, expected });
+                }
+                
+                // 测试昨天
+                setQuickDateRange('yesterday');
+                const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                const expectedYesterday = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+                const startY = document.getElementById('wechat-start-date').value;
+                const endY = document.getElementById('wechat-end-date').value;
+                
+                if (startY === expectedYesterday && endY === expectedYesterday) {
+                    console.log('✅ 昨天测试通过');
+                } else {
+                    console.error('❌ 昨天测试失败', { startY, endY, expectedYesterday });
+                }
+                
+                // 测试清除
+                setQuickDateRange('clear');
+                const startC = document.getElementById('wechat-start-date').value;
+                const endC = document.getElementById('wechat-end-date').value;
+                
+                if (startC === '' && endC === '') {
+                    console.log('✅ 清除测试通过');
+                } else {
+                    console.error('❌ 清除测试失败', { startC, endC });
+                }
+                
+                console.log('自动测试完成');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

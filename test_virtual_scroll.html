@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟滚动性能测试</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 40px;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #38bdf8;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+        button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        button.danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+        }
+        .message-container {
+            height: 400px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        .message {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            border-left: 3px solid #38bdf8;
+            transition: opacity 0.2s;
+        }
+        .message:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .virtual-container {
+            position: relative;
+            height: 100%;
+            overflow: auto;
+        }
+        .virtual-spacer {
+            position: relative;
+        }
+        .virtual-viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        .virtual-tip {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #fff;
+            z-index: 100;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .test-item {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .test-item.pass {
+            background: rgba(52, 211, 153, 0.1);
+            border-left: 3px solid #34d399;
+        }
+        .test-item.fail {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+        .performance-chart {
+            height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h2>🚀 虚拟滚动性能测试</h2>
+        
+        <!-- 控制面板 -->
+        <div class="test-section">
+            <h3>测试控制</h3>
+            <div class="controls">
+                <button onclick="generateMessages(100)">生成 100 条消息</button>
+                <button onclick="generateMessages(500)">生成 500 条消息</button>
+                <button onclick="generateMessages(1000)">生成 1000 条消息</button>
+                <button onclick="generateMessages(5000)">生成 5000 条消息</button>
+                <button class="secondary" onclick="toggleVirtualScroll()">切换渲染模式</button>
+                <button class="danger" onclick="clearMessages()">清空</button>
+            </div>
+            
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-label">消息总数</div>
+                    <div class="stat-value" id="total-count">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">渲染数量</div>
+                    <div class="stat-value" id="rendered-count">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">渲染耗时</div>
+                    <div class="stat-value" id="render-time">0ms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">DOM 节点数</div>
+                    <div class="stat-value" id="dom-nodes">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">内存占用</div>
+                    <div class="stat-value" id="memory">0MB</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">滚动帧率</div>
+                    <div class="stat-value" id="fps">60fps</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 消息渲染区域 -->
+        <div class="test-section">
+            <h3>消息渲染区域</h3>
+            <div class="message-container" id="message-container">
+                <div style="text-align: center; color: #64748b; padding: 100px;">
+                    点击上方按钮生成测试消息
+                </div>
+            </div>
+        </div>
+        
+        <!-- 性能测试结果 -->
+        <div class="test-section">
+            <h3>性能测试结果</h3>
+            <div class="test-results" id="test-results">
+                <div style="color: #64748b;">等待测试...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 配置
+        const CONFIG = {
+            MAX_RENDER_COUNT: 200,
+            ITEM_HEIGHT: 80,
+            BUFFER_COUNT: 10,
+            SCROLL_DEBOUNCE: 16
+        };
+        
+        // 状态
+        let state = {
+            messages: [],
+            isVirtualScroll: false,
+            scrollTop: 0,
+            visibleStart: 0,
+            visibleEnd: 0,
+            lastScrollTime: 0,
+            fps: 60,
+            frameCount: 0,
+            lastFpsTime: Date.now()
+        };
+        
+        // 生成模拟消息
+        function generateMessages(count) {
+            console.log(`生成 ${count} 条消息...`);
+            const messages = [];
+            for (let i = 0; i < count; i++) {
+                messages.push({
+                    id: i + 1,
+                    content: `消息内容 #${i + 1} - ${generateRandomText()}`,
+                    sender: `用户${(i % 10) + 1}`,
+                    time: Date.now() - (count - i) * 60000,
+                    formatted_time: new Date(Date.now() - (count - i) * 60000).toLocaleString('zh-CN')
+                });
+            }
+            state.messages = messages;
+            render();
+        }
+        
+        // 生成随机文本
+        function generateRandomText() {
+            const texts = [
+                '这是一条测试消息',
+                '今天天气真好，适合出去散步',
+                '明天有个重要会议，记得参加',
+                '周末大家一起吃饭吧',
+                '项目进度顺利，预计下周上线',
+                '收到老板的邮件，需要尽快回复',
+                '新产品发布会的准备工作进展如何',
+                '客户反馈很不错，继续保持',
+                '技术方案已经评审通过',
+                '代码审查中发现了一些问题'
+            ];
+            return texts[Math.floor(Math.random() * texts.length)];
+        }
+        
+        // 渲染
+        function render() {
+            const container = document.getElementById('message-container');
+            const startTime = performance.now();
+            
+            if (state.isVirtualScroll && state.messages.length > CONFIG.MAX_RENDER_COUNT) {
+                renderVirtual(container);
+            } else {
+                renderNormal(container);
+            }
+            
+            const endTime = performance.now();
+            const renderTime = Math.round(endTime - startTime);
+            
+            updateStats(renderTime);
+            runPerformanceTests();
+        }
+        
+        // 普通渲染
+        function renderNormal(container) {
+            const fragment = document.createDocumentFragment();
+            
+            state.messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'message';
+                div.innerHTML = `
+                    <div style="font-weight: 500; color: #38bdf8;">${msg.sender}</div>
+                    <div style="margin: 5px 0;">${msg.content}</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">${msg.formatted_time}</div>
+                `;
+                fragment.appendChild(div);
+            });
+            
+            container.innerHTML = '';
+            container.appendChild(fragment);
+        }
+        
+        // 虚拟滚动渲染
+        function renderVirtual(container) {
+            const totalHeight = state.messages.length * CONFIG.ITEM_HEIGHT;
+            const maxRender = CONFIG.MAX_RENDER_COUNT;
+            const renderedHeight = maxRender * CONFIG.ITEM_HEIGHT;
+            
+            container.innerHTML = `
+                <div class="virtual-container" id="virtual-container">
+                    <div class="virtual-spacer" style="height: ${totalHeight}px;">
+                        <div class="virtual-viewport" id="virtual-viewport" style="min-height: ${renderedHeight}px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="virtual-tip" id="virtual-tip">
+                    已启用虚拟滚动
+                </div>
+            `;
+            
+            // 初始渲染
+            renderVirtualMessages();
+            
+            // 绑定滚动事件
+            const virtualContainer = document.getElementById('virtual-container');
+            virtualContainer.addEventListener('scroll', onScroll);
+            
+            // 启动 FPS 监控
+            startFpsMonitor();
+        }
+        
+        // 渲染可见消息
+        function renderVirtualMessages() {
+            const viewport = document.getElementById('virtual-viewport');
+            if (!viewport) return;
+            
+            const startIndex = state.visibleStart;
+            const endIndex = Math.min(state.messages.length, state.visibleEnd);
+            
+            const fragment = document.createDocumentFragment();
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                const msg = state.messages[i];
+                const div = document.createElement('div');
+                div.className = 'message';
+                div.style.cssText = `position: absolute; top: ${i * CONFIG.ITEM_HEIGHT}px; left: 0; right: 0;`;
+                div.innerHTML = `
+                    <div style="font-weight: 500; color: #38bdf8;">${msg.sender}</div>
+                    <div style="margin: 5px 0;">${msg.content}</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">${msg.formatted_time}</div>
+                `;
+                fragment.appendChild(div);
+            }
+            
+            viewport.innerHTML = '';
+            viewport.appendChild(fragment);
+            
+            // 更新提示
+            const tip = document.getElementById('virtual-tip');
+            if (tip) {
+                tip.textContent = `显示 ${startIndex + 1}-${endIndex} / ${state.messages.length}`;
+            }
+        }
+        
+        // 滚动回调
+        function onScroll() {
+            const now = Date.now();
+            if (now - state.lastScrollTime < CONFIG.SCROLL_DEBOUNCE) {
+                return;
+            }
+            state.lastScrollTime = now;
+            
+            requestAnimationFrame(() => {
+                const container = document.getElementById('virtual-container');
+                if (!container) return;
+                
+                const scrollTop = container.scrollTop;
+                const viewportHeight = container.clientHeight;
+                
+                const visibleStart = Math.max(0, Math.floor(scrollTop / CONFIG.ITEM_HEIGHT) - CONFIG.BUFFER_COUNT);
+                const visibleEnd = Math.min(
+                    state.messages.length,
+                    Math.ceil((scrollTop + viewportHeight) / CONFIG.ITEM_HEIGHT) + CONFIG.BUFFER_COUNT
+                );
+                
+                if (visibleStart !== state.visibleStart || visibleEnd !== state.visibleEnd) {
+                    state.visibleStart = visibleStart;
+                    state.visibleEnd = visibleEnd;
+                    state.scrollTop = scrollTop;
+                    renderVirtualMessages();
+                }
+            });
+        }
+        
+        // FPS 监控
+        function startFpsMonitor() {
+            state.frameCount++;
+            const now = Date.now();
+            if (now - state.lastFpsTime >= 1000) {
+                state.fps = Math.round(state.frameCount * 1000 / (now - state.lastFpsTime));
+                state.frameCount = 0;
+                state.lastFpsTime = now;
+                document.getElementById('fps').textContent = `${state.fps}fps`;
+            }
+            requestAnimationFrame(startFpsMonitor);
+        }
+        
+        // 更新统计
+        function updateStats(renderTime) {
+            const container = document.getElementById('message-container');
+            const domNodes = container.querySelectorAll('.message').length;
+            const memory = performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) : 'N/A';
+            
+            document.getElementById('total-count').textContent = state.messages.length;
+            document.getElementById('rendered-count').textContent = domNodes;
+            document.getElementById('render-time').textContent = `${renderTime}ms`;
+            document.getElementById('dom-nodes').textContent = domNodes;
+            document.getElementById('memory').textContent = typeof memory === 'number' ? `${memory}MB` : memory;
+        }
+        
+        // 运行性能测试
+        function runPerformanceTests() {
+            const results = [];
+            const container = document.getElementById('message-container');
+            const domNodes = container.querySelectorAll('.message').length;
+            const totalMessages = state.messages.length;
+            const isVirtual = state.isVirtualScroll && totalMessages > CONFIG.MAX_RENDER_COUNT;
+            
+            // 测试 1: DOM 节点数量
+            if (isVirtual) {
+                results.push({
+                    name: 'DOM 节点优化',
+                    pass: domNodes <= CONFIG.MAX_RENDER_COUNT + 10,
+                    detail: `渲染 ${domNodes}/${totalMessages} 个节点 (${Math.round(domNodes / totalMessages * 100)}%)`
+                });
+            } else {
+                results.push({
+                    name: 'DOM 节点数量',
+                    pass: true,
+                    detail: `渲染 ${domNodes} 个节点`
+                });
+            }
+            
+            // 测试 2: 虚拟滚动效果
+            if (totalMessages > CONFIG.MAX_RENDER_COUNT) {
+                results.push({
+                    name: '虚拟滚动生效',
+                    pass: isVirtual,
+                    detail: isVirtual ? '已启用虚拟滚动' : '未启用虚拟滚动'
+                });
+            }
+            
+            // 测试 3: 渲染数量限制
+            results.push({
+                name: '渲染数量限制',
+                pass: domNodes <= CONFIG.MAX_RENDER_COUNT,
+                detail: `限制 ${CONFIG.MAX_RENDER_COUNT} 条，实际渲染 ${domNodes} 条`
+            });
+            
+            // 测试 4: FPS 监控
+            results.push({
+                name: '滚动帧率',
+                pass: state.fps >= 30,
+                detail: `当前 ${state.fps}fps`
+            });
+            
+            // 显示结果
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = results.map(r => `
+                <div class="test-item ${r.pass ? 'pass' : 'fail'}">
+                    ${r.pass ? '✓' : '✗'} ${r.name}: ${r.detail}
+                </div>
+            `).join('');
+        }
+        
+        // 切换渲染模式
+        function toggleVirtualScroll() {
+            state.isVirtualScroll = !state.isVirtualScroll;
+            alert(`渲染模式: ${state.isVirtualScroll ? '虚拟滚动' : '普通渲染'}`);
+            render();
+        }
+        
+        // 清空
+        function clearMessages() {
+            state.messages = [];
+            state.visibleStart = 0;
+            state.visibleEnd = 0;
+            const container = document.getElementById('message-container');
+            container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 100px;">点击上方按钮生成测试消息</div>';
+            updateStats(0);
+            document.getElementById('test-results').innerHTML = '<div style="color: #64748b;">等待测试...</div>';
+        }
+        
+        // 自动测试
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('自动测试开始...');
+            setTimeout(() => {
+                console.log('运行性能测试...');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

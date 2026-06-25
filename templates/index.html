@@ -1693,6 +1693,39 @@
                                         <option value="">-- 正在读取 --</option>
                                     </select>
                                 </div>
+                                <!-- 搜索范围切换 (全量 vs 指定会话) -->
+                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                    <label style="font-weight: 500;">🔍 搜索范围</label>
+                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
+                                            <input type="radio" name="searchScope" value="all" checked onclick="toggleSearchScope('all')" style="accent-color:var(--accent-color,#38bdf8);"> 🌐 全量检索
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
+                                            <input type="radio" name="searchScope" value="session" onclick="toggleSearchScope('session')" style="accent-color:var(--accent-color,#38bdf8);"> 💬 指定会话
+                                        </label>
+                                    </div>
+                                    <div id="search-type-filter" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                            <input type="radio" name="searchSessionType" value="" checked onclick="toggleSearchSessionType('')" style="accent-color:var(--accent-color,#38bdf8);"> 全部
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                            <input type="radio" name="searchSessionType" value="群聊" onclick="toggleSearchSessionType('群聊')" style="accent-color:var(--accent-color,#38bdf8);"> 👥 群聊
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                            <input type="radio" name="searchSessionType" value="私聊" onclick="toggleSearchSessionType('私聊')" style="accent-color:var(--accent-color,#38bdf8);"> 👤 私聊
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                            <input type="radio" name="searchSessionType" value="公众号" onclick="toggleSearchSessionType('公众号')" style="accent-color:var(--accent-color,#38bdf8);"> 📢 公众号
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- 指定会话模式下显示会话选择 -->
+                                <div class="analysis-control-row" id="session-select-container" style="flex-direction:column;align-items:flex-start;gap:6px;display:none;">
+                                    <label style="font-weight:500;">选择会话</label>
+                                    <select id="wechat-search-session-select" class="analysis-select" style="width:100%;">
+                                        <option value="">-- 正在读取 --</option>
+                                    </select>
+                                </div>
                                 <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
                                     <label style="font-weight: 500;">全文检索关键字 (FTS5)</label>
                                     <input type="text" id="wechat-keyword-input" class="analysis-input" placeholder="输入关键字搜索(支持拼音/英文/汉字)..." style="width: 100%; box-sizing: border-box;">
@@ -3219,7 +3252,11 @@
             searchLimit: 50,
             searchOffset: 0,
             searchTotal: 0,
-            searchResults: []
+            searchResults: [],
+            // 全量搜索: 搜索范围
+            searchScope: 'all',      // 'session'=指定会话, 'all'=全部
+            searchSessionType: '',   // '群聊'/'私聊'/'公众号'/''=全部
+            searchTypeStats: []      // 类型统计
         };
 
         function getSelectedStartTime() {
@@ -3647,11 +3684,14 @@
                 console.error('加载微信会话列表失败:', err);
                 const select = document.getElementById('wechat-session-select');
                 select.innerHTML = '<option value="">❌ 加载失败</option>';
+                const searchSelect = document.getElementById('wechat-search-session-select');
+                if (searchSelect) searchSelect.innerHTML = '<option value="">❌ 加载失败</option>';
             }
         }
 
         function renderWechatSessionOptions() {
             const select = document.getElementById('wechat-session-select');
+            const searchSelect = document.getElementById('wechat-search-session-select');
             const searchQuery = (document.getElementById('wechat-session-search')?.value || '').toLowerCase().trim();
             const typeFilter = document.getElementById('wechat-session-type-filter')?.value || 'all';
 
@@ -3683,6 +3723,7 @@
             });
 
             select.innerHTML = '<option value="">-- 请选择会话 --</option>';
+            if (searchSelect) searchSelect.innerHTML = '<option value="">-- 请选择会话 --</option>';
 
             // 渲染分组后的会话
             const groupOrder = ['群聊', '私聊', '公众号', '未分类'];
@@ -3698,6 +3739,18 @@
                         optgroup.appendChild(opt);
                     });
                     select.appendChild(optgroup);
+                    // 同步到搜索专用下拉框
+                    if (searchSelect) {
+                        const sg = document.createElement('optgroup');
+                        sg.label = `${groupName} (${list.length})`;
+                        list.forEach(session => {
+                            const opt2 = document.createElement('option');
+                            opt2.value = session.id;
+                            opt2.textContent = `${session.display_name} (${session.message_count}条)`;
+                            sg.appendChild(opt2);
+                        });
+                        searchSelect.appendChild(sg);
+                    }
                 }
             });
         }
@@ -3790,11 +3843,82 @@
             }
         }
 
+        // 切换搜索范围: 全量 vs 指定会话
+        function toggleSearchScope(scope) {
+            wechatState.searchScope = scope;
+            const typeFilter = document.getElementById('search-type-filter');
+            const sessionContainer = document.getElementById('session-select-container');
+            if (scope === 'all') {
+                if (typeFilter) typeFilter.style.display = 'flex';
+                if (sessionContainer) sessionContainer.style.display = 'none';
+            } else {
+                if (typeFilter) typeFilter.style.display = 'none';
+                if (sessionContainer) sessionContainer.style.display = 'flex';
+            }
+        }
+
+        // 切换会话类型过滤
+        function toggleSearchSessionType(type) {
+            wechatState.searchSessionType = type;
+        }
+
+        // 按类型分组渲染搜索结果 (全量搜索时使用)
+        function renderWechatBubblesGrouped(messages, keyword, groupByType) {
+            const feed = document.getElementById('wechat-bubble-feed');
+            feed.innerHTML = '';
+
+            if (!messages || messages.length === 0) {
+                feed.innerHTML = '<div style="text-align:center;color:var(--text-muted,#64748b);margin-top:60px;">未找到匹配结果</div>';
+                return;
+            }
+
+            const typeLabelMap = { '群聊': '👥', '私聊': '👤', '公众号': '📢', '未知': '❓' };
+            const typeColorMap = { '群聊': '#8b5cf6', '私聊': '#38bdf8', '公众号': '#f59e0b', '未知': '#94a3b8' };
+
+            if (!groupByType) {
+                renderWechatBubbles(messages, keyword, true);
+                return;
+            }
+
+            // 按 session_type 分组
+            const groups = {};
+            for (const msg of messages) {
+                const t = msg.session_type || '未知';
+                if (!groups[t]) groups[t] = [];
+                groups[t].push(msg);
+            }
+
+            const typeOrder = ['群聊', '私聊', '公众号', '未知'];
+            const sortedTypes = typeOrder.filter(t => groups[t]).concat(Object.keys(groups).filter(t => !typeOrder.includes(t)));
+
+            for (const typeName of sortedTypes) {
+                const msgs = groups[typeName];
+                const icon = typeLabelMap[typeName] || '💬';
+                const color = typeColorMap[typeName] || '#94a3b8';
+
+                // 类型分隔标题
+                const header = document.createElement('div');
+                header.className = 'wechat-group-header';
+                header.style.cssText = `display:flex;align-items:center;gap:8px;padding:10px 16px;margin:16px 0 8px;background:${color}18;border:1px solid ${color}40;border-radius:8px;font-size:0.88rem;font-weight:600;color:${color};`;
+                header.innerHTML = `<span style="font-size:1.1rem;">${icon}</span> ${typeName} <span style="margin-left:auto;font-size:0.78rem;opacity:0.75;">${msgs.length} 条结果</span>`;
+                feed.appendChild(header);
+
+                // 渲染该组消息
+                renderWechatBubbles(msgs, keyword, true);
+            }
+        }
+
         // 检索消息 (FTS + Senders)
         async function searchWechatMessages(loadMore = false) {
             const keyword = document.getElementById('wechat-keyword-input').value.trim();
             const sender = document.getElementById('wechat-sender-input').value.trim();
-            const sessionId = document.getElementById('wechat-session-select').value;
+            const scope = wechatState.searchScope;
+            // 指定会话搜索时从专用下拉框取值；全量搜索时忽略
+            const sessionId = (scope === 'session')
+                ? (document.getElementById('wechat-search-session-select') || {value:''}).value
+                : '';
+            const sessionType = wechatState.searchSessionType;
+            const sessionType = wechatState.searchSessionType;
             const stats = document.getElementById('wechat-feed-stats');
             const feed = document.getElementById('wechat-bubble-feed');
 
@@ -3804,30 +3928,32 @@
             }
 
             if (!loadMore) {
-                // 新搜索,重置状态
                 wechatState.isSearchMode = true;
                 wechatState.keyword = keyword;
                 wechatState.sender = sender;
                 wechatState.searchOffset = 0;
                 wechatState.searchResults = [];
+                wechatState.searchTypeStats = [];
 
-                stats.textContent = '🔍 正在检索...';
+                const scopeLabel = scope === 'all' ? (sessionType || '全部') : '指定会话';
+                stats.textContent = `🔍 正在检索 [${scopeLabel}]...`;
                 feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在执行全文检索中...</div>';
             } else {
-                // 加载更多,追加结果
                 if (wechatState.isLoading) return;
                 stats.textContent = '🔍 正在加载更多...';
             }
 
             wechatState.isLoading = true;
-
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
 
             try {
                 let url = `/api/wechat/search/keyword?keyword=${encodeURIComponent(keyword)}&only_sender=${sender ? 'true' : 'false'}&limit=${wechatState.searchLimit}&offset=${wechatState.searchOffset}`;
-                if (sessionId) {
+                if (scope === 'session' && sessionId) {
                     url += `&session_id=${sessionId}`;
+                }
+                if (scope === 'all' && sessionType) {
+                    url += `&session_type=${encodeURIComponent(sessionType)}`;
                 }
                 if (sender) {
                     url += `&sender_display_name=${encodeURIComponent(sender)}`;
@@ -3846,6 +3972,8 @@
 
                 const items = result.data.results || [];
                 wechatState.searchTotal = result.data.total;
+                // 保存类型统计
+                wechatState.searchTypeStats = result.data.type_stats || [];
 
                 if (loadMore) {
                     // 追加结果
@@ -3859,10 +3987,19 @@
                 const loadedCount = wechatState.searchResults.length;
                 const hasMore = loadedCount < wechatState.searchTotal;
 
-                stats.textContent = `共搜索到 ${wechatState.searchTotal} 条匹配结果,已加载 ${loadedCount} 条`;
+                // 类型统计信息
+                const typeStats = wechatState.searchTypeStats;
+                let statsText = `共搜索到 ${wechatState.searchTotal} 条`;
+                if (typeStats.length > 0 && wechatState.searchScope === 'all' && !wechatState.searchSessionType) {
+                    const parts = typeStats.map(t => `${t.type}${t.count}条`).join(' / ');
+                    statsText += ` (${parts})`;
+                } else if (wechatState.searchScope === 'all' && wechatState.searchSessionType) {
+                    statsText += ` [${wechatState.searchSessionType}]`;
+                }
+                stats.textContent = statsText + `，已加载 ${loadedCount} 条`;
 
-                // 渲染消息
-                renderWechatBubbles(wechatState.searchResults, keyword, true);
+                // 按类型分组渲染
+                renderWechatBubblesGrouped(wechatState.searchResults, keyword, wechatState.searchScope === 'all' && !wechatState.searchSessionType);
 
                 // 添加"加载更多"按钮(如果还有更多结果)
                 if (hasMore) {

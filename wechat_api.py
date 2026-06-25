@@ -126,14 +126,16 @@ async def search_by_keyword(
     start_time: Optional[int] = None,
     end_time: Optional[int] = None,
     show_context: bool = False,
-    only_sender: bool = False
+    only_sender: bool = False,
+    session_type: Optional[str] = Query(None, description="会话类型过滤：群聊/私聊/公众号，不传则搜全部")
 ):
     if not keyword and not only_sender:
         raise HTTPException(status_code=400, detail="Keyword or only_sender filter is required")
     try:
         results = wechat_db.search_by_keyword(
             keyword, session_id, sender_display_name, context_lines, limit, offset,
-            filters, sort_by, sort_order, start_time, end_time, show_context, only_sender
+            filters, sort_by, sort_order, start_time, end_time, show_context, only_sender,
+            session_type
         )
         return {"success": True, "data": results}
     except Exception as e:

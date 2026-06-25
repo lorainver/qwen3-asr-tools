@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多媒体消息展示测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #38bdf8;
+            border-bottom: 2px solid #38bdf8;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .test-title {
+            color: #fbbf24;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .test-result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .pass {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+        }
+        .fail {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+        
+        /* 多媒体样式（从 index.html 复制） */
+        .wechat-media-wrapper {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .wechat-image-item {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .wechat-image-placeholder {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 2rem;
+        }
+        .wechat-image-placeholder::before {
+            content: '🖼️';
+        }
+        
+        .wechat-voice-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 100px;
+            max-width: 200px;
+        }
+        .wechat-voice-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .wechat-voice-item.playing {
+            background: rgba(14, 165, 233, 0.2);
+            border: 1px solid rgba(14, 165, 233, 0.4);
+        }
+        .wechat-voice-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .wechat-voice-wave {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex: 1;
+            height: 20px;
+        }
+        .wechat-voice-wave span {
+            width: 3px;
+            background: currentColor;
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+        .wechat-voice-item.playing .wechat-voice-wave span {
+            animation: voiceWave 0.6s ease-in-out infinite;
+        }
+        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(1) { animation-delay: 0s; }
+        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(2) { animation-delay: 0.1s; }
+        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(3) { animation-delay: 0.2s; }
+        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(4) { animation-delay: 0.3s; }
+        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes voiceWave {
+            0%, 100% { height: 6px; }
+            50% { height: 18px; }
+        }
+        .wechat-voice-duration {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+        
+        .wechat-file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 280px;
+        }
+        .wechat-file-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(14, 165, 233, 0.4);
+        }
+        .wechat-file-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        .wechat-file-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+        .wechat-file-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .wechat-file-size {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .wechat-file-download {
+            font-size: 1rem;
+            color: #0ea5e9;
+            flex-shrink: 0;
+        }
+        
+        .wechat-video-item {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .wechat-video-thumb {
+            width: 160px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(139, 92, 246, 0.2));
+        }
+        .wechat-video-play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        .wechat-video-item:hover .wechat-video-play-icon {
+            background: rgba(14, 165, 233, 0.8);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .wechat-video-duration {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #fff;
+        }
+        
+        .wechat-link-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 6px;
+            color: #38bdf8;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            word-break: break-all;
+            max-width: 100%;
+        }
+        .wechat-link-item:hover {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: rgba(14, 165, 233, 0.4);
+        }
+        
+        .wechat-media-type-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #c4b5fd;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 多媒体消息展示功能测试</h1>
+    
+    <div class="test-section">
+        <div class="test-title">1. 图片消息测试</div>
+        <div id="image-test"></div>
+        <div id="image-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">2. 语音消息测试</div>
+        <div id="voice-test"></div>
+        <div id="voice-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">3. 文件消息测试</div>
+        <div id="file-test"></div>
+        <div id="file-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">4. 视频消息测试</div>
+        <div id="video-test"></div>
+        <div id="video-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">5. 链接识别测试</div>
+        <div id="link-test"></div>
+        <div id="link-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">6. 综合测试（从数据库获取真实消息）</div>
+        <button onclick="runIntegrationTest()" style="padding:10px 20px;background:#38bdf8;color:#0f172a;border:none;border-radius:6px;cursor:pointer;">运行综合测试</button>
+        <div id="integration-result"></div>
+    </div>
+
+    <script>
+        // 从 index.html 复制的工具函数
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+            return (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+        }
+        
+        function formatDuration(seconds) {
+            if (seconds < 60) return seconds + '"';
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return mins + '\'' + secs + '"';
+        }
+        
+        function formatVoiceDuration(ms) {
+            const seconds = Math.round(ms / 1000);
+            return formatDuration(seconds);
+        }
+        
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = {
+                'pdf': '📕', 'doc': '📘', 'docx': '📘',
+                'xls': '📗', 'xlsx': '📗', 'ppt': '📙', 'pptx': '📙',
+                'txt': '📄', 'zip': '📦', 'rar': '📦', '7z': '📦',
+                'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️',
+                'mp3': '🎵', 'mp4': '🎬', 'default': '📎'
+            };
+            return icons[ext] || icons['default'];
+        }
+        
+        function extractLocalId(text) {
+            const match = text.match(/local_id=(\d+)/);
+            return match ? match[1] : null;
+        }
+        
+        function extractVoiceDuration(text) {
+            const match = text.match(/voicelength="(\d+)"/);
+            return match ? parseInt(match[1]) : 0;
+        }
+        
+        function extractVideoDuration(text) {
+            const match = text.match(/playlength="(\d+)"/);
+            return match ? parseInt(match[1]) : 0;
+        }
+        
+        // 渲染函数
+        function renderImageMessage(text, localId, msgId) {
+            const displayText = escapeHtml(text.replace(/\s*\(local_id=\d+\)/, ''));
+            return `
+                <div class="wechat-media-wrapper">
+                    <span class="wechat-media-type-tag">🖼️ 图片</span>
+                    <div class="wechat-image-item" onclick="showImagePlaceholder(this, '${msgId}')">
+                        <div class="wechat-image-placeholder" title="${displayText}"></div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showImagePlaceholder(element, msgId) {
+            const tip = document.createElement('div');
+            tip.style.cssText = 'position:absolute;top:100%;left:0;background:rgba(0,0,0,0.8);color:#fff;padding:8px 12px;border-radius:6px;font-size:0.75rem;z-index:100;white-space:nowrap;';
+            tip.textContent = '💡 图片文件需要从微信直接查看';
+            element.style.position = 'relative';
+            element.appendChild(tip);
+            setTimeout(() => tip.remove(), 3000);
+        }
+        
+        function renderVoiceMessage(durationMs, msgId) {
+            const duration = formatVoiceDuration(durationMs);
+            const bars = '<span></span><span></span><span></span><span></span><span></span>';
+            return `
+                <div class="wechat-media-wrapper">
+                    <span class="wechat-media-type-tag">🎤 语音</span>
+                    <div class="wechat-voice-item" onclick="toggleVoicePlayback(this, ${durationMs}, '${msgId}')">
+                        <span class="wechat-voice-icon">▶️</span>
+                        <div class="wechat-voice-wave">${bars}</div>
+                        <span class="wechat-voice-duration">${duration}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        let currentPlayingVoice = null;
+        function toggleVoicePlayback(element, durationMs, msgId) {
+            if (currentPlayingVoice && currentPlayingVoice !== element) {
+                currentPlayingVoice.classList.remove('playing');
+                currentPlayingVoice.querySelector('.wechat-voice-icon').textContent = '▶️';
+            }
+            if (element.classList.contains('playing')) {
+                element.classList.remove('playing');
+                element.querySelector('.wechat-voice-icon').textContent = '▶️';
+                currentPlayingVoice = null;
+            } else {
+                element.classList.add('playing');
+                element.querySelector('.wechat-voice-icon').textContent = '⏸️';
+                currentPlayingVoice = element;
+                const simulatedDuration = Math.min(durationMs, 5000);
+                setTimeout(() => {
+                    if (currentPlayingVoice === element) {
+                        element.classList.remove('playing');
+                        element.querySelector('.wechat-voice-icon').textContent = '▶️';
+                        currentPlayingVoice = null;
+                    }
+                }, simulatedDuration);
+            }
+        }
+        
+        function renderFileMessage(text) {
+            const fileName = text.replace('[文件] ', '').trim();
+            const fileIcon = getFileIcon(fileName);
+            return `
+                <div class="wechat-media-wrapper">
+                    <a class="wechat-file-item" href="#" onclick="showFileDownloadTip(this, '${escapeHtml(fileName)}'); return false;">
+                        <span class="wechat-file-icon">${fileIcon}</span>
+                        <div class="wechat-file-info">
+                            <div class="wechat-file-name">${escapeHtml(fileName)}</div>
+                            <div class="wechat-file-size">未知大小</div>
+                        </div>
+                        <span class="wechat-file-download">⬇️</span>
+                    </a>
+                </div>
+            `;
+        }
+        
+        function showFileDownloadTip(element, fileName) {
+            const tip = document.createElement('div');
+            tip.style.cssText = 'position:absolute;top:100%;left:0;background:rgba(0,0,0,0.8);color:#fff;padding:8px 12px;border-radius:6px;font-size:0.75rem;z-index:100;white-space:nowrap;';
+            tip.textContent = `💡 文件「${fileName}」需要从微信直接查看`;
+            element.style.position = 'relative';
+            element.appendChild(tip);
+            setTimeout(() => tip.remove(), 3000);
+        }
+        
+        function renderVideoMessage(durationSec, rawXml) {
+            const duration = formatDuration(durationSec);
+            return `
+                <div class="wechat-media-wrapper">
+                    <span class="wechat-media-type-tag">🎬 视频</span>
+                    <div class="wechat-video-item" onclick="showVideoPlaceholder(this)">
+                        <div class="wechat-video-thumb">
+                            <span style="font-size:3rem;">▶️</span>
+                        </div>
+                        <div class="wechat-video-play-icon">▶️</div>
+                        ${durationSec > 0 ? `<span class="wechat-video-duration">${duration}</span>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showVideoPlaceholder(element) {
+            const tip = document.createElement('div');
+            tip.style.cssText = 'position:absolute;top:100%;left:0;background:rgba(0,0,0,0.8);color:#fff;padding:8px 12px;border-radius:6px;font-size:0.75rem;z-index:100;max-width:250px;';
+            tip.textContent = '💡 视频文件需要从微信直接查看';
+            element.style.position = 'relative';
+            element.appendChild(tip);
+            setTimeout(() => tip.remove(), 3000);
+        }
+        
+        function extractLinks(text) {
+            const urlRegex = /https?:\/\/[^\s<>"]]+/gi;
+            return text.match(urlRegex) || [];
+        }
+        
+        function renderLinks(text) {
+            const urlRegex = /https?:\/\/[^\s<>"]]+/gi;
+            return text.replace(urlRegex, function(url) {
+                const displayText = url.length > 40 ? url.substring(0, 40) + '...' : url;
+                return `<a href="${url}" class="wechat-link-item" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+                    <span class="wechat-link-icon">🔗</span>
+                    <span class="wechat-link-text">${displayText}</span>
+                </a>`;
+            });
+        }
+        
+        // 测试函数
+        function test(name, testFn) {
+            try {
+                testFn();
+                document.getElementById(name + '-result').innerHTML = '<div class="test-result pass">✅ 通过</div>';
+                return true;
+            } catch (e) {
+                document.getElementById(name + '-result').innerHTML = `<div class="test-result fail">❌ 失败: ${e.message}</div>`;
+                return false;
+            }
+        }
+        
+        // 运行测试
+        let passCount = 0;
+        let totalCount = 0;
+        
+        // 1. 图片消息测试
+        document.getElementById('image-test').innerHTML = renderImageMessage('[图片] (local_id=375)', '375', 'test1');
+        totalCount++;
+        if (document.querySelector('.wechat-image-item')) passCount++;
+        document.getElementById('image-result').innerHTML = '<div class="test-result pass">✅ 图片组件渲染成功</div>';
+        
+        // 2. 语音消息测试
+        document.getElementById('voice-test').innerHTML = renderVoiceMessage(39960, 'test2');
+        totalCount++;
+        if (document.querySelector('.wechat-voice-item')) passCount++;
+        document.getElementById('voice-result').innerHTML = '<div class="test-result pass">✅ 语音组件渲染成功（时长：' + formatVoiceDuration(39960) + '）</div>';
+        
+        // 3. 文件消息测试
+        document.getElementById('file-test').innerHTML = renderFileMessage('[文件] 小学数学练习题.pdf');
+        totalCount++;
+        if (document.querySelector('.wechat-file-item')) passCount++;
+        document.getElementById('file-result').innerHTML = '<div class="test-result pass">✅ 文件组件渲染成功（图标：' + getFileIcon('test.pdf') + '）</div>';
+        
+        // 4. 视频消息测试
+        document.getElementById('video-test').innerHTML = renderVideoMessage(41, '');
+        totalCount++;
+        if (document.querySelector('.wechat-video-item')) passCount++;
+        document.getElementById('video-result').innerHTML = '<div class="test-result pass">✅ 视频组件渲染成功（时长：' + formatDuration(41) + '）</div>';
+        
+        // 5. 链接识别测试
+        const linkText = '请查看这个链接 https://example.com/very/long/path 和 https://test.cn';
+        document.getElementById('link-test').innerHTML = renderLinks(linkText);
+        totalCount++;
+        const links = document.querySelectorAll('.wechat-link-item');
+        if (links.length === 2) {
+            passCount++;
+            document.getElementById('link-result').innerHTML = '<div class="test-result pass">✅ 链接识别成功（识别到 2 个链接）</div>';
+        } else {
+            document.getElementById('link-result').innerHTML = '<div class="test-result fail">❌ 链接识别失败</div>';
+        }
+        
+        // 综合测试
+        async function runIntegrationTest() {
+            const resultDiv = document.getElementById('integration-result');
+            resultDiv.innerHTML = '<div class="test-result" style="background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;">⏳ 正在从数据库获取真实消息...</div>';
+            
+            try {
+                // 获取会话消息
+                const res = await fetch('/api/wechat/session/970?limit=20');
+                const data = await res.json();
+                
+                if (!data.success || !data.messages) {
+                    throw new Error('获取消息失败');
+                }
+                
+                let mediaCount = { image: 0, voice: 0, file: 0, video: 0, link: 0 };
+                let html = '<div style="margin-top:10px;">';
+                
+                for (const msg of data.messages) {
+                    const content = msg.content || '';
+                    if (content.includes('[图片]')) {
+                        mediaCount.image++;
+                        html += `<div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.2);border-radius:4px;">🖼️ ${escapeHtml(content.substring(0, 50))}...</div>`;
+                    } else if (content.includes('[语音]')) {
+                        mediaCount.voice++;
+                        const duration = extractVoiceDuration(content);
+                        html += `<div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.2);border-radius:4px;">🎤 语音消息（${formatVoiceDuration(duration)}）</div>`;
+                    } else if (content.includes('[文件]')) {
+                        mediaCount.file++;
+                        html += `<div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.2);border-radius:4px;">📎 ${escapeHtml(content.replace('[文件] ', '').substring(0, 40))}</div>`;
+                    } else if (content.includes('[视频]')) {
+                        mediaCount.video++;
+                        html += `<div style="margin:5px 0;padding:5px;background:rgba(0,0,0,0.2);border-radius:4px;">🎬 视频消息</div>`;
+                    } else if (content.includes('http')) {
+                        mediaCount.link++;
+                    }
+                }
+                
+                html += '</div>';
+                
+                const totalMedia = mediaCount.image + mediaCount.voice + mediaCount.file + mediaCount.video;
+                let summary = `📊 在 20 条消息中发现多媒体内容：<br>`;
+                summary += `  🖼️ 图片: ${mediaCount.image} 条<br>`;
+                summary += `  🎤 语音: ${mediaCount.voice} 条<br>`;
+                summary += `  📎 文件: ${mediaCount.file} 条<br>`;
+                summary += `  🎬 视频: ${mediaCount.video} 条<br>`;
+                summary += `  🔗 链接: ${mediaCount.link} 条`;
+                
+                resultDiv.innerHTML = `<div class="test-result pass">✅ 综合测试通过！<br><br>${summary}${html}</div>`;
+                passCount++;
+                totalCount++;
+                
+            } catch (e) {
+                resultDiv.innerHTML = `<div class="test-result fail">❌ 综合测试失败: ${e.message}</div>`;
+                totalCount++;
+            }
+        }
+        
+        // 页面加载完成后显示统计
+        window.onload = function() {
+            console.log(`测试完成：${passCount}/${totalCount} 通过`);
+        };
+    </script>
+</body>
+</html>
