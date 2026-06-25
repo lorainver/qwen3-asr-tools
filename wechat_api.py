@@ -83,6 +83,21 @@ async def get_session(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/message/{message_id}/position")
+async def get_message_position(
+    message_id: int,
+    filters: Optional[List[str]] = Query(None),
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None
+):
+    try:
+        pos = wechat_db.get_message_position(message_id, filters, start_time, end_time)
+        if not pos:
+            raise HTTPException(status_code=404, detail="Message not found")
+        return {"success": True, "data": pos}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/search/username")
 async def search_by_username(
     username: str,

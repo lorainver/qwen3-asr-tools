@@ -1568,6 +1568,14 @@
                                     <label style="font-weight: 500;">发言人筛选 (可选)</label>
                                     <input type="text" id="wechat-sender-input" class="analysis-input" placeholder="输入发言人显示名称..." style="width: 100%; box-sizing: border-box;">
                                 </div>
+                                <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px; width: 100%;">
+                                    <label style="font-weight: 500;">日期筛选 (可选)</label>
+                                    <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
+                                        <input type="date" id="wechat-start-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="开始日期">
+                                        <span style="align-self: center; color: var(--text-muted, #64748b);">至</span>
+                                        <input type="date" id="wechat-end-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="结束日期">
+                                    </div>
+                                </div>
                                 <div class="analysis-action-row" style="margin-top: 10px;">
                                     <button class="kb-btn kb-btn-primary" id="wechat-btn-search" onclick="searchWechatMessages()" style="width: 100%;">🔍 检索消息</button>
                                 </div>
@@ -1627,6 +1635,24 @@
     </div>
     <script src="/static/main.js?v=20260528_voice"></script>
     <style>
+        /* 微信控制台新增样式 */
+        .wechat-jump-btn {
+            font-size: 0.75rem;
+            color: #38bdf8;
+            cursor: pointer;
+            margin-left: 8px;
+            padding: 2px 6px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 4px;
+            background: rgba(56, 189, 248, 0.05);
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        .wechat-jump-btn:hover {
+            background: rgba(56, 189, 248, 0.2);
+            color: #fff;
+        }
+
         /* 执行控件样式 */
         .run-control-row {
             display: flex;
@@ -2878,10 +2904,38 @@
             return `linear-gradient(135deg, hsl(${h}, 70%, 45%), hsl(${(h + 40) % 360}, 75%, 60%))`;
         }
 
+        // 微信状态管理器
+        let wechatState = {
+            sessionId: null,
+            limit: 50,
+            offset: 0,
+            totalCount: 0,
+            isLoading: false,
+            messages: [],
+            isSearchMode: false,
+            keyword: '',
+            sender: '',
+            startTime: null,
+            endTime: null
+        };
+
+        function getSelectedStartTime() {
+            const val = document.getElementById('wechat-start-date').value;
+            return val ? Math.floor(new Date(val + 'T00:00:00').getTime() / 1000) : null;
+        }
+
+        function getSelectedEndTime() {
+            const val = document.getElementById('wechat-end-date').value;
+            return val ? Math.floor(new Date(val + 'T23:59:59').getTime() / 1000) : null;
+        }
+
         // 渲染气泡列表
-        function renderWechatBubbles(messages, keyword) {
+        function renderWechatBubbles(messages, keyword, isSearchResults = false) {
             const feed = document.getElementById('wechat-bubble-feed');
             if (!messages || messages.length === 0) {
+                if (!isSearchResults && wechatState.offset > 0) {
+                    return;
+                }
                 feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">未查询到任何消息记录</div>';
                 return;
             }
@@ -2903,19 +2957,25 @@
                 const avatarBg = getWechatAvatarColor(senderName);
                 
                 const displayContent = highlightKeyword(msg.content || '', keyword);
+                
+                // 如果是检索模式，添加“上下文”定位跳转按钮
+                const jumpBtnHtml = isSearchResults ? 
+                    `<span class="wechat-jump-btn" onclick="jumpToMessageContext(${msg.id}, ${msg.session_id})">🔍 上下文</span>` : '';
 
                 html += `
-                    <div class="wechat-msg-row ${isSend ? 'sent' : 'received'}">
+                    <div class="wechat-msg-row ${isSend ? 'sent' : 'received'}" data-msg-id="${msg.id}">
                         <div class="wechat-avatar" style="background: ${avatarBg};">${escapeHtml(avatarChar)}</div>
                         <div class="wechat-msg-content-wrapper">
-                            <span class="wechat-sender-name">${escapeHtml(senderName)}</span>
+                            <span class="wechat-sender-name">
+                                ${escapeHtml(senderName)}
+                                ${jumpBtnHtml}
+                            </span>
                             <div class="wechat-bubble">${displayContent}</div>
                         </div>
                     </div>
                 `;
             });
             feed.innerHTML = html;
-            feed.scrollTop = feed.scrollHeight;
         }
 
         function highlightKeyword(text, keyword) {
@@ -3000,30 +3060,91 @@
             });
         }
 
-        // 加载指定会话的消息
-        async function loadWechatSessionMessages(sessionId) {
-            if (!sessionId) return;
+        // 统一获取会话消息接口（支持滚动分页）
+        async function fetchSessionMessages(sessionId, offset, limit, append = false, prepend = false) {
+            if (wechatState.isLoading) return;
+            wechatState.isLoading = true;
+            
             const stats = document.getElementById('wechat-feed-stats');
             const feed = document.getElementById('wechat-bubble-feed');
             
-            stats.textContent = '⏳ 正在加载...';
-            feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在加载聊天记录...</div>';
-
+            const st = getSelectedStartTime();
+            const et = getSelectedEndTime();
+            
+            let url = `/api/wechat/session/${sessionId}?limit=${limit}&offset=${offset}`;
+            if (st) url += `&start_time=${st}`;
+            if (et) url += `&end_time=${et}`;
+            
             try {
-                const res = await fetch(`/api/wechat/session/${sessionId}?limit=200`);
+                const res = await fetch(url);
                 const result = await res.json();
                 if (!result.success) {
                     stats.textContent = '❌ 加载失败';
-                    feed.innerHTML = '<div style="text-align: center; color: #ef4444; margin-top: 60px;">加载失败，请重试</div>';
+                    wechatState.isLoading = false;
                     return;
                 }
+                
+                const msgs = result.messages || [];
+                wechatState.totalCount = result.filtered_message_count;
+                
+                if (prepend) {
+                    const oldScrollHeight = feed.scrollHeight;
+                    const oldScrollTop = feed.scrollTop;
+                    
+                    wechatState.messages = msgs.concat(wechatState.messages);
+                    renderWechatBubbles(wechatState.messages, '');
+                    
+                    feed.scrollTop = oldScrollTop + (feed.scrollHeight - oldScrollHeight);
+                } else if (append) {
+                    wechatState.messages = wechatState.messages.concat(msgs);
+                    renderWechatBubbles(wechatState.messages, '');
+                } else {
+                    wechatState.messages = msgs;
+                    renderWechatBubbles(wechatState.messages, '');
+                    feed.scrollTop = feed.scrollHeight;
+                }
+                
+                wechatState.offset = offset;
+                
+                const startNum = Math.min(wechatState.totalCount, wechatState.offset + 1);
+                const endNum = Math.min(wechatState.totalCount, wechatState.offset + msgs.length);
+                stats.textContent = `当前展示第 ${startNum} - ${endNum} 条 (共 ${wechatState.totalCount} 条)`;
+                
+            } catch(e) {
+                console.error(e);
+                stats.textContent = '❌ 加载出错';
+            } finally {
+                wechatState.isLoading = false;
+            }
+        }
 
-                stats.textContent = `当前展示前 200 条 (共 ${result.filtered_message_count} 条)`;
-                renderWechatBubbles(result.messages, '');
+        // 加载指定会话的消息
+        async function loadWechatSessionMessages(sessionId) {
+            if (!sessionId) return;
+            const feed = document.getElementById('wechat-bubble-feed');
+            feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在加载聊天记录...</div>';
+            
+            wechatState.sessionId = sessionId;
+            wechatState.isSearchMode = false;
+            
+            const st = getSelectedStartTime();
+            const et = getSelectedEndTime();
+            let url = `/api/wechat/session/${sessionId}?limit=1&offset=0`;
+            if (st) url += `&start_time=${st}`;
+            if (et) url += `&end_time=${et}`;
+            
+            try {
+                const res = await fetch(url);
+                const result = await res.json();
+                if (result.success) {
+                    const total = result.filtered_message_count;
+                    const startOffset = Math.max(0, total - wechatState.limit);
+                    await fetchSessionMessages(sessionId, startOffset, wechatState.limit, false, false);
+                }
             } catch(err) {
-                console.error('加载会话消息失败:', err);
-                stats.textContent = '❌ 发生异常';
-                feed.innerHTML = '<div style="text-align: center; color: #ef4444; margin-top: 60px;">网络异常，请重试</div>';
+                console.error('加载初始消息失败:', err);
+                const stats = document.getElementById('wechat-feed-stats');
+                stats.textContent = '❌ 加载失败';
             }
         }
 
@@ -3040,8 +3161,15 @@
                 return;
             }
 
+            wechatState.isSearchMode = true;
+            wechatState.keyword = keyword;
+            wechatState.sender = sender;
+            
             stats.textContent = '🔍 正在检索...';
             feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在执行全文检索中...</div>';
+
+            const st = getSelectedStartTime();
+            const et = getSelectedEndTime();
 
             try {
                 let url = `/api/wechat/search/keyword?keyword=${encodeURIComponent(keyword)}&only_sender=${sender ? 'true' : 'false'}`;
@@ -3051,6 +3179,8 @@
                 if (sender) {
                     url += `&sender_display_name=${encodeURIComponent(sender)}`;
                 }
+                if (st) url += `&start_time=${st}`;
+                if (et) url += `&end_time=${et}`;
 
                 const res = await fetch(url);
                 const result = await res.json();
@@ -3062,11 +3192,67 @@
 
                 const items = result.data.results || [];
                 stats.textContent = `共搜索到 ${result.data.total} 条匹配结果`;
-                renderWechatBubbles(items, keyword);
+                renderWechatBubbles(items, keyword, true);
+                feed.scrollTop = feed.scrollHeight;
             } catch(err) {
                 console.error('全文检索失败:', err);
                 stats.textContent = '❌ 检索异常';
                 feed.innerHTML = '<div style="text-align: center; color: #ef4444; margin-top: 60px;">网络异常，请重试</div>';
+            }
+        }
+
+        // 跳转上下文方法
+        async function jumpToMessageContext(messageId, sessionId) {
+            const sessionSelect = document.getElementById('wechat-session-select');
+            sessionSelect.value = sessionId;
+            
+            document.getElementById('wechat-keyword-input').value = '';
+            document.getElementById('wechat-sender-input').value = '';
+            
+            wechatState.sessionId = sessionId;
+            wechatState.isSearchMode = false;
+            
+            const stats = document.getElementById('wechat-feed-stats');
+            stats.textContent = '⏳ 正在定位上下文...';
+            
+            const st = getSelectedStartTime();
+            const et = getSelectedEndTime();
+            
+            let posUrl = `/api/wechat/message/${messageId}/position`;
+            let queryParams = [];
+            if (st) queryParams.push(`start_time=${st}`);
+            if (et) queryParams.push(`end_time=${et}`);
+            if (queryParams.length) posUrl += `?${queryParams.join('&')}`;
+            
+            try {
+                const posRes = await fetch(posUrl);
+                const posResult = await posRes.json();
+                if (!posResult.success) {
+                    alert('定位失败，未找到该消息的位置');
+                    return;
+                }
+                
+                const pos = posResult.data.position;
+                const half = Math.floor(wechatState.limit / 2);
+                const targetOffset = Math.max(0, pos - half);
+                
+                await fetchSessionMessages(sessionId, targetOffset, wechatState.limit, false, false);
+                
+                setTimeout(() => {
+                    const targetEl = document.querySelector(`[data-msg-id="${messageId}"]`);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetEl.style.transition = 'background 1s ease';
+                        targetEl.style.background = 'rgba(56, 189, 248, 0.15)';
+                        setTimeout(() => {
+                            targetEl.style.background = '';
+                        }, 2500);
+                    }
+                }, 300);
+                
+            } catch(e) {
+                console.error(e);
+                alert('定位失败，网络异常');
             }
         }
 
@@ -3207,6 +3393,31 @@
             loadAnalysisGroups();
             // 加载微信会话列表
             loadWechatSessions();
+            
+            // 绑定滚动分页加载
+            const feed = document.getElementById('wechat-bubble-feed');
+            if (feed) {
+                feed.addEventListener('scroll', async () => {
+                    if (wechatState.isSearchMode || !wechatState.sessionId || wechatState.isLoading) return;
+                    
+                    // 滚动触顶时加载更早的历史记录
+                    if (feed.scrollTop === 0) {
+                        if (wechatState.offset > 0) {
+                            const newOffset = Math.max(0, wechatState.offset - wechatState.limit);
+                            const countToFetch = wechatState.offset - newOffset;
+                            await fetchSessionMessages(wechatState.sessionId, newOffset, countToFetch, false, true);
+                        }
+                    }
+                    // 滚动触底时且未展示到最新，加载更晚的历史记录
+                    else if (Math.ceil(feed.scrollTop + feed.clientHeight) >= feed.scrollHeight - 5) {
+                        const loadedCount = wechatState.offset + wechatState.messages.length;
+                        if (loadedCount < wechatState.totalCount) {
+                            const countToFetch = Math.min(wechatState.limit, wechatState.totalCount - loadedCount);
+                            await fetchSessionMessages(wechatState.sessionId, loadedCount, countToFetch, true, false);
+                        }
+                    }
+                });
+            }
             
             // 绑定微信会话过滤与检索事件
             const searchSessionInput = document.getElementById('wechat-session-search');

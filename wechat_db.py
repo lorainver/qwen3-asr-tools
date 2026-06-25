@@ -82,6 +82,10 @@ class WechatDatabaseManager:
             CREATE INDEX IF NOT EXISTS idx_messages_create_time ON messages(create_time)
         """)
 
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_messages_session_time ON messages(session_id, create_time)
+        """)
+
         # FTS5 virtual table
         cursor.execute("""
             CREATE VIRTUAL TABLE IF NOT EXISTS messages_fts USING fts5(
