@@ -895,265 +895,63 @@
             background: rgba(0, 0, 0, 0.05);
         }
 
-        /* ── 多媒体消息样式 ── */
-        .wechat-media-wrapper {
-            margin-top: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        /* 图片消息 */
-        .wechat-image-item {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 8px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .wechat-image-item img {
-            max-width: 200px;
-            max-height: 200px;
-            display: block;
-            transition: transform 0.2s ease;
-        }
-        .wechat-image-item:hover img {
-            transform: scale(1.05);
-        }
-        .wechat-image-placeholder {
-            width: 120px;
-            height: 120px;
-            display: flex;
+        /* ── 多媒体消息样式（紧凑行内标签） ── */
+        .wechat-media-tag {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            color: #94a3b8;
-            font-size: 2rem;
-        }
-        .wechat-image-placeholder::before {
-            content: '🖼️';
-        }
-
-        /* 语音消息 */
-        .wechat-voice-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 100px;
-            max-width: 200px;
-        }
-        .wechat-voice-item:hover {
-            background: rgba(0, 0, 0, 0.3);
-        }
-        .wechat-voice-item.playing {
-            background: rgba(14, 165, 233, 0.2);
-            border: 1px solid rgba(14, 165, 233, 0.4);
-        }
-        .wechat-voice-icon {
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        .wechat-voice-wave {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            flex: 1;
-            height: 20px;
-        }
-        .wechat-voice-wave span {
-            width: 3px;
-            background: currentColor;
-            border-radius: 2px;
-            opacity: 0.6;
-        }
-        .wechat-voice-item.playing .wechat-voice-wave span {
-            animation: voiceWave 0.6s ease-in-out infinite;
-        }
-        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(1) { animation-delay: 0s; }
-        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(2) { animation-delay: 0.1s; }
-        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(3) { animation-delay: 0.2s; }
-        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(4) { animation-delay: 0.3s; }
-        .wechat-voice-item.playing .wechat-voice-wave span:nth-child(5) { animation-delay: 0.4s; }
-        @keyframes voiceWave {
-            0%, 100% { height: 6px; }
-            50% { height: 18px; }
-        }
-        .wechat-voice-duration {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            flex-shrink: 0;
-        }
-        .wechat-voice-item.sent .wechat-voice-item {
-            background: rgba(14, 165, 233, 0.15);
-        }
-
-        /* 文件消息 */
-        .wechat-file-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            color: inherit;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 280px;
-        }
-        .wechat-file-item:hover {
-            background: rgba(0, 0, 0, 0.3);
-            border-color: rgba(14, 165, 233, 0.4);
-        }
-        .wechat-file-icon {
-            font-size: 1.8rem;
-            flex-shrink: 0;
-        }
-        .wechat-file-info {
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-        }
-        .wechat-file-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #e2e8f0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .wechat-file-size {
-            font-size: 0.7rem;
-            color: #64748b;
-            margin-top: 2px;
-        }
-        .wechat-file-download {
-            font-size: 1rem;
-            color: #0ea5e9;
-            flex-shrink: 0;
-        }
-
-        /* 视频消息 */
-        .wechat-video-item {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 8px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .wechat-video-thumb {
-            width: 160px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(139, 92, 246, 0.2));
-        }
-        .wechat-video-play-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: all 0.2s ease;
-        }
-        .wechat-video-item:hover .wechat-video-play-icon {
-            background: rgba(14, 165, 233, 0.8);
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-        .wechat-video-duration {
-            position: absolute;
-            bottom: 6px;
-            right: 6px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 2px 6px;
+            gap: 4px;
+            padding: 1px 7px;
             border-radius: 4px;
-            font-size: 0.7rem;
-            color: #fff;
+            font-size: 0.82em;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            vertical-align: middle;
+            line-height: 1.6;
+            white-space: nowrap;
+            user-select: none;
         }
+        .wechat-media-tag:hover {
+            filter: brightness(1.25);
+            transform: scale(1.04);
+        }
+        .wechat-media-tag .media-tag-icon { font-style: normal; }
+        .wechat-media-tag .media-tag-detail { font-size: 0.88em; opacity: 0.75; }
+        .media-tag-image { background: rgba(139,92,246,0.18); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.28); }
+        .media-tag-voice { background: rgba(14,165,233,0.16); color: #7dd3fc; border: 1px solid rgba(14,165,233,0.26); }
+        .media-tag-file  { background: rgba(34,197,94,0.15);  color: #86efac;  border: 1px solid rgba(34,197,94,0.25); }
+        .media-tag-video { background: rgba(249,115,22,0.16); color: #fdba74; border: 1px solid rgba(249,115,22,0.26); }
 
-        /* 图片预览模态框 */
-        .wechat-image-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
+        /* ── 媒体详情浮层 ── */
+        .wechat-media-popover {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.55); z-index: 9999;
+            display: none; align-items: center; justify-content: center;
+            animation: popoverFadeIn 0.15s ease;
         }
-        .wechat-image-modal.show {
-            display: flex;
+        .wechat-media-popover.show { display: flex; }
+        @keyframes popoverFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .wechat-media-popover-card {
+            background: var(--bg-card, #1e293b);
+            border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+            border-radius: 12px; padding: 24px 28px;
+            min-width: 320px; max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+            animation: popoverSlideUp 0.2s ease;
         }
-        .wechat-image-modal img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-        .wechat-image-modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .wechat-image-modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .wechat-image-modal-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .wechat-image-modal-nav:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .wechat-image-modal-nav.prev { left: 20px; }
-        .wechat-image-modal-nav.next { right: 20px; }
+        @keyframes popoverSlideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .popover-title { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: var(--text-primary, #e2e8f0); }
+        .popover-title-icon { font-size: 1.6rem; }
+        .popover-meta { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 0.85rem; margin-bottom: 18px; }
+        .popover-meta-label { color: var(--text-muted, #94a3b8); }
+        .popover-meta-value { color: var(--text-primary, #e2e8f0); word-break: break-all; }
+        .popover-actions { display: flex; gap: 10px; }
+        .popover-btn { flex: 1; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--border-color, rgba(255,255,255,0.12)); background: transparent; color: var(--text-primary, #e2e8f0); font-size: 0.85rem; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .popover-btn:hover { background: rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.35); color: #38bdf8; }
+        .popover-btn.primary { background: linear-gradient(135deg, #38bdf8, #8b5cf6); border: none; color: #fff; font-weight: 500; }
+        .popover-btn.primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .popover-hint { margin-top: 14px; padding: 10px 12px; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.18); border-radius: 8px; font-size: 0.78rem; color: #fbbf24; line-height: 1.55; }
+        .popover-close-btn { position: absolute; top: 14px; right: 14px; width: 30px; height: 30px; border: none; background: rgba(255,255,255,0.08); border-radius: 50%; color: #94a3b8; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+        .popover-close-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
         /* 链接消息 */
         .wechat-link-item {
@@ -1184,41 +982,17 @@
             white-space: nowrap;
         }
 
-        /* 消息类型标签 */
-        .wechat-media-type-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 2px 8px;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 4px;
-            font-size: 0.7rem;
-            color: #c4b5fd;
-            margin-right: 6px;
-        }
-
-        /* Light mode adjustments */
-        .light-mode .wechat-image-item {
-            background: rgba(0, 0, 0, 0.05);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        .light-mode .wechat-voice-item {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        .light-mode .wechat-voice-item:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        .light-mode .wechat-file-item {
-            background: rgba(0, 0, 0, 0.05);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        .light-mode .wechat-file-item:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        .light-mode .wechat-video-item {
-            background: rgba(0, 0, 0, 0.05);
-        }
+        /* Light mode - 媒体标签 */
+        .light-mode .media-tag-image { background: rgba(139,92,246,0.12); color: #7c3aed; border-color: rgba(139,92,246,0.22); }
+        .light-mode .media-tag-voice { background: rgba(14,165,233,0.10); color: #0284c7; border-color: rgba(14,165,233,0.20); }
+        .light-mode .media-tag-file  { background: rgba(34,197,94,0.10);  color: #16a34a; border-color: rgba(34,197,94,0.20); }
+        .light-mode .media-tag-video { background: rgba(249,115,22,0.10); color: #c2410c; border-color: rgba(249,115,22,0.20); }
+        .light-mode .wechat-media-popover-card { background: #fff; border-color: rgba(0,0,0,0.08); box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+        .light-mode .popover-title { color: #1e293b; }
+        .light-mode .popover-meta-label { color: #64748b; }
+        .light-mode .popover-meta-value { color: #334155; }
+        .light-mode .popover-btn { color: #334155; border-color: rgba(0,0,0,0.1); }
+        .light-mode .popover-btn:hover { background: rgba(56,189,248,0.08); color: #0284c7; }
     </style>
 </head>
 
@@ -3694,40 +3468,132 @@
 
         /**
          * 渲染消息内容（处理文本、图片、语音、文件、视频等）
+         * 多媒体消息统一渲染为紧凑的行内标签，点击弹出详情浮层
          */
         function renderMessageContent(content, keyword, container, msgId) {
-            // 存储当前消息的所有图片
-            window._wechatMsgImages = window._wechatMsgImages || {};
-            window._wechatMsgImages[msgId] = [];
-            
             let result = '';
             const parts = content.split(/(\n)/g);
-            
             for (const part of parts) {
                 if (part === '\n') {
                     result += '<br>';
                 } else if (part.startsWith('[图片]')) {
-                    // 图片消息
                     const localId = extractLocalId(part);
-                    result += renderImageMessage(part, localId, msgId);
+                    result += renderMediaTag('image', { localId, raw: part, msgId });
                 } else if (part.startsWith('[语音]')) {
-                    // 语音消息
-                    const duration = extractVoiceDuration(part);
-                    result += renderVoiceMessage(duration, msgId);
+                    const durationMs = extractVoiceDuration(part);
+                    result += renderMediaTag('voice', { durationMs, raw: part, msgId });
                 } else if (part.startsWith('[文件]')) {
-                    // 文件消息
-                    result += renderFileMessage(part);
+                    const fileName = part.replace('[文件] ', '').trim();
+                    result += renderMediaTag('file', { fileName, raw: part, msgId });
                 } else if (part.startsWith('[视频]')) {
-                    // 视频消息
-                    const duration = extractVideoDuration(part);
-                    result += renderVideoMessage(duration, part);
+                    const durationSec = extractVideoDuration(part);
+                    result += renderMediaTag('video', { durationSec, raw: part, msgId });
                 } else {
-                    // 普通文本消息 - 处理链接
                     result += highlightKeyword(renderLinks(escapeHtml(part)), keyword);
                 }
             }
-            
             return result;
+        }
+
+        /**
+         * 渲染紧凑的多媒体行内标签
+         */
+        function renderMediaTag(type, meta) {
+            const iconMap  = { image: '🖼️', voice: '🎤', file: '📎', video: '🎬' };
+            const labelMap = { image: '图片', voice: '语音', file: '文件', video: '视频' };
+            const clsMap   = { image: 'media-tag-image', voice: 'media-tag-voice', file: 'media-tag-file', video: 'media-tag-video' };
+            const icon = iconMap[type], label = labelMap[type], cls = clsMap[type];
+            let detail = '';
+            if (type === 'image') detail = meta.localId ? '#' + meta.localId : '';
+            else if (type === 'voice') detail = meta.durationMs ? formatVoiceDuration(meta.durationMs) : '';
+            else if (type === 'file') {
+                const fn = meta.fileName || '';
+                detail = fn.length > 16 ? fn.substring(0, 14) + '…' : fn;
+            } else if (type === 'video') detail = meta.durationSec ? formatDuration(meta.durationSec) : '';
+            const detailHtml = detail ? '<span class="media-tag-detail">' + escapeHtml(detail) + '</span>' : '';
+            const metaJson = JSON.stringify(meta).replace(/'/g, "&#39;");
+            return '<span class="wechat-media-tag ' + cls + '" onclick="showMediaPopover(event, \'' + type + '\', ' + metaJson + ')" title="点击查看' + label + '详情"><span class="media-tag-icon">' + icon + '</span>' + label + detailHtml + '</span>';
+        }
+
+        /* ── 媒体详情浮层 ── */
+        function showMediaPopover(event, type, meta) {
+            event.stopPropagation();
+            closeMediaPopover();
+            const titleMap = { image: '图片消息', voice: '语音消息', file: '文件消息', video: '视频消息' };
+            const iconMap  = { image: '🖼️', voice: '🎤', file: '📎', video: '🎬' };
+            const hintMap  = {
+                image: '图片以加密格式存储在本地，需在微信客户端中打开才能查看原图。',
+                voice: '语音消息无法在网页端播放，请在微信客户端中收听。',
+                file:  '文件存储在本地微信目录中，可在微信中打开或下载。',
+                video: '视频文件需在微信客户端中播放。'
+            };
+            let metaRows = '';
+            if (type === 'image') {
+                metaRows = '<span class="popover-meta-label">标识ID</span><span class="popover-meta-value">#' + (meta.localId || '未知') + '</span>';
+                metaRows += '<span class="popover-meta-label">原始数据</span><span class="popover-meta-value" style="font-family:monospace;font-size:0.78rem;color:#94a3b8;">' + escapeHtml((meta.raw||'').substring(0,80)) + '</span>';
+            } else if (type === 'voice') {
+                metaRows = '<span class="popover-meta-label">时长</span><span class="popover-meta-value">' + (meta.durationMs ? formatVoiceDuration(meta.durationMs) + ' (' + meta.durationMs + 'ms)' : '未知') + '</span>';
+                metaRows += '<span class="popover-meta-label">原始数据</span><span class="popover-meta-value" style="font-family:monospace;font-size:0.78rem;color:#94a3b8;">' + escapeHtml((meta.raw||'').substring(0,80)) + '</span>';
+            } else if (type === 'file') {
+                const ext = meta.fileName ? (meta.fileName.split('.').pop() || '未知') : '未知';
+                metaRows = '<span class="popover-meta-label">文件名</span><span class="popover-meta-value">' + escapeHtml(meta.fileName || '未知') + '</span>';
+                metaRows += '<span class="popover-meta-label">文件类型</span><span class="popover-meta-value">' + getFileIcon(meta.fileName||'') + ' .' + ext + '</span>';
+            } else if (type === 'video') {
+                metaRows = '<span class="popover-meta-label">时长</span><span class="popover-meta-value">' + (meta.durationSec ? formatDuration(meta.durationSec) + ' (' + meta.durationSec + 's)' : '未知') + '</span>';
+                metaRows += '<span class="popover-meta-label">原始数据</span><span class="popover-meta-value" style="font-family:monospace;font-size:0.78rem;color:#94a3b8;">' + escapeHtml((meta.raw||'').substring(0,80)) + '</span>';
+            }
+            const safeRaw = (meta.raw||'').replace(/'/g, "\'").replace(/"/g, '&quot;');
+            const html = '<div class="wechat-media-popover show" id="mediaPopover" onclick="if(event.target===this)closeMediaPopover()">' +
+                '<div class="wechat-media-popover-card" style="position:relative">' +
+                '<button class="popover-close-btn" onclick="closeMediaPopover()">✕</button>' +
+                '<div class="popover-title"><span class="popover-title-icon">' + iconMap[type] + '</span>' + titleMap[type] + '</div>' +
+                '<div class="popover-meta">' + metaRows + '</div>' +
+                '<div class="popover-actions">' +
+                '<button class="popover-btn primary" onclick="copyMediaInfo(\'' + type + '\', \'' + safeRaw + '\');event.stopPropagation();">📋 复制信息</button>' +
+                '<button class="popover-btn" onclick="closeMediaPopover();event.stopPropagation();">关闭</button></div>' +
+                '<div class="popover-hint">💡 ' + hintMap[type] + '</div></div></div>';
+            const old = document.getElementById('mediaPopover');
+            if (old) old.remove();
+            document.body.insertAdjacentHTML('beforeend', html);
+            const escHandler = (e) => { if (e.key === 'Escape') { closeMediaPopover(); document.removeEventListener('keydown', escHandler); } };
+            document.addEventListener('keydown', escHandler);
+        }
+
+        function closeMediaPopover() {
+            const el = document.getElementById('mediaPopover');
+            if (el) { el.classList.remove('show'); setTimeout(() => el.remove(), 150); }
+        }
+
+        async function copyMediaInfo(type, raw) {
+            const typeLabel = { image:'图片', voice:'语音', file:'文件', video:'视频' }[type] || '媒体';
+            const text = '[' + typeLabel + '] ' + raw;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('已复制到剪贴板 ✓', 'success');
+            } catch(e) {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+                document.body.appendChild(ta); ta.select();
+                document.execCommand('copy'); ta.remove();
+                showToast('已复制到剪贴板 ✓', 'success');
+            }
+        }
+
+        function showToast(msg, type) {
+            const existing = document.getElementById('_globalToast');
+            if (existing) existing.remove();
+            const bg = type === 'success' ? 'rgba(34,197,94,0.9)' : type === 'error' ? 'rgba(239,68,68,0.9)' : 'rgba(56,189,248,0.9)';
+            const toast = document.createElement('div');
+            toast.id = '_globalToast';
+            toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;padding:10px 22px;border-radius:8px;color:#fff;font-size:0.85rem;background:' + bg + ';box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:toastIn 0.2s ease;pointer-events:none;';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.animation = 'toastOut 0.2s ease forwards'; setTimeout(() => toast.remove(), 200); }, 1800);
+        }
+        if (!document.getElementById('_toastStyle')) {
+            const s = document.createElement('style'); s.id = '_toastStyle';
+            s.textContent = '@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}@keyframes toastOut{to{opacity:0;transform:translateX(-50%) translateY(-8px)}}';
+            document.head.appendChild(s);
         }
 
         /**
@@ -3739,35 +3605,6 @@
         }
 
         /**
-         * 渲染图片消息
-         */
-        function renderImageMessage(text, localId, msgId) {
-            // 由于没有实际的图片文件，显示占位符
-            const displayText = escapeHtml(text.replace(/\s*\(local_id=\d+\)/, ''));
-            return `
-                <div class="wechat-media-wrapper">
-                    <span class="wechat-media-type-tag">🖼️ 图片</span>
-                    <div class="wechat-image-item" onclick="showImagePlaceholder(this, '${msgId}')">
-                        <div class="wechat-image-placeholder" title="${displayText}"></div>
-                    </div>
-                </div>
-            `;
-        }
-
-        /**
-         * 显示图片占位符提示
-         */
-        function showImagePlaceholder(element, msgId) {
-            // 由于没有实际图片，显示提示
-            const tip = document.createElement('div');
-            tip.style.cssText = 'position:absolute;top:100%;left:0;background:rgba(0,0,0,0.8);color:#fff;padding:8px 12px;border-radius:6px;font-size:0.75rem;z-index:100;white-space:nowrap;';
-            tip.textContent = '💡 图片文件需要从微信直接查看';
-            element.style.position = 'relative';
-            element.appendChild(tip);
-            setTimeout(() => tip.remove(), 3000);
-        }
-
-        /**
          * 提取语音时长
          */
         function extractVoiceDuration(text) {
@@ -3776,137 +3613,11 @@
         }
 
         /**
-         * 渲染语音消息
-         */
-        function renderVoiceMessage(durationMs, msgId) {
-            const duration = formatVoiceDuration(durationMs);
-            const bars = '<span></span><span></span><span></span><span></span><span></span>';
-            return `
-                <div class="wechat-media-wrapper">
-                    <span class="wechat-media-type-tag">🎤 语音</span>
-                    <div class="wechat-voice-item" onclick="toggleVoicePlayback(this, ${durationMs}, '${msgId}')">
-                        <span class="wechat-voice-icon">▶️</span>
-                        <div class="wechat-voice-wave">${bars}</div>
-                        <span class="wechat-voice-duration">${duration}</span>
-                    </div>
-                </div>
-            `;
-        }
-
-        /**
-         * 切换语音播放状态
-         */
-        let currentPlayingVoice = null;
-        let currentAudio = null;
-
-        function toggleVoicePlayback(element, durationMs, msgId) {
-            // 停止当前播放
-            if (currentPlayingVoice && currentPlayingVoice !== element) {
-                currentPlayingVoice.classList.remove('playing');
-                currentPlayingVoice.querySelector('.wechat-voice-icon').textContent = '▶️';
-                if (currentAudio) {
-                    currentAudio.pause();
-                    currentAudio = null;
-                }
-            }
-
-            // 切换当前播放状态
-            if (element.classList.contains('playing')) {
-                element.classList.remove('playing');
-                element.querySelector('.wechat-voice-icon').textContent = '▶️';
-                if (currentAudio) {
-                    currentAudio.pause();
-                    currentAudio = null;
-                }
-                currentPlayingVoice = null;
-            } else {
-                element.classList.add('playing');
-                element.querySelector('.wechat-voice-icon').textContent = '⏸️';
-                currentPlayingVoice = element;
-                
-                // 模拟播放（因为没有实际音频文件）
-                const simulatedDuration = Math.min(durationMs, 10000); // 最多10秒
-                currentAudio = { pause: () => {}, play: () => {} };
-                setTimeout(() => {
-                    if (currentPlayingVoice === element) {
-                        element.classList.remove('playing');
-                        element.querySelector('.wechat-voice-icon').textContent = '▶️';
-                        currentPlayingVoice = null;
-                    }
-                }, simulatedDuration);
-            }
-        }
-
-        /**
-         * 渲染文件消息
-         */
-        function renderFileMessage(text) {
-            const fileName = text.replace('[文件] ', '').trim();
-            const fileIcon = getFileIcon(fileName);
-            const fileSize = '未知大小';
-            return `
-                <div class="wechat-media-wrapper">
-                    <a class="wechat-file-item" href="#" onclick="showFileDownloadTip(this, '${escapeHtml(fileName)}'); return false;">
-                        <span class="wechat-file-icon">${fileIcon}</span>
-                        <div class="wechat-file-info">
-                            <div class="wechat-file-name">${escapeHtml(fileName)}</div>
-                            <div class="wechat-file-size">${fileSize}</div>
-                        </div>
-                        <span class="wechat-file-download">⬇️</span>
-                    </a>
-                </div>
-            `;
-        }
-
-        /**
-         * 显示文件下载提示
-         */
-        function showFileDownloadTip(element, fileName) {
-            const tip = document.createElement('div');
-            tip.style.cssText = 'position:absolute;top:100%;left:0;background:rgba(0,0,0,0.8);color:#fff;padding:8px 12px;border-radius:6px;font-size:0.75rem;z-index:100;white-space:nowrap;';
-            tip.textContent = `💡 文件「${fileName}」需要从微信直接查看或下载`;
-            element.style.position = 'relative';
-            element.appendChild(tip);
-            setTimeout(() => tip.remove(), 3000);
-        }
-
-        /**
          * 提取视频时长
          */
         function extractVideoDuration(text) {
             const match = text.match(/playlength="(\d+)"/);
             return match ? parseInt(match[1]) : 0;
-        }
-
-        /**
-         * 渲染视频消息
-         */
-        function renderVideoMessage(durationSec, rawXml) {
-            const duration = formatDuration(durationSec);
-            return `
-                <div class="wechat-media-wrapper">
-                    <span class="wechat-media-type-tag">🎬 视频</span>
-                    <div class="wechat-video-item" onclick="showVideoPlaceholder(this)">
-                        <div class="wechat-video-thumb">
-                            <span style="font-size:3rem;">▶️</span>
-                        </div>
-                        <div class="wechat-video-play-icon">▶️</div>
-                        ${durationSec > 0 ? `<span class="wechat-video-duration">${duration}</span>` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        /**
-         * 显示视频播放提示
-         */
-        function showVideoPlaceholder(element) {
-            const tip = document.createElement('div');
-            tip.style.cssText = 'position:absolute;top:100%;left:0;background:rgba(0,0,0,0.8);color:#fff;padding:8px 12px;border-radius:6px;font-size:0.75rem;z-index:100;max-width:250px;';
-            tip.textContent = '💡 视频文件需要从微信直接查看';
-            element.style.position = 'relative';
-            element.appendChild(tip);
-            setTimeout(() => tip.remove(), 3000);
         }
         
         function highlightKeyword(text, keyword) {
@@ -4522,69 +4233,6 @@
 
             const btnChat = document.getElementById('kb-btn-chat');
             if (btnChat) btnChat.addEventListener('click', ragChat);
-        });
-
-        // ── 多媒体消息预览模态框 ──
-        const wechatImageModal = document.createElement('div');
-        wechatImageModal.id = 'wechat-image-modal';
-        wechatImageModal.className = 'wechat-image-modal';
-        wechatImageModal.innerHTML = `
-            <button class="wechat-image-modal-close" onclick="closeWechatImageModal()">×</button>
-            <button class="wechat-image-modal-nav prev" onclick="prevWechatImage(event)">‹</button>
-            <img id="wechat-modal-image" src="" alt="图片预览">
-            <button class="wechat-image-modal-nav next" onclick="nextWechatImage(event)">›</button>
-            <div id="wechat-modal-counter" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:0.9rem;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:20px;"></div>
-        `;
-        document.body.appendChild(wechatImageModal);
-
-        let currentWechatImages = [];
-        let currentWechatImageIndex = 0;
-
-        function openWechatImageModal(images, index) {
-            currentWechatImages = images;
-            currentWechatImageIndex = index;
-            updateWechatModalImage();
-            wechatImageModal.classList.add('show');
-        }
-
-        function updateWechatModalImage() {
-            const img = document.getElementById('wechat-modal-image');
-            const counter = document.getElementById('wechat-modal-counter');
-            if (currentWechatImages.length > 0) {
-                img.src = currentWechatImages[currentWechatImageIndex];
-                counter.textContent = `${currentWechatImageIndex + 1} / ${currentWechatImages.length}`;
-            }
-        }
-
-        function closeWechatImageModal() {
-            wechatImageModal.classList.remove('show');
-        }
-
-        function prevWechatImage(e) {
-            e.stopPropagation();
-            currentWechatImageIndex = (currentWechatImageIndex - 1 + currentWechatImages.length) % currentWechatImages.length;
-            updateWechatModalImage();
-        }
-
-        function nextWechatImage(e) {
-            e.stopPropagation();
-            currentWechatImageIndex = (currentWechatImageIndex + 1) % currentWechatImages.length;
-            updateWechatModalImage();
-        }
-
-        // 点击模态框背景关闭
-        wechatImageModal.addEventListener('click', function(e) {
-            if (e.target === wechatImageModal) {
-                closeWechatImageModal();
-            }
-        });
-
-        // 键盘导航
-        document.addEventListener('keydown', function(e) {
-            if (!wechatImageModal.classList.contains('show')) return;
-            if (e.key === 'Escape') closeWechatImageModal();
-            if (e.key === 'ArrowLeft') prevWechatImage(e);
-            if (e.key === 'ArrowRight') nextWechatImage(e);
         });
 
         // ── 工具函数 ──
