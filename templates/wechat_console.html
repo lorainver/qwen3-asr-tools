@@ -1881,12 +1881,12 @@
             div.className = `wechat-msg-row ${isSend ? 'sent' : 'received'}`;
             div.setAttribute('data-msg-id', msg.id);
             div.innerHTML = `
-                <div class="wechat-avatar" style="background: ${avatarBg};">${escapeHtml(avatarChar)}</div>
+                <div class="wechat-avatar" style="background: ${avatarBg}; cursor: pointer;" onclick="filterBySender('${escapeHtml(senderName.replace(/'/g, "\\'"))}')" title="点击筛选该发言人的消息">${escapeHtml(avatarChar)}</div>
                 <div class="wechat-msg-content-wrapper">
-                    <span class="wechat-sender-name">
+                    <span class="wechat-sender-name" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-color, #3b82f6)'" onmouseout="this.style.color=''" onclick="filterBySender('${escapeHtml(senderName.replace(/'/g, "\\'"))}')" title="点击筛选该发言人的消息">
                         ${escapeHtml(senderName)}
-                        ${jumpBtnHtml}
                     </span>
+                    ${jumpBtnHtml}
                     <div class="wechat-bubble">${renderedContent}</div>
                 </div>
             `;
@@ -2726,6 +2726,32 @@
             }
 
             container.appendChild(fragment);
+        }
+
+        // 点击头像或用户名筛选发言人
+        function filterBySender(senderName) {
+            const senderInput = document.getElementById('wechat-sender-input');
+            if (senderInput) {
+                senderInput.value = senderName;
+            }
+            
+            // 如果当前在某个特定会话中，点击发言人默认筛选该会话
+            if (wechatState.sessionId) {
+                wechatState.searchScope = 'session';
+                const sessionRadio = document.getElementById('search-scope-session');
+                if (sessionRadio) {
+                    sessionRadio.checked = true;
+                    toggleSearchScope('session');
+                }
+            }
+            
+            // 清空关键字，只过滤该用户发言
+            const keywordInput = document.getElementById('wechat-keyword-input');
+            if (keywordInput) {
+                keywordInput.value = '';
+            }
+            
+            searchWechatMessages(false);
         }
 
         // 检索消息 (FTS + Senders)
