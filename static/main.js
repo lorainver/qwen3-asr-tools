@@ -844,7 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
         targetLangSelect.classList.toggle('hidden', promptTypeSelect.value !== 'translate');
 
         // 监听变化
-        promptTypeSelect.addEventListener('change', () => {
+        if (promptTypeSelect) promptTypeSelect.addEventListener('change', () => {
             targetLangSelect.classList.toggle('hidden', promptTypeSelect.value !== 'translate');
         });
     }
@@ -1164,7 +1164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 2.5 声音设计水晶播放器控制逻辑 ===
     if (voiceAudio && btnVoicePlayPause) {
         // 播放与暂停切换
-        btnVoicePlayPause.addEventListener('click', () => {
+        if (btnVoicePlayPause) btnVoicePlayPause.addEventListener('click', () => {
             if (voiceAudio.paused) {
                 voiceAudio.play().catch(e => console.log("播放失败:", e));
             } else {
@@ -1257,7 +1257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dropZone.classList.remove('dragover');
             if (e.dataTransfer.files.length) handleUpload(e.dataTransfer.files[0]);
         });
-        fileInput.addEventListener('change', (e) => {
+        if (fileInput) fileInput.addEventListener('change', (e) => {
             if (e.target.files.length) handleUpload(e.target.files[0]);
         });
     }
@@ -2362,7 +2362,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } else {
-        console.error('[ReleaseGPU] Button not found!');
+        console.log('[ReleaseGPU] Button not found (expected on non-index pages)');
     }
 
     function showToast(message) {
@@ -2650,10 +2650,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // 刷新按钮
-    btnDocsRefresh.addEventListener('click', loadDocsList);
+    if (btnDocsRefresh) btnDocsRefresh.addEventListener('click', loadDocsList);
     
     // 复制按钮
-    btnDocsCopy.addEventListener('click', () => {
+    if (btnDocsCopy) btnDocsCopy.addEventListener('click', () => {
         if (!docsRawContent_text) return;
         navigator.clipboard.writeText(docsRawContent_text).then(() => {
             showToast('已复制文件内容');
@@ -2672,13 +2672,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 【新增】“🌐 打开”按钮的点击事件监听器。
     // 当点击时，在新标签页/新窗口中全屏打开当前正在浏览的文档文件（利用 docsCurrentFile 绑定的路径）。
     // 这样将“新窗口打开”的行为交由用户主动选择，极大提升了多文档快速预览时的用户体验。
-    btnDocsView.addEventListener('click', () => {
+    if (btnDocsView) btnDocsView.addEventListener('click', () => {
         if (!docsCurrentFile) return;
         window.open(`/api/docs/view?path=${encodeURIComponent(docsCurrentFile.path)}`, '_blank');
     });
     
     // 源码/渲染切换
-    btnDocsRaw.addEventListener('click', () => {
+    if (btnDocsRaw) btnDocsRaw.addEventListener('click', () => {
         docsShowRaw = !docsShowRaw;
         btnDocsRaw.textContent = docsShowRaw ? '👁️ 渲染' : '🔤 源码';
         if (docsCurrentFile) {
@@ -2689,7 +2689,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 最大化/还原切换
     if (btnDocsMaximize) {
-        btnDocsMaximize.addEventListener('click', () => {
+    if (btnDocsMaximize) if (btnDocsMaximize) btnDocsMaximize.addEventListener('click', () => {
             if (!docsViewerContainer) return;
             const isMaximized = docsViewerContainer.classList.toggle('maximized');
             btnDocsMaximize.innerHTML = isMaximized ? '🗗 还原' : '⛶ 最大化';
@@ -2740,7 +2740,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnSidebarToggle.title = '展开信息栏';
         }
         
-        btnSidebarToggle.addEventListener('click', () => {
+        if (btnSidebarToggle) btnSidebarToggle.addEventListener('click', () => {
             const willCollapse = sidebar.classList.toggle('collapsed');
             localStorage.setItem('sidebar_collapsed', willCollapse);
             btnSidebarToggle.textContent = willCollapse ? '▶' : '◀';
@@ -2748,4 +2748,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+
+
 

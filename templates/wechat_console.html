@@ -13,7 +13,7 @@
     <script src="/static/js/marked.min.js"></script>
     <!-- 代码高亮 -->
     <link rel="stylesheet" href="/static/css/atom-one-dark.min.css">
-    <script src="/static/js/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <!-- 数学公式 KaTeX -->
     <link rel="stylesheet" href="/static/css/katex.min.css">
     <script src="/static/js/katex.min.js"></script>
@@ -2641,8 +2641,7 @@
             if (!text) return '';
             try {
                 var mermaidBlocks = [];
-                text = text.replace(/```mermaid
-([\s\S]*?)```/g, function(match, code) {
+                text = text.replace(/```mermaid\n([\s\S]*?)```/g, function(match, code) {
                     var idx = mermaidBlocks.length;
                     mermaidBlocks.push(code.trim());
                     return '%%MERMAID_' + idx + '%%';
@@ -2654,8 +2653,7 @@
                     mathBlocks.push({ formula: formula.trim(), display: true });
                     return '%%MATH_BLOCK_' + idx + '%%';
                 });
-                text = text.replace(/\$([^$
-]+?)\$/g, function(match, formula) {
+                text = text.replace(/\$([^$\n]+?)\$/g, function(match, formula) {
                     var idx = mathBlocks.length;
                     mathBlocks.push({ formula: formula.trim(), display: false });
                     return '%%MATH_INLINE_' + idx + '%%';
@@ -2694,6 +2692,7 @@
 </body>
 
 </html>
+
 
 
 
