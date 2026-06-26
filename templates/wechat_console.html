@@ -1448,7 +1448,8 @@
             // 全量搜索: 搜索范围
             searchScope: 'all',      // 'session'=指定会话, 'all'=全部
             searchSessionType: '',   // '群聊'/'私聊'/'公众号'/''=全部
-            searchTypeStats: []      // 类型统计
+            searchTypeStats: [],     // 类型统计
+            requestVersion: 0        // 请求版本号，用于防止异步请求冲突
         };
 
         function getSelectedStartTime() {
@@ -1951,6 +1952,9 @@
         async function fetchSessionMessages(sessionId, offset, limit, append = false, prepend = false) {
             if (wechatState.isLoading) return;
             wechatState.isLoading = true;
+            
+            // 增加请求版本号，用于检测过期请求
+            const currentVersion = ++wechatState.requestVersion;
 
             const stats = document.getElementById('wechat-feed-stats');
             const feed = document.getElementById('wechat-bubble-feed');
@@ -1973,6 +1977,13 @@
 
                 const msgs = result.messages || [];
                 wechatState.totalCount = result.filtered_message_count;
+
+                // 检查请求是否过期
+                if (currentVersion !== wechatState.requestVersion) {
+                    console.log('请求已过期，跳过渲染');
+                    wechatState.isLoading = false;
+                    return;
+                }
 
                 if (prepend) {
                     const oldScrollHeight = feed.scrollHeight;
@@ -2011,8 +2022,25 @@
             const feed = document.getElementById('wechat-bubble-feed');
             feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在加载聊天记录...</div>';
 
+            // 重置状态，防止消息混入
             wechatState.sessionId = sessionId;
             wechatState.isSearchMode = false;
+            wechatState.messages = [];  // 清空消息数组
+            wechatState.offset = 0;
+            wechatState.totalCount = 0;
+            
+            // 重置虚拟滚动状态
+            virtualScrollState = {
+                isEnabled: false,
+                totalCount: 0,
+                renderedCount: 0,
+                scrollTop: 0,
+                visibleStart: 0,
+                visibleEnd: 0,
+                messages: [],
+                renderedMessages: [],
+                lastScrollTime: 0
+            };
 
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
@@ -2692,6 +2720,8 @@
 </body>
 
 </html>
+
+
 
 
 
