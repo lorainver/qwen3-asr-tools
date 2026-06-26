@@ -2602,9 +2602,12 @@
             
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
+            const sender = wechatState.sender || '';
             
             const params = new URLSearchParams();
-            if (keyword) params.set('keyword', keyword);
+            params.set('keyword', keyword || '');
+            params.set('only_sender', sender ? 'true' : 'false');
+            if (sender) params.set('sender_display_name', sender);
             params.set('session_id', sessionId);
             params.set('limit', '50');
             params.set('offset', '0');
@@ -2680,9 +2683,12 @@
             
             const st = getSelectedStartTime();
             const et = getSelectedEndTime();
+            const sender = wechatState.sender || '';
             
             const params = new URLSearchParams();
-            if (keyword) params.set('keyword', keyword);
+            params.set('keyword', keyword || '');
+            params.set('only_sender', sender ? 'true' : 'false');
+            if (sender) params.set('sender_display_name', sender);
             params.set('session_id', sessionId);
             params.set('limit', '50');
             params.set('offset', cached.offset.toString());
