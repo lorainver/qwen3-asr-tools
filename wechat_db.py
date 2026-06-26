@@ -122,22 +122,49 @@ class WechatDatabaseManager:
 
     def insert_session(self, session_data: Dict, file_name: str) -> int:
         cursor = self.conn.cursor()
-        cursor.execute("""
-            INSERT OR REPLACE INTO sessions 
-            (wxid, nickname, remark, display_name, type, last_timestamp, message_count, file_name)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            session_data.get("wxid"),
-            session_data.get("nickname"),
-            session_data.get("remark"),
-            session_data.get("displayName"),
-            session_data.get("type"),
-            session_data.get("lastTimestamp"),
-            session_data.get("messageCount"),
-            file_name
-        ))
+        wxid = session_data.get("wxid")
+        
+        # 检查是否已存在该 wxid 的会话
+        cursor.execute("SELECT id FROM sessions WHERE wxid = ?", (wxid,))
+        row = cursor.fetchone()
+        if row:
+            session_id = row['id']
+            # 如果存在，则更新数据（保留原始 id，防止产生孤儿消息数据）
+            cursor.execute("""
+                UPDATE sessions SET 
+                    nickname = ?, remark = ?, display_name = ?, type = ?, 
+                    last_timestamp = ?, message_count = ?, file_name = ?
+                WHERE id = ?
+            """, (
+                session_data.get("nickname"),
+                session_data.get("remark"),
+                session_data.get("displayName"),
+                session_data.get("type"),
+                session_data.get("lastTimestamp"),
+                session_data.get("messageCount"),
+                file_name,
+                session_id
+            ))
+        else:
+            # 如果不存在，则正常插入新记录
+            cursor.execute("""
+                INSERT INTO sessions 
+                (wxid, nickname, remark, display_name, type, last_timestamp, message_count, file_name)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                wxid,
+                session_data.get("nickname"),
+                session_data.get("remark"),
+                session_data.get("displayName"),
+                session_data.get("type"),
+                session_data.get("lastTimestamp"),
+                session_data.get("messageCount"),
+                file_name
+            ))
+            session_id = cursor.lastrowid
+            
         self.conn.commit()
-        return cursor.lastrowid
+        return session_id
 
     def insert_user(self, username: str, display_name: str, avatar_base64: Optional[str] = None):
         cursor = self.conn.cursor()
@@ -690,6 +717,9 @@ class WechatDatabaseManager:
         cursor = self.conn.cursor()
         try:
             cursor.execute("BEGIN TRANSACTION")
+            # Clear old messages for this session to prevent duplication on re-import
+            cursor.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
+            
             unique_senders = set(msg["senderDisplayName"] for msg in messages)
             for sender in unique_senders:
                 cursor.execute("""

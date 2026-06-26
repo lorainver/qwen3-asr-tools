@@ -727,7 +727,16 @@
             gap: 20px;
             min-height: 600px;
         }
-        .wechat-feed-card, .wechat-ai-card {
+        .wechat-feed-card {
+            display: flex;
+            flex-direction: column;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1.6;
+        }
+        .wechat-ai-card {
             display: flex;
             flex-direction: column;
             background: rgba(30, 41, 59, 0.4);
@@ -1199,6 +1208,116 @@
             border-radius: 10px;
             font-weight: 600;
         }
+
+        /* ── 搜索结果卡片专属高颜值样式 ── */
+        .search-hit-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--accent, #38bdf8);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 10px 12px;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        .search-hit-card:hover {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(56, 189, 248, 0.25);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+        .search-hit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.82rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            padding-bottom: 6px;
+        }
+        .search-hit-sender {
+            font-weight: 700;
+            color: #fff;
+        }
+        .search-hit-time {
+            color: var(--text-muted, #64748b);
+            margin-left: 8px;
+        }
+        .search-hit-body {
+            font-size: 0.9rem;
+            color: var(--text-primary, #e2e8f0);
+            line-height: 1.5;
+            word-break: break-all;
+            white-space: pre-wrap;
+            padding: 4px 0;
+        }
+        .search-hit-context {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.82rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+        }
+        .search-context-item {
+            line-height: 1.5;
+            opacity: 0.55;
+            word-break: break-all;
+            white-space: pre-wrap;
+            transition: opacity 0.2s;
+        }
+        .search-context-item:hover {
+            opacity: 0.85;
+        }
+        .search-context-item.current-hit {
+            opacity: 1;
+            font-weight: 500;
+            color: #fff;
+            background: rgba(56, 189, 248, 0.08);
+            border-left: 3px solid #38bdf8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 2px 0;
+        }
+        .search-context-sender {
+            color: #38bdf8;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        .search-context-sender.self-sender {
+            color: #34d399;
+        }
+        .light-mode .search-hit-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .light-mode .search-hit-card:hover {
+            background: #fff;
+            border-color: rgba(14, 165, 233, 0.3);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.08);
+        }
+        .light-mode .search-hit-sender {
+            color: #0f172a;
+        }
+        .light-mode .search-hit-body {
+            color: #334155;
+        }
+        .light-mode .search-hit-context {
+            background: rgba(241, 245, 249, 0.85);
+            border-color: rgba(0, 0, 0, 0.04);
+        }
+        .light-mode .search-context-item {
+            opacity: 0.65;
+        }
+        .light-mode .search-context-item.current-hit {
+            color: #0f172a;
+            background: rgba(14, 165, 233, 0.08);
+            border-left-color: #0ea5e9;
+        }
     </style>
 </head>
 <body>
@@ -1262,13 +1381,7 @@
                                 </label>
                             </div>
                         </div>
-                        <!-- 指定会话模式下显示会话选择 -->
-                        <div class="analysis-control-row" id="session-select-container" style="flex-direction:column;align-items:flex-start;gap:6px;display:none;">
-                            <label style="font-weight:500;">选择会话</label>
-                            <select id="wechat-search-session-select" class="analysis-select" style="width:100%;">
-                                <option value="">-- 正在读取 --</option>
-                            </select>
-                        </div>
+
                         <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
                             <label style="font-weight: 500;">全文检索关键字 (FTS5)</label>
                             <input type="text" id="wechat-keyword-input" class="analysis-input" placeholder="输入关键字搜索(支持拼音/英文/汉字)..." style="width: 100%; box-sizing: border-box;">
@@ -1359,7 +1472,7 @@
                                 <h5 style="margin: 0; font-size: 1rem; color: #38bdf8;">&#129504; AI 分析研判报告与可视化图谱</h5>
                                 <button class="kb-btn kb-btn-secondary" onclick="clearWechatAIResult()" style="padding: 2px 8px; font-size: 0.75rem; min-height: 24px;">清空</button>
                             </div>
-                            <div id="wechat-ai-result" class="markdown-content" style="flex: 1; overflow-y: auto; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.03); max-height: 500px;">
+                            <div id="wechat-ai-result" class="markdown-content" style="flex: 1; overflow-y: auto; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.03); max-height: 300px; min-height: 120px;">
                                 <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">等待 AI 深度研判分析输出结果...</div>
                             </div>
                         </div>
@@ -1413,6 +1526,8 @@
                 // 清除日期选择
                 startDateInput.value = '';
                 endDateInput.value = '';
+                startDateInput.dispatchEvent(new Event('change', { bubbles: true }));
+                endDateInput.dispatchEvent(new Event('change', { bubbles: true }));
                 return;
             }
 
@@ -1481,6 +1596,10 @@
 
             startDateInput.value = formatDate(startDate);
             endDateInput.value = formatDate(endDate);
+
+            // 触发 change 事件以自动重载会话消息
+            startDateInput.dispatchEvent(new Event('change', { bubbles: true }));
+            endDateInput.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
         // 微信状态管理器
@@ -1583,7 +1702,9 @@
                 visibleEnd: Math.min(totalCount, maxRender),
                 messages: messages,
                 renderedMessages: messages.slice(0, maxRender),
-                lastScrollTime: 0
+                lastScrollTime: 0,
+                keyword: keyword,
+                isSearchResults: isSearchResults
             };
             
             if (needVirtualScroll) {
@@ -1646,10 +1767,13 @@
             virtualViewport = feed.querySelector('.wechat-virtual-viewport');
             
             // 初始渲染
-            renderVirtualMessages(keyword, isSearchResults);
+            renderVirtualMessages();
             
             // 绑定滚动事件（节流）
             virtualContainer.addEventListener('scroll', onVirtualScroll);
+            virtualContainer.addEventListener('scroll', async () => {
+                await handleScrollPagination(virtualContainer);
+            });
         }
         
         // 虚拟滚动回调
@@ -1692,33 +1816,39 @@
         }
         
         // 渲染虚拟滚动消息
-        function renderVirtualMessages(keyword = '', isSearchResults = false) {
+        function renderVirtualMessages() {
             if (!virtualViewport) return;
             
+            const keyword = virtualScrollState.keyword || '';
+            const isSearchResults = virtualScrollState.isSearchResults || false;
             const startIndex = virtualScrollState.visibleStart;
             const endIndex = virtualScrollState.visibleEnd;
             const itemHeight = VIRTUAL_SCROLL.ITEM_HEIGHT;
             
             const fragment = document.createDocumentFragment();
-            let lastTime = 0;
+            let lastTime = startIndex > 0 && virtualScrollState.messages[startIndex - 1] ? virtualScrollState.messages[startIndex - 1].create_time : 0;
             
             for (let i = startIndex; i < endIndex; i++) {
                 const msg = virtualScrollState.messages[i];
                 if (!msg) continue;
+                
+                // Create a slot wrapper to hold the time tag and the message bubble to prevent them from overlapping
+                const slotWrapper = document.createElement('div');
+                slotWrapper.style.cssText = `position: absolute; top: ${i * itemHeight}px; left: 0; right: 0; display: flex; flex-direction: column;`;
                 
                 const createTime = msg.create_time;
                 if (createTime - lastTime > 300) {
                     const timeDiv = document.createElement('div');
                     timeDiv.className = 'wechat-time-tag';
                     timeDiv.textContent = msg.formatted_time || '';
-                    timeDiv.style.cssText = `position: absolute; top: ${i * itemHeight}px; left: 0; right: 0; text-align: center;`;
-                    fragment.appendChild(timeDiv);
+                    timeDiv.style.cssText = `align-self: center; margin-bottom: 4px;`;
+                    slotWrapper.appendChild(timeDiv);
                     lastTime = createTime;
                 }
                 
                 const msgElement = createMessageElement(msg, keyword, isSearchResults);
-                msgElement.style.cssText = `position: absolute; top: ${i * itemHeight}px; left: 0; right: 0;`;
-                fragment.appendChild(msgElement);
+                slotWrapper.appendChild(msgElement);
+                fragment.appendChild(slotWrapper);
             }
             
             virtualViewport.innerHTML = '';
@@ -1945,14 +2075,11 @@
                 console.error('加载微信会话列表失败:', err);
                 const select = document.getElementById('wechat-session-select');
                 select.innerHTML = '<option value="">❌ 加载失败</option>';
-                const searchSelect = document.getElementById('wechat-search-session-select');
-                if (searchSelect) searchSelect.innerHTML = '<option value="">❌ 加载失败</option>';
             }
         }
 
         function renderWechatSessionOptions() {
             const select = document.getElementById('wechat-session-select');
-            const searchSelect = document.getElementById('wechat-search-session-select');
             const searchQuery = (document.getElementById('wechat-session-search')?.value || '').toLowerCase().trim();
             const typeFilter = document.getElementById('wechat-session-type-filter')?.value || 'all';
 
@@ -1984,7 +2111,6 @@
             });
 
             select.innerHTML = '<option value="">-- 请选择会话 --</option>';
-            if (searchSelect) searchSelect.innerHTML = '<option value="">-- 请选择会话 --</option>';
 
             // 渲染分组后的会话
             const groupOrder = ['群聊', '私聊', '公众号', '未分类'];
@@ -2000,20 +2126,31 @@
                         optgroup.appendChild(opt);
                     });
                     select.appendChild(optgroup);
-                    // 同步到搜索专用下拉框
-                    if (searchSelect) {
-                        const sg = document.createElement('optgroup');
-                        sg.label = `${groupName} (${list.length})`;
-                        list.forEach(session => {
-                            const opt2 = document.createElement('option');
-                            opt2.value = session.id;
-                            opt2.textContent = `${session.display_name} (${session.message_count}条)`;
-                            sg.appendChild(opt2);
-                        });
-                        searchSelect.appendChild(sg);
-                    }
                 }
             });
+        }
+
+        // 统一获取会话消息接口(支持滚动分页)
+        // 统一滚动分页逻辑，支持普通与虚拟滚动
+        async function handleScrollPagination(element) {
+            if (wechatState.isSearchMode || !wechatState.sessionId || wechatState.isLoading) return;
+
+            // 滚动触顶时加载更早的历史记录
+            if (element.scrollTop === 0) {
+                if (wechatState.offset > 0) {
+                    const newOffset = Math.max(0, wechatState.offset - wechatState.limit);
+                    const countToFetch = wechatState.offset - newOffset;
+                    await fetchSessionMessages(wechatState.sessionId, newOffset, countToFetch, false, true);
+                }
+            }
+            // 滚动触底时且未展示到最新,加载更晚的历史记录
+            else if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - 5) {
+                const loadedCount = wechatState.offset + wechatState.messages.length;
+                if (loadedCount < wechatState.totalCount) {
+                    const countToFetch = Math.min(wechatState.limit, wechatState.totalCount - loadedCount);
+                    await fetchSessionMessages(wechatState.sessionId, loadedCount, countToFetch, true, false);
+                }
+            }
         }
 
         // 统一获取会话消息接口(支持滚动分页)
@@ -2054,20 +2191,27 @@
                 }
 
                 if (prepend) {
-                    const oldScrollHeight = feed.scrollHeight;
-                    const oldScrollTop = feed.scrollTop;
+                    const scrollEl = virtualScrollState.isEnabled ? document.querySelector('.wechat-virtual-container') : feed;
+                    const oldScrollHeight = scrollEl ? scrollEl.scrollHeight : 0;
+                    const oldScrollTop = scrollEl ? scrollEl.scrollTop : 0;
 
                     wechatState.messages = msgs.concat(wechatState.messages);
                     renderWechatBubbles(wechatState.messages, '');
 
-                    feed.scrollTop = oldScrollTop + (feed.scrollHeight - oldScrollHeight);
+                    const newScrollEl = virtualScrollState.isEnabled ? document.querySelector('.wechat-virtual-container') : feed;
+                    if (newScrollEl) {
+                        newScrollEl.scrollTop = oldScrollTop + (newScrollEl.scrollHeight - oldScrollHeight);
+                    }
                 } else if (append) {
                     wechatState.messages = wechatState.messages.concat(msgs);
                     renderWechatBubbles(wechatState.messages, '');
                 } else {
                     wechatState.messages = msgs;
                     renderWechatBubbles(wechatState.messages, '');
-                    feed.scrollTop = feed.scrollHeight;
+                    const scrollEl = virtualScrollState.isEnabled ? document.querySelector('.wechat-virtual-container') : feed;
+                    if (scrollEl) {
+                        scrollEl.scrollTop = scrollEl.scrollHeight;
+                    }
                 }
 
                 wechatState.offset = offset;
@@ -2140,13 +2284,10 @@
         function toggleSearchScope(scope) {
             wechatState.searchScope = scope;
             const typeFilter = document.getElementById('search-type-filter');
-            const sessionContainer = document.getElementById('session-select-container');
             if (scope === 'all') {
                 if (typeFilter) typeFilter.style.display = 'flex';
-                if (sessionContainer) sessionContainer.style.display = 'none';
             } else {
                 if (typeFilter) typeFilter.style.display = 'none';
-                if (sessionContainer) sessionContainer.style.display = 'flex';
             }
         }
 
@@ -2350,7 +2491,7 @@
                 const color = typeColorMap[stat.type] || '#94a3b8';
                 
                 // 第一个分组默认展开，其他默认折叠
-                const isCollapsed = wechatState.collapsedGroups.has(sid.toString()) || (!isFirstExpanded && !wechatState.collapsedGroups.has(sid.toString()) && Object.keys(wechatState.groupMessagesCache).length > 0);
+                const isCollapsed = wechatState.collapsedGroups.has(sid.toString());
                 
                 // 第一个分组自动展开
                 if (!isFirstExpanded && !wechatState.collapsedGroups.has(sid.toString())) {
@@ -2548,15 +2689,39 @@
             }
         }
 
-        // 渲染消息气泡到指定的分组容器中（复用系统 createMessageElement）
+        // 创建高可读性搜索命中结果卡片
+        function createSearchHitElement(msg, keyword) {
+            const div = document.createElement('div');
+            div.className = 'search-hit-card';
+            
+            const senderName = msg.sender_display_name || msg.sender_username || '未知用户';
+            const jumpBtnHtml = `<span class="wechat-jump-btn" onclick="jumpToMessageContext(${msg.id}, ${msg.session_id})">🔍 定位上下文</span>`;
+            
+            const renderedContent = renderMessageContent(msg.content || '', keyword, div, msg.id);
+            
+            div.innerHTML = `
+                <div class="search-hit-header">
+                    <div>
+                        <span class="search-hit-sender">${escapeHtml(senderName)}</span>
+                        <span class="search-hit-time">${msg.formatted_time || ''}</span>
+                    </div>
+                    ${jumpBtnHtml}
+                </div>
+                <div class="search-hit-body">${renderedContent}</div>
+            `;
+            
+            return div;
+        }
+
+        // 渲染消息到指定的分组容器中 (使用高可读性卡片格式)
         function _renderWechatBubblesToContainer(messages, keyword, container) {
             if (!messages || messages.length === 0) return;
 
             const fragment = document.createDocumentFragment();
 
             for (const msg of messages) {
-                // 直接复用系统自带的 createMessageElement，完美还原微信气泡样式
-                const msgElement = createMessageElement(msg, keyword, true);
+                // 使用全新的高可读性卡片代替传统的聊天气泡
+                const msgElement = createSearchHitElement(msg, keyword);
                 fragment.appendChild(msgElement);
             }
 
@@ -2568,13 +2733,18 @@
             const keyword = document.getElementById('wechat-keyword-input').value.trim();
             const sender = document.getElementById('wechat-sender-input').value.trim();
             const scope = wechatState.searchScope;
-            // 指定会话搜索时从专用下拉框取值；全量搜索时忽略
+            // 指定会话搜索时从微信会话选择器取值；全量搜索时忽略
             const sessionId = (scope === 'session')
-                ? (document.getElementById('wechat-search-session-select') || {value:''}).value
+                ? (document.getElementById('wechat-session-select') || {value:''}).value
                 : '';
             const sessionType = wechatState.searchSessionType;
             const stats = document.getElementById('wechat-feed-stats');
             const feed = document.getElementById('wechat-bubble-feed');
+
+            if (scope === 'session' && !sessionId) {
+                alert('请先在上方“选择微信会话 (Session)”中选择要检索的会话');
+                return;
+            }
 
             if (!keyword && !sender) {
                 alert('检索必须输入检索词或指定发言人昵称');
@@ -2637,6 +2807,15 @@
                 wechatState.searchTypeStats = result.data.type_stats || [];
                 // 修复:保存会话分组统计(后端已在 /api/wechat/search/keyword 返回 session_stats)
                 wechatState.groupSessionStats = result.data.session_stats || [];
+
+                if (!loadMore) {
+                    wechatState.collapsedGroups = new Set();
+                    if (wechatState.groupSessionStats.length > 1) {
+                        for (let i = 1; i < wechatState.groupSessionStats.length; i++) {
+                            wechatState.collapsedGroups.add(wechatState.groupSessionStats[i].id.toString());
+                        }
+                    }
+                }
 
                 if (loadMore) {
                     // 追加结果
@@ -2806,6 +2985,11 @@
 
             let endpoint = '';
             let bodyPayload = { use_cache: useCache };
+            
+            const st = getSelectedStartTime();
+            const et = getSelectedEndTime();
+            if (st) bodyPayload.start_time = st;
+            if (et) bodyPayload.end_time = et;
 
             if (mode === 'session') {
                 endpoint = '/api/wechat/analyze/session';
@@ -2988,23 +3172,8 @@
             const feed = document.getElementById('wechat-bubble-feed');
             if (feed) {
                 feed.addEventListener('scroll', async () => {
-                    if (wechatState.isSearchMode || !wechatState.sessionId || wechatState.isLoading) return;
-
-                    // 滚动触顶时加载更早的历史记录
-                    if (feed.scrollTop === 0) {
-                        if (wechatState.offset > 0) {
-                            const newOffset = Math.max(0, wechatState.offset - wechatState.limit);
-                            const countToFetch = wechatState.offset - newOffset;
-                            await fetchSessionMessages(wechatState.sessionId, newOffset, countToFetch, false, true);
-                        }
-                    }
-                    // 滚动触底时且未展示到最新,加载更晚的历史记录
-                    else if (Math.ceil(feed.scrollTop + feed.clientHeight) >= feed.scrollHeight - 5) {
-                        const loadedCount = wechatState.offset + wechatState.messages.length;
-                        if (loadedCount < wechatState.totalCount) {
-                            const countToFetch = Math.min(wechatState.limit, wechatState.totalCount - loadedCount);
-                            await fetchSessionMessages(wechatState.sessionId, loadedCount, countToFetch, true, false);
-                        }
+                    if (!virtualScrollState.isEnabled) {
+                        await handleScrollPagination(feed);
                     }
                 });
             }
@@ -3035,6 +3204,9 @@
                     document.querySelectorAll('.date-quick-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
+                    if (wechatState.sessionId) {
+                        loadWechatSessionMessages(wechatState.sessionId);
+                    }
                 });
             }
             if (wechatEndDate) {
@@ -3042,6 +3214,19 @@
                     document.querySelectorAll('.date-quick-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
+                    if (wechatState.sessionId) {
+                        loadWechatSessionMessages(wechatState.sessionId);
+                    }
+                });
+            }
+            // 绑定关键字回车检索
+            const keywordInput = document.getElementById('wechat-keyword-input');
+            if (keywordInput) {
+                keywordInput.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        searchWechatMessages();
+                    }
                 });
             }
 

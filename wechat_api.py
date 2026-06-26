@@ -80,6 +80,8 @@ async def get_session(
             "messages": messages,
             "filtered_message_count": len(all_filtered)
         }
+    except HTTPException as e:
+        raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
