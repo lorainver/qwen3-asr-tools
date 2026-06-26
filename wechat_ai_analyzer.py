@@ -44,7 +44,9 @@ class WechatAIAnalyzer:
 
     def _format_messages(self, messages: List[Dict], limit: int = 150) -> str:
         formatted = []
-        for msg in messages[:limit]:
+        # If there are more messages than the limit, take the latest ones (end of the list)
+        target_messages = messages[-limit:] if len(messages) > limit else messages
+        for msg in target_messages:
             formatted.append(
                 f"[{msg.get('formatted_time', '')}] {msg.get('sender_display_name', '未知')}: {msg.get('content', '')}"
             )
@@ -338,6 +340,143 @@ Mermaid 关系网草图：
             return {"success": True, "data": result, "from_cache": False}
 
         except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def analyze_top5(self, session_id: int, start_time: Optional[int] = None, end_time: Optional[int] = None, use_cache: bool = True) -> Dict:
+        try:
+            session_info = wechat_db.get_session_info(session_id)
+            if not session_info:
+                return {"success": False, "error": "会话不存在"}
+            
+            cache_key = self._generate_cache_key("top5", str(session_id), start_time, end_time)
+            if use_cache:
+                cached = self._get_from_cache(cache_key)
+                if cached:
+                    return {"success": True, "data": cached, "from_cache": True}
+            
+            cursor = wechat_db.conn.cursor()
+            
+            # Find the top 5 senders in this session by message count
+            query_stats = """
+                SELECT sender_display_name, sender_username, COUNT(*) as count
+                FROM messages
+                WHERE session_id = ? AND sender_display_name IS NOT NULL AND sender_display_name != ''
+            """
+            params_stats = [session_id]
+            if start_time:
+                query_stats += " AND create_time >= ?"
+                params_stats.append(start_time)
+            if end_time:
+                query_stats += " AND create_time <= ?"
+                params_stats.append(end_time)
+                
+            query_stats += " GROUP BY sender_display_name, sender_username ORDER BY count DESC LIMIT 5"
+            cursor.execute(query_stats, params_stats)
+            top5_rows = cursor.fetchall()
+            
+            if not top5_rows:
+                return {"success": False, "error": "该时间段内无活跃发言人数据"}
+                
+            # For each of the top 5 senders, fetch up to 40 messages they sent in this session
+            top5_data = []
+            for row in top5_rows:
+                sender_name = row["sender_display_name"]
+                sender_user = row["sender_username"]
+                msg_count = row["count"]
+                
+                query_msgs = """
+                    SELECT content, formatted_time, create_time
+                    FROM messages
+                    WHERE session_id = ? AND sender_display_name = ?
+                """
+                params_msgs = [session_id, sender_name]
+                if start_time:
+                    query_msgs += " AND create_time >= ?"
+                    params_msgs.append(start_time)
+                if end_time:
+                    query_msgs += " AND create_time <= ?"
+                    params_msgs.append(end_time)
+                
+                query_msgs += " ORDER BY create_time DESC LIMIT 40"
+                cursor.execute(query_msgs, params_msgs)
+                msgs = [dict(r) for r in cursor.fetchall()]
+                msgs.reverse()
+                
+                top5_data.append({
+                    "name": sender_name,
+                    "username": sender_user,
+                    "count": msg_count,
+                    "messages": msgs
+                })
+                
+            query_total = "SELECT COUNT(*) as total FROM messages WHERE session_id = ?"
+            params_total = [session_id]
+            if start_time:
+                query_total += " AND create_time >= ?"
+                params_total.append(start_time)
+            if end_time:
+                query_total += " AND create_time <= ?"
+                params_total.append(end_time)
+            cursor.execute(query_total, params_total)
+            total_session_msgs = cursor.fetchone()["total"]
+
+            top5_summary_lines = []
+            detailed_msgs_block = []
+            for idx, user_info in enumerate(top5_data):
+                pct = (user_info["count"] / total_session_msgs * 100) if total_session_msgs > 0 else 0
+                top5_summary_lines.append(f"{idx+1}. {user_info['name']} (账号/ID: {user_info['username'] or '未知'}): 发言 {user_info['count']} 条，占该时间段群发言总数 ({total_session_msgs}条) 的 {pct:.2f}%")
+                
+                formatted_msgs = []
+                for m in user_info["messages"]:
+                    formatted_msgs.append(f"[{m.get('formatted_time', '')}] {m.get('content', '')}")
+                msgs_str = "\n".join(formatted_msgs)
+                
+                detailed_msgs_block.append(f"发言人 {idx+1}: {user_info['name']}\n近期发言样本：\n{msgs_str}\n" + "-"*40)
+                
+            summary_text = "\n".join(top5_summary_lines)
+            detailed_text = "\n\n".join(detailed_msgs_block)
+            
+            system_prompt = """你是一个群聊社交网络与行为研判专家。你的任务是分析群聊中最活跃的前五名成员，生成一份深度对比研判报告。
+请从以下维度进行综合性分析并生成 Markdown 报告：
+1. 【群内活跃度与影响力概览】：分析前五名活跃成员的发言占比、活跃规律等。
+2. 【用户画像与群内角色研判】：对每一位活跃成员进行画像（分析其关注主题、言论态度、在群聊中扮演的角色，例如：是话题发起者、技术输出/答疑者、信息转发者、闲聊活跃气氛者还是情绪宣泄者）。
+3. 【社交互动与人际关系透视】：这五个人之间是否存在互动、是否存在观点抱团或交锋，以及他们是如何共同主导/影响群聊舆论和氛围的。
+4. 【总结与研判建议】：针对这几位核心活跃分子，总结群聊的舆论核心驱动力，并提供研判建议。
+请生成专业、深入、结构清晰的报告。"""
+
+            user_prompt = f"""请分析以下群聊中最活跃的前五名成员的发言特征：
+            
+群聊名称：{session_info.get('display_name', '未知')}
+消息统计时间段内总消息：{total_session_msgs} 条
+
+【活跃前五名基本信息】：
+{summary_text}
+
+【前五名成员的发言样本（每人最多40条最新记录）】：
+{detailed_text}
+
+请生成详细的活跃前五名对比研判报告。"""
+
+            ai_analysis = self._call_model(system_prompt, user_prompt)
+            result = {
+                "session_info": {
+                    "id": session_info["id"],
+                    "name": session_info["display_name"],
+                    "type": session_info["type"]
+                },
+                "statistics": {
+                    "total_messages": total_session_msgs,
+                },
+                "top5_users": [{"name": u["name"], "count": u["count"], "username": u["username"]} for u in top5_data],
+                "ai_analysis": ai_analysis,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            self._save_to_cache(cache_key, result)
+            return {"success": True, "data": result, "from_cache": False}
+            
+        except Exception as e:
+            logger.exception("活跃前五研判失败")
             return {"success": False, "error": str(e)}
 
     def chat_analyze(self, query: str, context: List[Dict], use_cache: bool = True) -> Dict:

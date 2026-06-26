@@ -36,6 +36,12 @@ class RelationsAnalyzeRequest(BaseModel):
     end_time: Optional[int] = None
     use_cache: bool = True
 
+class Top5AnalyzeRequest(BaseModel):
+    session_id: int
+    start_time: Optional[int] = None
+    end_time: Optional[int] = None
+    use_cache: bool = True
+
 class ChatAnalyzeRequest(BaseModel):
     query: str
     context: List[Dict[str, Any]]
@@ -241,6 +247,15 @@ async def analyze_theme(req: ThemeAnalyzeRequest):
 async def analyze_relations(req: RelationsAnalyzeRequest):
     result = wechat_ai_analyzer.analyze_user_relations(
         req.username, req.start_time, req.end_time, req.use_cache
+    )
+    if result["success"]:
+        return result
+    raise HTTPException(status_code=500, detail=result.get("error", "AI 分析失败"))
+
+@router.post("/analyze/top5")
+async def analyze_top5(req: Top5AnalyzeRequest):
+    result = wechat_ai_analyzer.analyze_top5(
+        req.session_id, req.start_time, req.end_time, req.use_cache
     )
     if result["success"]:
         return result

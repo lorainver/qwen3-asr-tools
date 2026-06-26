@@ -20,6 +20,34 @@
     <!-- Mermaid 图表 -->
     <script src="/static/js/mermaid.min.js"></script>
     <style>
+        /* Maximized AI Card Overlay style */
+        .wechat-ai-card.maximized {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            z-index: 9999;
+            background: #111827;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px) !important;
+            padding: 20px !important;
+            animation: popIn 0.25s ease-out;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .wechat-ai-card.maximized #wechat-ai-result {
+            max-height: none !important;
+            height: 100% !important;
+            flex: 1;
+        }
+
         /* ── 微信分析子标签样式 ── */
         .sub-tab-btn {
             background: none;
@@ -1428,6 +1456,7 @@
                             <select id="wechat-ai-mode" class="analysis-select" style="width: 100%;">
                                 <option value="session">&#128201; 会话脉络分析 (Session)</option>
                                 <option value="user">&#128100; 个人画像研判 (User)</option>
+                                <option value="top5">👥 群内活跃前五研判 (Top 5 Active Senders)</option>
                                 <option value="theme">&#127991;&#65039; 话题演进分析 (Theme)</option>
                                 <option value="relations">&#128120;&#8205;&#9794;&#65039; 关系网图分析 (Relations)</option>
                             </select>
@@ -1470,7 +1499,10 @@
                         <div class="wechat-ai-card">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px;">
                                 <h5 style="margin: 0; font-size: 1rem; color: #38bdf8;">&#129504; AI 分析研判报告与可视化图谱</h5>
-                                <button class="kb-btn kb-btn-secondary" onclick="clearWechatAIResult()" style="padding: 2px 8px; font-size: 0.75rem; min-height: 24px;">清空</button>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <button class="kb-btn kb-btn-secondary" id="wechat-ai-maximize-btn" onclick="toggleMaximizeAIResult()" style="padding: 2px 8px; font-size: 0.75rem; min-height: 24px;">🗖 最大化</button>
+                                    <button class="kb-btn kb-btn-secondary" onclick="clearWechatAIResult()" style="padding: 2px 8px; font-size: 0.75rem; min-height: 24px;">清空</button>
+                                </div>
                             </div>
                             <div id="wechat-ai-result" class="markdown-content" style="flex: 1; overflow-y: auto; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.03); max-height: 300px; min-height: 120px;">
                                 <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">等待 AI 深度研判分析输出结果...</div>
@@ -2993,6 +3025,18 @@
             }
         }
 
+        function toggleMaximizeAIResult() {
+            const card = document.querySelector('.wechat-ai-card');
+            const btn = document.getElementById('wechat-ai-maximize-btn');
+            if (card.classList.contains('maximized')) {
+                card.classList.remove('maximized');
+                btn.innerHTML = '🗖 最大化';
+            } else {
+                card.classList.add('maximized');
+                btn.innerHTML = '🗗 还原';
+            }
+        }
+
         // 运行 AI 研判
         let _wechatAiRunning = false;
         async function runWechatAIAnalysis() {
@@ -3020,6 +3064,13 @@
             if (mode === 'session') {
                 endpoint = '/api/wechat/analyze/session';
                 bodyPayload.session_id = parseInt(sessionId);
+            } else if (mode === 'top5') {
+                if (!sessionId) {
+                    alert('群内活跃前五研判模式下必须先在上方选择一个微信会话');
+                    return;
+                }
+                endpoint = '/api/wechat/analyze/top5';
+                bodyPayload.session_id = parseInt(sessionId);
             } else if (mode === 'user') {
                 const sender = document.getElementById('wechat-sender-input').value.trim();
                 if (!sender) {
@@ -3029,7 +3080,7 @@
                 endpoint = '/api/wechat/analyze/user';
                 bodyPayload.username = sender;
             } else if (mode === 'theme') {
-                // 针对群聊话题演进分析,使用当前选择的会话 display_name 或者直接输入
+                // 针对群聊话题演进分析,使用当前选择 the session display_name 或者直接输入
                 const sessionSelect = document.getElementById('wechat-session-select');
                 let groupName = '';
                 if (sessionId) {

@@ -908,5 +908,509 @@
     },
     "chunk_count": 17,
     "indexed_at": "2026-06-25T09:09:39.888028"
+  },
+  "51a218a70bd1": {
+    "filename": "新周刊_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\新周刊_raw.standard.md",
+      "filename": "新周刊_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 66447,
+      "loaded_at": "2026-06-26T14:15:55.153352",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\新周刊_raw.standard.md"
+    },
+    "chunk_count": 42,
+    "indexed_at": "2026-06-26T14:15:55.153352"
+  },
+  "893ac6003b9b": {
+    "filename": "朱门大叔_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\朱门大叔_raw.standard.md",
+      "filename": "朱门大叔_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 64680,
+      "loaded_at": "2026-06-26T14:17:29.190870",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\朱门大叔_raw.standard.md"
+    },
+    "chunk_count": 37,
+    "indexed_at": "2026-06-26T14:17:29.190870"
+  },
+  "19f45aed76a8": {
+    "filename": "浙江大学_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\浙江大学_raw.standard.md",
+      "filename": "浙江大学_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 18745,
+      "loaded_at": "2026-06-26T14:18:08.597103",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\浙江大学_raw.standard.md"
+    },
+    "chunk_count": 12,
+    "indexed_at": "2026-06-26T14:18:08.597103"
+  },
+  "b316479b6773": {
+    "filename": "重庆市棋牌运动管理中心_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\重庆市棋牌运动管理中心_raw.standard.md",
+      "filename": "重庆市棋牌运动管理中心_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 16157,
+      "loaded_at": "2026-06-26T14:28:43.970878",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\重庆市棋牌运动管理中心_raw.standard.md"
+    },
+    "chunk_count": 9,
+    "indexed_at": "2026-06-26T14:28:43.970878"
+  },
+  "7a9f0621366a": {
+    "filename": "沙坪坝发布_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\沙坪坝发布_raw.standard.md",
+      "filename": "沙坪坝发布_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 62741,
+      "loaded_at": "2026-06-26T14:29:10.524797",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\沙坪坝发布_raw.standard.md"
+    },
+    "chunk_count": 38,
+    "indexed_at": "2026-06-26T14:29:10.524797"
+  },
+  "9adce73a856e": {
+    "filename": "中国人民银行征信中心_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\中国人民银行征信中心_raw.standard.md",
+      "filename": "中国人民银行征信中心_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 17138,
+      "loaded_at": "2026-06-26T14:30:48.609255",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\中国人民银行征信中心_raw.standard.md"
+    },
+    "chunk_count": 10,
+    "indexed_at": "2026-06-26T14:30:48.609255"
+  },
+  "cdbe98f8516e": {
+    "filename": "中国南方航空_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\中国南方航空_raw.standard.md",
+      "filename": "中国南方航空_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 1699,
+      "loaded_at": "2026-06-26T14:31:49.036429",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\中国南方航空_raw.standard.md"
+    },
+    "chunk_count": 0,
+    "indexed_at": "2026-06-26T14:31:49.036429"
+  },
+  "25df57dc637e": {
+    "filename": "QQ安全中心_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\QQ安全中心_raw.standard.md",
+      "filename": "QQ安全中心_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 2166,
+      "loaded_at": "2026-06-26T14:31:53.573709",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\QQ安全中心_raw.standard.md"
+    },
+    "chunk_count": 2,
+    "indexed_at": "2026-06-26T14:31:53.573709"
+  },
+  "368a7c0b4f50": {
+    "filename": "招商银行信用卡_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\招商银行信用卡_raw.standard.md",
+      "filename": "招商银行信用卡_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 46868,
+      "loaded_at": "2026-06-26T14:32:03.452586",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\招商银行信用卡_raw.standard.md"
+    },
+    "chunk_count": 35,
+    "indexed_at": "2026-06-26T14:32:03.452586"
+  },
+  "9863b2ce13e8": {
+    "filename": "摸摸鱼_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\摸摸鱼_raw.standard.md",
+      "filename": "摸摸鱼_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 2822,
+      "loaded_at": "2026-06-26T14:40:12.413239",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\摸摸鱼_raw.standard.md"
+    },
+    "chunk_count": 2,
+    "indexed_at": "2026-06-26T14:40:12.413239"
+  },
+  "fb32d14d3667": {
+    "filename": "麦当劳_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\麦当劳_raw.standard.md",
+      "filename": "麦当劳_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 1525,
+      "loaded_at": "2026-06-26T14:40:24.251750",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\麦当劳_raw.standard.md"
+    },
+    "chunk_count": 1,
+    "indexed_at": "2026-06-26T14:40:24.251750"
+  },
+  "eb894dbe6ee0": {
+    "filename": "春语老师&木铎金声13110137559_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\春语老师&木铎金声13110137559_raw.standard.md",
+      "filename": "春语老师&木铎金声13110137559_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 1590,
+      "loaded_at": "2026-06-26T14:40:27.315984",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\春语老师&木铎金声13110137559_raw.standard.md"
+    },
+    "chunk_count": 1,
+    "indexed_at": "2026-06-26T14:40:27.315984"
+  },
+  "c2b7a52ca1de": {
+    "filename": "李老师 三境教育_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\李老师 三境教育_raw.standard.md",
+      "filename": "李老师 三境教育_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 17840,
+      "loaded_at": "2026-06-26T15:16:11.270162",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\李老师 三境教育_raw.standard.md"
+    },
+    "chunk_count": 12,
+    "indexed_at": "2026-06-26T15:16:11.270162"
+  },
+  "5e9f35e82453": {
+    "filename": "猫猫_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\猫猫_raw.standard.md",
+      "filename": "猫猫_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 37430,
+      "loaded_at": "2026-06-26T15:18:05.151055",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\猫猫_raw.standard.md"
+    },
+    "chunk_count": 30,
+    "indexed_at": "2026-06-26T15:18:05.151055"
+  },
+  "6bca0a545b43": {
+    "filename": "京东购物_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\京东购物_raw.standard.md",
+      "filename": "京东购物_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 49230,
+      "loaded_at": "2026-06-26T15:19:40.343591",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\京东购物_raw.standard.md"
+    },
+    "chunk_count": 33,
+    "indexed_at": "2026-06-26T15:19:40.343591"
+  },
+  "585174a8bdda": {
+    "filename": "玥玥老师&木铎金声_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\玥玥老师&木铎金声_raw.standard.md",
+      "filename": "玥玥老师&木铎金声_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 1749,
+      "loaded_at": "2026-06-26T15:20:35.712285",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\玥玥老师&木铎金声_raw.standard.md"
+    },
+    "chunk_count": 1,
+    "indexed_at": "2026-06-26T15:20:35.712285"
+  },
+  "b272fb4afd92": {
+    "filename": "飞飞老师-木铎金声_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\飞飞老师-木铎金声_raw.standard.md",
+      "filename": "飞飞老师-木铎金声_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 2348,
+      "loaded_at": "2026-06-26T15:20:40.440562",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\飞飞老师-木铎金声_raw.standard.md"
+    },
+    "chunk_count": 2,
+    "indexed_at": "2026-06-26T15:20:40.440562"
+  },
+  "95e2f8c38c18": {
+    "filename": "微信团队_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\微信团队_raw.standard.md",
+      "filename": "微信团队_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 1758,
+      "loaded_at": "2026-06-26T15:21:22.937499",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\微信团队_raw.standard.md"
+    },
+    "chunk_count": 2,
+    "indexed_at": "2026-06-26T15:21:22.937499"
+  },
+  "141c43b92142": {
+    "filename": "A蜀文教育@吕老师_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\A蜀文教育@吕老师_raw.standard.md",
+      "filename": "A蜀文教育@吕老师_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 4754,
+      "loaded_at": "2026-06-26T15:21:29.536551",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\A蜀文教育@吕老师_raw.standard.md"
+    },
+    "chunk_count": 3,
+    "indexed_at": "2026-06-26T15:21:29.536551"
+  },
+  "856bc0bc7ab1": {
+    "filename": "彭小东一全案设计+施工_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\彭小东一全案设计+施工_raw.standard.md",
+      "filename": "彭小东一全案设计+施工_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 1680,
+      "loaded_at": "2026-06-26T15:21:40.273791",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\彭小东一全案设计+施工_raw.standard.md"
+    },
+    "chunk_count": 1,
+    "indexed_at": "2026-06-26T15:21:40.273791"
+  },
+  "319c6922bc72": {
+    "filename": "蜀文田老师17388205298_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\蜀文田老师17388205298_raw.standard.md",
+      "filename": "蜀文田老师17388205298_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 4158,
+      "loaded_at": "2026-06-26T15:21:47.967879",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\蜀文田老师17388205298_raw.standard.md"
+    },
+    "chunk_count": 3,
+    "indexed_at": "2026-06-26T15:21:47.967879"
+  },
+  "e0da475ad52f": {
+    "filename": "sayhello 葛盼_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\sayhello 葛盼_raw.standard.md",
+      "filename": "sayhello 葛盼_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 538,
+      "loaded_at": "2026-06-26T15:22:00.112939",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\sayhello 葛盼_raw.standard.md"
+    },
+    "chunk_count": 1,
+    "indexed_at": "2026-06-26T15:22:00.112939"
+  },
+  "fb4269816439": {
+    "filename": "A鹏龙怡帆奔驰_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\A鹏龙怡帆奔驰_raw.standard.md",
+      "filename": "A鹏龙怡帆奔驰_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 1742,
+      "loaded_at": "2026-06-26T15:22:03.344150",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\A鹏龙怡帆奔驰_raw.standard.md"
+    },
+    "chunk_count": 2,
+    "indexed_at": "2026-06-26T15:22:03.344150"
+  },
+  "b65f5e2f8806": {
+    "filename": "A英豪教育庞老师15223393994_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\A英豪教育庞老师15223393994_raw.standard.md",
+      "filename": "A英豪教育庞老师15223393994_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 17365,
+      "loaded_at": "2026-06-26T15:22:07.015034",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\A英豪教育庞老师15223393994_raw.standard.md"
+    },
+    "chunk_count": 13,
+    "indexed_at": "2026-06-26T15:22:07.015034"
+  },
+  "fe654c9656fa": {
+    "filename": "杜蓓蕾_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\杜蓓蕾_raw.standard.md",
+      "filename": "杜蓓蕾_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 4085,
+      "loaded_at": "2026-06-26T15:22:35.208978",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\杜蓓蕾_raw.standard.md"
+    },
+    "chunk_count": 3,
+    "indexed_at": "2026-06-26T15:22:35.208978"
+  },
+  "89563ab6ef9e": {
+    "filename": "睿睿弟弟_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\睿睿弟弟_raw.standard.md",
+      "filename": "睿睿弟弟_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 460,
+      "loaded_at": "2026-06-26T15:22:49.611167",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\睿睿弟弟_raw.standard.md"
+    },
+    "chunk_count": 1,
+    "indexed_at": "2026-06-26T15:22:49.611167"
+  },
+  "f500d43be208": {
+    "filename": "🔥4年级春季期末冲刺大作战_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\🔥4年级春季期末冲刺大作战_raw.standard.md",
+      "filename": "🔥4年级春季期末冲刺大作战_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 11568,
+      "loaded_at": "2026-06-26T15:36:06.813202",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\🔥4年级春季期末冲刺大作战_raw.standard.md"
+    },
+    "chunk_count": 8,
+    "indexed_at": "2026-06-26T15:36:06.813202"
+  },
+  "efc618fb569d": {
+    "filename": "隆鑫盛世普天邻居群_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\隆鑫盛世普天邻居群_raw.standard.md",
+      "filename": "隆鑫盛世普天邻居群_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 45917,
+      "loaded_at": "2026-06-26T15:36:38.260034",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\隆鑫盛世普天邻居群_raw.standard.md"
+    },
+    "chunk_count": 31,
+    "indexed_at": "2026-06-26T15:36:38.260034"
+  },
+  "a30d8a48d495": {
+    "filename": "融三交流群_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\融三交流群_raw.standard.md",
+      "filename": "融三交流群_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 42918,
+      "loaded_at": "2026-06-26T15:38:11.493491",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\融三交流群_raw.standard.md"
+    },
+    "chunk_count": 28,
+    "indexed_at": "2026-06-26T15:38:11.493491"
+  },
+  "d3f07a9203bb": {
+    "filename": "张帆升学资源分享群_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\张帆升学资源分享群_raw.standard.md",
+      "filename": "张帆升学资源分享群_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 19741,
+      "loaded_at": "2026-06-26T15:39:46.287591",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\张帆升学资源分享群_raw.standard.md"
+    },
+    "chunk_count": 13,
+    "indexed_at": "2026-06-26T15:39:46.287591"
+  },
+  "7ba37d0f6eb5": {
+    "filename": "4-5年级上岸政策活动群_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\4-5年级上岸政策活动群_raw.standard.md",
+      "filename": "4-5年级上岸政策活动群_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 55237,
+      "loaded_at": "2026-06-26T15:40:19.822797",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\4-5年级上岸政策活动群_raw.standard.md"
+    },
+    "chunk_count": 37,
+    "indexed_at": "2026-06-26T15:40:19.822797"
+  },
+  "d33841a0b11e": {
+    "filename": "重庆大学MBA股票交流群_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\重庆大学MBA股票交流群_raw.standard.md",
+      "filename": "重庆大学MBA股票交流群_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 33204,
+      "loaded_at": "2026-06-26T15:41:53.167625",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\重庆大学MBA股票交流群_raw.standard.md"
+    },
+    "chunk_count": 25,
+    "indexed_at": "2026-06-26T15:41:53.167625"
+  },
+  "e5da8e36856d": {
+    "filename": "欣怡宝贝外贸童装1⃣ 群_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\欣怡宝贝外贸童装1⃣ 群_raw.standard.md",
+      "filename": "欣怡宝贝外贸童装1⃣ 群_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 42138,
+      "loaded_at": "2026-06-26T15:42:53.687599",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\欣怡宝贝外贸童装1⃣ 群_raw.standard.md"
+    },
+    "chunk_count": 35,
+    "indexed_at": "2026-06-26T15:42:53.687599"
+  },
+  "2fc9bf4cac4b": {
+    "filename": "💪信竞家长交流群_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\💪信竞家长交流群_raw.standard.md",
+      "filename": "💪信竞家长交流群_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 54443,
+      "loaded_at": "2026-06-26T15:44:33.193834",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\💪信竞家长交流群_raw.standard.md"
+    },
+    "chunk_count": 36,
+    "indexed_at": "2026-06-26T15:44:33.193834"
+  },
+  "13bcbc634495": {
+    "filename": "高2029届交流群1_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\高2029届交流群1_raw.standard.md",
+      "filename": "高2029届交流群1_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 35611,
+      "loaded_at": "2026-06-26T15:46:10.141562",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\高2029届交流群1_raw.standard.md"
+    },
+    "chunk_count": 23,
+    "indexed_at": "2026-06-26T15:46:10.141562"
+  },
+  "1172f9ebd6ad": {
+    "filename": "广深择校交流1群_妈妈圈_raw.standard.md",
+    "metadata": {
+      "source": "D:\\qwen3-asr\\knowledge_base\\wechat\\广深择校交流1群_妈妈圈_raw.standard.md",
+      "filename": "广深择校交流1群_妈妈圈_raw.standard.md",
+      "extension": ".md",
+      "size_bytes": 53999,
+      "loaded_at": "2026-06-26T15:47:26.679272",
+      "category": "微信聊天记录_batch_resume",
+      "stored_path": "D:\\qwen3-asr\\knowledge_base\\documents\\微信聊天记录_batch_resume\\广深择校交流1群_妈妈圈_raw.standard.md"
+    },
+    "chunk_count": 76,
+    "indexed_at": "2026-06-26T15:47:26.679272"
   }
 }
