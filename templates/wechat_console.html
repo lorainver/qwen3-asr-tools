@@ -1152,6 +1152,53 @@
         .btn-run:active {
             transform: scale(0.96);
         }
+
+        /* 搜索结果分类统计列表 */
+        .search-category-list {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.15);
+        }
+        .search-category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .search-category-item:last-child {
+            border-bottom: none;
+        }
+        .search-category-item:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+        .search-category-item.active {
+            background: rgba(56, 189, 248, 0.15);
+            border-left: 3px solid #38bdf8;
+        }
+        .search-category-item .category-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-category-item .category-icon {
+            font-size: 1.1rem;
+        }
+        .search-category-item .category-name {
+            font-size: 0.85rem;
+            color: var(--text-primary, #e2e8f0);
+        }
+        .search-category-item .category-count {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -1252,6 +1299,12 @@
                         </div>
                         <div class="analysis-action-row" style="margin-top: 10px;">
                             <button class="kb-btn kb-btn-primary" id="wechat-btn-search" onclick="searchWechatMessages()" style="width: 100%;">&#128269; 检索消息</button>
+                        </div>                        <!-- 搜索结果分类统计 -->
+                        <div id="search-category-container" style="display:none;">
+                            <label style="font-weight: 500; margin-bottom: 6px; display: block;">&#128200; 检索分类统计</label>
+                            <div id="search-category-list" class="search-category-list">
+                                <!-- 动态填充 -->
+                            </div>
                         </div>
 
                         <hr style="border: 0; border-top: 1px dashed rgba(255, 255, 255, 0.1); width: 100%; margin: 10px 0;">
@@ -1449,7 +1502,9 @@
             searchScope: 'all',      // 'session'=指定会话, 'all'=全部
             searchSessionType: '',   // '群聊'/'私聊'/'公众号'/''=全部
             searchTypeStats: [],     // 类型统计
-            requestVersion: 0        // 请求版本号，用于防止异步请求冲突
+            requestVersion: 0,       // 请求版本号，用于防止异步请求冲突
+            activeCategory: '',      // 当前激活的分类筛选
+            allSearchResults: []     // 保存所有搜索结果用于分类筛选
         };
 
         function getSelectedStartTime() {
@@ -2082,6 +2137,93 @@
             wechatState.searchSessionType = type;
         }
 
+
+        // 渲染搜索结果分类统计列表
+        function renderSearchCategoryList(typeStats, totalCount) {
+            const container = document.getElementById('search-category-container');
+            const list = document.getElementById('search-category-list');
+            
+            if (!typeStats || typeStats.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'block';
+            
+            const typeLabelMap = { '群聊': '👥', '私聊': '👤', '公众号': '📢', '未知': '❓' };
+            const typeColorMap = { '群聊': '#8b5cf6', '私聊': '#38bdf8', '公众号': '#f59e0b', '未知': '#94a3b8' };
+            
+            let html = '';
+            
+            // 添加"全部"选项
+            const allActive = wechatState.activeCategory === '' ? 'active' : '';
+            html += '<div class="search-category-item ' + allActive + '" onclick="filterByCategory(\'\')">' +
+                '<div class="category-info">' +
+                '<span class="category-icon">📋</span>' +
+                '<span class="category-name">全部结果</span>' +
+                '</div>' +
+                '<span class="category-count" style="background:rgba(56,189,248,0.2);color:#38bdf8;">' + totalCount + '</span>' +
+                '</div>';
+            
+            // 添加各分类选项
+            for (const stat of typeStats) {
+                const type = stat.type;
+                const icon = typeLabelMap[type] || '💬';
+                const color = typeColorMap[type] || '#94a3b8';
+                const active = wechatState.activeCategory === type ? 'active' : '';
+                
+                html += '<div class="search-category-item ' + active + '" onclick="filterByCategory(\'' + type + '\')">' +
+                    '<div class="category-info">' +
+                    '<span class="category-icon">' + icon + '</span>' +
+                    '<span class="category-name">' + type + '</span>' +
+                    '</div>' +
+                    '<span class="category-count" style="background:' + color + '20;color:' + color + ';">' + stat.count + '</span>' +
+                    '</div>';
+            }
+            
+            list.innerHTML = html;
+        }
+        
+        // 按分类筛选搜索结果
+        function filterByCategory(category) {
+            wechatState.activeCategory = category;
+            
+            // 更新分类列表的激活状态
+            const items = document.querySelectorAll('.search-category-item');
+            items.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 找到对应的项并添加激活状态
+            const targetItem = Array.from(items).find(item => {
+                const nameEl = item.querySelector('.category-name');
+                if (category === '') {
+                    return nameEl && nameEl.textContent === '全部结果';
+                }
+                return nameEl && nameEl.textContent === category;
+            });
+            if (targetItem) {
+                targetItem.classList.add('active');
+            }
+            
+            // 筛选并渲染消息
+            if (category === '') {
+                // 显示全部
+                renderWechatBubblesGrouped(wechatState.allSearchResults, wechatState.keyword);
+            } else {
+                // 按分类筛选
+                const filtered = wechatState.allSearchResults.filter(msg => (msg.session_type || '未知') === category);
+                renderWechatBubblesGrouped(filtered, wechatState.keyword);
+            }
+            
+            // 更新统计信息
+            const stats = document.getElementById('wechat-feed-stats');
+            const displayCount = category === '' ? wechatState.allSearchResults.length : 
+                wechatState.allSearchResults.filter(msg => (msg.session_type || '未知') === category).length;
+            stats.textContent = '显示 ' + (category || '全部') + ' ' + displayCount + ' 条结果';
+        }
+
+        // 按类型分组渲染搜索结果 (全量搜索时使用)
         // 按类型分组渲染搜索结果 (全量搜索时使用)
         function renderWechatBubblesGrouped(messages, keyword) {
             const feed = document.getElementById('wechat-bubble-feed');
@@ -2150,10 +2292,10 @@
                 div.innerHTML = '<div style="width:36px;height:36px;border-radius:6px;background:' + avatarBg + ';display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:bold;color:#fff;flex-shrink:0;">' + escapeHtml(avatarChar) + '</div>' +
                     '<div style="flex:1;min-width:0;">' +
                     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">' +
-                    '<span style="font-weight:600;font-size:0.82rem;color:#94a3b8;">' + escapeHtml(senderName) + '</span>' +
-                    '<span style="font-size:0.75rem;color:#64748b;">' + time + '</span>' +
+                    '<span style="font-weight:600;font-size:0.82rem;color:#cbd5e1;">' + escapeHtml(senderName) + '</span>' +
+                    '<span style="font-size:0.75rem;color:#94a3b8;">' + time + '</span>' +
                     '</div>' +
-                    '<div style="font-size:0.9rem;color:#e2e8f0;word-break:break-all;line-height:1.5;white-space:pre-wrap;">' + renderedContent + '</div>' +
+                    '<div style="font-size:0.9rem;color:#f8fafc;font-weight:500;word-break:break-all;line-height:1.5;white-space:pre-wrap;">' + renderedContent + '</div>' +
                     (msg.session_name ? '<div style="margin-top:4px;font-size:0.75rem;color:#475569;">' + escapeHtml(msg.session_name) + '</div>' : '') +
                     '</div>';
 
@@ -2252,6 +2394,19 @@
                 }
                 stats.textContent = statsText + `，已加载 ${loadedCount} 条`;
 
+                // 保存所有搜索结果用于分类筛选
+                if (!loadMore) {
+                    wechatState.allSearchResults = wechatState.searchResults;
+                    wechatState.activeCategory = '';
+                }
+                
+                // 渲染分类统计列表（仅在全量搜索时显示）
+                if (wechatState.searchScope === 'all' && !wechatState.searchSessionType) {
+                    renderSearchCategoryList(wechatState.searchTypeStats, wechatState.searchTotal);
+                } else {
+                    document.getElementById('search-category-container').style.display = 'none';
+                }
+                
                 // 按类型分组渲染
                 renderWechatBubblesGrouped(wechatState.searchResults, keyword, wechatState.searchScope === 'all' && !wechatState.searchSessionType);
 
@@ -2720,6 +2875,10 @@
 </body>
 
 </html>
+
+
+
+
 
 
 
