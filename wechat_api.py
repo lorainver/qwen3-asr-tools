@@ -141,6 +141,38 @@ async def search_by_keyword(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@router.get("/search/stats")
+async def search_stats_only(
+    keyword: str = "",
+    sender_display_name: Optional[str] = None,
+    session_type: Optional[str] = Query(None, description="会话类型过滤：群聊/私聊/公众号，不传则搜全部"),
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
+    only_sender: bool = False
+):
+    """只返回搜索结果的统计信息（按会话分组），不返回具体消息，用于首屏秒开"""
+    if not keyword and not only_sender:
+        raise HTTPException(status_code=400, detail="Keyword or only_sender filter is required")
+    try:
+        results = wechat_db.search_by_keyword(
+            keyword=keyword, session_id=None, sender_display_name=sender_display_name,
+            context_lines=0, limit=0, offset=0, filters=None, sort_by="time", sort_order="desc",
+            start_time=start_time, end_time=end_time, show_context=False, only_sender=only_sender,
+            session_type=session_type
+        )
+        # 只返回统计信息，不返回具体消息
+        return {
+            "success": True,
+            "data": {
+                "total": results["total"],
+                "session_stats": results["session_stats"],
+                "type_stats": results["type_stats"]
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/stats")
 async def get_stats():
     try:
@@ -246,3 +278,4 @@ async def get_cache_status():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

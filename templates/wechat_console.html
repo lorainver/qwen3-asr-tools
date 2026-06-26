@@ -1343,7 +1343,10 @@
                         <div class="wechat-feed-card">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px;">
                                 <h5 style="margin: 0; font-size: 1rem; color: #38bdf8;">&#128172; 微信聊天气泡还原流</h5>
-                                <span id="wechat-feed-stats" style="font-size: 0.8rem; color: var(--text-secondary, #94a3b8);">未加载数据</span>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <button id="wechat-back-to-search-btn" class="kb-btn kb-btn-secondary" style="display: none; padding: 4px 10px; font-size: 0.8rem; min-height: 28px;" onclick="restoreWechatSearch()">🔙 返回检索结果</button>
+                                    <span id="wechat-feed-stats" style="font-size: 0.8rem; color: var(--text-secondary, #94a3b8);">未加载数据</span>
+                                </div>
                             </div>
                             <div id="wechat-bubble-feed" class="wechat-bubble-container" style="max-height: 600px;">
                                 <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">请在左侧选择会话,或者输入关键字检索消息</div>
@@ -1504,7 +1507,17 @@
             searchTypeStats: [],     // 类型统计
             requestVersion: 0,       // 请求版本号，用于防止异步请求冲突
             activeCategory: '',      // 当前激活的分类筛选
-            allSearchResults: []     // 保存所有搜索结果用于分类筛选
+            allSearchResults: [],    // 保存所有搜索结果用于分类筛选
+            searchBackup: null,      // 搜索状态备份，用于上下文返回
+            collapsedGroups: new Set(), // 搜索结果折叠的分组 session_id 集合
+            groupSessionStats: [],   // 搜索结果按会话统计（首屏加载）
+            groupMessagesCache: {},  // 按群消息缓存 {session_id: {messages, offset, total}}
+            groupLoadingStatus: {},  // 按群加载状态 {session_id: 'loading'|'loaded'|'error'}
+            searchSessionStats: [],  // 保存按会话统计的列表数据
+            allSearchSessionStats: [], // 备份全部会话统计列表数据
+            groupMessages: {},       // 按会话存储已加载的检索消息，key为sessionId
+            groupOffsets: {},        // 按会话存储当前检索消息的偏移量，key为sessionId
+            groupTotals: {}          // 按会话存储每个会话匹配的总消息条数，key为sessionId
         };
 
         function getSelectedStartTime() {
@@ -2077,6 +2090,11 @@
             const feed = document.getElementById('wechat-bubble-feed');
             feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在加载聊天记录...</div>';
 
+            // 清理检索备份并隐藏返回按钮
+            const backBtn = document.getElementById('wechat-back-to-search-btn');
+            if (backBtn) backBtn.style.display = 'none';
+            wechatState.searchBackup = null;
+
             // 重置状态，防止消息混入
             wechatState.sessionId = sessionId;
             wechatState.isSearchMode = false;
@@ -2223,13 +2241,97 @@
             stats.textContent = '显示 ' + (category || '全部') + ' ' + displayCount + ' 条结果';
         }
 
-        // 按类型分组渲染搜索结果 (全量搜索时使用)
-        // 按类型分组渲染搜索结果 (全量搜索时使用)
+        // 切换会话组展开/折叠状态（支持懒加载）
+        function toggleGroupCollapse(sessionId) {
+            const groupContent = document.getElementById(`wechat-group-content-${sessionId}`);
+            const arrow = document.getElementById(`wechat-group-arrow-${sessionId}`);
+            const sid = sessionId.toString();
+            
+            if (wechatState.collapsedGroups.has(sid)) {
+                // 展开
+                wechatState.collapsedGroups.delete(sid);
+                if (groupContent) groupContent.style.display = 'block';
+                if (arrow) arrow.textContent = '▼';
+                
+                // 如果该分组还没有加载过消息，触发懒加载
+                if (!wechatState.groupMessagesCache[sessionId] && wechatState.groupLoadingStatus[sessionId] !== 'loading') {
+                    loadGroupMessages(sessionId, wechatState.keyword, groupContent);
+                }
+            } else {
+                // 折叠
+                wechatState.collapsedGroups.add(sid);
+                if (groupContent) groupContent.style.display = 'none';
+                if (arrow) arrow.textContent = '►';
+            }
+        }
+
+        // 恢复检索结果状态
+        function restoreWechatSearch() {
+            if (!wechatState.searchBackup) return;
+            
+            const backup = wechatState.searchBackup;
+            wechatState.searchBackup = null;
+            
+            // 恢复输入框
+            document.getElementById('wechat-keyword-input').value = backup.keyword;
+            document.getElementById('wechat-sender-input').value = backup.sender;
+            
+            // 恢复搜索状态
+            wechatState.searchResults = backup.searchResults;
+            wechatState.allSearchResults = backup.allSearchResults;
+            wechatState.searchTotal = backup.searchTotal;
+            wechatState.searchOffset = backup.searchOffset;
+            wechatState.searchSessionType = backup.searchSessionType;
+            wechatState.activeCategory = backup.activeCategory;
+            wechatState.searchScope = backup.searchScope;
+            wechatState.searchTypeStats = backup.searchTypeStats;
+            wechatState.isSearchMode = true;
+            
+            // 恢复分组状态
+            wechatState.groupSessionStats = backup.groupSessionStats || [];
+            wechatState.groupMessagesCache = backup.groupMessagesCache || {};
+            wechatState.collapsedGroups = backup.collapsedGroups || new Set();
+            
+            // 清理单会话选择UI
+            document.getElementById('wechat-session-select').value = '';
+            
+            // 隐藏返回按钮
+            document.getElementById('wechat-back-to-search-btn').style.display = 'none';
+            
+            // 更新分类筛选UI
+            if (wechatState.searchScope === 'all' && !wechatState.searchSessionType) {
+                renderSearchCategoryList(wechatState.searchTypeStats, wechatState.searchTotal);
+            } else {
+                document.getElementById('search-category-container').style.display = 'none';
+            }
+            
+            // 重新渲染分组（使用缓存的消息）
+            renderWechatBubblesGrouped([], backup.keyword);
+            
+            // 恢复滚动位置
+            const feed = document.getElementById('wechat-bubble-feed');
+            setTimeout(() => {
+                feed.scrollTop = backup.scrollPosition;
+            }, 100);
+            
+            // 更新统计文本
+            const typeStats = wechatState.searchTypeStats;
+            let statsText = `共搜索到 ${wechatState.searchTotal} 条`;
+            if (typeStats.length > 0 && wechatState.searchScope === 'all' && !wechatState.searchSessionType) {
+                const parts = typeStats.map(t => `${t.type}${t.count}条`).join(' / ');
+                statsText += ` (${parts})`;
+            }
+            document.getElementById('wechat-feed-stats').textContent = statsText;
+        }
+
+        // 按会话来源分组渲染搜索结果（支持按群懒加载）
         function renderWechatBubblesGrouped(messages, keyword) {
             const feed = document.getElementById('wechat-bubble-feed');
             feed.innerHTML = '';
 
-            if (!messages || messages.length === 0) {
+            // 使用 groupSessionStats 渲染分组卡片
+            const sessionStats = wechatState.groupSessionStats;
+            if (!sessionStats || sessionStats.length === 0) {
                 feed.innerHTML = '<div style="text-align:center;color:var(--text-muted,#64748b);margin-top:60px;">未找到匹配结果</div>';
                 return;
             }
@@ -2237,72 +2339,228 @@
             const typeLabelMap = { '群聊': '👥', '私聊': '👤', '公众号': '📢', '未知': '❓' };
             const typeColorMap = { '群聊': '#8b5cf6', '私聊': '#38bdf8', '公众号': '#f59e0b', '未知': '#94a3b8' };
 
-            // 按 session_type 分组
-            const groups = {};
-            for (const msg of messages) {
-                const t = msg.session_type || '未知';
-                if (!groups[t]) groups[t] = [];
-                groups[t].push(msg);
-            }
+            // 按匹配数量排序
+            const sortedStats = [...sessionStats].sort((a, b) => b.count - a.count);
 
-            const typeOrder = ['群聊', '私聊', '公众号', '未知'];
-            const sortedTypes = typeOrder.filter(t => groups[t]).concat(Object.keys(groups).filter(t => !typeOrder.includes(t)));
+            let isFirstExpanded = false;
 
-            for (const typeName of sortedTypes) {
-                const msgs = groups[typeName];
-                const icon = typeLabelMap[typeName] || '💬';
-                const color = typeColorMap[typeName] || '#94a3b8';
+            for (const stat of sortedStats) {
+                const sid = stat.id;
+                const icon = typeLabelMap[stat.type] || '💬';
+                const color = typeColorMap[stat.type] || '#94a3b8';
+                
+                // 第一个分组默认展开，其他默认折叠
+                const isCollapsed = wechatState.collapsedGroups.has(sid.toString()) || (!isFirstExpanded && !wechatState.collapsedGroups.has(sid.toString()) && Object.keys(wechatState.groupMessagesCache).length > 0);
+                
+                // 第一个分组自动展开
+                if (!isFirstExpanded && !wechatState.collapsedGroups.has(sid.toString())) {
+                    isFirstExpanded = true;
+                    // 如果缓存中没有该分组的消息，标记需要加载
+                    if (!wechatState.groupMessagesCache[sid]) {
+                        wechatState.groupLoadingStatus[sid] = 'pending';
+                    }
+                }
 
-                // 类型分隔标题
+                const groupContainer = document.createElement('div');
+                groupContainer.className = 'wechat-group-container';
+                groupContainer.style.cssText = 'margin-bottom: 12px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); background: rgba(30, 41, 59, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+
+                // 组头部
                 const header = document.createElement('div');
                 header.className = 'wechat-group-header';
-                header.style.cssText = `display:flex;align-items:center;gap:8px;padding:10px 16px;margin:16px 0 8px;background:${color}18;border:1px solid ${color}40;border-radius:8px;font-size:0.88rem;font-weight:600;color:${color};`;
-                header.innerHTML = `<span style="font-size:1.1rem;">${icon}</span> ${typeName} <span style="margin-left:auto;font-size:0.78rem;opacity:0.75;">${msgs.length} 条结果</span>`;
-                feed.appendChild(header);
+                header.style.cssText = `display:flex;align-items:center;gap:8px;padding:10px 16px;background:${color}12;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.88rem;font-weight:600;color:${color};cursor:pointer;user-select:none;transition: all 0.2s ease;`;
+                
+                header.onmouseover = function() { header.style.background = `${color}22`; };
+                header.onmouseout = function() { header.style.background = `${color}12`; };
 
-                // 直接渲染该组消息（追加模式，不清空）
-                _renderWechatBubblesAppend(msgs, keyword);
+                const arrowChar = isCollapsed ? '►' : '▼';
+                const loadStatus = wechatState.groupLoadingStatus[sid];
+                const statusText = loadStatus === 'loading' ? ' <span style="font-size:0.7rem;color:#f59e0b;">⏳ 加载中...</span>' : '';
+                
+                header.innerHTML = `
+                    <span id="wechat-group-arrow-${sid}" style="margin-right: 6px; font-family: monospace; font-size: 0.8rem; color: var(--text-muted, #64748b); transition: transform 0.2s;">${arrowChar}</span>
+                    <span style="font-size:1.05rem;">${icon}</span>
+                    <span style="color:var(--text-primary, #f1f5f9); font-weight:700;">${escapeHtml(stat.name)}</span>
+                    <span style="margin-left:6px; font-size:0.72rem; color:var(--text-muted, #94a3b8); font-weight:normal;">(${stat.type})</span>
+                    ${statusText}
+                    <span style="margin-left:auto;font-size:0.78rem;background:${color}18;color:${color};border:1px solid ${color}28;padding:2px 10px;border-radius:12px;font-weight:600;">${stat.count} 条</span>
+                `;
+                
+                header.onclick = function() {
+                    toggleGroupCollapse(sid);
+                };
+                
+                groupContainer.appendChild(header);
+
+                // 组内容容器
+                const contentDiv = document.createElement('div');
+                contentDiv.id = `wechat-group-content-${sid}`;
+                contentDiv.style.display = isCollapsed ? 'none' : 'block';
+                contentDiv.style.minHeight = '20px';
+
+                groupContainer.appendChild(contentDiv);
+                feed.appendChild(groupContainer);
+
+                // 如果该分组已展开且有缓存，直接渲染
+                if (!isCollapsed && wechatState.groupMessagesCache[sid]) {
+                    const cached = wechatState.groupMessagesCache[sid];
+                    _renderWechatBubblesToContainer(cached.messages, keyword, contentDiv);
+                    
+                    // 如果还有更多，显示该分组的"加载更多"按钮
+                    if (cached.offset < cached.total) {
+                        appendGroupLoadMoreBtn(sid, contentDiv, keyword);
+                    }
+                } else if (!isCollapsed && wechatState.groupLoadingStatus[sid] === 'pending') {
+                    // 异步加载该分组的消息
+                    loadGroupMessages(sid, keyword, contentDiv);
+                }
             }
         }
 
-        // 追加模式：渲染消息但不先清空 feed
-        // 追加模式：渲染消息但不先清空 feed（使用统一的消息渲染函数）
-        function _renderWechatBubblesAppend(messages, keyword) {
-            const feed = document.getElementById('wechat-bubble-feed');
+        // 加载指定分组的消息（按群懒加载）
+        async function loadGroupMessages(sessionId, keyword, container) {
+            if (wechatState.groupLoadingStatus[sessionId] === 'loading') return;
+            
+            wechatState.groupLoadingStatus[sessionId] = 'loading';
+            
+            // 更新头部状态显示
+            const arrow = document.getElementById(`wechat-group-arrow-${sessionId}`);
+            if (arrow) arrow.textContent = '▼';
+            
+            const st = getSelectedStartTime();
+            const et = getSelectedEndTime();
+            
+            const params = new URLSearchParams();
+            if (keyword) params.set('keyword', keyword);
+            params.set('session_id', sessionId);
+            params.set('limit', '50');
+            params.set('offset', '0');
+            if (st) params.set('start_time', st);
+            if (et) params.set('end_time', et);
+            
+            try {
+                const res = await fetch(`/api/wechat/search/keyword?${params.toString()}`);
+                const result = await res.json();
+                
+                if (!result.success) {
+                    wechatState.groupLoadingStatus[sessionId] = 'error';
+                    container.innerHTML = '<div style="padding:16px;color:#ef4444;">加载失败，请重试</div>';
+                    return;
+                }
+                
+                const data = result.data;
+                wechatState.groupMessagesCache[sessionId] = {
+                    messages: data.results || [],
+                    offset: (data.results || []).length,
+                    total: data.total || 0
+                };
+                wechatState.groupLoadingStatus[sessionId] = 'loaded';
+                
+                // 渲染消息
+                container.innerHTML = '';
+                _renderWechatBubblesToContainer(data.results, keyword, container);
+                
+                // 如果还有更多，显示该分组的"加载更多"按钮
+                if (data.results.length < data.total) {
+                    appendGroupLoadMoreBtn(sessionId, container, keyword);
+                }
+                
+            } catch (err) {
+                console.error('加载分组消息失败:', err);
+                wechatState.groupLoadingStatus[sessionId] = 'error';
+                container.innerHTML = '<div style="padding:16px;color:#ef4444;">加载失败，请重试</div>';
+            }
+        }
+
+        // 为分组添加"加载更多"按钮
+        function appendGroupLoadMoreBtn(sessionId, container, keyword) {
+            const cached = wechatState.groupMessagesCache[sessionId];
+            if (!cached) return;
+            
+            const remaining = cached.total - cached.offset;
+            if (remaining <= 0) return;
+            
+            // 移除已有的加载更多按钮
+            const existingBtn = container.querySelector('.group-load-more-btn');
+            if (existingBtn) existingBtn.remove();
+            
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'group-load-more-btn';
+            btnContainer.style.cssText = 'text-align:center;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.04);';
+            btnContainer.innerHTML = `
+                <button class="kb-btn kb-btn-secondary" onclick="loadMoreGroupMessages(${sessionId}, '${escapeHtml(keyword)}')" style="min-width:140px;font-size:0.82rem;">
+                    📥 加载更多 (剩余 ${remaining} 条)
+                </button>
+            `;
+            container.appendChild(btnContainer);
+        }
+
+        // 加载更多指定分组的消息
+        async function loadMoreGroupMessages(sessionId, keyword) {
+            const cached = wechatState.groupMessagesCache[sessionId];
+            if (!cached || wechatState.groupLoadingStatus[sessionId] === 'loading') return;
+            
+            wechatState.groupLoadingStatus[sessionId] = 'loading';
+            
+            const container = document.getElementById(`wechat-group-content-${sessionId}`);
+            if (!container) return;
+            
+            const st = getSelectedStartTime();
+            const et = getSelectedEndTime();
+            
+            const params = new URLSearchParams();
+            if (keyword) params.set('keyword', keyword);
+            params.set('session_id', sessionId);
+            params.set('limit', '50');
+            params.set('offset', cached.offset.toString());
+            if (st) params.set('start_time', st);
+            if (et) params.set('end_time', et);
+            
+            try {
+                const res = await fetch(`/api/wechat/search/keyword?${params.toString()}`);
+                const result = await res.json();
+                
+                if (!result.success) {
+                    wechatState.groupLoadingStatus[sessionId] = 'loaded';
+                    return;
+                }
+                
+                const newMessages = result.data.results || [];
+                cached.messages = cached.messages.concat(newMessages);
+                cached.offset = cached.messages.length;
+                wechatState.groupLoadingStatus[sessionId] = 'loaded';
+                
+                // 移除旧的加载更多按钮
+                const oldBtn = container.querySelector('.group-load-more-btn');
+                if (oldBtn) oldBtn.remove();
+                
+                // 渲染新消息
+                _renderWechatBubblesToContainer(newMessages, keyword, container);
+                
+                // 如果还有更多，重新添加加载更多按钮
+                if (cached.offset < cached.total) {
+                    appendGroupLoadMoreBtn(sessionId, container, keyword);
+                }
+                
+            } catch (err) {
+                console.error('加载更多消息失败:', err);
+                wechatState.groupLoadingStatus[sessionId] = 'loaded';
+            }
+        }
+
+        // 渲染消息气泡到指定的分组容器中（复用系统 createMessageElement）
+        function _renderWechatBubblesToContainer(messages, keyword, container) {
             if (!messages || messages.length === 0) return;
 
             const fragment = document.createDocumentFragment();
 
             for (const msg of messages) {
-                const div = document.createElement('div');
-                div.className = 'wechat-bubble-item';
-                div.style.cssText = 'display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.05);';
-
-                const isSend = msg.is_send === 1;
-                const senderName = msg.sender_display_name || msg.sender_username || msg.sender_name || '未知用户';
-                const avatarChar = senderName.trim().charAt(0).toUpperCase();
-                const avatarBg = getWechatAvatarColor(senderName);
-
-                const time = msg.create_time ? new Date(msg.create_time * 1000).toLocaleString('zh-CN', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
-                
-                // 使用统一的消息内容渲染函数处理多媒体消息
-                const content = msg.content || '';
-                const renderedContent = renderMessageContent(content, keyword, div, msg.id);
-
-                div.innerHTML = '<div style="width:36px;height:36px;border-radius:6px;background:' + avatarBg + ';display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:bold;color:#fff;flex-shrink:0;">' + escapeHtml(avatarChar) + '</div>' +
-                    '<div style="flex:1;min-width:0;">' +
-                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">' +
-                    '<span style="font-weight:600;font-size:0.82rem;color:var(--text-secondary, #475569);">' + escapeHtml(senderName) + '</span>' +
-                    '<span style="font-size:0.75rem;color:var(--text-muted, #64748b);">' + time + '</span>' +
-                    '</div>' +
-                    '<div style="font-size:0.9rem;color:var(--text-primary, #1e293b);font-weight:500;word-break:break-all;line-height:1.5;white-space:pre-wrap;">' + renderedContent + '</div>' +
-                    (msg.session_name ? '<div style="margin-top:4px;font-size:0.75rem;color:var(--text-muted, #94a3b8);">' + escapeHtml(msg.session_name) + '</div>' : '') +
-                    '</div>';
-
-                fragment.appendChild(div);
+                // 直接复用系统自带的 createMessageElement，完美还原微信气泡样式
+                const msgElement = createMessageElement(msg, keyword, true);
+                fragment.appendChild(msgElement);
             }
 
-            feed.appendChild(fragment);
+            container.appendChild(fragment);
         }
 
         // 检索消息 (FTS + Senders)
@@ -2330,6 +2588,10 @@
                 wechatState.searchOffset = 0;
                 wechatState.searchResults = [];
                 wechatState.searchTypeStats = [];
+                wechatState.searchBackup = null; // 清空旧的备份状态
+                
+                const backBtn = document.getElementById('wechat-back-to-search-btn');
+                if (backBtn) backBtn.style.display = 'none';
 
                 const scopeLabel = scope === 'all' ? (sessionType || '全部') : '指定会话';
                 stats.textContent = `🔍 正在检索 [${scopeLabel}]...`;
@@ -2444,6 +2706,30 @@
 
         // 跳转上下文方法
         async function jumpToMessageContext(messageId, sessionId) {
+            // 如果当前在检索模式，则备份检索状态以便返回
+            if (wechatState.isSearchMode) {
+                wechatState.searchBackup = {
+                    searchResults: [...wechatState.searchResults],
+                    allSearchResults: [...wechatState.allSearchResults],
+                    searchTotal: wechatState.searchTotal,
+                    searchOffset: wechatState.searchOffset,
+                    keyword: document.getElementById('wechat-keyword-input').value,
+                    sender: document.getElementById('wechat-sender-input').value,
+                    scrollPosition: document.getElementById('wechat-bubble-feed').scrollTop,
+                    searchSessionType: wechatState.searchSessionType,
+                    activeCategory: wechatState.activeCategory,
+                    searchScope: wechatState.searchScope,
+                    searchTypeStats: [...wechatState.searchTypeStats],
+                    groupSessionStats: [...wechatState.groupSessionStats],
+                    groupMessagesCache: {...wechatState.groupMessagesCache},
+                    collapsedGroups: new Set(wechatState.collapsedGroups)
+                };
+                
+                // 显示返回按钮
+                const backBtn = document.getElementById('wechat-back-to-search-btn');
+                if (backBtn) backBtn.style.display = 'inline-block';
+            }
+
             const sessionSelect = document.getElementById('wechat-session-select');
             sessionSelect.value = sessionId;
 
@@ -2875,6 +3161,13 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
 
 
 
