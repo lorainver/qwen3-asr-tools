@@ -118,6 +118,24 @@ class WechatDatabaseManager:
             END
         """)
 
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS group_members (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id INTEGER,
+                group_name TEXT NOT NULL,
+                wxid TEXT NOT NULL,
+                wechat_name TEXT,
+                nickname TEXT,
+                join_time TEXT,
+                inviter TEXT,
+                message_count INTEGER DEFAULT 0,
+                FOREIGN KEY (session_id) REFERENCES sessions(id),
+                UNIQUE(group_name, wxid)
+            )
+        """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_group_members_wxid ON group_members(wxid)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_group_members_group ON group_members(group_name)")
+
         self.conn.commit()
 
     def insert_session(self, session_data: Dict, file_name: str) -> int:
@@ -760,6 +778,318 @@ class WechatDatabaseManager:
         except Exception as e:
             self.conn.rollback()
             raise e
+
+    def insert_group_member(self, member: Dict) -> int:
+        cursor = self.conn.cursor()
+        group_name = member.get("group_name")
+        wxid = member.get("wxid")
+        
+        # Try to find corresponding session_id by matching group_name with sessions.display_name
+        cursor.execute("SELECT id FROM sessions WHERE display_name = ?", (group_name,))
+        session_row = cursor.fetchone()
+        session_id = session_row["id"] if session_row else None
+        
+        cursor.execute("SELECT id FROM group_members WHERE group_name = ? AND wxid = ?", (group_name, wxid))
+        row = cursor.fetchone()
+        if row:
+            member_id = row['id']
+            cursor.execute("""
+                UPDATE group_members SET 
+                    session_id = ?, wechat_name = ?, nickname = ?, 
+                    join_time = ?, inviter = ?, message_count = ?
+                WHERE id = ?
+            """, (
+                session_id,
+                member.get("wechat_name"),
+                member.get("nickname"),
+                member.get("join_time"),
+                member.get("inviter"),
+                member.get("message_count", 0),
+                member_id
+            ))
+        else:
+            cursor.execute("""
+                INSERT INTO group_members (session_id, group_name, wxid, wechat_name, nickname, join_time, inviter, message_count)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                session_id,
+                group_name,
+                wxid,
+                member.get("wechat_name"),
+                member.get("nickname"),
+                member.get("join_time"),
+                member.get("inviter"),
+                member.get("message_count", 0)
+            ))
+            member_id = cursor.lastrowid
+        self.conn.commit()
+        return member_id
+
+    def import_group_members_log(self, log_file_path: str) -> int:
+        """解析处理日志.txt文件，将所有群成员导入数据库"""
+        import re
+        if not Path(log_file_path).exists():
+            raise FileNotFoundError(f"日志文件不存在: {log_file_path}")
+            
+        current_group = None
+        in_member_list = False
+        
+        with open(log_file_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            
+        count = 0
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+                
+            group_match = re.match(r'群名称:\s*(.+)', line)
+            if group_match:
+                current_group = group_match.group(1).strip()
+                in_member_list = False
+                continue
+                
+            processing_match = re.search(r'正在处理:\s*(.+?)(?:_|\.json)', line)
+            if processing_match and not current_group:
+                current_group = processing_match.group(1).strip()
+                continue
+                
+            if '序号' in line and '微信ID' in line and '微信名' in line:
+                in_member_list = True
+                continue
+                
+            if in_member_list and line.startswith('=' * 80):
+                in_member_list = False
+                continue
+                
+            if in_member_list and current_group:
+                # 解析单行
+                pattern = r'^\s*\d+\s+(\S+)\s+(\S+)\s+(.+?)\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}|\S+)\s+(\S+)\s+(\d+)\s*$'
+                match = re.match(pattern, line)
+                if match:
+                    member_data = {
+                        'group_name': current_group,
+                        'wxid': match.group(1),
+                        'wechat_name': match.group(2),
+                        'nickname': match.group(3).strip(),
+                        'join_time': match.group(4),
+                        'inviter': match.group(5),
+                        'message_count': int(match.group(6))
+                    }
+                    self.insert_group_member(member_data)
+                    count += 1
+        return count
+
+    def get_group_member_overlap(self, session_id: int, exclude_wxids: List[str] = None) -> Dict:
+        cursor = self.conn.cursor()
+        if exclude_wxids is None:
+            exclude_wxids = []
+            
+        # Get target group info
+        cursor.execute("SELECT display_name FROM sessions WHERE id = ?", (session_id,))
+        session_row = cursor.fetchone()
+        if not session_row:
+            return {"error": "会话不存在"}
+        target_group = session_row["display_name"]
+        
+        # Get target group members
+        cursor.execute("""
+            SELECT wxid, wechat_name, nickname, join_time, inviter, message_count 
+            FROM group_members 
+            WHERE session_id = ? OR group_name = ?
+        """, (session_id, target_group))
+        members = [dict(row) for row in cursor.fetchall()]
+        
+        if not members:
+            return {"error": "未找到该群的成员数据，请先导入处理日志"}
+            
+        total_members = len(members)
+        
+        # Filter excluded wxids
+        members_filtered = [m for m in members if m["wxid"] not in exclude_wxids]
+        wxids = [m["wxid"] for m in members_filtered]
+        
+        # Find all groups these members are in
+        all_membership = {}
+        chunk_size = 900
+        for i in range(0, len(wxids), chunk_size):
+            chunk = wxids[i:i+chunk_size]
+            placeholders = ",".join(["?"] * len(chunk))
+            cursor.execute(f"""
+                SELECT wxid, group_name 
+                FROM group_members 
+                WHERE wxid IN ({placeholders})
+            """, chunk)
+            for row in cursor.fetchall():
+                wxid = row["wxid"]
+                gname = row["group_name"]
+                if wxid not in all_membership:
+                    all_membership[wxid] = set()
+                all_membership[wxid].add(gname)
+                
+        # Calculate overlap
+        members_in_other_groups = []
+        members_only_in_target = []
+        group_overlap_counts = {}
+        
+        for m in members_filtered:
+            wxid = m["wxid"]
+            member_groups = all_membership.get(wxid, set())
+            other_groups = [g for g in member_groups if g != target_group]
+            
+            if other_groups:
+                members_in_other_groups.append({
+                    "wxid": wxid,
+                    "wechat_name": m["wechat_name"],
+                    "nickname": m["nickname"],
+                    "join_time": m["join_time"],
+                    "inviter": m["inviter"],
+                    "message_count": m["message_count"],
+                    "groups": other_groups,
+                    "group_count": len(other_groups)
+                })
+                for g in other_groups:
+                    group_overlap_counts[g] = group_overlap_counts.get(g, 0) + 1
+            else:
+                members_only_in_target.append({
+                    "wechat_name": m["wechat_name"],
+                    "nickname": m["nickname"]
+                })
+                
+        # Sort group distribution
+        group_distribution = []
+        for gname, count in group_overlap_counts.items():
+            pct = count / total_members * 100 if total_members > 0 else 0
+            group_distribution.append({
+                "name": gname,
+                "count": count,
+                "percentage": pct
+            })
+        group_distribution.sort(key=lambda x: x["count"], reverse=True)
+        
+        # Sort members by group count descending
+        members_in_other_groups.sort(key=lambda x: x["group_count"], reverse=True)
+        
+        return {
+            "success": True,
+            "target_group": target_group,
+            "total_members": total_members,
+            "members_in_other_groups": len(members_in_other_groups),
+            "members_only_in_target": len(members_only_in_target),
+            "group_distribution": group_distribution,
+            "members": members_in_other_groups,
+            "only_target_members": members_only_in_target
+        }
+
+    def get_member_profile(self, wxid: str) -> Dict:
+        cursor = self.conn.cursor()
+        
+        # Get all groups this member belongs to
+        cursor.execute("""
+            SELECT group_name, nickname, join_time, inviter, message_count 
+            FROM group_members 
+            WHERE wxid = ?
+            ORDER BY message_count DESC
+        """, (wxid,))
+        group_rows = cursor.fetchall()
+        
+        if not group_rows:
+            return {"error": f"未找到微信ID: {wxid} 的群成员数据"}
+            
+        groups = [dict(row) for row in group_rows]
+        
+        # Extract basic info
+        cursor.execute("SELECT wechat_name, nickname FROM group_members WHERE wxid = ? LIMIT 1", (wxid,))
+        basic_row = cursor.fetchone()
+        wechat_name = basic_row["wechat_name"] if basic_row else ""
+        nickname = basic_row["nickname"] if basic_row else ""
+        
+        total_messages = sum(g["message_count"] for g in groups)
+        join_times = [g["join_time"] for g in groups if g["join_time"] and g["join_time"] != '-']
+        inviter_info = {g["group_name"]: g["inviter"] for g in groups if g["inviter"] and g["inviter"] != '-'}
+        
+        # Get co-occurring members (related members)
+        group_names = [g["group_name"] for g in groups]
+        related_members_info = []
+        
+        if group_names:
+            placeholders = ",".join(["?"] * len(group_names))
+            cursor.execute(f"""
+                SELECT wxid, wechat_name, nickname, message_count, group_name
+                FROM group_members 
+                WHERE group_name IN ({placeholders}) AND wxid != ?
+            """, group_names + [wxid])
+            
+            related_data = {}
+            for row in cursor.fetchall():
+                other_wxid = row["wxid"]
+                other_wechat_name = row["wechat_name"]
+                other_nickname = row["nickname"]
+                other_msg_count = row["message_count"]
+                
+                if other_wxid not in related_data:
+                    related_data[other_wxid] = {
+                        "wxid": other_wxid,
+                        "wechat_name": other_wechat_name,
+                        "nickname": other_nickname,
+                        "common_groups_count": 0,
+                        "total_messages": 0
+                    }
+                related_data[other_wxid]["common_groups_count"] += 1
+                related_data[other_wxid]["total_messages"] += other_msg_count
+                
+            related_members_info = sorted(related_data.values(), key=lambda x: (-x["common_groups_count"], -x["total_messages"]))[:50]
+            
+        group_member_counts = {}
+        if group_names:
+            placeholders = ",".join(["?"] * len(group_names))
+            cursor.execute(f"""
+                SELECT group_name, COUNT(*) as count 
+                FROM group_members 
+                WHERE group_name IN ({placeholders})
+                GROUP BY group_name
+            """, group_names)
+            for row in cursor.fetchall():
+                group_member_counts[row["group_name"]] = row["count"]
+                
+        return {
+            "wxid": wxid,
+            "wechat_name": wechat_name,
+            "nickname": nickname,
+            "total_messages": total_messages,
+            "group_count": len(groups),
+            "groups": groups,
+            "join_times": join_times,
+            "inviter_info": inviter_info,
+            "related_members": related_members_info,
+            "group_member_counts": group_member_counts
+        }
+
+    def search_group_members(self, keyword: str) -> List[Dict]:
+        cursor = self.conn.cursor()
+        keyword_pattern = f"%{keyword}%"
+        cursor.execute("""
+            SELECT wxid, wechat_name, nickname, SUM(message_count) as total_messages, COUNT(group_name) as group_count, GROUP_CONCAT(group_name) as groups
+            FROM group_members
+            WHERE wxid LIKE ? OR wechat_name LIKE ? OR nickname LIKE ?
+            GROUP BY wxid, wechat_name, nickname
+            ORDER BY total_messages DESC
+            LIMIT 100
+        """, (keyword_pattern, keyword_pattern, keyword_pattern))
+        
+        results = []
+        for row in cursor.fetchall():
+            groups_str = row["groups"] or ""
+            groups_list = [g.strip() for g in groups_str.split(",") if g.strip()]
+            results.append({
+                "wxid": row["wxid"],
+                "wechat_name": row["wechat_name"],
+                "nickname": row["nickname"],
+                "total_messages": row["total_messages"],
+                "group_count": row["group_count"],
+                "groups": list(set(groups_list))  # Deduplicate group names
+            })
+        return results
 
     def close(self):
         if self.conn:

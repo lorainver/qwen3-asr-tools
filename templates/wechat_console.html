@@ -19,6 +19,8 @@
     <script src="/static/js/katex.min.js"></script>
     <!-- Mermaid 图表 -->
     <script src="/static/js/mermaid.min.js"></script>
+    <!-- ECharts 图表 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
     <style>
         /* Maximized AI Card Overlay style */
         .wechat-ai-card.maximized {
@@ -1368,115 +1370,136 @@
                     <!-- Left Column: Controls & Filters -->
                     <div class="wechat-panel-left">
                         <h4>&#9881;&#65039; 查询与分析控制器</h4>
-                        <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                            <label style="font-weight: 500;">选择微信会话 (Session)</label>
-                            <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 6px; box-sizing: border-box;">
-                                <input type="text" id="wechat-session-search" class="analysis-input" placeholder="&#128269; 检索会话..." style="flex: 1; min-width: 0; box-sizing: border-box;">
-                                <select id="wechat-session-type-filter" class="analysis-select" style="width: 90px; box-sizing: border-box;">
-                                    <option value="all">全部</option>
-                                    <option value="群聊">群聊</option>
-                                    <option value="私聊">私聊</option>
-                                    <option value="公众号">公众号</option>
+                        
+                        <!-- 维度标签切换 -->
+                        <div class="sub-tabs-container" style="display: flex; gap: 4px; background: rgba(0, 0, 0, 0.25); padding: 4px; border-radius: 8px; margin-bottom: 15px;">
+                            <button id="tab-btn-message" class="sub-tab-btn active" onclick="switchConsoleTab('message')" style="flex: 1; border: none; outline: none; border-radius: 6px; padding: 6px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease;">💬 检索与 AI</button>
+                            <button id="tab-btn-member" class="sub-tab-btn" onclick="switchConsoleTab('member')" style="flex: 1; border: none; outline: none; border-radius: 6px; padding: 6px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease;">👥 群友重叠分析</button>
+                        </div>
+
+                        <div id="console-message-controls">
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">选择微信会话 (Session)</label>
+                                <div style="display: flex; gap: 8px; width: 100%; margin-bottom: 6px; box-sizing: border-box;">
+                                    <input type="text" id="wechat-session-search" class="analysis-input" placeholder="&#128269; 检索会话..." style="flex: 1; min-width: 0; box-sizing: border-box;">
+                                    <select id="wechat-session-type-filter" class="analysis-select" style="width: 90px; box-sizing: border-box;">
+                                        <option value="all">全部</option>
+                                        <option value="群聊">群聊</option>
+                                        <option value="私聊">私聊</option>
+                                        <option value="公众号">公众号</option>
+                                    </select>
+                                </div>
+                                <select id="wechat-session-select" class="analysis-select" style="width: 100%;">
+                                    <option value="">-- 正在读取 --</option>
                                 </select>
                             </div>
-                            <select id="wechat-session-select" class="analysis-select" style="width: 100%;">
-                                <option value="">-- 正在读取 --</option>
-                            </select>
-                        </div>
-                        <!-- 搜索范围切换 (全量 vs 指定会话) -->
-                        <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                            <label style="font-weight: 500;">&#128269; 搜索范围</label>
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
-                                    <input type="radio" name="searchScope" value="all" checked onclick="toggleSearchScope('all')" style="accent-color:var(--accent-color,#38bdf8);"> &#127760; 全量检索
-                                </label>
-                                <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
-                                    <input type="radio" name="searchScope" value="session" onclick="toggleSearchScope('session')" style="accent-color:var(--accent-color,#38bdf8);"> &#128172; 指定会话
-                                </label>
+                            <!-- 搜索范围切换 (全量 vs 指定会话) -->
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">&#128269; 搜索范围</label>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
+                                        <input type="radio" name="searchScope" value="all" checked onclick="toggleSearchScope('all')" style="accent-color:var(--accent-color,#38bdf8);"> &#127760; 全量检索
+                                    </label>
+                                    <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;">
+                                        <input type="radio" name="searchScope" value="session" onclick="toggleSearchScope('session')" style="accent-color:var(--accent-color,#38bdf8);"> &#128172; 指定会话
+                                    </label>
+                                </div>
+                                <div id="search-type-filter" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+                                    <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                        <input type="radio" name="searchSessionType" value="" checked onclick="toggleSearchSessionType('')" style="accent-color:var(--accent-color,#38bdf8);"> 全部
+                                    </label>
+                                    <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                        <input type="radio" name="searchSessionType" value="群聊" onclick="toggleSearchSessionType('群聊')" style="accent-color:var(--accent-color,#38bdf8);"> &#128100;&#65039; 群聊
+                                    </label>
+                                    <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                        <input type="radio" name="searchSessionType" value="私聊" onclick="toggleSearchSessionType('私聊')" style="accent-color:var(--accent-color,#38bdf8);"> &#128100; 私聊
+                                    </label>
+                                    <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
+                                        <input type="radio" name="searchSessionType" value="公众号" onclick="toggleSearchSessionType('公众号')" style="accent-color:var(--accent-color,#38bdf8);"> &#128250; 公众号
+                                    </label>
+                                </div>
                             </div>
-                            <div id="search-type-filter" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
-                                <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                    <input type="radio" name="searchSessionType" value="" checked onclick="toggleSearchSessionType('')" style="accent-color:var(--accent-color,#38bdf8);"> 全部
-                                </label>
-                                <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                    <input type="radio" name="searchSessionType" value="群聊" onclick="toggleSearchSessionType('群聊')" style="accent-color:var(--accent-color,#38bdf8);"> &#128100;&#65039; 群聊
-                                </label>
-                                <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                    <input type="radio" name="searchSessionType" value="私聊" onclick="toggleSearchSessionType('私聊')" style="accent-color:var(--accent-color,#38bdf8);"> &#128100; 私聊
-                                </label>
-                                <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:0.78rem;">
-                                    <input type="radio" name="searchSessionType" value="公众号" onclick="toggleSearchSessionType('公众号')" style="accent-color:var(--accent-color,#38bdf8);"> &#128250; 公众号
-                                </label>
+
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">全文检索关键字 (FTS5)</label>
+                                <input type="text" id="wechat-keyword-input" class="analysis-input" placeholder="输入关键字搜索(支持拼音/英文/汉字)..." style="width: 100%; box-sizing: border-box;">
                             </div>
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">发言人筛选 (可选)</label>
+                                <input type="text" id="wechat-sender-input" class="analysis-input" placeholder="输入发言人显示名称..." style="width: 100%; box-sizing: border-box;">
+                            </div>
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px; width: 100%;">
+                                <label style="font-weight: 500;">日期筛选 (可选)</label>
+                                <!-- 快捷日期选择按钮 -->
+                                <div class="date-quick-buttons" style="display: flex; flex-wrap: wrap; gap: 6px; width: 100%; margin-bottom: 4px;">
+                                    <button type="button" class="date-quick-btn" onclick="setQuickDateRange('today')" title="今天的消息">今天</button>
+                                    <button type="button" class="date-quick-btn" onclick="setQuickDateRange('yesterday')" title="昨天的消息">昨天</button>
+                                    <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisWeek')" title="本周的消息">本周</button>
+                                    <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last7days')" title="最近7天的消息">近7天</button>
+                                    <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last30days')" title="最近30天的消息">近30天</button>
+                                    <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisMonth')" title="本月的消息">本月</button>
+                                    <button type="button" class="date-quick-btn" onclick="setQuickDateRange('lastMonth')" title="上月的消息">上月</button>
+                                    <button type="button" class="date-quick-btn danger" onclick="setQuickDateRange('clear')" title="清除日期筛选">清除</button>
+                                </div>
+                                <!-- 自定义日期范围选择 -->
+                                <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
+                                    <input type="date" id="wechat-start-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="开始日期">
+                                    <span style="align-self: center; color: var(--text-muted, #64748b);">至</span>
+                                    <input type="date" id="wechat-end-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="结束日期">
+                                </div>
+                            </div>
+                            <div class="analysis-action-row" style="margin-top: 10px;">
+                                <button class="kb-btn kb-btn-primary" id="wechat-btn-search" onclick="searchWechatMessages()" style="width: 100%;">&#128269; 检索消息</button>
+                            </div>                        <!-- 搜索结果分类统计 -->
+                            <div id="search-category-container" style="display:none;">
+                                <label style="font-weight: 500; margin-bottom: 6px; display: block;">&#128200; 检索分类统计</label>
+                                <div id="search-category-list" class="search-category-list">
+                                    <!-- 动态填充 -->
+                                </div>
+                            </div>
+
+                            <hr style="border: 0; border-top: 1px dashed rgba(255, 255, 255, 0.1); width: 100%; margin: 10px 0;">
+
+                            <h4>&#129504; AI 研判控制面板</h4>
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">分析模式</label>
+                                <select id="wechat-ai-mode" class="analysis-select" style="width: 100%;">
+                                    <option value="session">&#128201; 会话脉络分析 (Session)</option>
+                                    <option value="user">&#128100; 个人画像研判 (User)</option>
+                                    <option value="top5">👥 群内活跃前五研判 (Top 5 Active Senders)</option>
+                                    <option value="theme">&#127991;&#65039; 话题演进分析 (Theme)</option>
+                                    <option value="relations">&#128120;&#8205;&#9794;&#65039; 关系网图分析 (Relations)</option>
+                                </select>
+                            </div>
+                            <div class="analysis-control-row" style="align-items: center; gap: 8px;">
+                                <label class="analysis-checkbox" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="checkbox" id="wechat-ai-cache" checked> 启用分析缓存
+                                </label>
+                                <button onclick="checkWechatAICacheStatus()" style="padding: 2px 8px; font-size: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; color: var(--text-muted, #64748b); cursor: pointer;">查看缓存状态</button>
+                            </div>
+                            <div id="wechat-cache-status" style="margin-top: 8px; padding: 8px; background: rgba(0, 0, 0, 0.2); border-radius: 6px; font-size: 0.8rem; color: var(--text-muted, #64748b); display: none;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>缓存状态: <span id="wechat-cache-count">0</span> 条</span>
+                                    <button onclick="clearWechatAICache()" style="padding: 2px 8px; font-size: 0.75rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 4px; color: #ef4444; cursor: pointer;">清除全部缓存</button>
+                                </div>
+                            </div>
+                            <div class="analysis-action-row" style="margin-top: 10px;">
+                                <button class="kb-btn kb-btn-primary" id="wechat-btn-analyze" onclick="runWechatAIAnalysis()" style="width: 100%; background: linear-gradient(135deg, #0ea5e9, #2563eb);">&#129504; 启动 AI 深度研判</button>
+                            </div>
+                            <span class="analysis-status" id="wechat-action-status"></span>
                         </div>
 
-                        <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                            <label style="font-weight: 500;">全文检索关键字 (FTS5)</label>
-                            <input type="text" id="wechat-keyword-input" class="analysis-input" placeholder="输入关键字搜索(支持拼音/英文/汉字)..." style="width: 100%; box-sizing: border-box;">
-                        </div>
-                        <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                            <label style="font-weight: 500;">发言人筛选 (可选)</label>
-                            <input type="text" id="wechat-sender-input" class="analysis-input" placeholder="输入发言人显示名称..." style="width: 100%; box-sizing: border-box;">
-                        </div>
-                        <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px; width: 100%;">
-                            <label style="font-weight: 500;">日期筛选 (可选)</label>
-                            <!-- 快捷日期选择按钮 -->
-                            <div class="date-quick-buttons" style="display: flex; flex-wrap: wrap; gap: 6px; width: 100%; margin-bottom: 4px;">
-                                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('today')" title="今天的消息">今天</button>
-                                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('yesterday')" title="昨天的消息">昨天</button>
-                                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisWeek')" title="本周的消息">本周</button>
-                                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last7days')" title="最近7天的消息">近7天</button>
-                                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('last30days')" title="最近30天的消息">近30天</button>
-                                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('thisMonth')" title="本月的消息">本月</button>
-                                <button type="button" class="date-quick-btn" onclick="setQuickDateRange('lastMonth')" title="上月的消息">上月</button>
-                                <button type="button" class="date-quick-btn danger" onclick="setQuickDateRange('clear')" title="清除日期筛选">清除</button>
+                        <div id="console-member-controls" style="display: none;">
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">排除的微信ID (逗号分隔)</label>
+                                <input type="text" id="wechat-exclude-wxids" class="analysis-input" value="loeainve,osugaro" style="width: 100%; box-sizing: border-box;">
                             </div>
-                            <!-- 自定义日期范围选择 -->
-                            <div style="display: flex; gap: 8px; width: 100%; box-sizing: border-box;">
-                                <input type="date" id="wechat-start-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="开始日期">
-                                <span style="align-self: center; color: var(--text-muted, #64748b);">至</span>
-                                <input type="date" id="wechat-end-date" class="analysis-input" style="flex: 1; min-width: 0; box-sizing: border-box;" title="结束日期">
+                            <div class="analysis-action-row" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                                <button class="kb-btn kb-btn-primary" onclick="runGroupOverlapAnalysis()" style="width: 100%; background: linear-gradient(135deg, #8b5cf6, #764ba2); color: white;">👥 开始群友重叠度分析</button>
+                                <button class="kb-btn kb-btn-secondary" onclick="reloadGroupMembersLog()" style="width: 100%;">📥 重新加载 EchoTrace 日志文件</button>
                             </div>
+                            <span class="analysis-status" id="wechat-member-status"></span>
                         </div>
-                        <div class="analysis-action-row" style="margin-top: 10px;">
-                            <button class="kb-btn kb-btn-primary" id="wechat-btn-search" onclick="searchWechatMessages()" style="width: 100%;">&#128269; 检索消息</button>
-                        </div>                        <!-- 搜索结果分类统计 -->
-                        <div id="search-category-container" style="display:none;">
-                            <label style="font-weight: 500; margin-bottom: 6px; display: block;">&#128200; 检索分类统计</label>
-                            <div id="search-category-list" class="search-category-list">
-                                <!-- 动态填充 -->
-                            </div>
-                        </div>
-
-                        <hr style="border: 0; border-top: 1px dashed rgba(255, 255, 255, 0.1); width: 100%; margin: 10px 0;">
-
-                        <h4>&#129504; AI 研判控制面板</h4>
-                        <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                            <label style="font-weight: 500;">分析模式</label>
-                            <select id="wechat-ai-mode" class="analysis-select" style="width: 100%;">
-                                <option value="session">&#128201; 会话脉络分析 (Session)</option>
-                                <option value="user">&#128100; 个人画像研判 (User)</option>
-                                <option value="top5">👥 群内活跃前五研判 (Top 5 Active Senders)</option>
-                                <option value="theme">&#127991;&#65039; 话题演进分析 (Theme)</option>
-                                <option value="relations">&#128120;&#8205;&#9794;&#65039; 关系网图分析 (Relations)</option>
-                            </select>
-                        </div>
-                        <div class="analysis-control-row" style="align-items: center; gap: 8px;">
-                            <label class="analysis-checkbox" style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                <input type="checkbox" id="wechat-ai-cache" checked> 启用分析缓存
-                            </label>
-                            <button onclick="checkWechatAICacheStatus()" style="padding: 2px 8px; font-size: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; color: var(--text-muted, #64748b); cursor: pointer;">查看缓存状态</button>
-                        </div>
-                        <div id="wechat-cache-status" style="margin-top: 8px; padding: 8px; background: rgba(0, 0, 0, 0.2); border-radius: 6px; font-size: 0.8rem; color: var(--text-muted, #64748b); display: none;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span>缓存状态: <span id="wechat-cache-count">0</span> 条</span>
-                                <button onclick="clearWechatAICache()" style="padding: 2px 8px; font-size: 0.75rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 4px; color: #ef4444; cursor: pointer;">清除全部缓存</button>
-                            </div>
-                        </div>
-                        <div class="analysis-action-row" style="margin-top: 10px;">
-                            <button class="kb-btn kb-btn-primary" id="wechat-btn-analyze" onclick="runWechatAIAnalysis()" style="width: 100%; background: linear-gradient(135deg, #0ea5e9, #2563eb);">&#129504; 启动 AI 深度研判</button>
-                        </div>
-                        <span class="analysis-status" id="wechat-action-status"></span>
                     </div>
 
                     <!-- Right Column: Interactive Output Display -->
@@ -1506,6 +1529,68 @@
                             </div>
                             <div id="wechat-ai-result" class="markdown-content" style="flex: 1; overflow-y: auto; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.03); max-height: 300px; min-height: 120px;">
                                 <div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px; font-size: 0.9rem;">等待 AI 深度研判分析输出结果...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Member Overlap Panel Section (Initially hidden) -->
+                        <div class="wechat-member-card" id="wechat-member-overlap-panel" style="display: none; background: rgba(17, 24, 39, 0.4); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 20px; flex-direction: column; gap: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+                                <h4 style="margin: 0; color: #8b5cf6; font-size: 1.1rem; display: flex; align-items: center; gap: 6px;">👥 群友分布与重叠分析</h4>
+                                <span id="wechat-overlap-stats" style="font-size: 0.85rem; color: #94a3b8;"></span>
+                            </div>
+                            
+                            <!-- Overlap Grid Summary cards -->
+                            <div class="overlap-stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 10px;">
+                                <div class="stat-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div class="number" id="overlap-num-total" style="font-size: 1.5rem; font-weight: bold; color: #8b5cf6;">0</div>
+                                    <div class="label" style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">总群友数</div>
+                                </div>
+                                <div class="stat-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div class="number" id="overlap-num-cross" style="font-size: 1.5rem; font-weight: bold; color: #38bdf8;">0</div>
+                                    <div class="label" style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">多群重叠</div>
+                                </div>
+                                <div class="stat-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div class="number" id="overlap-num-only" style="font-size: 1.5rem; font-weight: bold; color: #10b981;">0</div>
+                                    <div class="label" style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">仅在当前群</div>
+                                </div>
+                                <div class="stat-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; text-align: center;">
+                                    <div class="number" id="overlap-num-groups" style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">0</div>
+                                    <div class="label" style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">关联群聊数</div>
+                                </div>
+                            </div>
+                            
+                            <!-- ECharts Chart and List Row -->
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                <div style="flex: 1.2; min-width: 320px;">
+                                    <h5 style="margin: 0 0 10px 0; color: #e2e8f0; font-size: 0.9rem;">📊 重叠群友分布排名</h5>
+                                    <div id="overlap-echarts-chart" style="width: 100%; height: 260px; background: rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.02);"></div>
+                                </div>
+                                <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column;">
+                                    <h5 style="margin: 0 0 10px 0; color: #e2e8f0; font-size: 0.9rem;">仅在当前群的群友</h5>
+                                    <div id="overlap-only-target-list" style="flex: 1; max-height: 260px; overflow-y: auto; background: rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); padding: 10px; font-size: 0.82rem;">
+                                        <!-- List of only-target members -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Detailed overlap members list -->
+                            <div>
+                                <h5 style="margin: 0 0 10px 0; color: #e2e8f0; font-size: 0.9rem;">👤 重叠群成员详细名单</h5>
+                                <div style="max-height: 300px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.1);">
+                                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; color: #cbd5e1;">
+                                        <thead>
+                                            <tr style="background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid rgba(255,255,255,0.08);">
+                                                <th style="padding: 10px 14px;">微信名 (群内昵称)</th>
+                                                <th style="padding: 10px 14px;">微信ID</th>
+                                                <th style="padding: 10px 14px; text-align: center;">关联群聊数</th>
+                                                <th style="padding: 10px 14px;">所在群聊</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="overlap-detailed-members-tbody">
+                                            <!-- List of detailed overlap members -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2263,6 +2348,11 @@
         // 加载指定会话的消息
         async function loadWechatSessionMessages(sessionId) {
             if (!sessionId) return;
+            
+            if (currentConsoleTab === 'member') {
+                runGroupOverlapAnalysis();
+                return;
+            }
             const feed = document.getElementById('wechat-bubble-feed');
             feed.innerHTML = '<div style="text-align: center; color: var(--text-muted, #64748b); margin-top: 60px;">正在加载聊天记录...</div>';
 
@@ -3031,6 +3121,331 @@
             }
         }
 
+        // ==================== 群友分析与重叠度分析 JS ====================
+        let currentConsoleTab = 'message';
+        let overlapChartInstance = null;
+
+        function switchConsoleTab(tab) {
+            currentConsoleTab = tab;
+            const messageTabBtn = document.getElementById('tab-btn-message');
+            const memberTabBtn = document.getElementById('tab-btn-member');
+            const messageControls = document.getElementById('console-message-controls');
+            const memberControls = document.getElementById('console-member-controls');
+            
+            const wechatFeedCard = document.querySelector('.wechat-feed-card');
+            const wechatAICard = document.querySelector('.wechat-ai-card');
+            const memberOverlapPanel = document.getElementById('wechat-member-overlap-panel');
+
+            if (tab === 'message') {
+                messageTabBtn.classList.add('active');
+                memberTabBtn.classList.remove('active');
+                messageControls.style.display = 'block';
+                memberControls.style.display = 'none';
+                
+                wechatFeedCard.style.display = 'block';
+                wechatAICard.style.display = 'block';
+                memberOverlapPanel.style.display = 'none';
+            } else {
+                messageTabBtn.classList.remove('active');
+                memberTabBtn.classList.add('active');
+                messageControls.style.display = 'none';
+                memberControls.style.display = 'block';
+                
+                wechatFeedCard.style.display = 'none';
+                wechatAICard.style.display = 'none';
+                memberOverlapPanel.style.display = 'flex';
+                
+                // Trigger auto analysis if a session is already selected
+                const sessionId = document.getElementById('wechat-session-select').value;
+                if (sessionId) {
+                    runGroupOverlapAnalysis();
+                }
+            }
+        }
+
+        async function reloadGroupMembersLog() {
+            const status = document.getElementById('wechat-member-status');
+            status.style.display = 'block';
+            status.className = 'analysis-status loading';
+            status.textContent = '⏳ 正在解析并导入日志数据...';
+            
+            try {
+                const res = await fetch('/api/wechat/members/reload', { method: 'POST' });
+                const result = await res.json();
+                if (result.success) {
+                    status.className = 'analysis-status success';
+                    status.textContent = '✅ ' + result.message;
+                    setTimeout(() => { status.style.display = 'none'; }, 3000);
+                    // Reload analysis if session selected
+                    const sessionId = document.getElementById('wechat-session-select').value;
+                    if (sessionId) runGroupOverlapAnalysis();
+                } else {
+                    status.className = 'analysis-status error';
+                    status.textContent = '❌ 重新加载失败: ' + result.error;
+                }
+            } catch(e) {
+                console.error(e);
+                status.className = 'analysis-status error';
+                status.textContent = '❌ 网络请求异常';
+            }
+        }
+
+        async function runGroupOverlapAnalysis() {
+            const sessionId = document.getElementById('wechat-session-select').value;
+            const status = document.getElementById('wechat-member-status');
+            const excludeWxids = document.getElementById('wechat-exclude-wxids').value.trim();
+            
+            if (!sessionId) {
+                alert('请在左上角选择一个微信群聊会话');
+                return;
+            }
+            
+            status.style.display = 'block';
+            status.className = 'analysis-status loading';
+            status.textContent = '⏳ 正在计算群成员重叠度...';
+            
+            try {
+                const url = `/api/wechat/members/overlap?session_id=${sessionId}&exclude_wxids=${encodeURIComponent(excludeWxids)}`;
+                const res = await fetch(url);
+                const result = await res.json();
+                
+                if (!res.ok) {
+                    status.className = 'analysis-status error';
+                    status.textContent = '❌ ' + (result.detail || '未导入此群的群友名单数据');
+                    return;
+                }
+                
+                status.className = 'analysis-status success';
+                status.textContent = '✅ 计算完毕';
+                setTimeout(() => { status.style.display = 'none'; }, 2000);
+                
+                renderOverlapResults(result);
+            } catch(e) {
+                console.error(e);
+                status.className = 'analysis-status error';
+                status.textContent = '❌ 网络请求异常';
+            }
+        }
+
+        function renderOverlapResults(data) {
+            document.getElementById('wechat-overlap-stats').textContent = `目标群聊: ${data.target_group}`;
+            
+            document.getElementById('overlap-num-total').textContent = data.total_members;
+            document.getElementById('overlap-num-cross').textContent = data.members_in_other_groups;
+            document.getElementById('overlap-num-only').textContent = data.members_only_in_target;
+            document.getElementById('overlap-num-groups').textContent = data.group_distribution.length;
+            
+            // Render Only-Target members list
+            const onlyTargetContainer = document.getElementById('overlap-only-target-list');
+            onlyTargetContainer.innerHTML = '';
+            if (data.only_target_members.length === 0) {
+                onlyTargetContainer.innerHTML = '<div style="color:var(--text-muted,#64748b);text-align:center;margin-top:20px;">无独占群成员</div>';
+            } else {
+                data.only_target_members.forEach(m => {
+                    const name = m.wechat_name || '未知';
+                    const nick = m.nickname ? ` (${m.nickname})` : '';
+                    const item = document.createElement('div');
+                    item.style.cssText = 'padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; align-items: center; gap: 6px;';
+                    item.innerHTML = `<span>👤</span> <span>${escapeHtml(name + nick)}</span>`;
+                    onlyTargetContainer.appendChild(item);
+                });
+            }
+            
+            // Render Detailed overlap members table
+            const tbody = document.getElementById('overlap-detailed-members-tbody');
+            tbody.innerHTML = '';
+            if (data.members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-muted,#64748b);">无重叠群成员数据</td></tr>';
+            } else {
+                data.members.forEach(m => {
+                    const name = m.wechat_name || '未知';
+                    const nick = m.nickname ? ` (${m.nickname})` : '';
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+                    tr.innerHTML = `
+                        <td style="padding: 10px 14px; font-weight: 500; color: #f8fafc;">
+                            <span style="cursor: pointer; color: #38bdf8;" onclick="showMemberProfile('${escapeHtml(m.wxid)}')">👤 ${escapeHtml(name + nick)}</span>
+                        </td>
+                        <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: #94a3b8;">${escapeHtml(m.wxid)}</td>
+                        <td style="padding: 10px 14px; text-align: center; font-weight: bold; color: #8b5cf6;">${m.group_count}</td>
+                        <td style="padding: 10px 14px; font-size: 0.8rem; color: #64748b;">
+                            ${m.groups.map(g => `<span style="display:inline-block;background:rgba(139,92,246,0.1);color:#a78bfa;padding:2px 8px;border-radius:12px;margin-right:4px;margin-bottom:4px;">${escapeHtml(g)}</span>`).join('')}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+            
+            // Render ECharts overlap chart
+            renderOverlapEChart(data.group_distribution);
+        }
+
+        function renderOverlapEChart(distribution) {
+            const chartDom = document.getElementById('overlap-echarts-chart');
+            if (!chartDom) return;
+            
+            if (overlapChartInstance) {
+                overlapChartInstance.dispose();
+            }
+            
+            overlapChartInstance = echarts.init(chartDom, 'dark', { backgroundColor: 'transparent' });
+            
+            const topData = distribution.slice(0, 8);
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        const p = params[0];
+                        return `${p.name}: ${p.value} 人 (占比 ${p.data.d}%)`;
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '6%',
+                    bottom: '3%',
+                    top: '10%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: topData.map(item => item.name).reverse(),
+                    axisLabel: {
+                        formatter: function (value) {
+                            if (value.length > 8) {
+                                return value.substring(0, 8) + '...';
+                            }
+                            return value;
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: '重叠群友数',
+                        type: 'bar',
+                        data: topData.map(item => ({
+                            value: item.count,
+                            d: item.percentage.toFixed(1)
+                        })).reverse(),
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                                { offset: 0, color: 'rgba(139, 92, 246, 0.4)' },
+                                { offset: 1, color: 'rgba(139, 92, 246, 0.95)' }
+                            ]),
+                            borderRadius: [0, 4, 4, 0]
+                        }
+                    }
+                ]
+            };
+            
+            overlapChartInstance.setOption(option);
+            
+            window.addEventListener('resize', () => {
+                if (overlapChartInstance) overlapChartInstance.resize();
+            });
+        }
+
+        async function showMemberProfile(wxid) {
+            const modal = document.getElementById('wechat-member-profile-modal');
+            const content = document.getElementById('member-profile-content');
+            
+            content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted,#64748b);">⏳ 正在加载全局足迹研判画像...</div>';
+            modal.style.display = 'flex';
+            
+            try {
+                const res = await fetch(`/api/wechat/members/profile?wxid=${encodeURIComponent(wxid)}`);
+                const result = await res.json();
+                
+                if (!res.ok) {
+                    content.innerHTML = `<div style="padding:20px;color:#ef4444;">❌ 加载画像失败: ${result.detail || '请求错误'}</div>`;
+                    return;
+                }
+                
+                const p = result.profile;
+                
+                let groupsHtml = '';
+                p.groups.forEach(g => {
+                    const inviter = g.inviter && g.inviter !== '-' ? ` 由 <b>${escapeHtml(g.inviter)}</b> 邀请` : '';
+                    const time = g.join_time && g.join_time !== '-' ? `于 <i>${g.join_time}</i>` : '';
+                    groupsHtml += `
+                        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div style="font-weight:600;color:#f8fafc;font-size:0.92rem;">👥 ${escapeHtml(g.group_name)}</div>
+                                <div style="font-size:0.8rem;color:#64748b;margin-top:4px;">
+                                    群内昵称: <span style="color:#e2e8f0;">${escapeHtml(g.nickname || '-')}</span> ${inviter} ${time}
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-weight:bold;color:#38bdf8;font-size:1.1rem;">${g.message_count}</div>
+                                <div style="font-size:0.75rem;color:#64748b;">发言数</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                let relationHtml = '';
+                if (p.related_members.length === 0) {
+                    relationHtml = '<div style="color:#64748b;text-align:center;padding:20px;">无共同群关系</div>';
+                } else {
+                    p.related_members.slice(0, 12).forEach(r => {
+                        const name = r.wechat_name || '未知';
+                        const nick = r.nickname ? ` (${r.nickname})` : '';
+                        relationHtml += `
+                            <div style="background:rgba(139,92,246,0.04);border:1px solid rgba(139,92,246,0.08);border-radius:8px;padding:10px;text-align:center;cursor:pointer;" onclick="showMemberProfile('${escapeHtml(r.wxid)}')">
+                                <div style="font-weight:600;color:#c084fc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(name + nick)}">👤 ${escapeHtml(name)}</div>
+                                <div style="font-size:0.75rem;color:#64748b;margin-top:4px;">
+                                    同群 <b>${r.common_groups_count}</b> 个 / 发言 ${r.total_messages}条
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                content.innerHTML = `
+                    <!-- Top header basic stats -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(56,189,248,0.05);border:1px solid rgba(56,189,248,0.1);padding:16px 20px;border-radius:8px;">
+                        <div>
+                            <div style="font-size:1.3rem;font-weight:bold;color:#f8fafc;">${escapeHtml(p.wechat_name || '未知')} ${p.nickname ? `<span style="font-size:1rem;color:#64748b;font-weight:normal;">(${escapeHtml(p.nickname)})</span>` : ''}</div>
+                            <div style="margin-top:4px;color:#94a3b8;font-family:monospace;font-size:0.82rem;">微信ID (wxid): ${escapeHtml(p.wxid)}</div>
+                        </div>
+                        <div style="display:flex;gap:20px;text-align:center;">
+                            <div>
+                                <div style="font-size:1.4rem;font-weight:bold;color:#38bdf8;">${p.group_count}</div>
+                                <div style="font-size:0.75rem;color:#64748b;margin-top:2px;">加入群聊数</div>
+                            </div>
+                            <div>
+                                <div style="font-size:1.4rem;font-weight:bold;color:#8b5cf6;">${p.total_messages}</div>
+                                <div style="font-size:0.75rem;color:#64748b;margin-top:2px;">累计发言条数</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Group footprint list -->
+                    <div>
+                        <h5 style="margin:0 0 10px 0;color:#f8fafc;font-size:0.9rem;border-left:3px solid #38bdf8;padding-left:8px;">👣 全局入群足迹分布 (${p.group_count} 个群聊)</h5>
+                        <div style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;padding-right:4px;">
+                            ${groupsHtml}
+                        </div>
+                    </div>
+                    
+                    <!-- Closest members relations -->
+                    <div>
+                        <h5 style="margin:0 0 10px 0;color:#f8fafc;font-size:0.9rem;border-left:3px solid #8b5cf6;padding-left:8px;">🔗 共同关联密接关系网 (Top 12 密接群友)</h5>
+                        <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:10px;">
+                            ${relationHtml}
+                        </div>
+                    </div>
+                `;
+            } catch(e) {
+                console.error(e);
+                content.innerHTML = `<div style="padding:20px;color:#ef4444;">❌ 网络加载异常: ${e.message}</div>`;
+            }
+        }
+
         function toggleMaximizeAIResult() {
             const card = document.querySelector('.wechat-ai-card');
             const btn = document.getElementById('wechat-ai-maximize-btn');
@@ -3430,7 +3845,31 @@
                 return escapeHtml(text);
             }
         }
+
+        // ==================== 群友画像 Modal 弹窗 ====================
+        function closeMemberProfileModal() {
+            document.getElementById('wechat-member-profile-modal').style.display = 'none';
+        }
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('wechat-member-profile-modal');
+            if (e.target === modal) {
+                closeMemberProfileModal();
+            }
+        });
 </script>
+
+    <!-- Member Footprint Profile Modal -->
+    <div id="wechat-member-profile-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 90%; max-width: 800px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popIn 0.25s ease-out;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.01);">
+                <h4 style="margin: 0; color: #38bdf8; display: flex; align-items: center; gap: 8px;">👤 微信群友全局足迹研判画像</h4>
+                <button onclick="closeMemberProfileModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+            <div id="member-profile-content" style="padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 20px; color: #cbd5e1; font-size: 0.88rem;">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -296,3 +296,51 @@ async def get_cache_status():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# ==================== 群成员分析接口 ====================
+
+@router.get("/members/overlap")
+async def get_members_overlap(
+    session_id: int, 
+    exclude_wxids: Optional[str] = "loeainve,osugaro"
+):
+    try:
+        excludes = [x.strip() for x in exclude_wxids.split(",") if x.strip()]
+        res = wechat_db.get_group_member_overlap(session_id, excludes)
+        if "error" in res:
+            raise HTTPException(status_code=400, detail=res["error"])
+        return res
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/members/profile")
+async def get_members_profile(wxid: str):
+    try:
+        res = wechat_db.get_member_profile(wxid)
+        if "error" in res:
+            raise HTTPException(status_code=400, detail=res["error"])
+        return {"success": True, "profile": res}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/members/search")
+async def search_members(keyword: str):
+    try:
+        res = wechat_db.search_group_members(keyword)
+        return {"success": True, "results": res}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/members/reload")
+async def reload_members_log():
+    try:
+        log_path = r"D:\Programs\EchoTrace\documents\处理日志.txt"
+        count = wechat_db.import_group_members_log(log_path)
+        return {"success": True, "message": f"成功重新加载 {count} 条群友数据"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
