@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 更新当前模型 ID
             if (data.current) {
                 currentModelId = data.current.id;
-                currentModelTag.textContent = data.current.name;
+                if (currentModelTag) currentModelTag.textContent = data.current.name;
             }
 
             renderModelList();
@@ -571,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!newModelId || newModelId === currentModelId) return;
 
             selectModel.disabled = true;
-            currentModelTag.textContent = '切换中...';
+                if (currentModelTag) currentModelTag.textContent = data.current.name;
 
             try {
                 const resp = await fetch('/api/switch_model', {
@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (data.status === 'ok' && data.current_model) {
                     currentModelId = newModelId;
-                    currentModelTag.textContent = data.current_model.name;
+                if (currentModelTag) currentModelTag.textContent = data.current.name;
                     showToast(`✅ 已切换到 ${data.current_model.name}`);
                 } else {
                     showToast('❌ 切换失败: ' + (data.message || '未知错误'));
