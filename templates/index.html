@@ -13,7 +13,7 @@
     <script src="/static/js/marked.min.js"></script>
     <!-- 代码高亮 -->
     <link rel="stylesheet" href="/static/css/atom-one-dark.min.css">
-    <script src="/static/js/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <!-- 数学公式 KaTeX -->
     <link rel="stylesheet" href="/static/css/katex.min.css">
     <script src="/static/js/katex.min.js"></script>
@@ -1489,7 +1489,7 @@
                             </div>
                             <nav id="docs-toc" class="docs-toc hidden"></nav>
                             <div id="docs-rendered" class="docs-rendered markdown-content"></div>
-                            <iframe id="docs-iframe" class="docs-iframe hidden" sandbox="allow-same-origin"></iframe>
+                            <iframe id="docs-iframe" class="docs-iframe hidden" sandbox="allow-same-origin allow-scripts"></iframe>
                             <pre id="docs-raw-content" class="docs-raw-content hidden"></pre>
                         </div>
                     </div>
@@ -4396,3 +4396,4 @@
 </body>
 
 </html>
+
