@@ -2363,7 +2363,7 @@
 
                 const groupContainer = document.createElement('div');
                 groupContainer.className = 'wechat-group-container';
-                groupContainer.style.cssText = 'margin-bottom: 12px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); background: rgba(30, 41, 59, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+                groupContainer.style.cssText = 'margin-bottom: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); background: rgba(30, 41, 59, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
 
                 // 组头部
                 const header = document.createElement('div');
@@ -2588,6 +2588,9 @@
                 wechatState.searchOffset = 0;
                 wechatState.searchResults = [];
                 wechatState.searchTypeStats = [];
+                wechatState.groupSessionStats = [];   // 修复:重置会话分组统计
+                wechatState.groupMessagesCache = {};  // 修复:重置分组消息缓存
+                wechatState.groupLoadingStatus = {};  // 修复:重置分组加载状态
                 wechatState.searchBackup = null; // 清空旧的备份状态
                 
                 const backBtn = document.getElementById('wechat-back-to-search-btn');
@@ -2632,6 +2635,8 @@
                 wechatState.searchTotal = result.data.total;
                 // 保存类型统计
                 wechatState.searchTypeStats = result.data.type_stats || [];
+                // 修复:保存会话分组统计(后端已在 /api/wechat/search/keyword 返回 session_stats)
+                wechatState.groupSessionStats = result.data.session_stats || [];
 
                 if (loadMore) {
                     // 追加结果
