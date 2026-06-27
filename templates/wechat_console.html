@@ -3800,7 +3800,7 @@
                     // 刷新群成员重叠页面以显示最新备注
                     const sessionId = document.getElementById('wechat-session-select').value;
                     if (sessionId && document.getElementById('tab-btn-member').classList.contains('active')) {
-                        loadGroupMembersOverlap();
+                        runGroupOverlapAnalysis();
                     }
                 } else {
                     alert('保存备注失败: ' + (result.detail || '未知错误'));
