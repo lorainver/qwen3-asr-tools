@@ -136,6 +136,15 @@ class WechatDatabaseManager:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_group_members_wxid ON group_members(wxid)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_group_members_group ON group_members(group_name)")
 
+        # 创建全局自定义备注表
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS member_remarks (
+                wxid TEXT PRIMARY KEY,
+                remark TEXT NOT NULL,
+                update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
         self.conn.commit()
 
     def insert_session(self, session_data: Dict, file_name: str) -> int:
@@ -1026,9 +1035,10 @@ class WechatDatabaseManager:
         
         # Get target group members
         cursor.execute("""
-            SELECT wxid, wechat_name, nickname, join_time, inviter, message_count 
-            FROM group_members 
-            WHERE session_id = ? OR group_name = ?
+            SELECT gm.wxid, gm.wechat_name, gm.nickname, gm.join_time, gm.inviter, gm.message_count, mr.remark as custom_remark
+            FROM group_members gm
+            LEFT JOIN member_remarks mr ON gm.wxid = mr.wxid
+            WHERE gm.session_id = ? OR gm.group_name = ?
         """, (session_id, target_group))
         members = [dict(row) for row in cursor.fetchall()]
         
@@ -1074,6 +1084,7 @@ class WechatDatabaseManager:
                     "wxid": wxid,
                     "wechat_name": m["wechat_name"],
                     "nickname": m["nickname"],
+                    "custom_remark": m["custom_remark"] or "",
                     "join_time": m["join_time"],
                     "inviter": m["inviter"],
                     "message_count": m["message_count"],
@@ -1183,11 +1194,17 @@ class WechatDatabaseManager:
             """, group_names)
             for row in cursor.fetchall():
                 group_member_counts[row["group_name"]] = row["count"]
+
+        # 获取全局自定义备注
+        cursor.execute("SELECT remark FROM member_remarks WHERE wxid = ?", (wxid,))
+        remark_row = cursor.fetchone()
+        custom_remark = remark_row["remark"] if remark_row else ""
                 
         return {
             "wxid": wxid,
             "wechat_name": wechat_name,
             "nickname": nickname,
+            "custom_remark": custom_remark,
             "total_messages": total_messages,
             "group_count": len(groups),
             "groups": groups,
@@ -1222,6 +1239,73 @@ class WechatDatabaseManager:
                 "groups": list(set(groups_list))  # Deduplicate group names
             })
         return results
+
+    def save_member_remark(self, wxid: str, remark: str) -> bool:
+        """保存或删除全局用户自定义备注"""
+        cursor = self.conn.cursor()
+        remark = (remark or "").strip()
+        if not remark:
+            cursor.execute("DELETE FROM member_remarks WHERE wxid = ?", (wxid,))
+        else:
+            cursor.execute("""
+                INSERT INTO member_remarks (wxid, remark, update_time)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(wxid) DO UPDATE SET remark = excluded.remark, update_time = CURRENT_TIMESTAMP
+            """, (wxid, remark))
+        self.conn.commit()
+        return True
+
+    def get_solicitation_suggestions(self, wxid: str, session_id: int = None) -> List[str]:
+        """从历史接龙消息中智能推断并提取推荐的群友备注名称"""
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT DISTINCT wechat_name, nickname, wxid 
+            FROM group_members 
+            WHERE wxid = ?
+        """, (wxid,))
+        names = set()
+        for row in cursor.fetchall():
+            if row["wechat_name"]:
+                names.add(row["wechat_name"])
+            if row["nickname"]:
+                names.add(row["nickname"])
+            if row["wxid"]:
+                names.add(row["wxid"])
+                
+        if not names:
+            return []
+            
+        query = """
+            SELECT content 
+            FROM messages 
+            WHERE (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
+        """
+        params = []
+        if session_id:
+            query += " AND session_id = ?"
+            params.append(session_id)
+            
+        query += " ORDER BY create_time DESC LIMIT 150"
+        cursor.execute(query, params)
+        messages = [row["content"] for row in cursor.fetchall() if row["content"]]
+        
+        suggestions = set()
+        line_pattern = re.compile(r'(?:^|\n)\s*\d+[\.\、\s-]\s*([^\n]+)')
+        
+        for msg in messages:
+            matches = line_pattern.findall(msg)
+            for val in matches:
+                val = val.strip()
+                if len(val) < 2 or len(val) > 20:
+                    continue
+                for name in names:
+                    if name and name in val:
+                        cleaned = re.sub(r'[\(\)（）\-\d\s\+]+', ' ', val).strip()
+                        if cleaned and len(cleaned) <= 10:
+                            suggestions.add(cleaned)
+                            
+        final_suggestions = [s for s in suggestions if s not in names]
+        return sorted(final_suggestions, key=len)[:5]
 
     def close(self):
         if self.conn:

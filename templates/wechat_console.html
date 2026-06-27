@@ -3462,9 +3462,10 @@
                 data.only_target_members.forEach(m => {
                     const name = m.wechat_name || '未知';
                     const nick = m.nickname ? ` (${m.nickname})` : '';
+                    const remark = m.custom_remark ? ` <span style="color:#10b981;font-weight:bold;">[${escapeHtml(m.custom_remark)}]</span>` : '';
                     const item = document.createElement('div');
                     item.style.cssText = 'padding: 6px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; align-items: center; gap: 6px;';
-                    item.innerHTML = `<span>👤</span> <span>${escapeHtml(name + nick)}</span>`;
+                    item.innerHTML = `<span>👤</span> <span>${escapeHtml(name + nick)}${remark}</span>`;
                     onlyTargetContainer.appendChild(item);
                 });
             }
@@ -3478,11 +3479,12 @@
                 data.members.forEach(m => {
                     const name = m.wechat_name || '未知';
                     const nick = m.nickname ? ` (${m.nickname})` : '';
+                    const remark = m.custom_remark ? ` <span style="color:#10b981;font-weight:bold;">[${escapeHtml(m.custom_remark)}]</span>` : '';
                     const tr = document.createElement('tr');
                     tr.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
                     tr.innerHTML = `
                         <td style="padding: 10px 14px; font-weight: 500; color: #f8fafc;">
-                            <span style="cursor: pointer; color: #38bdf8;" onclick="showMemberProfile('${escapeHtml(m.wxid)}')">👤 ${escapeHtml(name + nick)}</span>
+                            <span style="cursor: pointer; color: #38bdf8;" onclick="showMemberProfile('${escapeHtml(m.wxid)}')">👤 ${escapeHtml(name + nick)}${remark}</span>
                         </td>
                         <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: #94a3b8;">${escapeHtml(m.wxid)}</td>
                         <td style="padding: 10px 14px; text-align: center; font-weight: bold; color: #8b5cf6;">${m.group_count}</td>
@@ -3643,6 +3645,22 @@
                          </div>
                     </div>
                     
+                    <!-- Custom remark edit section -->
+                    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:14px 20px;border-radius:8px;display:flex;flex-direction:column;gap:8px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;">
+                            <label style="font-weight:600;font-size:0.88rem;color:#f8fafc;display:flex;align-items:center;gap:6px;">✍️ 自定义群友备注 (全局有效)</label>
+                            <span id="remark-save-status" style="font-size:0.75rem;color:#10b981;display:none;">✓ 已保存</span>
+                        </div>
+                        <div style="display:flex;gap:8px;">
+                            <input type="text" id="member-custom-remark-input" class="analysis-input" style="flex:1;margin:0;" placeholder="设置自定义备注（如：真实姓名、届别学号、备注特征等）..." value="${escapeHtml(p.custom_remark || '')}">
+                            <button class="kb-btn kb-btn-primary" onclick="saveMemberRemark('${escapeHtml(p.wxid.replace(/'/g, "\\'"))}')" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;">保存备注</button>
+                        </div>
+                        <div id="solicitation-suggestions-container" style="display:none;font-size:0.78rem;color:#94a3b8;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px;">
+                            <span>💡 接龙提取建议:</span>
+                            <span id="suggestions-tags-list" style="display:flex;gap:6px;flex-wrap:wrap;"></span>
+                        </div>
+                    </div>
+                    
                     <!-- Group footprint list -->
                     <div>
                         <h5 style="margin:0 0 10px 0;color:#f8fafc;font-size:0.9rem;border-left:3px solid #38bdf8;padding-left:8px;">👣 全局入群足迹分布 (${p.group_count} 个群聊)</h5>
@@ -3659,6 +3677,23 @@
                         </div>
                     </div>
                 `;
+                
+                // 异步获取接龙推荐备注
+                fetch(`/api/wechat/members/solicitation-suggestions?wxid=${encodeURIComponent(wxid)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.suggestions && data.suggestions.length > 0) {
+                            const container = document.getElementById('solicitation-suggestions-container');
+                            const list = document.getElementById('suggestions-tags-list');
+                            if (container && list) {
+                                list.innerHTML = data.suggestions.map(s => `
+                                    <span class="suggestion-tag" onclick="applySuggestionTag('${escapeHtml(s.replace(/'/g, "\\'"))}')" style="background:rgba(56,189,248,0.1);color:#38bdf8;padding:2px 8px;border-radius:4px;cursor:pointer;border:1px solid rgba(56,189,248,0.2);font-weight:bold;transition:all 0.2s;" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='rgba(56,189,248,0.1)'">${escapeHtml(s)}</span>
+                                `).join('');
+                                container.style.display = 'flex';
+                            }
+                        }
+                    })
+                    .catch(err => console.error('加载接龙推荐失败:', err));
             } catch(e) {
                 console.error(e);
                 content.innerHTML = `<div style="padding:20px;color:#ef4444;">❌ 网络加载异常: ${e.message}</div>`;
@@ -3732,6 +3767,46 @@
             
             // 6. 执行检索
             searchWechatMessages(false);
+        }
+
+        function applySuggestionTag(val) {
+            const input = document.getElementById('member-custom-remark-input');
+            if (input) {
+                input.value = val;
+            }
+        }
+
+        async function saveMemberRemark(wxid) {
+            const input = document.getElementById('member-custom-remark-input');
+            const remark = input ? input.value.trim() : '';
+            const statusSpan = document.getElementById('remark-save-status');
+            
+            try {
+                const res = await fetch('/api/wechat/members/remark', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ wxid, remark })
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    if (statusSpan) {
+                        statusSpan.style.display = 'inline';
+                        setTimeout(() => {
+                            statusSpan.style.display = 'none';
+                        }, 2000);
+                    }
+                    // 刷新群成员重叠页面以显示最新备注
+                    const sessionId = document.getElementById('wechat-session-select').value;
+                    if (sessionId && document.getElementById('tab-btn-member').classList.contains('active')) {
+                        loadGroupMembersOverlap();
+                    }
+                } else {
+                    alert('保存备注失败: ' + (result.detail || '未知错误'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('网络错误，保存备注失败');
+            }
         }
 
         function toggleMaximizeAIResult() {

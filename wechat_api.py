@@ -47,6 +47,10 @@ class ChatAnalyzeRequest(BaseModel):
     context: List[Dict[str, Any]]
     use_cache: bool = True
 
+class MemberRemarkRequest(BaseModel):
+    wxid: str
+    remark: str
+
 # ==================== 接口定义 ====================
 
 @router.get("/sessions")
@@ -340,6 +344,32 @@ async def reload_members_log():
         log_path = r"D:\Programs\EchoTrace\documents\处理日志.txt"
         count = wechat_db.import_group_members_log(log_path)
         return {"success": True, "message": f"成功重新加载 {count} 条群友数据"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/members/sync-cli")
+async def sync_members_cli():
+    try:
+        count = wechat_db.import_group_members_via_cli()
+        return {"success": True, "message": f"成功通过 wechat-cli 同步 {count} 条群友数据"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/members/remark")
+async def save_member_remark(req: MemberRemarkRequest):
+    try:
+        wechat_db.save_member_remark(req.wxid, req.remark)
+        return {"success": True, "message": "备注更新成功"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/members/solicitation-suggestions")
+async def get_solicitation_suggestions(wxid: str, session_id: Optional[int] = None):
+    try:
+        suggestions = wechat_db.get_solicitation_suggestions(wxid, session_id)
+        return {"success": True, "suggestions": suggestions}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
