@@ -1259,7 +1259,7 @@ class WechatDatabaseManager:
     def get_solicitation_suggestions(self, wxid: str, session_id: int = None) -> List[str]:
         """从历史接龙消息中智能推断并提取推荐的群友备注名称"""
         cursor = self.conn.cursor()
-        # 1. 获取该微信ID关联的各种名字 (微信号、群名片、微信名)
+        # 1. 获取该微信ID关联的各种名字 (微信号、微信名等)
         cursor.execute("""
             SELECT DISTINCT wechat_name, nickname, wxid 
             FROM group_members 
@@ -1277,6 +1277,15 @@ class WechatDatabaseManager:
             
         suggestions = set()
 
+        # 校验是否为老师/助教/班主任（老师发的内容一般是作业和通知，不要进行消息差分提取，避免推荐作业条目）
+        is_teacher = False
+        cursor.execute("SELECT DISTINCT nickname, wechat_name FROM group_members WHERE wxid = ?", (wxid,))
+        for row in cursor.fetchall():
+            for name_field in (row["nickname"], row["wechat_name"]):
+                if name_field and any(t in name_field for t in ("老师", "班主任", "助教", "Teacher")):
+                    is_teacher = True
+                    break
+
         # 辅助解析器：提取列表行
         def extract_numbered_list_items(content: str):
             if not content:
@@ -1285,34 +1294,36 @@ class WechatDatabaseManager:
             matches = re.finditer(r'(\d+)\s*[\.\、\s-]\s*([^\n\d]+)', content)
             for m in matches:
                 val = m.group(2).strip()
-                val = re.sub(r'(?:同意|已接龙|已填|参与|已缴费|已交|已缴|缴费|已打卡|已完成|已付|已支付|已报|报名|已交费|交费|OK|ok|ok\b|OK\b|\s+)+$', '', val).strip()
+                val = re.sub(r'(?:同意|已接龙|已填|参与|已缴费|已交|已缴|缴费|已打卡|已完成|已付|暗\b|已支付|已报|报名|已交费|交费|OK|ok|ok\b|OK\b|\s+)+$', '', val).strip()
                 if len(val) >= 2 and len(val) <= 15:
                     items.append(val)
             return items
 
-        # ====== 策略 A：差分列表提取（针对发送人自己发送的接龙列表进行前瞻增量比对） ======
-        if session_id:
-            # 查找此人在该群中发送的所有接龙/列表消息
+        # 常见非姓名词汇过滤（过滤通知、作业中产生的非人名高频词）
+        NON_NAME_WORDS = {"背诵", "复习", "预习", "打卡", "听写", "默写", "朗读", "阅读", "作业", "签字", "练习", "完成", "提醒", "自查", "报到", "早上", "第五", "自查", "本周", "继续", "下周", "自备", "请假", "请假条", "请家长"}
+
+        if not is_teacher:
+            # ====== 策略 A：差分列表提取（针对发送人自己发送的接龙列表进行前瞻增量比对，全局搜寻所有关联会话） ======
             cursor.execute("""
-                SELECT id, content, create_time 
+                SELECT id, session_id, content, create_time 
                 FROM messages 
-                WHERE session_id = ? 
-                  AND (sender_display_name IN (SELECT nickname FROM group_members WHERE wxid = ?) 
+                WHERE (sender_display_name IN (SELECT nickname FROM group_members WHERE wxid = ?) 
                        OR sender_username = ? 
                        OR sender_display_name IN (SELECT wechat_name FROM group_members WHERE wxid = ?))
                   AND (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
-                ORDER BY create_time DESC LIMIT 20
-            """, (session_id, wxid, wxid, wxid))
+                ORDER BY create_time DESC LIMIT 30
+            """, (wxid, wxid, wxid))
             my_msgs = cursor.fetchall()
             
             for my_msg in my_msgs:
                 my_content = my_msg["content"]
                 my_time = my_msg["create_time"]
+                my_sess = my_msg["session_id"]
                 my_items = extract_numbered_list_items(my_content)
                 if not my_items:
                     continue
                 
-                # 寻找我发送的消息之前，群里最近的且真正包含接龙列表的其他消息
+                # 寻找我发送的消息之前，该会话（session_id）里最近的且真正包含接龙列表的其他消息
                 cursor.execute("""
                     SELECT content 
                     FROM messages 
@@ -1321,7 +1332,7 @@ class WechatDatabaseManager:
                       AND id != ?
                       AND (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
                     ORDER BY create_time DESC LIMIT 10
-                """, (session_id, my_time, my_msg["id"]))
+                """, (my_sess, my_time, my_msg["id"]))
                 prev_msgs = cursor.fetchall()
                 prev_items = []
                 for p_msg in prev_msgs:
@@ -1334,33 +1345,30 @@ class WechatDatabaseManager:
                     diff = [item for item in my_items if item not in prev_items]
                     for d in diff:
                         cleaned = re.sub(r'[\(\)（）\-\d\s\+]+', ' ', d).strip()
-                        if cleaned and len(cleaned) <= 10:
-                            suggestions.add(cleaned)
+                        # 姓名基本校验：无英文、不属于公告词、长度合适
+                        if cleaned and len(cleaned) > 1 and not re.search(r'[a-zA-Z]', cleaned):
+                            if cleaned not in NON_NAME_WORDS:
+                                suggestions.add(cleaned)
 
-        # ====== 策略 B：关键词包含过滤（传统模糊检索，匹配列表里出现我微信名/群名片的行） ======
-        query = """
-            SELECT content 
-            FROM messages 
-            WHERE (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
-        """
-        params = []
-        if session_id:
-            query += " AND session_id = ?"
-            params.append(session_id)
+            # ====== 策略 B：关键词包含过滤（全局检索有接龙列表中出现我微信名/群名片的行） ======
+            cursor.execute("""
+                SELECT content 
+                FROM messages 
+                WHERE (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
+                ORDER BY create_time DESC LIMIT 150
+            """)
+            messages = [row["content"] for row in cursor.fetchall() if row["content"]]
             
-        query += " ORDER BY create_time DESC LIMIT 150"
-        cursor.execute(query, params)
-        messages = [row["content"] for row in cursor.fetchall() if row["content"]]
-        
-        for msg in messages:
-            my_items = extract_numbered_list_items(msg)
-            for val in my_items:
-                for name in names:
-                    if name and name in val:
-                        cleaned = re.sub(r'[\(\)（）\-\d\s\+]+', ' ', val).strip()
-                        if cleaned and len(cleaned) <= 10:
-                            suggestions.add(cleaned)
-                            
+            for msg in messages:
+                my_items = extract_numbered_list_items(msg)
+                for val in my_items:
+                    for name in names:
+                        if name and name in val:
+                            cleaned = re.sub(r'[\(\)（）\-\d\s\+]+', ' ', val).strip()
+                            if cleaned and len(cleaned) > 1 and not re.search(r'[a-zA-Z]', cleaned):
+                                if cleaned not in NON_NAME_WORDS:
+                                    suggestions.add(cleaned)
+                                    
         # ====== 策略 C：跨群群名片匹配（如果该用户在其他班级群设置了更详细的群名片/备注） ======
         cursor.execute("""
             SELECT DISTINCT nickname 
@@ -1379,7 +1387,6 @@ class WechatDatabaseManager:
 
         final_suggestions = [s for s in suggestions if s not in names]
         return sorted(final_suggestions, key=len)[:5]
-
     def close(self):
         if self.conn:
             self.conn.close()
