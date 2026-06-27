@@ -336,8 +336,31 @@ class WechatDatabaseManager:
             params.append(session_type)
         
         if sender_display_name:
-            base_query += " AND m.sender_display_name LIKE ?"
-            params.append(f"%{sender_display_name}%")
+            # 尝试通过 group_members 映射微信ID和所有可能的群昵称/微信号
+            cursor.execute("""
+                SELECT DISTINCT wechat_name, nickname, wxid 
+                FROM group_members 
+                WHERE wxid = ? OR wechat_name = ? OR nickname = ?
+            """, (sender_display_name, sender_display_name, sender_display_name))
+            associated_rows = cursor.fetchall()
+            
+            names_to_match = {sender_display_name}
+            for row in associated_rows:
+                if row["wechat_name"]:
+                    names_to_match.add(row["wechat_name"])
+                if row["nickname"]:
+                    names_to_match.add(row["nickname"])
+                if row["wxid"]:
+                    names_to_match.add(row["wxid"])
+            
+            match_clauses = []
+            for name in names_to_match:
+                match_clauses.append("m.sender_display_name LIKE ?")
+                match_clauses.append("m.sender_username LIKE ?")
+                params.append(f"%{name}%")
+                params.append(f"%{name}%")
+            
+            base_query += f" AND ({' OR '.join(match_clauses)})"
         
         if start_time:
             base_query += " AND m.create_time >= ?"
@@ -704,8 +727,15 @@ class WechatDatabaseManager:
                     messages.append(current_msg)
                 
                 time_str = match.group(1)
-                sender = match.group(2)
+                sender_raw = match.group(2).strip()
                 content = match.group(3)
+                
+                sender_username = sender_raw
+                sender_display_name = sender_raw
+                if '<' in sender_raw and sender_raw.endswith('>'):
+                    parts = sender_raw.split('<', 1)
+                    sender_display_name = parts[0].strip()
+                    sender_username = parts[1][:-1].strip()
                 
                 try:
                     dt = datetime.strptime(time_str, "%Y-%m-%d %H:%M")
@@ -721,8 +751,8 @@ class WechatDatabaseManager:
                     "localType": 1,
                     "content": content,
                     "isSend": 0,
-                    "senderUsername": sender,
-                    "senderDisplayName": sender,
+                    "senderUsername": sender_username,
+                    "senderDisplayName": sender_display_name,
                     "source": ""
                 }
             else:
@@ -735,8 +765,11 @@ class WechatDatabaseManager:
         cursor = self.conn.cursor()
         try:
             cursor.execute("BEGIN TRANSACTION")
-            # Clear old messages for this session to prevent duplication on re-import
-            cursor.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
+            
+            if messages:
+                t_min = min(msg["createTime"] for msg in messages)
+                # Clear old messages since T_min to prevent duplication on incremental import
+                cursor.execute("DELETE FROM messages WHERE session_id = ? AND create_time >= ?", (session_id, t_min))
             
             unique_senders = set(msg["senderDisplayName"] for msg in messages)
             for sender in unique_senders:
@@ -766,12 +799,17 @@ class WechatDatabaseManager:
                 ))
             
             if messages:
-                last_ts = max(msg["createTime"] for msg in messages)
+                # Query database to get correct total count and last message timestamp
+                cursor.execute("SELECT COUNT(*) as cnt, MAX(create_time) as max_ts FROM messages WHERE session_id = ?", (session_id,))
+                stats = cursor.fetchone()
+                total_cnt = stats['cnt'] if stats else len(messages)
+                last_ts = stats['max_ts'] if stats and stats['max_ts'] else max(msg["createTime"] for msg in messages)
+                
                 cursor.execute("""
                     UPDATE sessions 
                     SET message_count = ?, last_timestamp = ?
                     WHERE id = ?
-                """, (len(messages), last_ts, session_id))
+                """, (total_cnt, last_ts, session_id))
                 
             self.conn.commit()
             return True
@@ -880,6 +918,87 @@ class WechatDatabaseManager:
                     count += 1
         return count
 
+    def import_group_members_via_cli(self) -> int:
+        """调用 wechat-cli members 命令获取所有群聊的成员并导入数据库"""
+        import subprocess
+        import json
+        import os
+        
+        # 1. 获取数据库中所有的群聊会话
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT id, display_name, wxid FROM sessions WHERE type = '群聊'")
+        group_sessions = cursor.fetchall()
+        
+        # 清除原有的 group_members 记录，重新通过 wechat-cli 导入
+        cursor.execute("DELETE FROM group_members")
+        self.conn.commit()
+        
+        total_imported = 0
+        env = {**os.environ, 'PYTHONIOENCODING': 'utf-8'}
+        
+        for sess in group_sessions:
+            sess_id = sess["id"]
+            group_name = sess["display_name"]
+            
+            # 调用 wechat-cli members 获取该群的成员列表
+            try:
+                result = subprocess.run(
+                    ['wechat-cli', 'members', '--format', 'json', '--', group_name],
+                    capture_output=True, text=True, encoding='utf-8', env=env
+                )
+                if result.returncode != 0:
+                    continue
+                
+                data = json.loads(result.stdout)
+                members = data.get('members', [])
+                
+                # 统计每个成员在该群聊中的消息数量（因为 messages 中的 sender_username 与 sender_display_name 实际存储的都是显示名/昵称，故需按显示名统计后由昵称映射回微信ID）
+                cursor.execute("""
+                    SELECT sender_display_name, COUNT(*) as msg_cnt 
+                    FROM messages 
+                    WHERE session_id = ? 
+                    GROUP BY sender_display_name
+                """, (sess_id,))
+                msg_counts = {row["sender_display_name"]: row["msg_cnt"] for row in cursor.fetchall()}
+                
+                # 写入 group_members
+                for m in members:
+                    wxid = m['username']
+                    wechat_name = m['nick_name'] or ''
+                    nickname = m['display_name'] or wechat_name
+                    
+                    # 匹配消息数：将可能在 messages 表中出现的显示名/昵称/微信ID的值进行累计
+                    possible_names = {wechat_name, nickname, wxid}
+                    message_count = 0
+                    seen_names = set()
+                    for name in possible_names:
+                        if name and name not in seen_names:
+                            message_count += msg_counts.get(name, 0)
+                            seen_names.add(name)
+                    
+                    cursor.execute("""
+                        INSERT INTO group_members (
+                            session_id, group_name, wxid, wechat_name, nickname, join_time, inviter, message_count
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        sess_id,
+                        group_name,
+                        wxid,
+                        wechat_name,
+                        nickname,
+                        '-',
+                        '-',
+                        message_count
+                    ))
+                    total_imported += 1
+                
+                self.conn.commit()
+                
+            except Exception as e:
+                pass
+                
+        return total_imported
+
     def get_group_member_overlap(self, session_id: int, exclude_wxids: List[str] = None) -> Dict:
         cursor = self.conn.cursor()
         if exclude_wxids is None:
@@ -986,7 +1105,7 @@ class WechatDatabaseManager:
         
         # Get all groups this member belongs to
         cursor.execute("""
-            SELECT group_name, nickname, join_time, inviter, message_count 
+            SELECT session_id, group_name, nickname, join_time, inviter, message_count 
             FROM group_members 
             WHERE wxid = ?
             ORDER BY message_count DESC
