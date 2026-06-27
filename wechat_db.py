@@ -1363,6 +1363,22 @@ class WechatDatabaseManager:
                         if cleaned and len(cleaned) <= 10:
                             suggestions.add(cleaned)
                             
+        # ====== 策略 C：跨群群名片匹配（如果该用户在其他班级群设置了更详细的群名片/备注） ======
+        cursor.execute("""
+            SELECT DISTINCT nickname 
+            FROM group_members 
+            WHERE wxid = ? 
+              AND nickname IS NOT NULL 
+              AND nickname != '' 
+              AND nickname != wxid
+        """, (wxid,))
+        for row in cursor.fetchall():
+            g_nick = row["nickname"].strip()
+            # 过滤掉微信昵称完全一致的，也过滤掉只有1个字的无意义名片或纯数字微信号
+            if g_nick and g_nick not in names and len(g_nick) > 1:
+                if not re.match(r'^[a-zA-Z0-9_-]+$', g_nick):
+                    suggestions.add(g_nick)
+
         final_suggestions = [s for s in suggestions if s not in names]
         return sorted(final_suggestions, key=len)[:5]
 
