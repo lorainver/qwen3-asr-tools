@@ -1314,7 +1314,7 @@ class WechatDatabaseManager:
                 if not my_items:
                     continue
                 
-                # 寻找我发送的消息之前，群里最近的一条其他接龙消息
+                # 寻找我发送的消息之前，群里最近的且真正包含接龙列表的其他消息
                 cursor.execute("""
                     SELECT content 
                     FROM messages 
@@ -1322,11 +1322,17 @@ class WechatDatabaseManager:
                       AND create_time < ?
                       AND id != ?
                       AND (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
-                    ORDER BY create_time DESC LIMIT 1
+                    ORDER BY create_time DESC LIMIT 10
                 """, (session_id, my_time, my_msg["id"]))
-                prev_msg = cursor.fetchone()
-                if prev_msg:
-                    prev_items = extract_numbered_list_items(prev_msg["content"])
+                prev_msgs = cursor.fetchall()
+                prev_items = []
+                for p_msg in prev_msgs:
+                    p_items = extract_numbered_list_items(p_msg["content"])
+                    if p_items:
+                        prev_items = p_items
+                        break
+                        
+                if prev_items:
                     diff = [item for item in my_items if item not in prev_items]
                     for d in diff:
                         cleaned = re.sub(r'[\(\)（）\-\d\s\+]+', ' ', d).strip()
