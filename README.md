@@ -144,6 +144,31 @@ D:\qwen3-asr\venv\Scripts\python.exe d:\qwen3-asr\web_app.py
 
 ---
 
+## 🔌 第三方工具适配与补丁备份 (Third-Party Tool Adapters & Patches)
+
+为了实现更高精度的微信聊天记录分析（如微信 ID 精确检索、排除特定公众号等），系统对上游工具进行了定制适配与补丁处理。
+
+### 1. 微信客户端数据提取工具 (`wechat-cli`) 适配补丁
+我们对系统全局安装的第三方微信提取工具 `wechat-cli` (v0.2.4) 的核心导出逻辑进行了优化：
+* **补丁文件路径**：[wechat_cli_messages.py](file:///d:/qwen3-asr/patches/wechat_cli_messages.py)
+* **适配功能**：
+  * **微信 ID 物理绑定**：原版 `wechat-cli export` 导出的 Markdown 文件中，每行消息只包含了昵称。打上补丁后，导出的每行消息前缀会自动追加真实的微信唯一标识符（例如：`昵称 <wxid_xxxxxxxx>`），这使得本地数据库在导入时能将每条消息与真实微信 ID 进行 100% 物理绑定，彻底从底层解决了“多群同名”和“跨群改名”的检索与统计断层问题。
+  * **系统通知模版清洗**：自动将撤回消息、谁邀请谁入群等系统级原始 XML 通知（Type 10000 / 10002）解析为极具人脑可读性的纯文本（如 `“A 邀请 B 加入了群聊”`），完美对齐 EchoTrace 格式。
+
+#### 如何在本地应用补丁：
+如果您在新电脑上重新部署或更新了 `wechat-cli`，可以运行以下命令将我们的补丁代码覆盖到 Python 的第三方库目录下：
+```powershell
+copy D:\qwen3-asr\patches\wechat_cli_messages.py D:\Programs\Python\Python314\Lib\site-packages\wechat_cli\core\messages.py
+```
+*(注：请根据您本地的 Python 安装路径，将 `D:\Programs\Python\Python314\Lib\site-packages` 替换为实际的 `site-packages` 路径。)*
+
+### 2. 本地数据库自动映射与加载优化
+为了配合上述补丁，本地 `wechat_db.py` 同样进行了重构：
+* **微信 ID 双向模糊匹配**：即使只对老数据进行检索，“发言人筛选”输入框也支持同时匹配昵称与微信 ID，并能自动结合群友关系表 `group_members` 动态展开联查。
+* **分组全量加载**：全量/指定群聊检索聊天记录时，限制由 `50` 调大至 `10000`，展开分组时直接一屏全部加载，免去不显眼的“加载更多”操作。
+
+---
+
 ## 🔒 隐私与安全性声明
 * **多模态与推理完全本地化**：无论是 ASR 语音识别、文本总结还是 AI 对话，全部推理均运行在您的 RTX 5060 显卡上，**零数据外流**，100% 安全离线。
 * **在线 TTS 使用**：当且仅当您使用“微软在线朗读”时，会将文本发送至 Edge 接口进行拟真合成。若敏感信息较多，请在网页右上角将其切换为“本地离线”模式。
