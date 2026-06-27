@@ -1222,13 +1222,14 @@ def _is_wechat_record(file_path: str) -> bool:
         return False
 
 
-def index_document(file_path: str, category: str = "默认") -> Dict:
+def index_document(file_path: str, category: str = "默认", skip_msg_embeddings: bool = False) -> Dict:
     """
     一键索引文档（加载 → 分块 → 向量化 → 存储）
 
     Args:
         file_path: 文档路径
         category: 分类标签
+        skip_msg_embeddings: 是否跳过生成单条消息级的向量索引（大群聊建议跳过以提升百倍导入速度）
 
     Returns:
         索引结果信息
@@ -1281,7 +1282,7 @@ def index_document(file_path: str, category: str = "默认") -> Dict:
 
     # 方案 C：如果是微信聊天记录，同时创建消息级索引
     message_entries = []
-    if _is_wechat_record(file_path):
+    if _is_wechat_record(file_path) and not skip_msg_embeddings:
         wc = WeChatChunker(chunk_size=800, overlap=50, time_window_minutes=10)
         message_entries = wc.extract_messages(file_path, chunks)
         for m in message_entries:
@@ -1302,6 +1303,7 @@ def index_document(file_path: str, category: str = "默认") -> Dict:
         "chunk_count": len(chunks),
         "category": category
     }
+
 
 
 def _update_index_file(doc: Document):

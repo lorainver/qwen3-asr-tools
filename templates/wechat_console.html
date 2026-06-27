@@ -3679,7 +3679,9 @@
                 `;
                 
                 // 异步获取接龙推荐备注
-                fetch(`/api/wechat/members/solicitation-suggestions?wxid=${encodeURIComponent(wxid)}`)
+                const activeSessId = document.getElementById('wechat-session-select')?.value || '';
+                const suggestionsUrl = `/api/wechat/members/solicitation-suggestions?wxid=${encodeURIComponent(wxid)}` + (activeSessId ? `&session_id=${activeSessId}` : '');
+                fetch(suggestionsUrl)
                     .then(res => res.json())
                     .then(data => {
                         if (data.success && data.suggestions && data.suggestions.length > 0) {

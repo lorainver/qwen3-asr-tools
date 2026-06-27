@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import re
 from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
@@ -1258,6 +1259,7 @@ class WechatDatabaseManager:
     def get_solicitation_suggestions(self, wxid: str, session_id: int = None) -> List[str]:
         """从历史接龙消息中智能推断并提取推荐的群友备注名称"""
         cursor = self.conn.cursor()
+        # 1. 获取该微信ID关联的各种名字 (微信号、群名片、微信名)
         cursor.execute("""
             SELECT DISTINCT wechat_name, nickname, wxid 
             FROM group_members 
@@ -1275,6 +1277,63 @@ class WechatDatabaseManager:
         if not names:
             return []
             
+        suggestions = set()
+
+        # 辅助解析器：提取列表行
+        def extract_numbered_list_items(content: str):
+            if not content:
+                return []
+            items = []
+            matches = re.finditer(r'(\d+)\s*[\.\、\s-]\s*([^\n\d]+)', content)
+            for m in matches:
+                val = m.group(2).strip()
+                val = re.sub(r'(?:同意|已接龙|已填|参与|OK|ok|ok\b|OK\b|\s+)+$', '', val).strip()
+                if len(val) >= 2 and len(val) <= 15:
+                    items.append(val)
+            return items
+
+        # ====== 策略 A：差分列表提取（针对发送人自己发送的接龙列表进行前瞻增量比对） ======
+        if session_id:
+            # 查找此人在该群中发送的所有接龙/列表消息
+            cursor.execute("""
+                SELECT id, content, create_time 
+                FROM messages 
+                WHERE session_id = ? 
+                  AND (sender_display_name IN (SELECT nickname FROM group_members WHERE wxid = ?) 
+                       OR sender_username = ? 
+                       OR sender_display_name IN (SELECT wechat_name FROM group_members WHERE wxid = ?))
+                  AND (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
+                ORDER BY create_time DESC LIMIT 20
+            """, (session_id, wxid, wxid, wxid))
+            my_msgs = cursor.fetchall()
+            
+            for my_msg in my_msgs:
+                my_content = my_msg["content"]
+                my_time = my_msg["create_time"]
+                my_items = extract_numbered_list_items(my_content)
+                if not my_items:
+                    continue
+                
+                # 寻找我发送的消息之前，群里最近的一条其他接龙消息
+                cursor.execute("""
+                    SELECT content 
+                    FROM messages 
+                    WHERE session_id = ? 
+                      AND create_time < ?
+                      AND id != ?
+                      AND (content LIKE '%接龙%' OR content LIKE '%1.%' OR content LIKE '%1、%')
+                    ORDER BY create_time DESC LIMIT 1
+                """, (session_id, my_time, my_msg["id"]))
+                prev_msg = cursor.fetchone()
+                if prev_msg:
+                    prev_items = extract_numbered_list_items(prev_msg["content"])
+                    diff = [item for item in my_items if item not in prev_items]
+                    for d in diff:
+                        cleaned = re.sub(r'[\(\)（）\-\d\s\+]+', ' ', d).strip()
+                        if cleaned and len(cleaned) <= 10:
+                            suggestions.add(cleaned)
+
+        # ====== 策略 B：关键词包含过滤（传统模糊检索，匹配列表里出现我微信名/群名片的行） ======
         query = """
             SELECT content 
             FROM messages 
@@ -1289,15 +1348,9 @@ class WechatDatabaseManager:
         cursor.execute(query, params)
         messages = [row["content"] for row in cursor.fetchall() if row["content"]]
         
-        suggestions = set()
-        line_pattern = re.compile(r'(?:^|\n)\s*\d+[\.\、\s-]\s*([^\n]+)')
-        
         for msg in messages:
-            matches = line_pattern.findall(msg)
-            for val in matches:
-                val = val.strip()
-                if len(val) < 2 or len(val) > 20:
-                    continue
+            my_items = extract_numbered_list_items(msg)
+            for val in my_items:
                 for name in names:
                     if name and name in val:
                         cleaned = re.sub(r'[\(\)（）\-\d\s\+]+', ' ', val).strip()
