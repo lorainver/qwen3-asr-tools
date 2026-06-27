@@ -3709,6 +3709,13 @@
                 toggleSearchScope('session');
             }
             
+            // 重置过滤条件，重新渲染列表，确保目标会话可选
+            const typeFilter = document.getElementById('wechat-session-type-filter');
+            if (typeFilter) typeFilter.value = 'all';
+            const sessionSearch = document.getElementById('wechat-session-search');
+            if (sessionSearch) sessionSearch.value = '';
+            renderWechatSessionOptions();
+            
             const sessionSelect = document.getElementById('wechat-session-select');
             if (sessionSelect) {
                 sessionSelect.value = sessionId;
