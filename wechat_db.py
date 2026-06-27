@@ -1269,8 +1269,6 @@ class WechatDatabaseManager:
         for row in cursor.fetchall():
             if row["wechat_name"]:
                 names.add(row["wechat_name"])
-            if row["nickname"]:
-                names.add(row["nickname"])
             if row["wxid"]:
                 names.add(row["wxid"])
                 
@@ -1287,7 +1285,7 @@ class WechatDatabaseManager:
             matches = re.finditer(r'(\d+)\s*[\.\、\s-]\s*([^\n\d]+)', content)
             for m in matches:
                 val = m.group(2).strip()
-                val = re.sub(r'(?:同意|已接龙|已填|参与|OK|ok|ok\b|OK\b|\s+)+$', '', val).strip()
+                val = re.sub(r'(?:同意|已接龙|已填|参与|已缴费|已交|已缴|缴费|已打卡|已完成|已付|已支付|已报|报名|已交费|交费|OK|ok|ok\b|OK\b|\s+)+$', '', val).strip()
                 if len(val) >= 2 and len(val) <= 15:
                     items.append(val)
             return items
