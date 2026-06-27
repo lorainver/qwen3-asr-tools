@@ -336,6 +336,9 @@ class WechatDatabaseManager:
             params.append(session_type)
         
         if sender_display_name:
+            # 检查是否为微信号/wxid（通常为英文、数字、下划线、减号，无中文）
+            is_wxid = not any('\u4e00' <= char <= '\u9fff' for char in sender_display_name)
+            
             # 尝试通过 group_members 映射微信ID和所有可能的群昵称/微信号
             cursor.execute("""
                 SELECT DISTINCT wechat_name, nickname, wxid 
@@ -353,14 +356,24 @@ class WechatDatabaseManager:
                 if row["wxid"]:
                     names_to_match.add(row["wxid"])
             
-            match_clauses = []
-            for name in names_to_match:
-                match_clauses.append("m.sender_display_name LIKE ?")
-                match_clauses.append("m.sender_username LIKE ?")
-                params.append(f"%{name}%")
-                params.append(f"%{name}%")
-            
-            base_query += f" AND ({' OR '.join(match_clauses)})"
+            if is_wxid:
+                # 如果是微信号，必须进行精确匹配（避免输入 wxid 却模糊匹配到“邓勇”、“邓英”等重名用户）
+                match_clauses = []
+                for name in names_to_match:
+                    match_clauses.append("m.sender_display_name = ?")
+                    match_clauses.append("m.sender_username = ?")
+                    params.append(name)
+                    params.append(name)
+                base_query += f" AND ({' OR '.join(match_clauses)})"
+            else:
+                # 如果是普通昵称输入，保持模糊匹配以支持部分字/模糊搜索
+                match_clauses = []
+                for name in names_to_match:
+                    match_clauses.append("m.sender_display_name LIKE ?")
+                    match_clauses.append("m.sender_username LIKE ?")
+                    params.append(f"%{name}%")
+                    params.append(f"%{name}%")
+                base_query += f" AND ({' OR '.join(match_clauses)})"
         
         if start_time:
             base_query += " AND m.create_time >= ?"
