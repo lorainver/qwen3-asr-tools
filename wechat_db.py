@@ -940,10 +940,10 @@ class WechatDatabaseManager:
             sess_id = sess["id"]
             group_name = sess["display_name"]
             
-            # 调用 wechat-cli members 获取该群的成员列表
+            # 调用 wechat-cli members 获取该群的成员列表（使用唯一的 wxid 避免名字编码或特殊字符歧义）
             try:
                 result = subprocess.run(
-                    ['wechat-cli', 'members', '--format', 'json', '--', group_name],
+                    ['wechat-cli', 'members', '--format', 'json', '--', sess["wxid"]],
                     capture_output=True, text=True, encoding='utf-8', env=env
                 )
                 if result.returncode != 0:
