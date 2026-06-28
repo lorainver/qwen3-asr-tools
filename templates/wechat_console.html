@@ -3548,6 +3548,7 @@
             const option = {
                 tooltip: {
                     trigger: 'axis',
+                    extraCssText: 'max-width:520px;white-space:normal;',
                     formatter: function(params) {
                         const p = params[0];
                         const gName = p.name;
@@ -3561,7 +3562,7 @@
                                 const remark = m.custom_remark ? ' [' + m.custom_remark + ']' : '';
                                 return '<span style="display:inline-block;margin:2px 4px;padding:1px 6px;background:rgba(255,255,255,0.06);border-radius:6px;font-size:11px;">' + escapeHtml(name + nick + remark) + '</span>';
                             });
-                            memberHtml = '<div style="margin-top:6px;max-width:380px;line-height:1.8;">' + items.join('') + '</div>';
+                            memberHtml = '<div style="margin-top:6px;max-width:500px;display:flex;flex-wrap:wrap;gap:4px;line-height:1.6;">' + items.join('') + '</div>';
                         }
                         return `<div style="font-weight:600;margin-bottom:4px;">${gName}: ${p.value} 人 (占比 ${p.data.d}%)</div>${memberHtml}`;
                     }
