@@ -10,89 +10,7 @@
     <link rel="stylesheet" href="/static/kb.css">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <!-- Markdown 渲染库 -->
-    <script src="/static/js/marked.min.js">
-
-        // ==================== 备注管理 Panel ====================
-        var allRemarksData = [];
-
-        async function showRemarksPanel() {
-            var modal = document.getElementById('wechat-remarks-panel-modal');
-            var tbody = document.getElementById('remarks-tbody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#64748b;">\u23f3 加载中...</td></tr>';
-            modal.style.display = 'flex';
-            document.getElementById('remarks-search-input').value = '';
-            try {
-                var res = await fetch('/api/wechat/members/remarks');
-                var data = await res.json();
-                if (!data.success) { alert('加载失败'); return; }
-                allRemarksData = data.remarks;
-                document.getElementById('remarks-total-badge').textContent = data.total;
-                renderRemarksList(allRemarksData);
-            } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#ef4444;">加载失败: ' + e.message + '</td></tr>';
-            }
-        }
-
-        function closeRemarksPanel() {
-            document.getElementById('wechat-remarks-panel-modal').style.display = 'none';
-        }
-
-        function filterRemarks(keyword) {
-            keyword = keyword.toLowerCase();
-            var filtered = allRemarksData.filter(function(r) {
-                return (r.remark || '').toLowerCase().includes(keyword)
-                    || (r.wechat_name || '').toLowerCase().includes(keyword)
-                    || (r.nickname || '').toLowerCase().includes(keyword)
-                    || (r.groups || []).some(function(g) { return g.toLowerCase().includes(keyword); })
-                    || (r.wxid || '').toLowerCase().includes(keyword);
-            });
-            renderRemarksList(filtered);
-        }
-
-        function renderRemarksList(remarks) {
-            var tbody = document.getElementById('remarks-tbody');
-            var empty = document.getElementById('remarks-empty');
-            if (remarks.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
-            empty.style.display = 'none';
-            tbody.innerHTML = remarks.map(function(r, i) {
-                var wechatName = r.wechat_name || r.nickname || r.wxid;
-                var groups = (r.groups || []).slice(0, 4).map(function(g) {
-                    return '<span style="display:inline-block;background:rgba(139,92,246,0.1);color:#a78bfa;padding:1px 6px;border-radius:10px;font-size:0.72rem;margin-right:3px;">' + escapeHtml(g.length > 10 ? g.substring(0,10) + '..' : g) + '</span>';
-                }).join('') + (r.groups && r.groups.length > 4 ? '<span style="color:#64748b;font-size:0.72rem;">+' + (r.groups.length - 4) + '</span>' : '');
-                return '<tr style="border-bottom:1px solid rgba(255,255,255,0.03);" onmouseenter="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseleave="this.style.background=\'transparent\'">'
-                    + '<td style="padding:8px 14px;color:#64748b;font-size:0.75rem;">' + (i+1) + '</td>'
-                    + '<td style="padding:8px 14px;"><span style="cursor:pointer;color:#38bdf8;" onclick="closeRemarksPanel();showMemberProfile(\'' + escapeHtml(r.wxid) + '\')">' + escapeHtml(wechatName) + '</span></td>'
-                    + '<td style="padding:8px 14px;color:#fbbf24;font-weight:600;">' + escapeHtml(r.remark) + '</td>'
-                    + '<td style="padding:8px 14px;">' + groups + '</td>'
-                    + '<td style="padding:8px 14px;text-align:center;">'
-                    + '<button onclick="deleteRemark(\'' + escapeHtml(r.wxid) + '\',this)" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:2px 8px;border-radius:4px;font-size:0.72rem;cursor:pointer;" title="删除备注">\U0001f5d1</button>'
-                    + '</td></tr>';
-            }).join('');
-        }
-
-        async function deleteRemark(wxid, btn) {
-            var row = btn.closest('tr');
-            var remarkName = row ? row.children[2].textContent : '';
-            if (!confirm('确定删除「' + remarkName + '」的备注吗？')) return;
-            try {
-                var res = await fetch('/api/wechat/members/remark/' + encodeURIComponent(wxid), { method: 'DELETE' });
-                var data = await res.json();
-                if (data.success) {
-                    allRemarksData = allRemarksData.filter(function(r) { return r.wxid !== wxid; });
-                    document.getElementById('remarks-total-badge').textContent = allRemarksData.length;
-                    renderRemarksList(allRemarksData);
-                } else {
-                    alert('删除失败');
-                }
-            } catch(e) { alert('删除失败: ' + e.message); }
-        }
-
-        window.addEventListener('click', function(e) {
-            var m = document.getElementById('wechat-remarks-panel-modal');
-            if (e.target === m) closeRemarksPanel();
-        });
-
-</script>
+    <script src="/static/js/marked.min.js"></script>
     <!-- 代码高亮 -->
     <link rel="stylesheet" href="/static/css/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -4477,7 +4395,87 @@ window.addEventListener('click', function(e) {
     if (e.target === modal) {
         closeAllMembersModal();
     }
-});</script>
+});
+
+        // ==================== 备注管理 Panel ====================
+        var allRemarksData = [];
+
+        async function showRemarksPanel() {
+            var modal = document.getElementById('wechat-remarks-panel-modal');
+            var tbody = document.getElementById('remarks-tbody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#64748b;">⏳ 加载中...</td></tr>';
+            modal.style.display = 'flex';
+            document.getElementById('remarks-search-input').value = '';
+            try {
+                var res = await fetch('/api/wechat/members/remarks');
+                var data = await res.json();
+                if (!data.success) { alert('加载失败'); return; }
+                allRemarksData = data.remarks;
+                document.getElementById('remarks-total-badge').textContent = data.total;
+                renderRemarksList(allRemarksData);
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#ef4444;">加载失败: ' + e.message + '</td></tr>';
+            }
+        }
+
+        function closeRemarksPanel() {
+            document.getElementById('wechat-remarks-panel-modal').style.display = 'none';
+        }
+
+        function filterRemarks(keyword) {
+            keyword = keyword.toLowerCase();
+            var filtered = allRemarksData.filter(function(r) {
+                return (r.remark || '').toLowerCase().includes(keyword)
+                    || (r.wechat_name || '').toLowerCase().includes(keyword)
+                    || (r.nickname || '').toLowerCase().includes(keyword)
+                    || (r.groups || []).some(function(g) { return g.toLowerCase().includes(keyword); })
+                    || (r.wxid || '').toLowerCase().includes(keyword);
+            });
+            renderRemarksList(filtered);
+        }
+
+        function renderRemarksList(remarks) {
+            var tbody = document.getElementById('remarks-tbody');
+            var empty = document.getElementById('remarks-empty');
+            if (remarks.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+            tbody.innerHTML = remarks.map(function(r, i) {
+                var wechatName = r.wechat_name || r.nickname || r.wxid;
+                var groups = (r.groups || []).slice(0, 4).map(function(g) {
+                    return '<span style="display:inline-block;background:rgba(139,92,246,0.1);color:#a78bfa;padding:1px 6px;border-radius:10px;font-size:0.72rem;margin-right:3px;">' + escapeHtml(g.length > 10 ? g.substring(0,10) + '..' : g) + '</span>';
+                }).join('') + (r.groups && r.groups.length > 4 ? '<span style="color:#64748b;font-size:0.72rem;">+' + (r.groups.length - 4) + '</span>' : '');
+                return '<tr style="border-bottom:1px solid rgba(255,255,255,0.03);" onmouseenter="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseleave="this.style.background=\'transparent\'">'
+                    + '<td style="padding:8px 14px;color:#64748b;font-size:0.75rem;">' + (i+1) + '</td>'
+                    + '<td style="padding:8px 14px;"><span style="cursor:pointer;color:#38bdf8;" onclick="closeRemarksPanel();showMemberProfile(\'' + escapeHtml(r.wxid) + '\')">' + escapeHtml(wechatName) + '</span></td>'
+                    + '<td style="padding:8px 14px;color:#fbbf24;font-weight:600;">' + escapeHtml(r.remark) + '</td>'
+                    + '<td style="padding:8px 14px;">' + groups + '</td>'
+                    + '<td style="padding:8px 14px;text-align:center;">'
+                    + '<button onclick="deleteRemark(\'' + escapeHtml(r.wxid) + '\',this)" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:2px 8px;border-radius:4px;font-size:0.72rem;cursor:pointer;" title="删除备注">🗑️</button>'
+                    + '</td></tr>';
+            }).join('');
+        }
+
+        async function deleteRemark(wxid, btn) {
+            var row = btn.closest('tr');
+            var remarkName = row ? row.children[2].textContent : '';
+            if (!confirm('确定删除「' + remarkName + '」的备注吗？')) return;
+            try {
+                var res = await fetch('/api/wechat/members/remark/' + encodeURIComponent(wxid), { method: 'DELETE' });
+                var data = await res.json();
+                if (data.success) {
+                    allRemarksData = allRemarksData.filter(function(r) { return r.wxid !== wxid; });
+                    document.getElementById('remarks-total-badge').textContent = allRemarksData.length;
+                    renderRemarksList(allRemarksData);
+                } else { alert('删除失败'); }
+            } catch(e) { alert('删除失败: ' + e.message); }
+        }
+
+        window.addEventListener('click', function(e) {
+            var m = document.getElementById('wechat-remarks-panel-modal');
+            if (e.target === m) closeRemarksPanel();
+        });
+
+</script>
 
     <!-- Member Footprint Profile Modal -->
     <div id="wechat-member-profile-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
