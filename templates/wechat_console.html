@@ -1757,7 +1757,7 @@
                             <div style="display: flex; gap: 20px; flex-wrap: wrap;">
                                 <div style="flex: 1.2; min-width: 320px;">
                                     <h5 style="margin: 0 0 10px 0; color: #e2e8f0; font-size: 0.9rem;">📊 重叠群友分布排名</h5>
-                                    <div id="overlap-echarts-chart" style="width: 100%; height: 260px; background: rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.02);"></div>
+                                    <div style="max-height: 500px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); background: rgba(0,0,0,0.1);"><div id="overlap-echarts-chart" style="width: 100%; height: 260px;"></div></div>
                                 </div>
                                 <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column;">
                                     <h5 style="margin: 0 0 10px 0; color: #e2e8f0; font-size: 0.9rem;">仅在当前群的群友</h5>
@@ -3604,7 +3604,10 @@
             const isLight = document.body.classList.contains('light-mode');
             overlapChartInstance = echarts.init(chartDom, isLight ? null : 'dark', { backgroundColor: 'transparent' });
             
-            const topData = distribution.slice(0, 8);
+            const topData = distribution; // show all groups
+            // Dynamic height: ~28px per bar, min 200px, max 800px
+            const chartHeight = Math.max(200, Math.min(800, topData.length * 28 + 60));
+            chartDom.style.height = chartHeight + 'px';
             
             const option = {
                 tooltip: {
@@ -3643,9 +3646,10 @@
                     type: 'category',
                     data: topData.map(item => item.name).reverse(),
                     axisLabel: {
+                        fontSize: 11,
                         formatter: function (value) {
-                            if (value.length > 8) {
-                                return value.substring(0, 8) + '...';
+                            if (value.length > 12) {
+                                return value.substring(0, 12) + '...';
                             }
                             return value;
                         }
