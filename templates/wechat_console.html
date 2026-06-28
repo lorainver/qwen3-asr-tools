@@ -3482,6 +3482,26 @@
                 });
             }
             
+            // Build group->color map for visual distinction
+            const groupColorPalette = [
+                {bg:'rgba(139,92,246,0.12)', fg:'#a78bfa'},
+                {bg:'rgba(56,189,248,0.12)', fg:'#38bdf8'},
+                {bg:'rgba(16,185,129,0.12)', fg:'#34d399'},
+                {bg:'rgba(251,146,60,0.12)', fg:'#fb923c'},
+                {bg:'rgba(244,114,182,0.12)', fg:'#f472b6'},
+                {bg:'rgba(250,204,21,0.12)', fg:'#facc15'},
+                {bg:'rgba(45,212,191,0.12)', fg:'#2dd4bf'},
+                {bg:'rgba(248,113,113,0.12)', fg:'#f87171'},
+                {bg:'rgba(168,162,158,0.12)', fg:'#a8a29e'},
+                {bg:'rgba(129,140,248,0.12)', fg:'#818cf8'},
+            ];
+            const groupColorMap = {};
+            if (data.group_distribution) {
+                data.group_distribution.forEach((g, i) => {
+                    groupColorMap[g.name] = groupColorPalette[i % groupColorPalette.length];
+                });
+            }
+
             // Render Detailed overlap members table
             const tbody = document.getElementById('overlap-detailed-members-tbody');
             tbody.innerHTML = '';
@@ -3501,7 +3521,7 @@
                         <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: #94a3b8;">${escapeHtml(m.wxid)}</td>
                         <td style="padding: 10px 14px; text-align: center; font-weight: bold; color: #8b5cf6;">${m.group_count}</td>
                         <td style="padding: 10px 14px; font-size: 0.8rem; color: #64748b;">
-                            ${m.groups.map(g => `<span style="display:inline-block;background:rgba(139,92,246,0.1);color:#a78bfa;padding:2px 8px;border-radius:12px;margin-right:4px;margin-bottom:4px;">${escapeHtml(g)}</span>`).join('')}
+                            ${m.groups.map(g => { const c = groupColorMap[g] || groupColorPalette[0]; return `<span style="display:inline-block;background:${c.bg};color:${c.fg};padding:2px 8px;border-radius:12px;margin-right:4px;margin-bottom:4px;">${escapeHtml(g)}</span>`; }).join('')}
                         </td>
                     `;
                     tbody.appendChild(tr);
