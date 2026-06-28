@@ -365,6 +365,29 @@ async def save_member_remark(req: MemberRemarkRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/members/remarks")
+async def get_all_member_remarks():
+    try:
+        remarks = wechat_db.get_all_member_remarks()
+        return {"success": True, "remarks": remarks, "total": len(remarks)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/members/remark/{wxid}")
+async def delete_member_remark(wxid: str):
+    try:
+        ok = wechat_db.delete_member_remark(wxid)
+        if ok:
+            return {"success": True, "message": "备注已删除"}
+        else:
+            raise HTTPException(status_code=404, detail="未找到该备注")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/members/solicitation-suggestions")
 async def get_solicitation_suggestions(wxid: str, session_id: Optional[int] = None):
     try:

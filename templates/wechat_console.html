@@ -10,7 +10,89 @@
     <link rel="stylesheet" href="/static/kb.css">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <!-- Markdown 渲染库 -->
-    <script src="/static/js/marked.min.js"></script>
+    <script src="/static/js/marked.min.js">
+
+        // ==================== 备注管理 Panel ====================
+        var allRemarksData = [];
+
+        async function showRemarksPanel() {
+            var modal = document.getElementById('wechat-remarks-panel-modal');
+            var tbody = document.getElementById('remarks-tbody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#64748b;">\u23f3 加载中...</td></tr>';
+            modal.style.display = 'flex';
+            document.getElementById('remarks-search-input').value = '';
+            try {
+                var res = await fetch('/api/wechat/members/remarks');
+                var data = await res.json();
+                if (!data.success) { alert('加载失败'); return; }
+                allRemarksData = data.remarks;
+                document.getElementById('remarks-total-badge').textContent = data.total;
+                renderRemarksList(allRemarksData);
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#ef4444;">加载失败: ' + e.message + '</td></tr>';
+            }
+        }
+
+        function closeRemarksPanel() {
+            document.getElementById('wechat-remarks-panel-modal').style.display = 'none';
+        }
+
+        function filterRemarks(keyword) {
+            keyword = keyword.toLowerCase();
+            var filtered = allRemarksData.filter(function(r) {
+                return (r.remark || '').toLowerCase().includes(keyword)
+                    || (r.wechat_name || '').toLowerCase().includes(keyword)
+                    || (r.nickname || '').toLowerCase().includes(keyword)
+                    || (r.groups || []).some(function(g) { return g.toLowerCase().includes(keyword); })
+                    || (r.wxid || '').toLowerCase().includes(keyword);
+            });
+            renderRemarksList(filtered);
+        }
+
+        function renderRemarksList(remarks) {
+            var tbody = document.getElementById('remarks-tbody');
+            var empty = document.getElementById('remarks-empty');
+            if (remarks.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+            tbody.innerHTML = remarks.map(function(r, i) {
+                var wechatName = r.wechat_name || r.nickname || r.wxid;
+                var groups = (r.groups || []).slice(0, 4).map(function(g) {
+                    return '<span style="display:inline-block;background:rgba(139,92,246,0.1);color:#a78bfa;padding:1px 6px;border-radius:10px;font-size:0.72rem;margin-right:3px;">' + escapeHtml(g.length > 10 ? g.substring(0,10) + '..' : g) + '</span>';
+                }).join('') + (r.groups && r.groups.length > 4 ? '<span style="color:#64748b;font-size:0.72rem;">+' + (r.groups.length - 4) + '</span>' : '');
+                return '<tr style="border-bottom:1px solid rgba(255,255,255,0.03);" onmouseenter="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseleave="this.style.background=\'transparent\'">'
+                    + '<td style="padding:8px 14px;color:#64748b;font-size:0.75rem;">' + (i+1) + '</td>'
+                    + '<td style="padding:8px 14px;"><span style="cursor:pointer;color:#38bdf8;" onclick="closeRemarksPanel();showMemberProfile(\'' + escapeHtml(r.wxid) + '\')">' + escapeHtml(wechatName) + '</span></td>'
+                    + '<td style="padding:8px 14px;color:#fbbf24;font-weight:600;">' + escapeHtml(r.remark) + '</td>'
+                    + '<td style="padding:8px 14px;">' + groups + '</td>'
+                    + '<td style="padding:8px 14px;text-align:center;">'
+                    + '<button onclick="deleteRemark(\'' + escapeHtml(r.wxid) + '\',this)" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:2px 8px;border-radius:4px;font-size:0.72rem;cursor:pointer;" title="删除备注">\U0001f5d1</button>'
+                    + '</td></tr>';
+            }).join('');
+        }
+
+        async function deleteRemark(wxid, btn) {
+            var row = btn.closest('tr');
+            var remarkName = row ? row.children[2].textContent : '';
+            if (!confirm('确定删除「' + remarkName + '」的备注吗？')) return;
+            try {
+                var res = await fetch('/api/wechat/members/remark/' + encodeURIComponent(wxid), { method: 'DELETE' });
+                var data = await res.json();
+                if (data.success) {
+                    allRemarksData = allRemarksData.filter(function(r) { return r.wxid !== wxid; });
+                    document.getElementById('remarks-total-badge').textContent = allRemarksData.length;
+                    renderRemarksList(allRemarksData);
+                } else {
+                    alert('删除失败');
+                }
+            } catch(e) { alert('删除失败: ' + e.message); }
+        }
+
+        window.addEventListener('click', function(e) {
+            var m = document.getElementById('wechat-remarks-panel-modal');
+            if (e.target === m) closeRemarksPanel();
+        });
+
+</script>
     <!-- 代码高亮 -->
     <link rel="stylesheet" href="/static/css/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -1727,7 +1809,10 @@
                         <div class="wechat-member-card" id="wechat-member-overlap-panel" style="display: none; background: rgba(17, 24, 39, 0.4); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 20px; flex-direction: column; gap: 20px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
                                 <h4 style="margin: 0; color: #8b5cf6; font-size: 1.1rem; display: flex; align-items: center; gap: 6px;">👥 群友分布与重叠分析</h4>
+                                <div style="display:flex;align-items:center;gap:10px;">
                                 <span id="wechat-overlap-stats" style="font-size: 0.85rem; color: #94a3b8;"></span>
+                                <button onclick="showRemarksPanel()" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);color:#fbbf24;padding:4px 12px;border-radius:6px;font-size:0.78rem;cursor:pointer;white-space:nowrap;">📝 备注管理</button>
+                            </div>
                             </div>
                             
                             <!-- Overlap Grid Summary cards -->
@@ -4406,6 +4491,34 @@ window.addEventListener('click', function(e) {
             </div>
         </div>
     </div>
+
+<!-- 备注管理 Modal -->
+<div id="wechat-remarks-panel-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(4px);">
+    <div style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 92%; max-width: 900px; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popIn 0.25s ease-out;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.01);">
+            <h4 style="margin: 0; color: #fbbf24; display: flex; align-items: center; gap: 8px;">📝 备注管理 <span id="remarks-total-badge" style="font-size:0.75rem;background:rgba(251,191,36,0.15);color:#fbbf24;padding:2px 10px;border-radius:12px;">0</span></h4>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <input type="text" id="remarks-search-input" placeholder="🔍 搜索备注/昵称/群名..." style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 12px;color:#e2e8f0;font-size:0.82rem;width:220px;outline:none;" oninput="filterRemarks(this.value)">
+                <button onclick="closeRemarksPanel()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+        </div>
+        <div style="padding: 0; overflow-y: auto; flex: 1;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.83rem;">
+                <thead style="position:sticky;top:0;z-index:1;background:#1e293b;">
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                        <th style="padding: 10px 14px; text-align: left; color: #94a3b8; font-weight: 500; width: 50px;">#</th>
+                        <th style="padding: 10px 14px; text-align: left; color: #94a3b8; font-weight: 500;">微信昵称</th>
+                        <th style="padding: 10px 14px; text-align: left; color: #fbbf24; font-weight: 600;">我的备注</th>
+                        <th style="padding: 10px 14px; text-align: left; color: #94a3b8; font-weight: 500;">所在群聊</th>
+                        <th style="padding: 10px 14px; text-align: center; color: #94a3b8; font-weight: 500; width: 70px;">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="remarks-tbody"></tbody>
+            </table>
+            <div id="remarks-empty" style="display:none;padding:40px;text-align:center;color:#64748b;">暂无备注数据</div>
+        </div>
+    </div>
+</div>
 
 <!-- 全量群友列表 Modal -->
 <div id="wechat-all-members-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(4px);">

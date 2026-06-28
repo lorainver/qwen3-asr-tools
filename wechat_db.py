@@ -1356,6 +1356,43 @@ class WechatDatabaseManager:
         self.conn.commit()
         return True
 
+    def get_all_member_remarks(self) -> List[Dict]:
+        """获取所有已备注的群友列表，包含群信息"""
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT mr.wxid, mr.remark, mr.update_time,
+                   gm.wechat_name, gm.nickname,
+                   GROUP_CONCAT(DISTINCT gm.group_name) as groups,
+                   COUNT(DISTINCT gm.group_name) as group_count,
+                   SUM(gm.message_count) as total_messages
+            FROM member_remarks mr
+            LEFT JOIN group_members gm ON mr.wxid = gm.wxid
+            GROUP BY mr.wxid
+            ORDER BY mr.update_time DESC
+        """)
+        results = []
+        for row in cursor.fetchall():
+            groups_str = row["groups"] or ""
+            groups_list = [g.strip() for g in groups_str.split(",") if g.strip()]
+            results.append({
+                "wxid": row["wxid"],
+                "remark": row["remark"],
+                "update_time": row["update_time"],
+                "wechat_name": row["wechat_name"] or "",
+                "nickname": row["nickname"] or "",
+                "groups": groups_list,
+                "group_count": row["group_count"] or 0,
+                "total_messages": row["total_messages"] or 0
+            })
+        return results
+
+    def delete_member_remark(self, wxid: str) -> bool:
+        """删除指定群友的备注"""
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM member_remarks WHERE wxid = ?", (wxid,))
+        self.conn.commit()
+        return cursor.rowcount > 0
+
     def get_solicitation_suggestions(self, wxid: str, session_id: int = None) -> List[str]:
         """从历史接龙消息中智能推断并提取推荐的群友备注名称"""
         cursor = self.conn.cursor()
