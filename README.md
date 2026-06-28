@@ -142,6 +142,28 @@ D:\qwen3-asr\venv\Scripts\python.exe d:\qwen3-asr\web_app.py
 3. **快速释放**：运行本地 GPU 模型后若想玩游戏，可直接点击网页侧边栏的 **“一键释放显存”** 按钮或在控制台按下 **Ctrl+C**，服务将在 3秒内秒退，百分之百回收显存。
 4. **长上下文维护**：若长时间进行对话，长上下文会导致 Ollama 缓存显存增加，推荐定期点击 **“新建对话”** 来刷新状态。
 
+### 3. 常用微信数据库维护命令
+
+#### 刷新群成员群昵称（从 ext_buffer 解析群名牌）
+
+当发现部分群聊的群成员昵称显示为微信昵称而非群内设置的群名牌（如“谁谁谁妈妈”、“谁谁谁爸爸”），可运行以下命令重新导入所有群成员数据。该命令会从微信本地缓存的 `contact.db` 中解析 `ext_buffer` 字段，提取每个群成员在群内设置的真实群名牌，并写入 `group_members` 表的 `nickname` 字段：
+
+```powershell
+cd D:\qwen3-asr
+python -c "from wechat_db import wechat_db; total = wechat_db.import_group_members_via_cli(); print(f'导入完成，共 {total} 条记录')"
+```
+
+**工作原理**：
+1. 从 `wechat-cli` 解密缓存中读取 `contact.db` 的 `chat_room` 表 `ext_buffer` 字段
+2. 解析 protobuf 格式，提取每个群成员的 `wxid → 群名牌` 映射
+3. 遍历所有群聊会话，调用 `wechat-cli members` 获取成员列表
+4. 优先使用 `ext_buffer` 解析出的群名牌作为 `nickname`，无群名牌时回退到 `wechat-cli` 返回的 `display_name`
+
+**适用场景**：
+- 新导入群聊后发现群昵称显示不正确
+- 群成员修改了群名牌后需要刷新
+- 从新电脑恢复微信数据后重新同步群成员信息
+
 ---
 
 ## 🔌 第三方工具适配与补丁备份 (Third-Party Tool Adapters & Patches)
