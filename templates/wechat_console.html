@@ -3315,6 +3315,9 @@
         // ==================== 群友分析与重叠度分析 JS ====================
         let currentConsoleTab = 'message';
         let overlapChartInstance = null;
+        let overlapFilteredGroup = null;  // currently filtered group name, null = show all
+        let overlapAllMembers = [];       // full unfiltered members list
+        let overlapGroupColorMap = {};    // group->color mapping
 
         function switchConsoleTab(tab) {
             currentConsoleTab = tab;
@@ -3502,34 +3505,89 @@
                 });
             }
 
-            // Render Detailed overlap members table
-            const tbody = document.getElementById('overlap-detailed-members-tbody');
-            tbody.innerHTML = '';
-            if (data.members.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-muted,#64748b);">无重叠群成员数据</td></tr>';
-            } else {
-                data.members.forEach(m => {
-                    const name = m.wechat_name || '未知';
-                    const nick = m.nickname ? ` (${m.nickname})` : '';
-                    const remark = m.custom_remark ? ` <span style="color:#10b981;font-weight:bold;">[${escapeHtml(m.custom_remark)}]</span>` : '';
-                    const tr = document.createElement('tr');
-                    tr.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
-                    tr.innerHTML = `
-                        <td style="padding: 10px 14px; font-weight: 500; color: #f8fafc;">
-                            <span style="cursor: pointer; color: #38bdf8;" onclick="showMemberProfile('${escapeHtml(m.wxid)}')">👤 ${escapeHtml(name + nick)}${remark}</span>
-                        </td>
-                        <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: #94a3b8;">${escapeHtml(m.wxid)}</td>
-                        <td style="padding: 10px 14px; text-align: center; font-weight: bold; color: #8b5cf6;">${m.group_count}</td>
-                        <td style="padding: 10px 14px; font-size: 0.8rem; color: #64748b;">
-                            ${m.groups.map(g => { const c = groupColorMap[g] || groupColorPalette[0]; return `<span style="display:inline-block;background:${c.bg};color:${c.fg};padding:2px 8px;border-radius:12px;margin-right:4px;margin-bottom:4px;">${escapeHtml(g)}</span>`; }).join('')}
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
+            // Store globally for filtering
+            overlapAllMembers = data.members;
+            overlapGroupColorMap = groupColorMap;
+            overlapFilteredGroup = null;
+
+            renderOverlapMembersTable(data.members, groupColorMap, null);
+            // (table rendering moved to renderOverlapMembersTable function)
             
             // Render ECharts overlap chart
             renderOverlapEChart(data.group_distribution, data.members, groupColorMap);
+        }
+
+        function filterOverlapByGroup(groupName) {
+            if (overlapFilteredGroup === groupName) {
+                // Toggle off: show all
+                overlapFilteredGroup = null;
+                renderOverlapMembersTable(overlapAllMembers, overlapGroupColorMap, null);
+            } else {
+                // Filter to this group
+                overlapFilteredGroup = groupName;
+                const filtered = overlapAllMembers.filter(m => m.groups && m.groups.includes(groupName));
+                renderOverlapMembersTable(filtered, overlapGroupColorMap, groupName);
+            }
+        }
+
+        function renderOverlapMembersTable(members, colorMap, activeGroup) {
+            const palette = [
+                {bg:'rgba(139,92,246,0.12)', fg:'#a78bfa'},
+                {bg:'rgba(56,189,248,0.12)', fg:'#38bdf8'},
+                {bg:'rgba(16,185,129,0.12)', fg:'#34d399'},
+                {bg:'rgba(251,146,60,0.12)', fg:'#fb923c'},
+                {bg:'rgba(244,114,182,0.12)', fg:'#f472b6'},
+                {bg:'rgba(250,204,21,0.12)', fg:'#facc15'},
+                {bg:'rgba(45,212,191,0.12)', fg:'#2dd4bf'},
+                {bg:'rgba(248,113,113,0.12)', fg:'#f87171'},
+                {bg:'rgba(168,162,158,0.12)', fg:'#a8a29e'},
+                {bg:'rgba(129,140,248,0.12)', fg:'#818cf8'},
+            ];
+            const tbody = document.getElementById('overlap-detailed-members-tbody');
+            tbody.innerHTML = '';
+
+            // Show filter indicator
+            if (activeGroup) {
+                const indicator = document.createElement('tr');
+                indicator.innerHTML = `<td colspan="4" style="padding:8px 14px;background:rgba(56,189,248,0.08);font-size:0.82rem;">
+                    <span style="color:#38bdf8;">🔍 已筛选: </span>
+                    <span style="cursor:pointer;color:#f8fafc;font-weight:600;" onclick="filterOverlapByGroup('${escapeHtml(activeGroup)}')">「${escapeHtml(activeGroup)}」</span>
+                    <span style="color:#64748b;"> · ${members.length} 人 · </span>
+                    <span style="cursor:pointer;color:#38bdf8;text-decoration:underline;" onclick="filterOverlapByGroup('${escapeHtml(activeGroup)}')">点击恢复全部</span>
+                </td>`;
+                tbody.appendChild(indicator);
+            }
+
+            if (members.length === 0) {
+                tbody.innerHTML += '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-muted,#64748b);">无重叠群成员数据</td></tr>';
+                return;
+            }
+
+            members.forEach(m => {
+                const name = m.wechat_name || '未知';
+                const nick = m.nickname ? ' (' + m.nickname + ')' : '';
+                const remark = m.custom_remark ? ' <span style="color:#10b981;font-weight:bold;">[' + escapeHtml(m.custom_remark) + ']</span>' : '';
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+                if (activeGroup) tr.style.background = 'rgba(56,189,248,0.02)';
+                tr.innerHTML = `
+                    <td style="padding: 10px 14px; font-weight: 500; color: #f8fafc;">
+                        <span style="cursor: pointer; color: #38bdf8;" onclick="showMemberProfile('${escapeHtml(m.wxid)}')">👤 ${escapeHtml(name + nick)}${remark}</span>
+                    </td>
+                    <td style="padding: 10px 14px; font-family: monospace; font-size: 0.8rem; color: #94a3b8;">${escapeHtml(m.wxid)}</td>
+                    <td style="padding: 10px 14px; text-align: center; font-weight: bold; color: #8b5cf6;">${m.group_count}</td>
+                    <td style="padding: 10px 14px; font-size: 0.8rem; color: #64748b;">
+                        ${m.groups.map(g => {
+                            const c = (colorMap && colorMap[g]) ? colorMap[g] : palette[0];
+                            const isActive = activeGroup === g;
+                            const border = isActive ? 'border:1px solid ' + c.fg + ';' : '';
+                            const cursor = 'cursor:pointer;';
+                            return '<span style="display:inline-block;background:' + c.bg + ';color:' + c.fg + ';padding:2px 8px;border-radius:12px;margin-right:4px;margin-bottom:4px;' + border + cursor + '" onclick="filterOverlapByGroup(\'' + escapeHtml(g) + '\')">' + escapeHtml(g) + '</span>';
+                        }).join('')}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         function renderOverlapEChart(distribution, members, colorMap) {
