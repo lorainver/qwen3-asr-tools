@@ -942,12 +942,106 @@ class WechatDatabaseManager:
         return count
 
     def import_group_members_via_cli(self) -> int:
-        """调用 wechat-cli members 命令获取所有群聊的成员并导入数据库"""
+        """调用 wechat-cli members 命令获取所有群聊的成员并导入数据库，并解析 contact.db 的 ext_buffer 提取群名片"""
         import subprocess
         import json
         import os
+        import tempfile
+        import sqlite3
         
-        # 1. 获取数据库中所有的群聊会话
+        # 1. 尝试从 wechat-cli 的解密缓存中读取 contact.db 并解析所有群名片 (ext_buffer)
+        group_cards = {} # {group_wxid: {member_wxid: group_card}}
+        try:
+            cache_dir = os.path.join(tempfile.gettempdir(), "wechat_cli_cache")
+            mtime_file = os.path.join(cache_dir, "_mtimes.json")
+            if os.path.exists(mtime_file):
+                with open(mtime_file, "r", encoding="utf-8") as f:
+                    mtime_data = json.load(f)
+                contact_tmp = None
+                for k, v in mtime_data.items():
+                    if "contact.db" in k:
+                        contact_tmp = v["path"]
+                        break
+                if contact_tmp and os.path.exists(contact_tmp):
+                    c_conn = sqlite3.connect(contact_tmp)
+                    c_cursor = c_conn.cursor()
+                    c_cursor.execute("SELECT username, ext_buffer FROM chat_room WHERE ext_buffer IS NOT NULL")
+                    for c_row in c_cursor.fetchall():
+                        g_wxid, buf = c_row
+                        if not buf:
+                            continue
+                        cards = {}
+                        pos = 0
+                        limit = len(buf)
+                        while pos < limit:
+                            if buf[pos] == 0x0A:
+                                pos += 1
+                                if pos >= limit: break
+                                sub_len = buf[pos]
+                                if sub_len & 0x80:
+                                    shift = 7
+                                    sub_len = sub_len & 0x7F
+                                    while True:
+                                        pos += 1
+                                        if pos >= limit: break
+                                        b = buf[pos]
+                                        sub_len |= (b & 0x7F) << shift
+                                        shift += 7
+                                        if not (b & 0x80):
+                                            break
+                                pos += 1
+                                sub_end = pos + sub_len
+                                if sub_end > limit: break
+                                
+                                m_wxid = None
+                                m_card = None
+                                sub_pos = pos
+                                while sub_pos < sub_end:
+                                    tag = buf[sub_pos]
+                                    sub_pos += 1
+                                    if sub_pos >= sub_end: break
+                                    wire_type = tag & 0x07
+                                    field_num = tag >> 3
+                                    if wire_type == 2:
+                                        l = buf[sub_pos]
+                                        if l & 0x80:
+                                            shift = 7
+                                            l = l & 0x7F
+                                            while True:
+                                                sub_pos += 1
+                                                if sub_pos >= sub_end: break
+                                                b = buf[sub_pos]
+                                                l |= (b & 0x7F) << shift
+                                                shift += 7
+                                                if not (b & 0x80):
+                                                    break
+                                        sub_pos += 1
+                                        val_bytes = buf[sub_pos:sub_pos+l]
+                                        sub_pos += l
+                                        if field_num == 1:
+                                            m_wxid = val_bytes.decode('utf-8', errors='ignore')
+                                        elif field_num == 2:
+                                            m_card = val_bytes.decode('utf-8', errors='ignore')
+                                    elif wire_type == 0:
+                                        while sub_pos < sub_end:
+                                            b = buf[sub_pos]
+                                            sub_pos += 1
+                                            if not (b & 0x80):
+                                                break
+                                    else:
+                                        break
+                                if m_wxid:
+                                    cards[m_wxid] = m_card
+                                pos = sub_end
+                            else:
+                                pos += 1
+                        if cards:
+                            group_cards[g_wxid] = cards
+                    c_conn.close()
+        except Exception as ex:
+            print("Warning: failed to parse chat_room ext_buffer:", ex)
+
+        # 2. 获取数据库中所有的群聊会话
         cursor = self.conn.cursor()
         cursor.execute("SELECT id, display_name, wxid FROM sessions WHERE type = '群聊'")
         group_sessions = cursor.fetchall()
@@ -963,7 +1057,7 @@ class WechatDatabaseManager:
             sess_id = sess["id"]
             group_name = sess["display_name"]
             
-            # 调用 wechat-cli members 获取该群的成员列表（使用唯一的 wxid 避免名字编码或特殊字符歧义）
+            # 调用 wechat-cli members 获取该群的成员列表
             try:
                 result = subprocess.run(
                     ['wechat-cli', 'members', '--format', 'json', '--', sess["wxid"]],
@@ -975,7 +1069,7 @@ class WechatDatabaseManager:
                 data = json.loads(result.stdout)
                 members = data.get('members', [])
                 
-                # 统计每个成员在该群聊中的消息数量（因为 messages 中的 sender_username 与 sender_display_name 实际存储的都是显示名/昵称，故需按显示名统计后由昵称映射回微信ID）
+                # 统计每个成员在该群聊中的消息数量
                 cursor.execute("""
                     SELECT sender_display_name, COUNT(*) as msg_cnt 
                     FROM messages 
@@ -988,7 +1082,10 @@ class WechatDatabaseManager:
                 for m in members:
                     wxid = m['username']
                     wechat_name = m['nick_name'] or ''
-                    nickname = m['display_name'] or wechat_name
+                    
+                    # 优先获取我们从 ext_buffer 中解析出的真实群名片 (Group Card)
+                    g_card = group_cards.get(sess["wxid"], {}).get(wxid)
+                    nickname = g_card if g_card else (m['display_name'] or wechat_name)
                     
                     # 匹配消息数：将可能在 messages 表中出现的显示名/昵称/微信ID的值进行累计
                     possible_names = {wechat_name, nickname, wxid}
