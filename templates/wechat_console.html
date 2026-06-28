@@ -3529,10 +3529,10 @@
             }
             
             // Render ECharts overlap chart
-            renderOverlapEChart(data.group_distribution);
+            renderOverlapEChart(data.group_distribution, data.members);
         }
 
-        function renderOverlapEChart(distribution) {
+        function renderOverlapEChart(distribution, members) {
             const chartDom = document.getElementById('overlap-echarts-chart');
             if (!chartDom) return;
             
@@ -3550,7 +3550,20 @@
                     trigger: 'axis',
                     formatter: function(params) {
                         const p = params[0];
-                        return `${p.name}: ${p.value} 人 (占比 ${p.data.d}%)`;
+                        const gName = p.name;
+                        // Find members belonging to this group
+                        const groupMembers = (members || []).filter(m => m.groups && m.groups.includes(gName));
+                        let memberHtml = '';
+                        if (groupMembers.length > 0) {
+                            const items = groupMembers.map(m => {
+                                const name = m.wechat_name || '未知';
+                                const nick = m.nickname && m.nickname !== m.wechat_name ? ' (' + m.nickname + ')' : '';
+                                const remark = m.custom_remark ? ' [' + m.custom_remark + ']' : '';
+                                return '<span style="display:inline-block;margin:2px 4px;padding:1px 6px;background:rgba(255,255,255,0.06);border-radius:6px;font-size:11px;">' + escapeHtml(name + nick + remark) + '</span>';
+                            });
+                            memberHtml = '<div style="margin-top:6px;max-width:380px;line-height:1.8;">' + items.join('') + '</div>';
+                        }
+                        return `<div style="font-weight:600;margin-bottom:4px;">${gName}: ${p.value} 人 (占比 ${p.data.d}%)</div>${memberHtml}`;
                     }
                 },
                 grid: {
