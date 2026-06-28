@@ -1193,8 +1193,11 @@ class WechatDatabaseManager:
                     group_overlap_counts[g] = group_overlap_counts.get(g, 0) + 1
             else:
                 members_only_in_target.append({
+                    "wxid": wxid,
                     "wechat_name": m["wechat_name"],
-                    "nickname": m["nickname"]
+                    "nickname": m["nickname"],
+                    "custom_remark": m["custom_remark"] or "",
+                    "message_count": m["message_count"]
                 })
                 
         # Sort group distribution

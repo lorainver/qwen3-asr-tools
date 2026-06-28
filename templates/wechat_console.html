@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -1733,8 +1733,8 @@
                             <!-- Overlap Grid Summary cards -->
                             <div class="overlap-stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 10px;">
                                 <div class="stat-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; text-align: center;">
-                                    <div class="number" id="overlap-num-total" style="font-size: 1.5rem; font-weight: bold; color: #8b5cf6;">0</div>
-                                    <div class="label" style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">总群友数</div>
+                                    <div class="number" id="overlap-num-total" style="font-size: 1.5rem; font-weight: bold; color: #8b5cf6; cursor: pointer; text-decoration: underline dotted;" onclick="showAllMembersModal()" title="点击查看全部群友列表">0</div>
+                                    <div class="label" style="font-size: 0.75rem; color: #64748b; margin-top: 4px; cursor: pointer;" onclick="showAllMembersModal()">总群友数 (点击查看)</div>
                                 </div>
                                 <div class="stat-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; text-align: center;">
                                     <div class="number" id="overlap-num-cross" style="font-size: 1.5rem; font-weight: bold; color: #38bdf8;">0</div>
@@ -3449,6 +3449,18 @@
             document.getElementById('wechat-overlap-stats').textContent = `目标群聊: ${data.target_group}`;
             
             document.getElementById('overlap-num-total').textContent = data.total_members;
+
+    // 收集全量群友数据（重叠群友 + 仅在当前群的群友）
+    allMembersData = [];
+    if (data.members) {
+        data.members.forEach(m => { allMembersData.push({...m, type: "overlap"}); });
+    }
+    if (data.only_target_members) {
+        data.only_target_members.forEach(m => { allMembersData.push({...m, type: "only_target"}); });
+    }
+    // 按消息数降序排序
+    allMembersData.sort((a, b) => (b.message_count || 0) - (a.message_count || 0));
+
             document.getElementById('overlap-num-cross').textContent = data.members_in_other_groups;
             document.getElementById('overlap-num-only').textContent = data.members_only_in_target;
             document.getElementById('overlap-num-groups').textContent = data.group_distribution.length;
@@ -4221,7 +4233,74 @@
                 closeMemberProfileModal();
             }
         });
-</script>
+
+// ==================== 全量群友列表 Modal ====================
+var allMembersData = [];
+
+function showAllMembersModal() {
+    if (!allMembersData || allMembersData.length === 0) {
+        alert('暂无群友数据，请先运行群友分布分析');
+        return;
+    }
+    renderAllMembersList(allMembersData);
+    document.getElementById('wechat-all-members-modal').style.display = 'flex';
+    document.getElementById('all-members-search').value = '';
+}
+
+function closeAllMembersModal() {
+    document.getElementById('wechat-all-members-modal').style.display = 'none';
+}
+
+function filterAllMembers(keyword) {
+    keyword = keyword.toLowerCase();
+    const filtered = allMembersData.filter(m => {
+        const name = (m.wechat_name || '').toLowerCase();
+        const nick = (m.nickname || '').toLowerCase();
+        const remark = (m.custom_remark || '').toLowerCase();
+        return name.includes(keyword) || nick.includes(keyword) || remark.includes(keyword);
+    });
+    renderAllMembersList(filtered);
+}
+
+function renderAllMembersList(members) {
+    const container = document.getElementById('all-members-list');
+    document.getElementById('all-members-count-badge').textContent = members.length + '人';
+    container.innerHTML = '';
+    if (members.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:30px;color:#64748b;">无匹配结果</div>';
+        return;
+    }
+    members.forEach((m, i) => {
+        const name = m.wechat_name || '未知';
+        const nick = m.nickname ? ' (' + m.nickname + ')' : '';
+        const remark = m.custom_remark ? ' <span style="color:#10b981;font-weight:bold;">[' + escapeHtml(m.custom_remark) + ']</span>' : '';
+        const msgCnt = m.message_count || 0;
+        const isOverlap = m.groups && m.groups.length > 0;
+        const tag = isOverlap ? '<span style="display:inline-block;background:rgba(56,189,248,0.12);color:#38bdf8;padding:1px 6px;border-radius:8px;font-size:0.7rem;margin-left:6px;">跨群</span>' : '';
+        const item = document.createElement('div');
+        item.style.cssText = 'padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; border-radius: 6px; transition: background 0.15s;';
+        item.onmouseenter = function() { this.style.background = 'rgba(255,255,255,0.03)'; };
+        item.onmouseleave = function() { this.style.background = 'transparent'; };
+        item.innerHTML = '<div style="display:flex;align-items:center;gap:8px;min-width:0;">'
+            + '<span style="color:#64748b;font-size:0.75rem;width:28px;text-align:right;">' + (i+1) + '.</span>'
+            + '<span style="cursor:pointer;color:#38bdf8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" onclick="closeAllMembersModal();showMemberProfile(\'' + escapeHtml(m.wxid) + '\')" title="' + escapeHtml(name + nick) + '">👤 ' + escapeHtml(name + nick) + '</span>'
+            + remark + tag
+            + '</div>'
+            + '<div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">'
+            + '<span style="font-family:monospace;font-size:0.72rem;color:#475569;">' + escapeHtml(m.wxid || '') + '</span>'
+            + (msgCnt > 0 ? '<span style="font-size:0.72rem;color:#8b5cf6;">' + msgCnt + '条</span>' : '')
+            + '</div>';
+        container.appendChild(item);
+    });
+}
+
+// Click outside to close
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('wechat-all-members-modal');
+    if (e.target === modal) {
+        closeAllMembersModal();
+    }
+});</script>
 
     <!-- Member Footprint Profile Modal -->
     <div id="wechat-member-profile-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
@@ -4235,6 +4314,22 @@
             </div>
         </div>
     </div>
+
+<!-- 全量群友列表 Modal -->
+<div id="wechat-all-members-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(4px);">
+    <div style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popIn 0.25s ease-out;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.01);">
+            <h4 style="margin: 0; color: #8b5cf6; display: flex; align-items: center; gap: 8px;">👥 全部群友列表 <span id="all-members-count-badge" style="font-size:0.75rem;background:rgba(139,92,246,0.15);color:#a78bfa;padding:2px 10px;border-radius:12px;">0人</span></h4>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <input type="text" id="all-members-search" placeholder="🔍 搜索昵称/群名片/备注..." style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 12px;color:#e2e8f0;font-size:0.82rem;width:200px;outline:none;" oninput="filterAllMembers(this.value)">
+                <button onclick="closeAllMembersModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+        </div>
+        <div id="all-members-list" style="padding: 12px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 2px; color: #cbd5e1; font-size: 0.85rem;">
+            <!-- Filled dynamically -->
+        </div>
+    </div>
+</div>
 </body>
 
 </html>
