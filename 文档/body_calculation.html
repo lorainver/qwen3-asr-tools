@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全身演算演示 - 5+8=13 手指+脚趾联动</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 50%, #0d1117 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 25px 20px 15px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(100,200,255,0.2);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            background: linear-gradient(90deg, #00d4ff, #7b68ee, #00d4ff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+            margin-bottom: 8px;
+        }
+
+        @keyframes shimmer { to { background-position: 200% center; } }
+
+        .header .subtitle { color: #888; font-size: 0.95em; }
+
+        /* ===== 主演算区域 ===== */
+        .main-stage {
+            position: relative;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .stage-area {
+            position: relative;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(100,200,255,0.18);
+            border-radius: 18px;
+            overflow: hidden;
+            height: 520px;
+        }
+
+        .stage-area::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(100,200,255,0.04) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } }
+
+        /* ===== SVG 画布 ===== */
+        .stage-svg {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 手掌 */
+        .palm { fill: #f4a460; stroke: #c8943e; stroke-width: 2; }
+
+        /* 手指 */
+        .finger {
+            fill: #f5cba7;
+            stroke: #c8943e;
+            stroke-width: 2;
+            transition: all 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center bottom;
+        }
+        .finger.active {
+            fill: #00ff88;
+            stroke: #00ff88;
+            filter: drop-shadow(0 0 14px rgba(0,255,136,0.7));
+        }
+        .finger.counting { animation: finPop 0.45s ease-out; }
+        @keyframes finPop { 0%{transform:scale(1) translateY(0)} 50%{transform:scale(1.18) translateY(-10px)} 100%{transform:scale(1) translateY(0)} }
+
+        /* 脚掌 */
+        .foot-palm { fill: #e8a87c; stroke: #c07a4a; stroke-width: 2; }
+
+        /* 脚趾 */
+        .toe {
+            fill: #f0c090;
+            stroke: #a07050;
+            stroke-width: 2;
+            transition: all 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .toe.active {
+            fill: #00ff88;
+            stroke: #00ff88;
+            filter: drop-shadow(0 0 14px rgba(0,255,136,0.7));
+        }
+        .toe.counting { animation: toePop 0.45s ease-out; }
+        @keyframes toePop { 0%{transform:scale(1)} 50%{transform:scale(1.35)} 100%{transform:scale(1)} }
+
+        /* 数字标签 */
+        .digit-label {
+            fill: #fff; font-size: 15px; font-weight: bold;
+            text-anchor: middle;
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        .digit-label.show { opacity: 1; }
+
+        /* 公式浮层 */
+        .formula-overlay {
+            position: absolute;
+            top: 18px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            color: #7b68ee;
+            font-weight: 900;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: 10;
+            text-shadow: 0 0 18px rgba(123,104,238,0.6);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .formula-overlay.show { opacity: 1; }
+
+        /* 步骤标题浮层 */
+        .step-banner {
+            position: absolute;
+            bottom: 18px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,20,50,0.82);
+            border: 1px solid rgba(100,200,255,0.3);
+            border-radius: 12px;
+            padding: 10px 28px;
+            font-size: 1.15em;
+            color: #00d4ff;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: 10;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .step-banner.show { opacity: 1; }
+
+        /* ===== 讲解区 ===== */
+        .narrative-box {
+            max-width: 1000px;
+            margin: 18px auto 0;
+            padding: 0 20px;
+        }
+
+        .narrative-inner {
+            background: rgba(0,20,45,0.65);
+            border: 1px solid rgba(100,200,255,0.2);
+            border-radius: 14px;
+            padding: 22px 26px;
+            min-height: 130px;
+        }
+
+        .narrative-inner h2 {
+            color: #7b68ee;
+            font-size: 1.15em;
+            margin-bottom: 12px;
+        }
+
+        .narrative-inner p {
+            color: #b8b8b8;
+            line-height: 1.75;
+            font-size: 0.92em;
+        }
+
+        .narrative-inner .ai-logic {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: rgba(123,104,238,0.1);
+            border-left: 3px solid #7b68ee;
+            border-radius: 0 8px 8px 0;
+            color: #c9b8ff;
+            font-size: 0.88em;
+            line-height: 1.7;
+        }
+
+        /* ===== 步骤进度条 ===== */
+        .progress-bar {
+            max-width: 1000px;
+            margin: 18px auto 0;
+            padding: 0 20px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .progress-seg {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            transition: all 0.5s ease;
+        }
+        .progress-seg.active { background: #00d4ff; box-shadow: 0 0 10px rgba(0,212,255,0.5); }
+        .progress-seg.done { background: #00ff88; }
+
+        /* ===== 控制面板 ===== */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            padding: 22px;
+            background: rgba(255,255,255,0.03);
+            border-top: 1px solid rgba(100,200,255,0.18);
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .btn {
+            padding: 11px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            color: #fff;
+        }
+        .btn-play:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,212,255,0.4); }
+        .btn-play:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+        .btn-reset {
+            background: rgba(255,100,100,0.18);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,100,100,0.3);
+        }
+        .btn-reset:hover { background: rgba(255,100,100,0.28); }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .speed-control input[type="range"] {
+            width: 140px; height: 5px;
+            -webkit-appearance: none;
+            background: rgba(100,200,255,0.2);
+            border-radius: 3px; outline: none;
+        }
+        .speed-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px;
+            background: #00d4ff; border-radius: 50%; cursor: pointer;
+        }
+
+        /* ===== 结果弹窗 ===== */
+        .result-popup {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.3);
+            background: rgba(0,40,20,0.92);
+            border: 2px solid #00ff88;
+            border-radius: 20px;
+            padding: 30px 50px;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 20;
+            pointer-events: none;
+        }
+        .result-popup.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .result-popup .big-num {
+            font-size: 4em;
+            color: #00ff88;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(0,255,136,0.5);
+        }
+        .result-popup .label { color: #888; margin-top: 8px; font-size: 1em; }
+
+        /* ===== 粒子 ===== */
+        .data-particle {
+            position: absolute;
+            width: 5px; height: 5px;
+            background: #00d4ff;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 0 8px #00d4ff;
+            z-index: 5;
+        }
+
+        /* ===== 加载 ===== */
+        .loading-overlay {
+            position: fixed; top:0; left:0;
+            width:100%; height:100%;
+            background: #0a0e27;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+        .loader {
+            width: 56px; height: 56px;
+            border: 4px solid rgba(100,200,255,0.18);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.4em; }
+            .stage-area { height: 400px; }
+            .formula-overlay { font-size: 1.4em; }
+            .narrative-inner { padding: 16px; }
+            .controls { flex-direction: column; align-items: center; }
+            .btn { width: 85%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载 -->
+    <div class="loading-overlay" id="loadingOverlay"><div class="loader"></div></div>
+
+    <div class="header">
+        <h1>🧮 全身演算演示</h1>
+        <p class="subtitle">5 + 8 = 13 · 手指 + 脚趾联动 · AI 计算链路可视化</p>
+    </div>
+
+    <!-- 主舞台 -->
+    <div class="main-stage">
+        <div class="stage-area" id="stageArea">
+            <div class="formula-overlay" id="formulaOverlay"></div>
+            <div class="step-banner" id="stepBanner"></div>
+            <div class="result-popup" id="resultPopup">
+                <div class="big-num">5 + 8 = 13</div>
+                <div class="label">✅ 计算完成 · 双模态校验通过</div>
+            </div>
+            <svg class="stage-svg" id="stageSvg" viewBox="0 0 960 520"></svg>
+        </div>
+    </div>
+
+    <!-- 进度条 -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- 讲解区 -->
+    <div class="narrative-box">
+        <div class="narrative-inner" id="narrativeBox">
+            <h2>📝 准备就绪</h2>
+            <p>点击<strong>「开始演算」</strong>按钮，观看 5 + 8 = 13 的完整手指+脚趾联动计算过程。</p>
+        </div>
+    </div>
+
+    <!-- 控制 -->
+    <div class="controls">
+        <button class="btn btn-play" id="btnPlay" onclick="startCalc()">▶️ 开始演算</button>
+        <button class="btn btn-reset" onclick="resetCalc()">🔄 重置</button>
+        <div class="speed-control">
+            <span>🐢</span>
+            <input type="range" id="speedSlider" min="0.4" max="2.5" step="0.1" value="1" oninput="updateSpeed(this.value)">
+            <span id="speedValue">1.0x</span>
+            <span>🐇</span>
+        </div>
+    </div>
+
+    <script>
+        /* =====================================================
+         *  全局状态
+         * ===================================================== */
+        let stepIdx  = 0;
+        let playing  = false;
+        let speed    = 1.0;
+        let timer    = null;
+
+        /* =====================================================
+         *  演算步骤（核心！）
+         *  每一步：formula=公式浮层，banner=底部提示，
+         *         narrative=讲解文字，aiLogic=AI逻辑块
+         *         action=执行的肢体动作函数
+         * ===================================================== */
+        const STEPS = [
+            {
+                // ── 第1步：启动 ───────────────────────────
+                formula : '5 + 8 = ?',
+                banner  : '⚡ 步骤 1 / 6 · 计算启动',
+                narrative: 'AI 收到计算指令 <strong>5 + 8</strong>。\n\n这道题的答案是 <strong>13</strong>，但 13 超过了手指总数（10根），所以需要用上<strong>脚趾</strong>才能完整演示整个计算过程。\n\n准备好双手和双脚，开始联动演算！',
+                aiLogic  : '输入解析：operand_A=5, operand_B=8, op=ADD。检测到 result=13 > 10（手指上限），触发 Cross_Modal_Calculation：同时激活手指计数引擎和脚趾计数引擎，准备双模态并行计算。',
+                action   : null   // 无肢体动作，纯展示
+            },
+            {
+                // ── 第2步：先表示 5（左手5根手指）────────────
+                formula : '5 + 8  →  先放 5',
+                banner  : '🖐️ 步骤 2 / 6 · 展开第一个加数：5',
+                narrative: '第一步：表示数字 <strong>5</strong>。\n\n我们把<strong>左手的 5 根手指全部展开</strong>，每根手指代表 1，5 根就是 5。\n\n现在左手已经用完了（5/10），接下来要加 8，还需要 8 个计数单元。',
+                aiLogic  : 'Finger_Counting_Path：左手 5 根手指全部激活（L0~L4 = ACTIVE），计数寄存器 R1 = 5。\n\n剩余手指容量 = 10 - 5 = 5，不足以容纳 operand_B=8，触发跨肢体借位（Cross_Body_Borrow）。',
+                action   : 'step2'  // 左手5根激活
+            },
+            {
+                // ── 第3步：加 8，先用完右手5根 ───────────────
+                formula : '5 + 5 = 10',
+                banner  : '🖐️🖐️ 步骤 3 / 6 · 加 8（先用完右手 5 根）',
+                narrative: '第二步：加数字 <strong>8</strong>。\n\n我们先把<strong>右手的 5 根手指也全部展开</strong>，这样手上总共有 5 + 5 = <strong>10</strong>。\n\n但 8 还没加完！我们已经加了 5（右手），还需要再加 <strong>3</strong> 才能凑满 8。',
+                aiLogic  : '右手 5 根全部激活（R0~R4 = ACTIVE），手上总计 = 10。\n\noperand_B 已消耗 5，剩余 remainder = 8 - 5 = 3。\n\n手指容量已耗尽（10/10），remainder=3 需要借助脚趾计数引擎继续处理。触发 Toe_Engine_Wake()。',
+                action   : 'step3'  // 右手5根也激活（共10）
+            },
+            {
+                // ── 第4步：用脚趾加剩下的3 ──────────────────
+                formula : '10 + 3 = 13',
+                banner  : '🦶 步骤 4 / 6 · 手指不够，脚趾来凑（+3）',
+                narrative: '第三步：用<strong>脚趾</strong>加完剩下的 3！\n\n手指已经全部用完了（10/10），我们把<strong>左脚的前 3 个脚趾展开</strong>，代表剩下的 3。\n\n现在：左手 5 + 右手 5 + 左脚 3 = <strong>13</strong> ✅',
+                aiLogic  : 'Toe_Counting_Path：左脚前 3 个脚趾激活（TL0~TL2 = ACTIVE）。\n\nTotal = Finger_Left(5) + Finger_Right(5) + Toe_Left(3) = 13。\n\n Cross_Modal_Sum 完成，原始计算结果 = 13。进入校验阶段。',
+                action   : 'step4'  // 左脚前3个脚趾激活
+            },
+            {
+                // ── 第5步：校验 ─────────────────────────────
+                formula : '5 + 8 = 13  ✓',
+                banner  : '✅ 步骤 5 / 6 · 校验复核',
+                narrative: '现在进行<strong>交叉校验</strong>：\n\n① 重新数手指：左手 5 + 右手 5 = 10\n② 重新数脚趾：左脚 3 = 3\n③ 合计：10 + 3 = <strong>13</strong>\n\n用另一种方式验证：右脚展开 5 个 + 右脚再加 3 个 = 8，加上原来的 5 = 13。两种方式结果一致！',
+                aiLogic  : 'Consistency_Check 启动：\n- Path_A（手指全 + 脚趾部分）：10 + 3 = 13\n- Path_B（左手 5 + 右脚 8）：5 + 8 = 13\n- 双路径结果一致，置信度 = 100%。\n\nChecksum 通过，结果锁定。',
+                action   : 'step5'  // 保持现状，加一个"验证光泽"动画
+            },
+            {
+                // ── 第6步：出结果 ────────────────────────────
+                formula : '5 + 8 = 13',
+                banner  : '🎯 步骤 6 / 6 · 计算完成！',
+                narrative: '计算完成！\n\n通过<strong>手指 + 脚趾联动</strong>，我们直观地演示了 5 + 8 = 13 的完整过程：\n\n① 左手 5 根 → 表示 5\n② 右手 5 根 → 加了 5（共 10）\n③ 左脚 3 趾 → 加了 3（共 13）\n\n这模拟了 AI 的<strong>多路径推理</strong>和<strong>跨模态校验</strong>机制：当单一"模型"（手指）容量不足时，引入辅助"模型"（脚趾）协同计算，最后交叉验证确保结果正确。',
+                aiLogic  : '计算链路关闭。\n输出：RESULT = 13。\n元数据：Cross_Modal = TRUE，双路径校验 = PASS，置信度 = 100%。\n\n类比 AI 推理：当单一推理路径置信度不足时，激活多路径集成（Ensemble Inference），降低幻觉风险。',
+                action   : 'step6'  // 全部高亮，展示结果弹窗
+            }
+        ];
+
+        /* =====================================================
+         *  初始化 SVG（手 + 脚 画布）
+         * ===================================================== */
+        function initSVG() {
+            const svg = document.getElementById('stageSvg');
+            svg.innerHTML = '';
+
+            /* ── 标签：手区 / 脚区 ── */
+            const zoneTitle = (x, y, txt, color) => {
+                const t = createSVG('text', {
+                    x, y, fill: color,
+                    'font-size': '13', 'font-weight': 'bold',
+                    'text-anchor': 'middle', opacity: '0.55'
+                });
+                t.textContent = txt;
+                svg.appendChild(t);
+            };
+            zoneTitle(240, 38, '← 左手',  '#daa520');
+            zoneTitle(720, 38, '右手 →', '#daa520');
+            zoneTitle(240, 498, '← 左脚', '#c07a4a');
+            zoneTitle(720, 498, '右脚 →', '#c07a4a');
+
+            /* ══════════════════════════════════════════════════
+             *  左手（上方偏左）
+             *  ════════════════════════════════════════════════ */
+            const LP = createSVG('ellipse', { cx:240, cy:120, rx:55, ry:38, class:'palm' });
+            svg.appendChild(LP);
+
+            // 左手指 5 根
+            const LFP = [
+                { x:210, y:68 },  // 小指
+                { x:228, y:58 },  // 无名指
+                { x:242, y:54 },  // 中指
+                { x:256, y:58 },  // 食指
+                { x:270, y:66 }   // 拇指
+            ];
+            LFP.forEach((p, i) => {
+                const f = createSVG('rect', {
+                    x:p.x-11, y:p.y-42, width:22, height:48, rx:11,
+                    class:'finger', id:`fL${i}`
+                });
+                svg.appendChild(f);
+                // 数字标签
+                const l = createSVG('text', {
+                    x:p.x, y:p.y-50, class:'digit-label', id:`fL${i}Lbl`
+                });
+                l.textContent = `L${i+1}`;
+                svg.appendChild(l);
+            });
+
+            /* ══════════════════════════════════════════════════
+             *  右手（上方偏右）
+             *  ════════════════════════════════════════════════ */
+            const RP = createSVG('ellipse', { cx:720, cy:120, rx:55, ry:38, class:'palm' });
+            svg.appendChild(RP);
+
+            const RFP = [
+                { x:690, y:66 },  // 拇指
+                { x:704, y:58 },  // 食指
+                { x:718, y:54 },  // 中指
+                { x:732, y:58 },  // 无名指
+                { x:750, y:68 }   // 小指
+            ];
+            RFP.forEach((p, i) => {
+                const f = createSVG('rect', {
+                    x:p.x-11, y:p.y-42, width:22, height:48, rx:11,
+                    class:'finger', id:`fR${i}`
+                });
+                svg.appendChild(f);
+                const l = createSVG('text', {
+                    x:p.x, y:p.y-50, class:'digit-label', id:`fR${i}Lbl`
+                });
+                l.textContent = `R${i+1}`;
+                svg.appendChild(l);
+            });
+
+            /* ══════════════════════════════════════════════════
+             *  左脚（下方偏左）
+             *  ════════════════════════════════════════════════ */
+            const LT = createSVG('ellipse', { cx:240, cy:410, rx:60, ry:32, class:'foot-palm' });
+            svg.appendChild(LT);
+
+            const LTP = [
+                { x:210, y:376 },  // 小趾
+                { x:225, y:371 },  // 无名趾
+                { x:240, y:368 },  // 中趾
+                { x:255, y:371 },  // 食指趾
+                { x:267, y:374 }   // 拇趾
+            ];
+            LTP.forEach((p, i) => {
+                const t = createSVG('circle', {
+                    cx:p.x, cy:p.y, r:13,
+                    class:'toe', id:`tL${i}`
+                });
+                svg.appendChild(t);
+                const l = createSVG('text', {
+                    x:p.x, y:p.y+5, class:'digit-label', id:`tL${i}Lbl`
+                });
+                l.textContent = `L${i+1}`;
+                svg.appendChild(l);
+            });
+
+            /* ══════════════════════════════════════════════════
+             *  右脚（下方偏右）
+             *  ════════════════════════════════════════════════ */
+            const RT = createSVG('ellipse', { cx:720, cy:410, rx:60, ry:32, class:'foot-palm' });
+            svg.appendChild(RT);
+
+            const RTP = [
+                { x:690, y:374 },  // 拇趾
+                { x:706, y:371 },  // 食指趾
+                { x:720, y:368 },  // 中趾
+                { x:735, y:371 },  // 无名趾
+                { x:750, y:376 }   // 小趾
+            ];
+            RTP.forEach((p, i) => {
+                const t = createSVG('circle', {
+                    cx:p.x, cy:p.y, r:13,
+                    class:'toe', id:`tR${i}`
+                });
+                svg.appendChild(t);
+                const l = createSVG('text', {
+                    x:p.x, y:p.y+5, class:'digit-label', id:`tR${i}Lbl`
+                });
+                l.textContent = `R${i+1}`;
+                svg.appendChild(l);
+            });
+        }
+
+        /* ===== SVG 元素创建辅助 ===== */
+        function createSVG(tag, attrs) {
+            const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+            return el;
+        }
+
+        /* ===== 进度条 ===== */
+        function initProgress() {
+            const bar = document.getElementById('progressBar');
+            bar.innerHTML = '';
+            STEPS.forEach((_, i) => {
+                const seg = document.createElement('div');
+                seg.className = 'progress-seg';
+                seg.title = `步骤 ${i+1}`;
+                bar.appendChild(seg);
+            });
+        }
+
+        /* ===== 开始演算 ===== */
+        function startCalc() {
+            if (playing) return;
+            playing  = true;
+            stepIdx  = 0;
+
+            const btn = document.getElementById('btnPlay');
+            btn.disabled = true;
+            btn.textContent = '⏸️ 演算中...';
+
+            // 隐藏结果弹窗
+            document.getElementById('resultPopup').classList.remove('show');
+
+            goStep();
+        }
+
+        /* ===== 执行单步 ===== */
+        function goStep() {
+            if (stepIdx >= STEPS.length) { finishCalc(); return; }
+
+            const step = STEPS[stepIdx];
+            const delay = 2200 / speed;
+
+            // 公式浮层
+            const fo = document.getElementById('formulaOverlay');
+            fo.textContent = step.formula;
+            fo.classList.add('show');
+
+            // 底部 Banner
+            const bn = document.getElementById('stepBanner');
+            bn.textContent = step.banner;
+            bn.classList.add('show');
+
+            // 讲解区（打字机效果）
+            typeNarrative(step.narrative, step.aiLogic);
+
+            // 进度条
+            updateProgress();
+
+            // 肢体动作
+            if (step.action) runAction(step.action);
+
+            // 粒子
+            spawnParticles();
+
+            stepIdx++;
+            timer = setTimeout(goStep, delay);
+        }
+
+        /* ===== 肢体动作 ===== */
+        function runAction(act) {
+            if (act === 'step2') {
+                // 左手5根依次亮起
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        document.getElementById(`fL${i}`).classList.add('active', 'counting');
+                        document.getElementById(`fL${i}Lbl`).classList.add('show');
+                    }, i * 280 / speed);
+                }
+            }
+            if (act === 'step3') {
+                // 右手5根依次亮起
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        document.getElementById(`fR${i}`).classList.add('active', 'counting');
+                        document.getElementById(`fR${i}Lbl`).classList.add('show');
+                    }, i * 280 / speed);
+                }
+            }
+            if (act === 'step4') {
+                // 左脚前3个脚趾亮起
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        document.getElementById(`tL${i}`).classList.add('active', 'counting');
+                        document.getElementById(`tL${i}Lbl`).classList.add('show');
+                    }, i * 350 / speed);
+                }
+            }
+            if (act === 'step5') {
+                // 校验：全部闪烁一次
+                setTimeout(() => {
+                    document.querySelectorAll('.finger.active, .toe.active').forEach(el => {
+                        el.classList.add('counting');
+                        setTimeout(() => el.classList.remove('counting'), 600 / speed);
+                    });
+                }, 400 / speed);
+            }
+            if (act === 'step6') {
+                // 结果：全部保持亮起，显示弹窗
+                setTimeout(() => {
+                    document.getElementById('resultPopup').classList.add('show');
+                }, 800 / speed);
+            }
+        }
+
+        /* ===== 讲解区打字机效果 ===== */
+        function typeNarrative(text, aiLogic) {
+            const box = document.getElementById('narrativeBox');
+
+            // 先解析换行和加粗
+            const lines = text.split('\n');
+            let html = `<h2>📝 ${STEPS[stepIdx].banner.replace(/^\S+\s/, '步骤 ' + (stepIdx + 1) + ' / ' + STEPS.length + ' · ')}</h2>`;
+            lines.forEach(ln => {
+                if (ln.trim()) html += `<p>${ln.replace(/<strong>(.*?)<\/strong>/g, '<strong>$1</strong>')}</p>`;
+            });
+            if (aiLogic) {
+                html += `<div class="ai-logic">🧠 <strong>AI 计算链路：</strong><br>${aiLogic.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            box.style.opacity = '0';
+            setTimeout(() => {
+                box.innerHTML = html;
+                box.style.opacity = '1';
+            }, 300 / speed);
+        }
+
+        /* ===== 更新进度条 ===== */
+        function updateProgress() {
+            const segs = document.getElementById('progressBar').children;
+            for (let i = 0; i < segs.length; i++) {
+                segs[i].className = 'progress-seg';
+                if (i < stepIdx) segs[i].classList.add('done');
+                else if (i === stepIdx) segs[i].classList.add('active');
+            }
+        }
+
+        /* ===== 粒子效果 ===== */
+        function spawnParticles() {
+            const area = document.getElementById('stageArea');
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('div');
+                p.className = 'data-particle';
+                p.style.left = 10 + Math.random() * 80 + '%';
+                p.style.top  = 10 + Math.random() * 80 + '%';
+                area.appendChild(p);
+
+                const ang = Math.random() * Math.PI * 2;
+                const dist = 25 + Math.random() * 50;
+                setTimeout(() => {
+                    p.style.opacity = '1';
+                    p.style.transform = `translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist}px)`;
+                    setTimeout(() => {
+                        p.style.opacity = '0';
+                        setTimeout(() => p.remove(), 500);
+                    }, 600 / speed);
+                }, i * 70);
+                setTimeout(() => { if (p.parentNode) p.remove(); }, 2200);
+            }
+        }
+
+        /* ===== 完成 ===== */
+        function finishCalc() {
+            playing = false;
+            clearTimeout(timer);
+
+            const btn = document.getElementById('btnPlay');
+            btn.disabled = false;
+            btn.textContent = '▶️ 重新演算';
+
+            updateProgress();
+        }
+
+        /* ===== 重置 ===== */
+        function resetCalc() {
+            playing = false;
+            stepIdx = 0;
+            clearTimeout(timer);
+
+            const btn = document.getElementById('btnPlay');
+            btn.disabled = false;
+            btn.textContent = '▶️ 开始演算';
+
+            // 重置全部肢体
+            for (let i = 0; i < 5; i++) {
+                ['fL','fR'].forEach(prefix => {
+                    document.getElementById(prefix+i).classList.remove('active','counting');
+                    document.getElementById(prefix+i+'Lbl').classList.remove('show');
+                });
+                ['tL','tR'].forEach(prefix => {
+                    document.getElementById(prefix+i).classList.remove('active','counting');
+                    document.getElementById(prefix+i+'Lbl').classList.remove('show');
+                });
+            }
+
+            // 隐藏浮层
+            document.getElementById('formulaOverlay').classList.remove('show');
+            document.getElementById('stepBanner').classList.remove('show');
+            document.getElementById('resultPopup').classList.remove('show');
+
+            // 重置讲解区
+            document.getElementById('narrativeBox').innerHTML = `
+                <h2>📝 准备就绪</h2>
+                <p>点击<strong>「开始演算」</strong>按钮，观看 5 + 8 = 13 的完整手指+脚趾联动计算过程。</p>`;
+
+            // 重置进度条
+            const segs = document.getElementById('progressBar').children;
+            for (let i = 0; i < segs.length; i++) segs[i].className = 'progress-seg';
+        }
+
+        /* ===== 速度 ===== */
+        function updateSpeed(v) {
+            speed = parseFloat(v);
+            document.getElementById('speedValue').textContent = speed.toFixed(1) + 'x';
+        }
+
+        /* ===== DOM Ready ===== */
+        window.addEventListener('DOMContentLoaded', () => {
+            initSVG();
+            initProgress();
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 400);
+        });
+    </script>
+</body>
+</html>
