@@ -1,0 +1,230 @@
+# 聊天记录: XSC某八系（五年级）2群
+
+**时间范围:** 2026-01-09 ~ 最新
+
+**导出时间:** 2026-06-27 09:38
+
+**消息数量:** 219
+
+**类型:** 群聊
+
+---
+- [2026-06-08 13:55] [系统] "米妈规划团王老师@米妈圈昕煜朗、米妈助理晨老师@米妈圈昕煜朗、米妈助理刘老师@米妈圈昕煜朗"为企业微信用户，<_wc_custom_link_  href="https://weixin.qq.com/cgi-bin/newreadtemplate?t=work_wechat/about_group">了解更多</_wc_custom_link_>。
+- [2026-06-08 13:55] [系统] 你通过扫描二维码加入群聊，群聊参与人还有：美好的壹次心、Li、🌺婷婷🌺、Yan . 🐳、🌻柚子糖🍭、Anna Zhang、晓玲、牛皮糖、米妈 晚8:00至10:00答疑、多啦꩓露💕、角一丝、hj、阿杜、Vivi、sunshine-ZH、Rian、SISI、无声的搬砖、家有可为、高凤13438332261、Jenny、晴天、Hazel、吴琼、🙀难得糊涂😾、黄姣尧、胡廷朋、半盏纱、米妈规划团王老师@米妈圈昕煜朗、米妈助理晨老师@米妈圈昕煜朗、米妈助理刘老师@米妈圈昕煜朗
+- [2026-06-08 13:56] [系统] "墨袖留香"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 13:57] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 13:58] [系统] "黑山老妖"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:00] [系统] "陈鱼落燕ོ 🍃"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:00] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:01] [系统] "fyy"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:03] [系统] "Jessica"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:03] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:04] [系统] "胡"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:04] [系统] "jane_洁"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:04] [系统] "越努力@越幸运"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:06] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:07] [系统] "汀兰在望"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:07] [系统] "阿拉蕾"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:09] [系统] "丹丹妹儿"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:09] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:09] [系统] "😘瑞菡媽"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:11] [系统] "高兴"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:11] [系统] "AIisa"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:12] [系统] "Paix et Joie 🍀"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:12] [系统] "🌻亦杯小可乐🌸"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:12] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:13] [系统] "杨*婷"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:14] [系统] "希瑞"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:14] [系统] "茁壮豆芽"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:15] [系统] "💗汐汐💗"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:15] [系统] "轩彤"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:15] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:16] [系统] "S小雨"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:18] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:21] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:22] [系统] "Rebecca"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:23] [系统] "万事顺利"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:24] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:27] [系统] "舟亦"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:27] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:30] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:30] [系统] "Qianling"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:32] [系统] "糖七七"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:33] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:34] [系统] "王小翔"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:34] [系统] "加油"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:36] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:40] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:40] [系统] "李贞"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:42] [系统] "杜嘟嘟"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:42] [系统] "橘子🍊"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:43] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:44] [系统] "JJ晶"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:46] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:55] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:55] [系统] "扶摇"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:56] [系统] "喃喃"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:57] [系统] "向日葵"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:58] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 14:58] [系统] "🔥羅哥"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 14:58] [系统] "soso🐳"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:01] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:02] [系统] "CZF"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:04] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:05] [系统] "东林文化冯老师13350391257"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:05] [系统] "雪绒花"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:06] [系统] "满天繁星"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:07] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:19] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:20] [系统] "周周"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:20] [系统] "腊梅傲雪"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:22] [系统] "小符"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:22] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:26] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:26] [系统] "XL"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:30] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:30] [系统] "落叶无痕"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:30] [系统] "小晓懒喵🐈"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:32] [系统] "◇﹏尐梅"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:33] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:37] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:37] [系统] "路过~"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:42] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:42] [系统] "丝露花语"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:44] [系统] "May.Sun"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:45] [系统] "^_^小心肝^_^"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 15:45] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:56] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 15:56] [系统] "徐欣然"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 16:02] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 16:02] [系统] "鑫鑫妈"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 16:13] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 16:13] [系统] "晓旭"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 16:14] [系统] "刘邦"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 16:16] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 16:17] [系统] "陶陶"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 16:19] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 16:22] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 16:23] [系统] "Q～小雯1311"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 16:39] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 16:39] [系统] "君"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 16:49] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 16:49] [系统] "lu"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 17:20] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 17:20] [系统] "潘多拉"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 17:34] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 17:34] [系统] "指缘"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 17:36] [系统] "媛媛"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 17:37] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 17:39] [系统] "早班车"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 17:40] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 18:30] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 18:30] [系统] "美美韦氏儿童羽绒服"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 18:57] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 18:57] [系统] "谭祈华"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 19:00] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 19:00] [系统] "唐爽"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 19:06] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 19:06] [系统] "傅驪孋"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 20:04] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 20:04] [系统] "曹亮"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 20:23] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 20:23] [系统] "简简单单  小幸福"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 20:23] [系统] "樱花🌸 💋"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 20:26] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 20:36] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 20:36] [系统] "立"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 20:37] [系统] "神"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 20:39] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 21:10] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 21:10] [系统] "游忠群"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 21:22] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 21:22] [系统] "💋艾米💋"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 21:38] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 21:38] [系统] "张寒"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 21:50] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 21:51] [系统] "秋雨&菡宇  龙马吉祥"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 22:02] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 22:02] [系统] "山前"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 23:05] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 23:05] [系统] "拾光骑士视觉团队.秀岩"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 23:09] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 23:09] [系统] "青青"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-08 23:53] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-08 23:53] [系统] "清心顺之"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 08:03] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 08:03] [系统] "点点"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 08:47] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 08:47] [系统] "🍀 ღ艳᭄ꦿ子დ 🕊"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 09:59] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 09:59] [系统] "决绝可乐子"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 11:24] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 11:24] [系统] "凤"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 11:41] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 11:41] [系统] "陌路"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 11:57] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 11:57] [系统] "漾🌈"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 12:31] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 12:31] [系统] "老婷"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 14:55] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 14:55] [系统] "奕奕"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 15:17] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 15:17] [系统] "米妈助理刘老师@米妈圈昕煜朗"邀请"Amy～蓉👑"加入了群聊
+- [2026-06-09 15:20] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 15:20] [系统] "米妈助理刘老师@米妈圈昕煜朗"邀请"花小Q"加入了群聊
+- [2026-06-09 16:02] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 16:02] [系统] "丢丟"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 17:14] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 17:14] [系统] "小羽毛"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 17:17] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 17:17] [系统] "小羽毛"邀请"阿汪"加入了群聊
+- [2026-06-09 17:22] 小羽毛: 刘老师，不好意思，今天才看到，我们现在报一个可以吗？ @米妈助理刘老师
+- [2026-06-09 17:32] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 17:33] [系统] "泰泰"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 17:57] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 17:57] [系统] "💋 drama💋"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 22:17] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 22:17] [系统] "yungtrue"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 23:14] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 23:14] [系统] "LY"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-09 23:29] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-09 23:29] [系统] "🚗晴天🏓"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-10 14:54] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-10 14:54] [系统] "米宝"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-10 16:27] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-10 16:27] [系统] "豪妈"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 08:59] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 08:59] [系统] "王娟"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 14:13] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 14:14] [系统] "6冄29號"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 15:56] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 15:56] [系统] "Nizi"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 16:01] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 16:01] [系统] "ci ci"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 16:02] [系统] "深白色"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 16:03] [系统] "ZL"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 16:04] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 16:24] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 16:24] [系统] "AURORA～"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 17:04] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 17:04] [系统] "👟韩流宝宝&蜡笔米奇🍃"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 17:14] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 17:14] [系统] "大手牵小手"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-11 17:25] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-11 17:26] [系统] "在水一方"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-12 10:30] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-12 10:31] [系统] "語嶠324135"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-12 12:51] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-12 12:51] [系统] "SOPHIA"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-12 13:07] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-12 13:07] [系统] "莉莉儿"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-12 15:42] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-12 15:42] [系统] "染墨"通过扫描"米妈助理刘老师@米妈圈昕煜朗"分享的二维码加入群聊
+- [2026-06-14 12:59] 👟韩流宝宝&蜡笔米奇🍃: 请问刘老师 有通知考试时间吗？@米妈助理刘老师 
+- [2026-06-14 12:59] 米妈助理刘老师: 我问问
+- [2026-06-14 13:43] 加油: 没接到电话
+- [2026-06-14 14:15] 美美韦氏儿童羽绒服: 也没接到
+- [2026-06-14 14:30] 小羽毛: 我们也没接到
+- [2026-06-14 14:39] Anna Zhang: 我们也没有
+- [2026-06-14 19:43] 米妈助理刘老师: 报名表链接：https://doc.weixin.qq.com/forms/ANkArAfZAC4AVYA7gbeAPQCNsGXnLb2Of
+- [2026-06-14 19:43] [系统] "sunshine-ZH"邀请"可可小花"加入了群聊
