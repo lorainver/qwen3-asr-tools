@@ -3529,10 +3529,10 @@
             }
             
             // Render ECharts overlap chart
-            renderOverlapEChart(data.group_distribution, data.members);
+            renderOverlapEChart(data.group_distribution, data.members, groupColorMap);
         }
 
-        function renderOverlapEChart(distribution, members) {
+        function renderOverlapEChart(distribution, members, colorMap) {
             const chartDom = document.getElementById('overlap-echarts-chart');
             if (!chartDom) return;
             
@@ -3560,7 +3560,7 @@
                                 const name = m.wechat_name || '未知';
                                 const nick = m.nickname && m.nickname !== m.wechat_name ? ' (' + m.nickname + ')' : '';
                                 const remark = m.custom_remark ? ' [' + m.custom_remark + ']' : '';
-                                return '<span style="display:inline-block;margin:2px 4px;padding:1px 6px;background:rgba(255,255,255,0.06);border-radius:6px;font-size:11px;">' + escapeHtml(name + nick + remark) + '</span>';
+                                const c = (colorMap && colorMap[gName]) ? colorMap[gName] : {bg:'rgba(139,92,246,0.12)',fg:'#a78bfa'}; return '<span style="display:inline-block;margin:2px 4px;padding:1px 6px;background:' + c.bg + ';color:' + c.fg + ';border-radius:6px;font-size:11px;">' + escapeHtml(name + nick + remark) + '</span>';
                             });
                             memberHtml = '<div style="margin-top:6px;max-width:500px;display:flex;flex-wrap:wrap;gap:4px;line-height:1.6;">' + items.join('') + '</div>';
                         }
