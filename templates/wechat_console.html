@@ -1896,7 +1896,7 @@
                                             <input type="date" id="ai-digest-end-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary); width: 120px;">
                                         </div>
                                     </h5>
-                                    <div id="ai-digest-result" style="flex: 1; max-height: 320px; min-height: 150px; overflow-y: auto; font-size: 0.85rem; color: var(--text-primary); line-height: 1.6; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
+                                    <div id="ai-digest-result" style="flex: 1; max-height: 320px; min-height: 150px; overflow: auto; font-size: 0.85rem; color: var(--text-primary); line-height: 1.6; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
                                         <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0;">选择上方月份或自定义区间（留空默认提取近期500条消息），点击“生成纪要”按钮开启 AI 智能归纳。</div>
                                     </div>
                                 </div>
@@ -4065,8 +4065,17 @@
                 
                 if (markdownContent) {
                     if (typeof marked !== 'undefined') {
-                        textContainer.innerHTML = marked.parse(markdownContent);
+                        textContainer.style.whiteSpace = 'normal';
+                        textContainer.innerHTML = `<style>
+                            #ai-digest-stream-text table { width: 100%; border-collapse: collapse; margin: 12px 0; border: 1px solid rgba(255,255,255,0.1); }
+                            #ai-digest-stream-text th, #ai-digest-stream-text td { padding: 8px 12px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
+                            #ai-digest-stream-text th { background: rgba(255,255,255,0.05); font-weight: 600; color: #38bdf8; }
+                            #ai-digest-stream-text tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+                            #ai-digest-stream-text ul, #ai-digest-stream-text ol { padding-left: 20px; margin: 8px 0; }
+                            #ai-digest-stream-text li { margin-bottom: 4px; }
+                        </style>` + marked.parse(markdownContent);
                     } else {
+                        textContainer.style.whiteSpace = 'normal';
                         let html = escapeHtml(markdownContent)
                             .replace(/\\*\\*(.*?)\\*\\*/g, '<b>$1</b>')
                             .replace(/\\*(.*?)\\*/g, '<i>$1</i>')
