@@ -1887,6 +1887,12 @@
                                             <span>🤖 AI 智能群聊纪要与干货总结</span>
                                             <button class="kb-btn kb-btn-primary" style="padding: 2px 10px; font-size: 0.75rem; min-height: 24px; background: linear-gradient(135deg, #10b981, #059669);" onclick="generateAiDigest()">⚡ 生成纪要</button>
                                         </div>
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: normal; font-size: 0.78rem; color: #94a3b8; margin-bottom: 4px; width: 100%;">
+                                            <span>群分类模板:</span>
+                                            <select id="ai-digest-template-select" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary); width: 260px; outline: none;">
+                                                <!-- Dynamically loaded -->
+                                            </select>
+                                        </div>
                                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: normal; font-size: 0.78rem; color: #94a3b8;">
                                             <span>按月:</span>
                                             <input type="month" id="ai-digest-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary); width: 110px;">
@@ -4002,6 +4008,7 @@
             const dateVal = document.getElementById('ai-digest-date').value;
             const startDateVal = document.getElementById('ai-digest-start-date').value;
             const endDateVal = document.getElementById('ai-digest-end-date').value;
+            const templateVal = document.getElementById('ai-digest-template-select')?.value || 'education_sharing';
             const resultBox = document.getElementById('ai-digest-result');
             if (!resultBox) return;
             
@@ -4015,7 +4022,8 @@
                         session_id: parseInt(selectVal), 
                         date: (startDateVal || endDateVal) ? null : (dateVal || null),
                         start_date: startDateVal || null,
-                        end_date: endDateVal || null
+                        end_date: endDateVal || null,
+                        template_type: templateVal
                     })
                 });
                 
@@ -5134,6 +5142,19 @@
                         digestMonthInput.value = '';
                     }
                 });
+            }
+
+            // 动态加载 AI 纪要提示词分类模板
+            const digestTemplateSelect = document.getElementById('ai-digest-template-select');
+            if (digestTemplateSelect) {
+                fetch('/api/analytics/digest-templates')
+                    .then(res => res.json())
+                    .then(data => {
+                        digestTemplateSelect.innerHTML = Object.entries(data).map(([key, val]) => {
+                            return `<option value="${key}">${escapeHtml(val.name)}</option>`;
+                        }).join('');
+                    })
+                    .catch(err => console.error('加载 AI 纪要模板失败:', err));
             }
 
         });

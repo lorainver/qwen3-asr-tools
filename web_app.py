@@ -442,6 +442,7 @@ class DigestRequest(BaseModel):
     date: Optional[str] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
+    template_type: Optional[str] = "education_sharing"
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -1820,6 +1821,19 @@ async def proxy_kb_api(request: Request, call_next):
         logger.error(f"KB 代理错误: {e}", exc_info=True)
         return JSONResponse({"error": str(e)}, status_code=500)
 
+@app.get("/api/analytics/digest-templates")
+async def api_analytics_digest_templates():
+    """获取所有 AI 智能群聊纪要的分类提示词模板"""
+    try:
+        template_file = os.path.join(os.path.dirname(__file__), "templates", "ai_digest_templates.json")
+        if os.path.exists(template_file):
+            with open(template_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return {}
+    except Exception as e:
+        logger.error(f"读取 AI 纪要模板失败: {e}")
+        return {"error": str(e)}
+
 @app.post("/api/analytics/digest")
 async def api_analytics_digest(request: DigestRequest):
     """为指定群聊在特定日期（或近期）的消息生成 AI 纪要"""
@@ -1914,13 +1928,19 @@ async def api_analytics_digest(request: DigestRequest):
         chat_text = "\n".join(chat_lines)
         
         # 4. 构建提示词
-        prompt = f"""你是一个智能微信群聊纪要助手。请为以下群聊记录生成一份结构化的‘月度群聊纪要与干货总结’。
-        请用精炼的中文进行归纳，重点关注：
-1. 讨论的核心主题（大家主要在聊什么）
-2. 提及的具体学校或考点（如巴蜀、育才、八中等）及其相关讨论内容
-3. 推荐的课外书籍、练习册、教辅（如《知识清单》等）
-4. 提及的培训机构与辅导品牌（如学而思、新东方等）
-5. 重要通知、后续活动或群友共识（如交表时间、家长会、免单活动等）
+        base_prompt = "你是一个智能微信群聊纪要助手。请为以下群聊记录生成一份结构化的‘月度群聊纪要与干货总结’。"
+        try:
+            template_file = os.path.join(os.path.dirname(__file__), "templates", "ai_digest_templates.json")
+            if os.path.exists(template_file):
+                with open(template_file, "r", encoding="utf-8") as f:
+                    templates = json.load(f)
+                    selected_template = templates.get(request.template_type or "education_sharing")
+                    if selected_template and "prompt" in selected_template:
+                        base_prompt = selected_template["prompt"]
+        except Exception as e:
+            logger.error(f"加载 AI 纪要模板失败，将使用默认模板: {e}")
+
+        prompt = f"""{base_prompt}
 
 以下为群聊对话记录：
 ---
