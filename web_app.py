@@ -800,7 +800,7 @@ async def api_analytics_network(session_id: int):
                 display_name = f"{group_name} ({remark})"
             else:
                 display_name = group_name
-            active_speakers.append({"name": display_name, "count": cnt})
+            active_speakers.append({"name": display_name, "wxid": wxid, "count": cnt})
 
         if not edges:
             return {
@@ -849,8 +849,8 @@ async def api_analytics_network(session_id: int):
             return node_name
 
         # 排行榜
-        sorted_influence = [{"name": get_display_name_with_remark(name), "score": round(score, 4)} for name, score in sorted(in_degree.items(), key=lambda x: x[1], reverse=True)[:10]]
-        sorted_bridges = [{"name": get_display_name_with_remark(name), "score": round(score, 4)} for name, score in sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:10]]
+        sorted_influence = [{"name": get_display_name_with_remark(name), "wxid": group_name_to_wxid.get(name), "score": round(score, 4)} for name, score in sorted(in_degree.items(), key=lambda x: x[1], reverse=True)[:10]]
+        sorted_bridges = [{"name": get_display_name_with_remark(name), "wxid": group_name_to_wxid.get(name), "score": round(score, 4)} for name, score in sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:10]]
         
         return {
             "nodes": nodes_data,
