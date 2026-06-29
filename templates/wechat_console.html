@@ -1883,14 +1883,14 @@
                                 <!-- Right Panel: AI Digest -->
                                 <div style="flex: 1.2; min-width: 320px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
                                     <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #10b981; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;">
-                                        <span>🤖 AI 智能每日群聊纪要与干货总结</span>
+                                        <span>🤖 AI 智能每月群聊纪要与干货总结</span>
                                         <div style="display: flex; align-items: center; gap: 8px;">
-                                            <input type="date" id="ai-digest-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary);">
+                                            <input type="month" id="ai-digest-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary);">
                                             <button class="kb-btn kb-btn-primary" style="padding: 2px 10px; font-size: 0.75rem; min-height: 24px; background: linear-gradient(135deg, #10b981, #059669);" onclick="generateAiDigest()">⚡ 生成纪要</button>
                                         </div>
                                     </h5>
                                     <div id="ai-digest-result" style="flex: 1; max-height: 320px; min-height: 150px; overflow-y: auto; font-size: 0.85rem; color: var(--text-primary); line-height: 1.6; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
-                                        <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0;">选择上方日期（留空默认提取近期400条消息），点击右侧“生成纪要”按钮开启 AI 智能归纳。</div>
+                                        <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0;">选择上方月份（留空默认提取近期400条消息），点击右侧“生成纪要”按钮开启 AI 智能归纳。</div>
                                     </div>
                                 </div>
                             </div>
@@ -5073,6 +5073,15 @@
                     wechatSessionSearch.value = this.value;
                     renderWechatSessionOptions();
                 });
+            }
+
+            // 初始化 AI 纪要月份选择框为当前月份
+            const digestMonthInput = document.getElementById('ai-digest-date');
+            if (digestMonthInput) {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                digestMonthInput.value = `${year}-${month}`;
             }
 
         });
