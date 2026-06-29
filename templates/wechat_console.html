@@ -5102,17 +5102,12 @@
                 });
             }
 
-            // 初始化 AI 纪要月份选择框为当前月份并绑定互斥清空事件
+            // 绑定 AI 纪要月份及日期选择互斥清空事件（不预填月份以支持默认拉取最近 500 条消息的行为）
             const digestMonthInput = document.getElementById('ai-digest-date');
             const digestStartDate = document.getElementById('ai-digest-start-date');
             const digestEndDate = document.getElementById('ai-digest-end-date');
             
             if (digestMonthInput) {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                digestMonthInput.value = `${year}-${month}`;
-                
                 digestMonthInput.addEventListener('change', function() {
                     if (this.value && digestStartDate && digestEndDate) {
                         digestStartDate.value = '';
