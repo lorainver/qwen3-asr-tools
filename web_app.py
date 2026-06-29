@@ -644,7 +644,7 @@ async def api_analytics_topics(
         
         analytics = ChatAnalytics()
         cursor = analytics.conn.cursor()
-        query = "SELECT create_time, content FROM messages WHERE session_id = ? AND type = 'text'"
+        query = "SELECT create_time, content FROM messages WHERE session_id = ? AND type IN ('text', '文本消息')"
         params = [session_id]
         if month:
             query += " AND strftime('%Y-%m', datetime(create_time, 'unixepoch')) = ?"
@@ -1840,7 +1840,7 @@ async def api_analytics_digest(request: DigestRequest):
             cursor.execute("""
                 SELECT sender_display_name, content, formatted_time, sender_username 
                 FROM messages 
-                WHERE session_id = ? AND formatted_time LIKE ? AND type = 'text'
+                WHERE session_id = ? AND formatted_time LIKE ? AND type IN ('text', '文本消息')
                 ORDER BY create_time ASC
             """, (session_id, f"{date}%"))
             rows = cursor.fetchall()
@@ -1848,7 +1848,7 @@ async def api_analytics_digest(request: DigestRequest):
             cursor.execute("""
                 SELECT sender_display_name, content, formatted_time, sender_username 
                 FROM messages 
-                WHERE session_id = ? AND type = 'text'
+                WHERE session_id = ? AND type IN ('text', '文本消息')
                 ORDER BY create_time DESC 
                 LIMIT 400
             """, (session_id,))

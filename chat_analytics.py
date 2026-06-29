@@ -124,11 +124,11 @@ class ChatAnalytics:
         cursor = self.conn.cursor()
         
         # 统计文本消息数
-        cursor.execute("SELECT COUNT(*) FROM messages WHERE type = 'text'")
+        cursor.execute("SELECT COUNT(*) FROM messages WHERE type IN ('text', '文本消息')")
         total_text_messages = cursor.fetchone()[0]
         print(f"[*] 共发现 {total_text_messages} 条文本消息需要扫描。")
         
-        cursor.execute("SELECT id, session_id, content, sender_display_name, create_time FROM messages WHERE type = 'text'")
+        cursor.execute("SELECT id, session_id, content, sender_display_name, create_time FROM messages WHERE type IN ('text', '文本消息')")
         
         count = 0
         extracted_count = 0
@@ -167,7 +167,7 @@ class ChatAnalytics:
         session_id = session['id']
         cursor = self.conn.cursor()
         
-        cursor.execute("SELECT id, content, sender_display_name, create_time FROM messages WHERE session_id = ? AND type = 'text'", (session_id,))
+        cursor.execute("SELECT id, content, sender_display_name, create_time FROM messages WHERE session_id = ? AND type IN ('text', '文本消息')", (session_id,))
         rows = cursor.fetchall()
         
         extracted_count = 0
@@ -228,7 +228,7 @@ class ChatAnalytics:
         print(f"\n📊 正在分析会话主题: {name} (ID: {session_id})")
         
         cursor = self.conn.cursor()
-        query = "SELECT create_time, content FROM messages WHERE session_id = ? AND type = 'text'"
+        query = "SELECT create_time, content FROM messages WHERE session_id = ? AND type IN ('text', '文本消息')"
         params = [session_id]
         if filter_month:
             # 格式 YYYY-MM
