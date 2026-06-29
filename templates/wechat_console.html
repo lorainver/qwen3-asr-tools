@@ -1687,6 +1687,7 @@
                             </div>
                             <div class="analysis-action-row" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
                                 <button class="kb-btn kb-btn-primary" onclick="runGroupOverlapAnalysis()" style="width: 100%; background: linear-gradient(135deg, #8b5cf6, #764ba2); color: white;">👥 开始群友重叠度分析</button>
+                                <button class="kb-btn kb-btn-primary" onclick="openBatchSyncModal()" style="width: 100%; background: linear-gradient(135deg, #fbbf24, #d97706); color: #1e293b; font-weight: bold;">📝 一键同步当前群名片为备注</button>
                                 <button class="kb-btn kb-btn-secondary" onclick="reloadGroupMembersLog()" style="width: 100%;">📥 重新加载 EchoTrace 日志文件</button>
                                 <button class="kb-btn kb-btn-secondary" onclick="syncMembersViaCli()" style="width: 100%;">🔄 使用 wechat-cli 自动同步群友</button>
                             </div>
@@ -1697,7 +1698,7 @@
                             <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
                                 <label style="font-weight: 500;">筛选分析会话</label>
                                 <input type="text" id="analytics-session-search" class="analysis-input" placeholder="输入关键字搜索会话..." style="width: 100%; box-sizing: border-box; margin-bottom: 4px;" oninput="renderAnalyticsSessionOptions()">
-                                <select id="analytics-session-select" class="analysis-select" style="width: 100%;" onchange="loadExtractedResources()">
+                                <select id="analytics-session-select" class="analysis-select" style="width: 100%;" onchange="onAnalyticsSessionChange(this.value)">
                                     <option value="all">📁 [全部会话提取]</option>
                                 </select>
                             </div>
@@ -1838,7 +1839,7 @@
                             <div style="display: flex; gap: 20px; flex-wrap: wrap;">
                                 <!-- Left sub-box: Word cloud or frequency listing -->
                                 <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
-                                    <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #0ea5e9; padding-left: 8px;">📈 热词与词频分析</h5>
+                                    <h5 style="margin: 0 0 10px 0; color: #0f172a; font-size: 0.95rem; font-weight: 700; border-left: 3px solid #0ea5e9; padding-left: 8px;">📈 热词与词频分析</h5>
                                     <div id="analytics-topics-result" style="flex: 1; max-height: 350px; overflow-y: auto; font-size: 0.85rem; color: #cbd5e1; line-height: 1.8;">
                                         <div style="text-align: center; color: #94a3b8; padding: 40px 0;">点击左侧“运行词频热词演变”获取分析数据</div>
                                     </div>
@@ -1846,19 +1847,57 @@
                                 
                                 <!-- Right sub-box: Social network graph -->
                                 <div style="flex: 1.2; min-width: 320px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
-                                    <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #8b5cf6; padding-left: 8px;">🌐 家长回复社交关系图</h5>
+                                    <h5 style="margin: 0 0 10px 0; color: #0f172a; font-size: 0.95rem; font-weight: 700; border-left: 3px solid #8b5cf6; padding-left: 8px;">🌐 家长回复社交关系图</h5>
                                     <div id="analytics-network-chart-container" style="width: 100%; height: 350px; position: relative;">
                                         <div id="analytics-network-chart" style="width: 100%; height: 100%;"></div>
                                         <div id="analytics-network-placeholder" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color: #94a3b8; text-align:center;">
                                             点击左侧“构建社交互动网络”生成回复图谱
                                         </div>
                                     </div>
+                            </div>
+                            
+                            <!-- Row 2: Leaderboard & AI Digest -->
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                <!-- Left Panel: Leaderboards -->
+                                <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
+                                    <h5 style="margin: 0 0 12px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #f59e0b; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>🏆 核心发言人与“意见领袖”榜</span>
+                                        <div style="display: flex; gap: 10px; font-size: 0.75rem; font-weight: normal;">
+                                            <span id="rank-tab-active" style="cursor: pointer; color: #f59e0b; font-weight: bold; border-bottom: 2px solid #f59e0b;" title="💬 活跃排行计算方法：&#10;按当前群聊会话中该家长的消息总发送量（消息行数）进行降序排序。发言越多，排行越靠前，代表了群内最活跃的『情报发言人』。" onclick="switchRankTab('active')">💬 活跃排行</span>
+                                            <span style="color: rgba(255,255,255,0.2);">|</span>
+                                            <span id="rank-tab-influencer" style="cursor: pointer; color: var(--text-secondary, #94a3b8);" title="👑 意见领袖计算方法：&#10;通过 NetworkX 图论算法分析群聊中 @艾特 与引用回复的互动网络拓扑结构，计算各个节点的『入度中心性 (In-degree Centrality)』。被其他群友提及、回复的频次越高，该指数得分越高，代表了群内极具号召力或最具发言含金量的『意见领袖』。" onclick="switchRankTab('influencer')">👑 意见领袖</span>
+                                        </div>
+                                    </h5>
+                                    
+                                    <!-- Active Speakers list -->
+                                    <div id="rank-list-active" style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto; padding-right: 5px;">
+                                        <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0; font-size: 0.85rem;">暂无数据，请在上方构建社交图谱</div>
+                                    </div>
+                                    
+                                    <!-- Influencer list (Hidden by default) -->
+                                    <div id="rank-list-influencer" style="display: none; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto; padding-right: 5px;">
+                                        <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0; font-size: 0.85rem;">暂无数据，请在上方构建社交图谱</div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Panel: AI Digest -->
+                                <div style="flex: 1.2; min-width: 320px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
+                                    <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #10b981; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>🤖 AI 智能每日群聊纪要与干货总结</span>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="date" id="ai-digest-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary);">
+                                            <button class="kb-btn kb-btn-primary" style="padding: 2px 10px; font-size: 0.75rem; min-height: 24px; background: linear-gradient(135deg, #10b981, #059669);" onclick="generateAiDigest()">⚡ 生成纪要</button>
+                                        </div>
+                                    </h5>
+                                    <div id="ai-digest-result" style="flex: 1; max-height: 320px; min-height: 150px; overflow-y: auto; font-size: 0.85rem; color: var(--text-primary); line-height: 1.6; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
+                                        <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0;">选择上方日期（留空默认提取近期400条消息），点击右侧“生成纪要”按钮开启 AI 智能归纳。</div>
+                                    </div>
                                 </div>
                             </div>
                             
                             <!-- Bottom row for dry goods/resource extracted listing -->
                             <div>
-                                <h5 style="margin: 0 0 10px 0; color: #ffffff; font-size: 0.95rem; font-weight: 600; border-left: 3px solid #10b981; padding-left: 8px;">📦 提取出的干货资源库</h5>
+                                <h5 style="margin: 0 0 10px 0; color: #0f172a; font-size: 0.95rem; font-weight: 700; border-left: 3px solid #10b981; padding-left: 8px;">📦 提取出的干货资源库</h5>
                                 <div style="max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(56,189,248,0.5); background: #020617; box-shadow: inset 0 0 0 1px rgba(56,189,248,0.15);">
                                     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; color: #ffffff;">
                                         <thead>
@@ -1868,10 +1907,11 @@
                                                 <th style="padding: 13px 14px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">上下文内容</th>
                                                 <th style="padding: 13px 14px; width: 110px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">分享人</th>
                                                 <th style="padding: 13px 14px; width: 160px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">提取时间</th>
+                                                <th style="padding: 13px 14px; width: 80px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); text-align: center;">操作</th>
                                             </tr>
                                         </thead>
                                         <tbody id="analytics-resources-tbody">
-                                            <tr><td colspan="5" style="text-align:center;padding:40px;color:#e2e8f0;font-size:0.95rem;background:#0f172a;">正在加载干货资源数据...</td></tr>
+                                            <tr><td colspan="6" style="text-align:center;padding:40px;color:#e2e8f0;font-size:0.95rem;background:#0f172a;">正在加载干货资源数据...</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -3575,6 +3615,36 @@
         }
 
         // 加载提取到的干货资源
+        // 缩写超长 URL，美化表格显示
+        function truncateUrl(text, maxLength = 35) {
+            if (!text) return '';
+            if (text.startsWith('http://') || text.startsWith('https://')) {
+                if (text.length > maxLength) {
+                    try {
+                        const urlObj = new URL(text);
+                        // 返回：域名 + 缩写的路径
+                        const pathname = urlObj.pathname;
+                        const shortPath = pathname.length > 15 ? pathname.substring(0, 15) + '...' : pathname;
+                        return urlObj.hostname + shortPath;
+                    } catch(e) {
+                        return text.substring(0, maxLength) + '...';
+                    }
+                }
+            }
+            return text;
+        }
+
+        // 跳转并准确定位到资源对应的原始聊天消息上下文
+        function jumpToResourceMessage(messageId, sessionId) {
+            // 1. 切换到还原流 Tab
+            switchConsoleTab('message');
+            // 2. 调用系统自带的消息上下文定位跳转逻辑
+            if (typeof jumpToMessageContext === 'function') {
+                jumpToMessageContext(messageId, sessionId);
+            }
+        }
+
+        // 加载提取到的干货资源
         async function loadExtractedResources(refresh = false) {
             updateTargetGroupHeaders();
             const selectVal = document.getElementById('analytics-session-select')?.value;
@@ -3605,7 +3675,7 @@
                 if (!tbody) return;
                 
                 if (!data.resources || data.resources.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:#64748b;">📭 未提取到相关干货资源。您可以先进行微信导入以自动提取，或选择其他类型。</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#64748b;">📭 未提取到相关干货资源。您可以先进行微信导入以自动提取，或选择其他类型。</td></tr>';
                     if (statusSpan) statusSpan.textContent = '未找到数据';
                     return;
                 }
@@ -3619,19 +3689,30 @@
                 
                 tbody.innerHTML = data.resources.map((item, idx) => {
                     const typeLabel = typeMap[item.resource_type] || item.resource_type;
+                    
+                    // 对超长 URL 缩写显示，保留 hover title 提示
                     const valHtml = item.resource_type === 'url' 
-                        ? `<a href="${item.resource_value}" target="_blank" class="wechat-link-item">${item.resource_value}</a>`
+                        ? `<a href="${item.resource_value}" target="_blank" class="wechat-link-item" title="${item.resource_value}">${truncateUrl(item.resource_value, 35)}</a>`
                         : `<b style="color:#7dd3fc;font-size:0.95rem;">${escapeHtml(item.resource_value)}</b>`;
+                    
                     const context = highlightKeyword(escapeHtml(item.raw_content), item.resource_value);
                     const formattedTime = new Date(item.create_time * 1000).toLocaleString();
                     const rowBg = idx % 2 === 0 ? '#020617' : '#0b1220';
                     
+                    // 用 CSS Webkit-line-clamp 把超长上下文强制限制在一至两行，提供悬浮查看全文
                     return `<tr style="border-bottom:1px solid rgba(56,189,248,0.15);background:${rowBg};" onmouseenter="this.style.background='rgba(56,189,248,0.18)'" onmouseleave="this.style.background='${rowBg}'">
                         <td style="padding:13px 14px;color:#f8fafc;font-size:0.9rem;font-weight:600;">${typeLabel}</td>
                         <td style="padding:13px 14px;">${valHtml}</td>
-                        <td style="padding:13px 14px;color:#ffffff;font-size:0.9rem;max-width:350px;word-break:break-all;line-height:1.7;font-weight:500;">${context}</td>
+                        <td style="padding:13px 14px;color:#ffffff;font-size:0.9rem;max-width:350px;word-break:break-all;line-height:1.7;font-weight:500;">
+                            <div style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(item.raw_content)}">
+                                ${context}
+                            </div>
+                        </td>
                         <td style="padding:13px 14px;color:#bae6fd;font-weight:600;font-size:0.9rem;">${escapeHtml(item.sender_name || '未知')}</td>
                         <td style="padding:13px 14px;color:#e2e8f0;font-family:monospace;font-size:0.85rem;font-weight:500;">${formattedTime}</td>
+                        <td style="padding:13px 14px; text-align: center;">
+                            <button class="kb-btn kb-btn-primary" style="padding: 4px 10px; font-size: 0.8rem; min-height: 28px; white-space: nowrap; background: linear-gradient(135deg, #0ea5e9, #38bdf8);" onclick="jumpToResourceMessage(${item.message_id}, ${item.session_id})">📍 定位</button>
+                        </td>
                     </tr>`;
                 }).join('');
                 
@@ -3670,21 +3751,23 @@
                     return;
                 }
                 
-                let html = '<h6>全期核心热词Top 15 (TF-IDF):</h6><div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;">';
+                let html = '<h6 style="color:#0f172a;font-weight:700;margin:0 0 12px 0;font-size:1rem;letter-spacing:0.5px;">🔥 全期核心热词Top 15 (TF-IDF)</h6><div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;">';
                 data.keywords.forEach(item => {
-                    const size = Math.max(12, Math.min(22, 12 + item.weight * 20));
-                    const opac = Math.max(0.5, Math.min(1.0, 0.4 + item.weight));
-                    html += `<span style="font-size:${size}px;color:#38bdf8;opacity:${opac};font-weight:bold;margin:2px 5px;" title="重要性权重: ${item.weight.toFixed(4)}">${escapeHtml(item.word)}</span>`;
+                    const size = Math.max(14, Math.min(26, 14 + item.weight * 22));
+                    const weightClass = item.weight > 0.08 ? 700 : (item.weight > 0.05 ? 600 : 500);
+                    const color = item.weight > 0.08 ? '#fbbf24' : (item.weight > 0.05 ? '#7dd3fc' : '#bae6fd');
+                    html += `<span style="font-size:${size}px;color:${color};font-weight:${weightClass};margin:3px 6px;padding:2px 8px;background:rgba(2,6,23,0.6);border-radius:4px;" title="重要性权重: ${item.weight.toFixed(4)}">${escapeHtml(item.word)}</span>`;
                 });
                 html += '</div>';
                 
                 if (data.monthly_trends && Object.keys(data.monthly_trends).length > 0) {
-                    html += '<h6>📅 月度关注主题演变雷达:</h6><div style="display:flex;flex-direction:column;gap:8px;">';
-                    Object.keys(data.monthly_trends).sort().forEach(month => {
+                    html += '<h6 style="color:#0f172a;font-weight:700;margin:16px 0 12px 0;font-size:1rem;letter-spacing:0.5px;">📅 月度关注主题演变雷达</h6><div style="display:flex;flex-direction:column;gap:10px;">';
+                    Object.keys(data.monthly_trends).sort().forEach((month, idx) => {
                         const words = data.monthly_trends[month].join(', ');
-                        html += `<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:8px 12px;display:flex;justify-content:space-between;">
-                            <span style="color:#a78bfa;font-weight:bold;">${month}月</span>
-                            <span style="color:#e2e8f0;text-align:right;">${escapeHtml(words)}</span>
+                        const bgColor = idx % 2 === 0 ? '#020617' : '#0b1220';
+                        html += `<div style="background:${bgColor};border:1px solid rgba(56,189,248,0.25);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;" onmouseenter="this.style.borderColor='rgba(56,189,248,0.6)'" onmouseleave="this.style.borderColor='rgba(56,189,248,0.25)'">
+                            <span style="color:#38bdf8;font-weight:700;font-size:0.95rem;flex-shrink:0;margin-right:12px;">${month}月</span>
+                            <span style="color:#f1f5f9;text-align:right;font-weight:500;line-height:1.6;">${escapeHtml(words)}</span>
                         </div>`;
                     });
                     html += '</div>';
@@ -3723,7 +3806,15 @@
                     return;
                 }
                 
+                // 即使无网络边，也依然尝试渲染活跃发言人排行榜
+                renderLeaderboards(data);
+                
                 if (!data.nodes || data.nodes.length === 0) {
+                    if (analyticsChartInstance) {
+                        analyticsChartInstance.clear();
+                        analyticsChartInstance.dispose();
+                        analyticsChartInstance = null;
+                    }
                     if (placeholder) {
                         placeholder.style.display = 'flex';
                         placeholder.textContent = 'ℹ️ 群聊中无引用 @ 回复关系数据';
@@ -3789,12 +3880,253 @@
                 };
                 
                 analyticsChartInstance.setOption(option);
+                renderLeaderboards(data);
             } catch(e) {
                 alert('渲染社交网络出错: ' + e.message);
                 if (placeholder) {
                     placeholder.style.display = 'flex';
                     placeholder.textContent = '渲染出错: ' + e.message;
                 }
+            }
+        }
+
+        // 切换活跃排行 / 意见领袖排行的显示标签页
+        let activeSpeakerTab = 'active';
+        function switchRankTab(tab) {
+            activeSpeakerTab = tab;
+            const tabActive = document.getElementById('rank-tab-active');
+            const tabInfluencer = document.getElementById('rank-tab-influencer');
+            const listActive = document.getElementById('rank-list-active');
+            const listInfluencer = document.getElementById('rank-list-influencer');
+            
+            if (tab === 'active') {
+                tabActive.style.color = '#f59e0b';
+                tabActive.style.fontWeight = 'bold';
+                tabActive.style.borderBottom = '2px solid #f59e0b';
+                
+                tabInfluencer.style.color = 'var(--text-secondary, #94a3b8)';
+                tabInfluencer.style.fontWeight = 'normal';
+                tabInfluencer.style.borderBottom = 'none';
+                
+                listActive.style.display = 'flex';
+                listInfluencer.style.display = 'none';
+            } else {
+                tabInfluencer.style.color = '#f59e0b';
+                tabInfluencer.style.fontWeight = 'bold';
+                tabInfluencer.style.borderBottom = '2px solid #f59e0b';
+                
+                tabActive.style.color = 'var(--text-secondary, #94a3b8)';
+                tabActive.style.fontWeight = 'normal';
+                tabActive.style.borderBottom = 'none';
+                
+                listActive.style.display = 'none';
+                listInfluencer.style.display = 'flex';
+            }
+        }
+
+        // 渲染排行榜 UI 组件 (核心发言人与意见领袖)
+        function renderLeaderboards(data) {
+            const listActive = document.getElementById('rank-list-active');
+            const listInfluencer = document.getElementById('rank-list-influencer');
+            if (!listActive || !listInfluencer) return;
+            
+            // 1. 渲染活跃发言人榜单
+            if (data.active_speakers && data.active_speakers.length > 0) {
+                const maxCount = data.active_speakers[0].count;
+                listActive.innerHTML = data.active_speakers.map((item, idx) => {
+                    const pct = maxCount > 0 ? (item.count / maxCount * 100) : 0;
+                    const badgeColor = idx === 0 ? '#ef4444' : (idx === 1 ? '#f97316' : (idx === 2 ? '#eab308' : '#64748b'));
+                    return `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-weight: bold; width: 22px; height: 22px; border-radius: 50%; background: ${badgeColor}; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">${idx + 1}</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 3px; color: var(--text-primary);">
+                                    <span style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.name)}</span>
+                                    <span style="color: var(--text-secondary, #94a3b8);">${item.count} 条发言</span>
+                                </div>
+                                <div style="width: 100%; height: 6px; background: rgba(128,128,128,0.1); border-radius: 3px; overflow: hidden;">
+                                    <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #f59e0b, #ef4444); border-radius: 3px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                listActive.innerHTML = '<div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0; font-size: 0.85rem;">该群聊暂无发言数据记录</div>';
+            }
+            
+            // 2. 渲染意见领袖榜单
+            if (data.influence && data.influence.length > 0) {
+                const maxScore = data.influence[0].score;
+                listInfluencer.innerHTML = data.influence.map((item, idx) => {
+                    const pct = maxScore > 0 ? (item.score / maxScore * 100) : 0;
+                    const badgeColor = idx === 0 ? '#a855f7' : (idx === 1 ? '#ec4899' : (idx === 2 ? '#6366f1' : '#64748b'));
+                    return `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-weight: bold; width: 22px; height: 22px; border-radius: 50%; background: ${badgeColor}; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">${idx + 1}</span>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 3px; color: var(--text-primary);">
+                                    <span style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.name)}</span>
+                                    <span style="color: var(--text-secondary, #94a3b8);">指数: ${item.score}</span>
+                                </div>
+                                <div style="width: 100%; height: 6px; background: rgba(128,128,128,0.1); border-radius: 3px; overflow: hidden;">
+                                    <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #8b5cf6, #d946ef); border-radius: 3px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                listInfluencer.innerHTML = '<div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0; font-size: 0.85rem;">暂无 @ 引用关系，意见领袖榜未生成</div>';
+            }
+        }
+
+        // 调用本地 AI 生成每日纪要（流式 SSE 输出）
+        async function generateAiDigest() {
+            const selectVal = document.getElementById('analytics-session-select')?.value;
+            if (!selectVal || selectVal === 'all') {
+                alert('请在左侧选择具体的群聊会话以生成 AI 纪要');
+                return;
+            }
+            
+            const dateVal = document.getElementById('ai-digest-date').value;
+            const resultBox = document.getElementById('ai-digest-result');
+            if (!resultBox) return;
+            
+            resultBox.innerHTML = '<div style="color: #10b981; font-weight: bold; font-size: 0.9rem; padding: 10px;">⏳ 正在提取并清洗群消息记录，即将开始生成纪要...</div>';
+            
+            try {
+                const response = await fetch('/api/analytics/digest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: parseInt(selectVal), date: dateVal || null })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP 异常: ${response.status}`);
+                }
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let buffer = '';
+                let markdownContent = '';
+                
+                resultBox.innerHTML = '<div id="ai-digest-stream-text" style="line-height:1.7; font-size:0.88rem; white-space: pre-wrap; font-family: sans-serif; padding: 5px;"></div>';
+                const textContainer = document.getElementById('ai-digest-stream-text');
+                
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
+                    
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (!trimmed) continue;
+                        
+                        if (trimmed.startsWith('data: ')) {
+                            const dataStr = trimmed.substring(6);
+                            try {
+                                const parsed = JSON.parse(dataStr);
+                                if (parsed.error) {
+                                    textContainer.innerHTML += `\n\n❌ <b>AI 生成出错:</b> ${escapeHtml(parsed.error)}`;
+                                } else if (parsed.content) {
+                                    markdownContent += parsed.content;
+                                    textContainer.textContent = markdownContent;
+                                    resultBox.scrollTop = resultBox.scrollHeight;
+                                } else if (parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content) {
+                                    markdownContent += parsed.choices[0].delta.content;
+                                    textContainer.textContent = markdownContent;
+                                    resultBox.scrollTop = resultBox.scrollHeight;
+                                }
+                            } catch(e) {
+                                // 忽略单行解析错误
+                            }
+                        }
+                    }
+                }
+                
+                if (markdownContent) {
+                    if (typeof marked !== 'undefined') {
+                        textContainer.innerHTML = marked.parse(markdownContent);
+                    } else {
+                        let html = escapeHtml(markdownContent)
+                            .replace(/\\*\\*(.*?)\\*\\*/g, '<b>$1</b>')
+                            .replace(/\\*(.*?)\\*/g, '<i>$1</i>')
+                            .replace(/\\n/g, '<br>');
+                        textContainer.innerHTML = html;
+                    }
+                } else if (!textContainer.textContent) {
+                    textContainer.innerHTML = '<span style="color:#ef4444;">❌ AI 总结响应为空，请确认本地 AI 服务（Ollama/Qwen）是否开启并能够正常对话。</span>';
+                }
+                
+            } catch(e) {
+                console.error(e);
+                resultBox.innerHTML = `<div style="color: #ef4444; padding: 10px;">❌ AI 纪要生成失败: ${e.message}。请确保您的本地 AI Worker 及大模型已就绪。</div>`;
+            }
+        }
+
+        async function openBatchSyncModal() {
+            const selectVal = document.getElementById('wechat-session-select')?.value;
+            if (!selectVal || selectVal === 'all') {
+                alert('请在左侧选择一个具体的群聊会话以进行同步');
+                return;
+            }
+            
+            const selectElem = document.getElementById('wechat-session-select');
+            const groupName = selectElem.options[selectElem.selectedIndex].text.replace(/\[\d+条\]\s*/, '').trim();
+            
+            const tagInput = prompt(`即将一键将当前群中已设置群昵称的家长的「群名片」同步写入您的备注库中。\n\n请输入要同步绑定的标签(tags)名称（若无需标签请留空）：`, groupName);
+            if (tagInput === null) return; 
+            
+            const modeInput = prompt(`已设置同步标签为: "${tagInput}"。\n\n请选择备注同步模式：\n输入 1 : 仅同步未备注成员的空缺备注 (推荐)\n输入 2 : 覆盖所有已有的微信备注\n\n(输入其他或直接取消将放弃本次同步)`, "1");
+            if (modeInput !== "1" && modeInput !== "2") {
+                return; // 取消或放弃
+            }
+            const overwrite = (modeInput === "2");
+            
+            const status = document.getElementById('wechat-member-status');
+            if (status) {
+                status.style.display = 'block';
+                status.className = 'analysis-status loading';
+                status.textContent = '⏳ 正在进行备注名片批量同步与打标签...';
+            }
+            
+            try {
+                const res = await fetch('/api/wechat/members/sync-group', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: parseInt(selectVal),
+                        overwrite: overwrite,
+                        tag: tagInput
+                    })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    if (status) {
+                        status.className = 'analysis-status success';
+                        status.textContent = '✅ ' + data.message;
+                        setTimeout(() => { status.style.display = 'none'; }, 3000);
+                    }
+                    alert(data.message);
+                    // 刷新群成员画像列表显示新备注
+                    runGroupOverlapAnalysis();
+                } else {
+                    if (status) {
+                        status.className = 'analysis-status error';
+                        status.textContent = '❌ 同步失败: ' + (data.detail || '未知错误');
+                    }
+                    alert('同步失败: ' + (data.detail || '未知错误'));
+                }
+            } catch(e) {
+                if (status) {
+                    status.className = 'analysis-status error';
+                    status.textContent = '❌ 网络请求异常';
+                }
+                alert('网络错误，同步失败: ' + e.message);
             }
         }
 
@@ -4230,7 +4562,10 @@
                     <!-- Top header basic stats -->
                     <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(56,189,248,0.05);border:1px solid rgba(56,189,248,0.1);padding:16px 20px;border-radius:8px;">
                          <div>
-                             <div style="font-size:1.3rem;font-weight:bold;color:#f8fafc;">${escapeHtml(p.wechat_name || '未知')} ${p.nickname ? `<span style="font-size:1rem;color:#64748b;font-weight:normal;">(${escapeHtml(p.nickname)})</span>` : ''}</div>
+                             <div style="font-size:1.3rem;font-weight:bold;color:#f8fafc;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                 <span>${escapeHtml(p.wechat_name || '未知')} ${p.nickname ? `<span style="font-size:1rem;color:#64748b;font-weight:normal;">(${escapeHtml(p.nickname)})</span>` : ''}</span>
+                                 ${p.tags ? p.tags.split(',').map(t => `<span style="font-size:0.7rem;background:rgba(56,189,248,0.15);color:#38bdf8;padding:2px 6px;border-radius:4px;font-weight:normal;">${escapeHtml(t.trim())}</span>`).join('') : ''}
+                             </div>
                              <div style="margin-top:4px;color:#94a3b8;font-family:monospace;font-size:0.82rem;">微信ID (wxid): ${escapeHtml(p.wxid)}</div>
                          </div>
                          <div style="display:flex;gap:20px;text-align:center;">
@@ -4248,12 +4583,13 @@
                     <!-- Custom remark edit section -->
                     <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:14px 20px;border-radius:8px;display:flex;flex-direction:column;gap:8px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;">
-                            <label style="font-weight:600;font-size:0.88rem;color:#f8fafc;display:flex;align-items:center;gap:6px;">✍️ 自定义群友备注 (全局有效)</label>
+                            <label style="font-weight:600;font-size:0.88rem;color:#f8fafc;display:flex;align-items:center;gap:6px;">✍️ 自定义群友备注与标签 (全局有效)</label>
                             <span id="remark-save-status" style="font-size:0.75rem;color:#10b981;display:none;">✓ 已保存</span>
                         </div>
                         <div style="display:flex;gap:8px;">
-                            <input type="text" id="member-custom-remark-input" class="analysis-input" style="flex:1;margin:0;" placeholder="设置自定义备注（如：真实姓名、届别学号、备注特征等）..." value="${escapeHtml(p.custom_remark || '')}">
-                            <button class="kb-btn kb-btn-primary" onclick="saveMemberRemark('${escapeHtml(p.wxid.replace(/'/g, "\\'"))}')" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;">保存备注</button>
+                            <input type="text" id="member-custom-remark-input" class="analysis-input" style="flex:1.2;margin:0;" placeholder="设置备注（如：真实姓名等）..." value="${escapeHtml(p.custom_remark || '')}">
+                            <input type="text" id="member-custom-tags-input" class="analysis-input" style="flex:1;margin:0;" placeholder="标签 (多个逗号隔开，如：融三五班)..." value="${escapeHtml(p.tags || '')}">
+                            <button class="kb-btn kb-btn-primary" onclick="saveMemberRemark('${escapeHtml(p.wxid.replace(/'/g, "\\'"))}')" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;">保存</button>
                         </div>
                         <div id="solicitation-suggestions-container" style="display:none;font-size:0.78rem;color:#94a3b8;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px;">
                             <span>💡 接龙提取建议:</span>
@@ -4380,14 +4716,16 @@
 
         async function saveMemberRemark(wxid) {
             const input = document.getElementById('member-custom-remark-input');
+            const tagsInput = document.getElementById('member-custom-tags-input');
             const remark = input ? input.value.trim() : '';
+            const tags = tagsInput ? tagsInput.value.trim() : '';
             const statusSpan = document.getElementById('remark-save-status');
             
             try {
                 const res = await fetch('/api/wechat/members/remark', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ wxid, remark })
+                    body: JSON.stringify({ wxid, remark, tags })
                 });
                 const result = await res.json();
                 if (res.ok && result.success) {
@@ -4397,6 +4735,8 @@
                             statusSpan.style.display = 'none';
                         }, 2000);
                     }
+                    // 重新加载画像以显示新设置的标签
+                    showMemberProfile(wxid);
                     // 刷新群成员重叠页面以显示最新备注
                     const sessionId = document.getElementById('wechat-session-select').value;
                     if (sessionId && document.getElementById('tab-btn-member').classList.contains('active')) {
@@ -4651,13 +4991,31 @@
                 filterSessionType.addEventListener('change', renderWechatSessionOptions);
             }
 
-            // 绑定微信会话下拉框切换事件
-            const selectWechatSession = document.getElementById('wechat-session-select');
-            if (selectWechatSession) {
-                selectWechatSession.addEventListener('change', function() {
-                    loadWechatSessionMessages(this.value);
-                });
+        // 统一处理语料洞察下拉框变化并同步给检索与AI
+        window.onAnalyticsSessionChange = function(val) {
+            const wechatSelect = document.getElementById('wechat-session-select');
+            if (wechatSelect) {
+                wechatSelect.value = val === 'all' ? '' : val;
+                if (val && val !== 'all') {
+                    loadWechatSessionMessages(val);
+                }
             }
+            // 触发原本的资源分析加载
+            loadExtractedResources();
+        };
+
+        // 绑定微信会话下拉框切换事件
+        const selectWechatSession = document.getElementById('wechat-session-select');
+        if (selectWechatSession) {
+            selectWechatSession.addEventListener('change', function() {
+                loadWechatSessionMessages(this.value);
+                // 同步到 analytics-session-select
+                const analyticsSelect = document.getElementById('analytics-session-select');
+                if (analyticsSelect) {
+                    analyticsSelect.value = this.value || 'all';
+                }
+            });
+        }
 
             // 绑定日期输入框变化事件(清除快捷按钮 active 状态)
             const wechatStartDate = document.getElementById('wechat-start-date');
@@ -4690,6 +5048,19 @@
                         event.preventDefault();
                         searchWechatMessages();
                     }
+                });
+            }
+
+            // 保持检索与AI中的关键字与数据语料洞察中的筛选词实时同步
+            const resourceSearchInput = document.getElementById('analytics-resource-search');
+            if (keywordInput && resourceSearchInput) {
+                keywordInput.addEventListener('input', function() {
+                    resourceSearchInput.value = this.value;
+                });
+                resourceSearchInput.addEventListener('input', function() {
+                    keywordInput.value = this.value;
+                    // 同步完后触发提取结果的筛选重载
+                    loadExtractedResources();
                 });
             }
 
@@ -4921,6 +5292,7 @@ window.addEventListener('click', function(e) {
                 return (r.remark || '').toLowerCase().includes(keyword)
                     || (r.wechat_name || '').toLowerCase().includes(keyword)
                     || (r.nickname || '').toLowerCase().includes(keyword)
+                    || (r.tags || '').toLowerCase().includes(keyword)
                     || (r.groups || []).some(function(g) { return g.toLowerCase().includes(keyword); })
                     || (r.wxid || '').toLowerCase().includes(keyword);
             });
@@ -4934,6 +5306,11 @@ window.addEventListener('click', function(e) {
             empty.style.display = 'none';
             tbody.innerHTML = remarks.map(function(r, i) {
                 var wechatName = r.wechat_name || r.nickname || r.wxid;
+                var tagsHtml = (r.tags || '').split(',').map(function(t) {
+                    var trimmed = t.trim();
+                    if (!trimmed) return '';
+                    return '<span style="display:inline-block;background:rgba(56,189,248,0.12);color:#38bdf8;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-right:4px;">' + escapeHtml(trimmed) + '</span>';
+                }).join('');
                 var groups = (r.groups || []).slice(0, 4).map(function(g) {
                     return '<span style="display:inline-block;background:rgba(139,92,246,0.1);color:#a78bfa;padding:1px 6px;border-radius:10px;font-size:0.72rem;margin-right:3px;">' + escapeHtml(g.length > 10 ? g.substring(0,10) + '..' : g) + '</span>';
                 }).join('') + (r.groups && r.groups.length > 4 ? '<span style="color:#64748b;font-size:0.72rem;">+' + (r.groups.length - 4) + '</span>' : '');
@@ -4941,6 +5318,7 @@ window.addEventListener('click', function(e) {
                     + '<td style="padding:8px 14px;color:#64748b;font-size:0.75rem;">' + (i+1) + '</td>'
                     + '<td style="padding:8px 14px;"><span style="cursor:pointer;color:#38bdf8;" onclick="closeRemarksPanel();showMemberProfile(\'' + escapeHtml(r.wxid) + '\')">' + escapeHtml(wechatName) + '</span></td>'
                     + '<td style="padding:8px 14px;color:#fbbf24;font-weight:600;">' + escapeHtml(r.remark) + '</td>'
+                    + '<td style="padding:8px 14px;">' + tagsHtml + '</td>'
                     + '<td style="padding:8px 14px;">' + groups + '</td>'
                     + '<td style="padding:8px 14px;text-align:center;">'
                     + '<button onclick="deleteRemark(\'' + escapeHtml(r.wxid) + '\',this)" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:2px 8px;border-radius:4px;font-size:0.72rem;cursor:pointer;" title="删除备注">🗑️</button>'
@@ -5000,6 +5378,7 @@ window.addEventListener('click', function(e) {
                         <th style="padding: 10px 14px; text-align: left; color: #94a3b8; font-weight: 500; width: 50px;">#</th>
                         <th style="padding: 10px 14px; text-align: left; color: #94a3b8; font-weight: 500;">微信昵称</th>
                         <th style="padding: 10px 14px; text-align: left; color: #fbbf24; font-weight: 600;">我的备注</th>
+                        <th style="padding: 10px 14px; text-align: left; color: #38bdf8; font-weight: 500;">标签 (Tags)</th>
                         <th style="padding: 10px 14px; text-align: left; color: #94a3b8; font-weight: 500;">所在群聊</th>
                         <th style="padding: 10px 14px; text-align: center; color: #94a3b8; font-weight: 500; width: 70px;">操作</th>
                     </tr>

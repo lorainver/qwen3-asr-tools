@@ -142,9 +142,14 @@ class WechatDatabaseManager:
             CREATE TABLE IF NOT EXISTS member_remarks (
                 wxid TEXT PRIMARY KEY,
                 remark TEXT NOT NULL,
+                tags TEXT,
                 update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        try:
+            cursor.execute("ALTER TABLE member_remarks ADD COLUMN tags TEXT")
+        except Exception:
+            pass
 
         # 创建干货资源提取表
         cursor.execute("""
@@ -1352,16 +1357,18 @@ class WechatDatabaseManager:
             for row in cursor.fetchall():
                 group_member_counts[row["group_name"]] = row["count"]
 
-        # 获取全局自定义备注
-        cursor.execute("SELECT remark FROM member_remarks WHERE wxid = ?", (wxid,))
+        # 获取全局自定义备注及标签
+        cursor.execute("SELECT remark, tags FROM member_remarks WHERE wxid = ?", (wxid,))
         remark_row = cursor.fetchone()
         custom_remark = remark_row["remark"] if remark_row else ""
+        tags = remark_row["tags"] if remark_row and remark_row["tags"] else ""
                 
         return {
             "wxid": wxid,
             "wechat_name": wechat_name,
             "nickname": nickname,
             "custom_remark": custom_remark,
+            "tags": tags,
             "total_messages": total_messages,
             "group_count": len(groups),
             "groups": groups,
@@ -1397,26 +1404,35 @@ class WechatDatabaseManager:
             })
         return results
 
-    def save_member_remark(self, wxid: str, remark: str) -> bool:
-        """保存或删除全局用户自定义备注"""
+    def save_member_remark(self, wxid: str, remark: str, tags: Optional[str] = None) -> bool:
+        """保存或删除全局用户自定义备注，并支持标签存储"""
         cursor = self.conn.cursor()
         remark = (remark or "").strip()
+        tags_val = (tags or "").strip() if tags is not None else None
+        
         if not remark:
             cursor.execute("DELETE FROM member_remarks WHERE wxid = ?", (wxid,))
         else:
-            cursor.execute("""
-                INSERT INTO member_remarks (wxid, remark, update_time)
-                VALUES (?, ?, CURRENT_TIMESTAMP)
-                ON CONFLICT(wxid) DO UPDATE SET remark = excluded.remark, update_time = CURRENT_TIMESTAMP
-            """, (wxid, remark))
+            if tags_val is not None:
+                cursor.execute("""
+                    INSERT INTO member_remarks (wxid, remark, tags, update_time)
+                    VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(wxid) DO UPDATE SET remark = excluded.remark, tags = excluded.tags, update_time = CURRENT_TIMESTAMP
+                """, (wxid, remark, tags_val))
+            else:
+                cursor.execute("""
+                    INSERT INTO member_remarks (wxid, remark, update_time)
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(wxid) DO UPDATE SET remark = excluded.remark, update_time = CURRENT_TIMESTAMP
+                """, (wxid, remark))
         self.conn.commit()
         return True
 
     def get_all_member_remarks(self) -> List[Dict]:
-        """获取所有已备注的群友列表，包含群信息"""
+        """获取所有已备注的群友列表，包含群信息及标签"""
         cursor = self.conn.cursor()
         cursor.execute("""
-            SELECT mr.wxid, mr.remark, mr.update_time,
+            SELECT mr.wxid, mr.remark, mr.tags, mr.update_time,
                    gm.wechat_name, gm.nickname,
                    GROUP_CONCAT(DISTINCT gm.group_name) as groups,
                    COUNT(DISTINCT gm.group_name) as group_count,
@@ -1433,14 +1449,79 @@ class WechatDatabaseManager:
             results.append({
                 "wxid": row["wxid"],
                 "remark": row["remark"],
+                "tags": row["tags"] or "",
                 "update_time": row["update_time"],
                 "wechat_name": row["wechat_name"] or "",
                 "nickname": row["nickname"] or "",
-                "groups": groups_list,
+                "groups": list(set(groups_list)),
                 "group_count": row["group_count"] or 0,
                 "total_messages": row["total_messages"] or 0
             })
         return results
+
+    def sync_group_members_to_remarks(self, session_id: int, overwrite: bool = False, tag: Optional[str] = None) -> int:
+        """
+        一键将指定群的成员名片（若存在且不为默认符号）同步为全局微信备注。
+        可选择是否覆盖已有备注，并可自动打上指定标签（如“融三五班”）。
+        """
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT wxid, wechat_name, nickname 
+            FROM group_members 
+            WHERE session_id = ?
+        """, (session_id,))
+        members = cursor.fetchall()
+        
+        synced_count = 0
+        for m in members:
+            wxid = m[0]
+            wechat_name = m[1]
+            nickname = m[2]
+            
+            if not nickname or nickname.strip() in ('-', ''):
+                continue
+                
+            cursor.execute("SELECT remark, tags FROM member_remarks WHERE wxid = ?", (wxid,))
+            existing = cursor.fetchone()
+            
+            new_tags = tag.strip() if tag and tag.strip() else ""
+            
+            if existing:
+                if not overwrite:
+                    if new_tags:
+                        old_tags_str = existing["tags"] or ""
+                        old_tags = [t.strip() for t in old_tags_str.split(",") if t.strip()]
+                        if new_tags not in old_tags:
+                            old_tags.append(new_tags)
+                            updated_tags_str = ",".join(old_tags)
+                            cursor.execute("""
+                                UPDATE member_remarks 
+                                SET tags = ?, update_time = CURRENT_TIMESTAMP 
+                                WHERE wxid = ?
+                            """, (updated_tags_str, wxid))
+                    continue
+                else:
+                    old_tags_str = existing["tags"] or ""
+                    old_tags = [t.strip() for t in old_tags_str.split(",") if t.strip()]
+                    if new_tags and new_tags not in old_tags:
+                        old_tags.append(new_tags)
+                    updated_tags_str = ",".join(old_tags)
+                    
+                    cursor.execute("""
+                        UPDATE member_remarks 
+                        SET remark = ?, tags = ?, update_time = CURRENT_TIMESTAMP 
+                        WHERE wxid = ?
+                    """, (nickname, updated_tags_str, wxid))
+                    synced_count += 1
+            else:
+                cursor.execute("""
+                    INSERT INTO member_remarks (wxid, remark, tags, update_time)
+                    VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                """, (wxid, nickname, new_tags))
+                synced_count += 1
+                
+        self.conn.commit()
+        return synced_count
 
     def delete_member_remark(self, wxid: str) -> bool:
         """删除指定群友的备注"""

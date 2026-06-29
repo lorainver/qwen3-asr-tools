@@ -437,6 +437,10 @@ class SummarizeRequest(BaseModel):
     parallel: Optional[bool] = False
     chunk_size: Optional[int] = None
 
+class DigestRequest(BaseModel):
+    session_id: int
+    date: Optional[str] = None
+
 class SwitchModelRequest(BaseModel):
     model_id: str
 
@@ -692,29 +696,106 @@ async def api_analytics_network(session_id: int):
         
         analytics = ChatAnalytics()
         cursor = analytics.conn.cursor()
+        # 1. 从 group_members 获取本群成员的微信名与群昵称映射（解决@名称与发言微信昵称不一致的问题）
         cursor.execute("""
-            SELECT sender_display_name, content 
+            SELECT wxid, wechat_name, nickname 
+            FROM group_members 
+            WHERE session_id = ?
+        """, (session_id,))
+        member_rows = cursor.fetchall()
+
+        wxid_to_group_name = {}
+        wechat_name_to_group_name = {}
+        group_names = set()
+
+        for row in member_rows:
+            wxid = row[0]
+            wechat_name = row[1]
+            group_name = row[2]
+            
+            # 过滤掉默认空字符
+            if not group_name or group_name.strip() in ('-', ''):
+                group_name = wechat_name if wechat_name and wechat_name.strip() not in ('-', '') else wxid
+                
+            if group_name:
+                wxid_to_group_name[wxid] = group_name
+                if wechat_name:
+                    wechat_name_to_group_name[wechat_name] = group_name
+                # 只保留长度>=2的名称用作正则匹配，避免误触
+                if len(group_name) >= 2:
+                    group_names.add(group_name)
+
+        # 2. 获取包含 @ 符号的所有消息内容
+        cursor.execute("""
+            SELECT sender_display_name, content, sender_username 
             FROM messages 
-            WHERE session_id = ? AND content LIKE '> @%'
+            WHERE session_id = ? AND content LIKE '%@%'
         """, (session_id,))
         rows = cursor.fetchall()
         
-        if not rows:
-            return {"nodes": [], "links": [], "influence": [], "bridges": []}
+        edges = []
+        # 构建 @群名片 形式的正则表达式模式
+        escaped_members = [re.escape(g) for g in group_names]
+        mention_pattern = None
+        if escaped_members:
+            # 匹配 @群名片 后接空格、艾特空格、冒号、标点或行尾
+            mention_pattern = re.compile(r'@(' + '|'.join(escaped_members) + r')(?:\u2005|\s|:|：|[,，。.]|$)')
             
         reply_pattern = re.compile(r'^>\s*@([^\s：:]+)')
-        edges = []
+        
         for r in rows:
-            replier = r['sender_display_name']
-            content = r['content'] or ''
+            sender_display = r[0]
+            content = r[1] or ''
+            sender_wxid = r[2]
+            
+            # 获取发言人在本群的群名片（展示更直观）
+            replier_name = wxid_to_group_name.get(sender_wxid) or wechat_name_to_group_name.get(sender_display) or sender_display or sender_wxid
+            if not replier_name:
+                continue
+                
+            # 1. 匹配 @群名片 的互动关系
+            if mention_pattern:
+                matches = mention_pattern.findall(content)
+                for target_group_name in matches:
+                    if replier_name != target_group_name:
+                        edges.append((replier_name, target_group_name))
+            
+            # 2. 备用匹配引用模式 ('> @昵称') 并尝试转换为本群名片
             match = reply_pattern.match(content)
             if match:
-                original_poster = match.group(1)
-                if replier and original_poster and replier != original_poster:
-                    edges.append((replier, original_poster))
+                target_display = match.group(1)
+                # 寻找对应的群名片
+                target_group_name = wechat_name_to_group_name.get(target_display) or target_display
+                if replier_name != target_group_name:
+                    edges.append((replier_name, target_group_name))
                     
+        # 查询本群活跃度（发言最多）的前10名家长名片，供排行榜展示
+        cursor.execute("""
+            SELECT sender_username, sender_display_name, COUNT(*) as cnt 
+            FROM messages 
+            WHERE session_id = ? AND sender_username IS NOT NULL AND sender_username != ''
+            GROUP BY sender_username 
+            ORDER BY cnt DESC 
+            LIMIT 10
+        """, (session_id,))
+        active_counts = cursor.fetchall()
+        
+        active_speakers = []
+        for r in active_counts:
+            wxid = r[0]
+            display = r[1]
+            cnt = r[2]
+            group_name = wxid_to_group_name.get(wxid) or wechat_name_to_group_name.get(display) or display or wxid
+            active_speakers.append({"name": group_name, "count": cnt})
+
         if not edges:
-            return {"nodes": [], "links": [], "influence": [], "bridges": []}
+            return {
+                "nodes": [], 
+                "links": [], 
+                "influence": [], 
+                "bridges": [], 
+                "active_speakers": active_speakers
+            }
             
         G = nx.DiGraph()
         for u, v in edges:
@@ -753,7 +834,8 @@ async def api_analytics_network(session_id: int):
             "nodes": nodes_data,
             "links": links_data,
             "influence": sorted_influence,
-            "bridges": sorted_bridges
+            "bridges": sorted_bridges,
+            "active_speakers": active_speakers
         }
     except Exception as e:
         logger.error(f"构建社交网络图谱失败: {e}")
@@ -1715,6 +1797,122 @@ async def proxy_kb_api(request: Request, call_next):
     except Exception as e:
         logger.error(f"KB 代理错误: {e}", exc_info=True)
         return JSONResponse({"error": str(e)}, status_code=500)
+
+@app.post("/api/analytics/digest")
+async def api_analytics_digest(request: DigestRequest):
+    """为指定群聊在特定日期（或近期）的消息生成 AI 纪要"""
+    if not ai_worker.ensure_running():
+        async def error_gen():
+            yield 'data: {"error": "AI Worker 启动失败"}\n\n'.encode("utf-8")
+        return StreamingResponse(error_gen(), media_type="text/event-stream")
+        
+    try:
+        from chat_analytics import ChatAnalytics
+        analytics = ChatAnalytics()
+        cursor = analytics.conn.cursor()
+        
+        session_id = request.session_id
+        date = request.date
+        
+        # 1. 获取群昵称映射
+        cursor.execute("""
+            SELECT wxid, wechat_name, nickname 
+            FROM group_members 
+            WHERE session_id = ?
+        """, (session_id,))
+        member_rows = cursor.fetchall()
+        
+        wxid_to_group_name = {}
+        wechat_name_to_group_name = {}
+        for row in member_rows:
+            wxid = row[0]
+            wechat_name = row[1]
+            group_name = row[2]
+            if not group_name or group_name.strip() in ('-', ''):
+                group_name = wechat_name if wechat_name and wechat_name.strip() not in ('-', '') else wxid
+            if group_name:
+                wxid_to_group_name[wxid] = group_name
+                if wechat_name:
+                    wechat_name_to_group_name[wechat_name] = group_name
+                    
+        # 2. 查询消息记录
+        if date:
+            cursor.execute("""
+                SELECT sender_display_name, content, formatted_time, sender_username 
+                FROM messages 
+                WHERE session_id = ? AND formatted_time LIKE ? AND type = 'text'
+                ORDER BY create_time ASC
+            """, (session_id, f"{date}%"))
+            rows = cursor.fetchall()
+        else:
+            cursor.execute("""
+                SELECT sender_display_name, content, formatted_time, sender_username 
+                FROM messages 
+                WHERE session_id = ? AND type = 'text'
+                ORDER BY create_time DESC 
+                LIMIT 400
+            """, (session_id,))
+            rows = cursor.fetchall()[::-1]
+            
+        if not rows:
+            async def empty_gen():
+                yield 'data: {"content": "📭 该日期（或近期）无任何文本消息记录，无法生成纪要。"}\n\n'.encode("utf-8")
+            return StreamingResponse(empty_gen(), media_type="text/event-stream")
+            
+        # 3. 组装对话文本
+        chat_lines = []
+        for r in rows:
+            sender_display = r[0]
+            content = r[1] or ""
+            formatted_time = r[2]
+            sender_wxid = r[3]
+            
+            time_str = formatted_time.split(" ")[-1][:5] if formatted_time else ""
+            sender_name = wxid_to_group_name.get(sender_wxid) or wechat_name_to_group_name.get(sender_display) or sender_display or "未知"
+            chat_lines.append(f"[{time_str}] {sender_name}: {content}")
+            
+        chat_text = "\n".join(chat_lines)
+        
+        # 4. 构建提示词
+        prompt = f"""你是一个智能微信群聊纪要助手。请为以下群聊记录生成一份结构化的‘今日群聊纪要与干货总结’。
+请用精炼的中文进行归纳，重点关注：
+1. 讨论的核心主题（大家主要在聊什么）
+2. 提及的具体学校或考点（如巴蜀、育才、八中等）及其相关讨论内容
+3. 推荐的课外书籍、练习册、教辅（如《知识清单》等）
+4. 提及的培训机构与辅导品牌（如学而思、新东方等）
+5. 重要通知、后续活动或群友共识（如交表时间、家长会、免单活动等）
+
+以下为群聊对话记录：
+---
+{chat_text}
+---
+请直接以结构化 Markdown 形式输出纪要，不要包含任何前导或后续多余的客套话。"""
+
+        # 5. 调用 AI Worker 的 /api/chat_stream
+        chat_payload = {
+            "messages": [{"role": "user", "content": prompt}],
+            "enable_search": False,
+            "enable_think": False
+        }
+        
+        async def stream_gen():
+            try:
+                async with httpx.AsyncClient(timeout=300.0) as client:
+                    async with client.stream("POST", f"{AI_WORKER_URL}/api/chat_stream", json=chat_payload) as resp:
+                        async for chunk in resp.aiter_bytes():
+                            yield chunk
+            except Exception as e:
+                logger.error(f"AI 纪要流式处理出错: {e}")
+                yield f'data: {{"error": "{str(e)}"}}\n\n'.encode("utf-8")
+                
+        return StreamingResponse(stream_gen(), media_type="text/event-stream")
+        
+    except Exception as e:
+        logger.error(f"生成群聊纪要失败: {e}")
+        async def error_gen():
+            yield f'data: {{"error": "{str(e)}"}}\n\n'.encode("utf-8")
+        return StreamingResponse(error_gen(), media_type="text/event-stream")
+
 
 # ========== 启动 ==========
 

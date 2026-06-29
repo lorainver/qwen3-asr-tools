@@ -50,6 +50,12 @@ class ChatAnalyzeRequest(BaseModel):
 class MemberRemarkRequest(BaseModel):
     wxid: str
     remark: str
+    tags: Optional[str] = None
+
+class SyncRemarksRequest(BaseModel):
+    session_id: int
+    overwrite: bool = False
+    tag: Optional[str] = None
 
 # ==================== 接口定义 ====================
 
@@ -359,8 +365,16 @@ async def sync_members_cli():
 @router.post("/members/remark")
 async def save_member_remark(req: MemberRemarkRequest):
     try:
-        wechat_db.save_member_remark(req.wxid, req.remark)
-        return {"success": True, "message": "备注更新成功"}
+        wechat_db.save_member_remark(req.wxid, req.remark, req.tags)
+        return {"success": True, "message": "备注与标签更新成功"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/members/sync-group")
+async def sync_group_remarks(req: SyncRemarksRequest):
+    try:
+        count = wechat_db.sync_group_members_to_remarks(req.session_id, req.overwrite, req.tag)
+        return {"success": True, "message": f"成功同步了 {count} 位实名群友的备注与标签"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
