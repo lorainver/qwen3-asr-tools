@@ -146,7 +146,63 @@ class WechatDatabaseManager:
             )
         """)
 
+        # 创建干货资源提取表
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS extracted_resources (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id INTEGER NOT NULL,
+                message_id INTEGER NOT NULL,
+                resource_type TEXT NOT NULL,
+                resource_value TEXT NOT NULL,
+                raw_content TEXT,
+                sender_name TEXT,
+                create_time INTEGER,
+                FOREIGN KEY (session_id) REFERENCES sessions(id),
+                FOREIGN KEY (message_id) REFERENCES messages(id),
+                UNIQUE(session_id, message_id, resource_type, resource_value)
+            )
+        """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_extracted_resources_session_id ON extracted_resources(session_id)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_extracted_resources_type ON extracted_resources(resource_type)")
+
         self.conn.commit()
+
+    def save_extracted_resource(self, session_id: int, message_id: int, resource_type: str, resource_value: str, raw_content: str, sender_name: str, create_time: int):
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT OR IGNORE INTO extracted_resources 
+                (session_id, message_id, resource_type, resource_value, raw_content, sender_name, create_time)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (session_id, message_id, resource_type, resource_value, raw_content, sender_name, create_time))
+            self.conn.commit()
+        except Exception as e:
+            print(f"Error saving extracted resource: {e}")
+
+    def get_extracted_resources(self, session_id=None, resource_type=None, limit=100, offset=0, search_query=None):
+        cursor = self.conn.cursor()
+        query = """
+            SELECT r.*, s.nickname as session_nickname, s.remark as session_remark
+            FROM extracted_resources r
+            LEFT JOIN sessions s ON r.session_id = s.id
+            WHERE 1=1
+        """
+        params = []
+        if session_id:
+            query += " AND r.session_id = ?"
+            params.append(session_id)
+        if resource_type:
+            query += " AND r.resource_type = ?"
+            params.append(resource_type)
+        if search_query:
+            query += " AND (r.resource_value LIKE ? OR r.raw_content LIKE ?)"
+            params.extend([f"%{search_query}%", f"%{search_query}%"])
+            
+        query += " ORDER BY r.create_time DESC LIMIT ? OFFSET ?"
+        params.extend([limit, offset])
+        
+        cursor.execute(query, params)
+        return [dict(row) for row in cursor.fetchall()]
 
     def insert_session(self, session_data: Dict, file_name: str) -> int:
         cursor = self.conn.cursor()

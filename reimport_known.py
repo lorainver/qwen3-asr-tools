@@ -1,7 +1,7 @@
 """
 使用已知群名重新导出和导入微信会话，并支持全部会话的导出（dump）与批次导入（import）
 """
-import sys, os, json, time, subprocess, argparse
+import sys, os, json, time, subprocess, argparse, threading, concurrent.futures
 from datetime import datetime, timedelta
 from pathlib import Path
 import re
@@ -15,6 +15,9 @@ os.environ['OLLAMA_MODELS'] = 'D:\\ollama\\models'
 from knowledge_store import init_knowledge_base, index_document, get_vectorstore, DOCS_PATH, delete_by_filename
 from wechat_db import wechat_db
 from wechat_cli_importer import WeChatCliImporter
+
+db_lock = threading.Lock()
+
 
 # 历史记录和目录定义
 HISTORY_FILE = Path("D:/qwen3-asr/import_history.json")
@@ -151,11 +154,12 @@ def clear_knowledge_base():
     all_ids = vs.collection.get(limit=10000)
     if all_ids['ids']:
         vs.collection.delete(ids=all_ids['ids'])
-    index_file = DOCS_PATH / 'index.json'
+    index_file = DOCS_PATH.parent / 'index.json'
     if index_file.exists():
         with open(index_file, 'w', encoding='utf-8') as f:
             json.dump([], f, ensure_ascii=False, indent=2)
     safe_print("KB 清空完成")
+
 
 def parse_raw_md(file_path):
     if not os.path.exists(file_path):
@@ -270,14 +274,15 @@ def import_single_session(chat_name, username, is_group, start_time, force=False
             # 如果是正常完成没有消息记录，wechat-cli 的错误输出会包含 "无消息记录"
             if "无消息记录" in stderr_text:
                 safe_print(f"  -> ℹ️ 微信数据库在该时间段内没有任何新消息记录。")
-                # 更新历史导入时间，防止下次重复扫描无新消息的日期
-                history[username] = {
-                    "chat": chat_name,
-                    "is_group": is_group,
-                    "last_import_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "msg_count": history[username].get("msg_count", 0) if username in history else 0
-                }
-                save_history(history)
+                with db_lock:
+                    # 更新历史导入时间，防止下次重复扫描无新消息的日期
+                    history[username] = {
+                        "chat": chat_name,
+                        "is_group": is_group,
+                        "last_import_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "msg_count": history[username].get("msg_count", 0) if username in history else 0
+                    }
+                    save_history(history)
                 return True
             else:
                 safe_print(f"  -> ❌ 微信消息导出失败 (错误码={r.returncode}): {stderr_text[:200]}")
@@ -289,43 +294,52 @@ def import_single_session(chat_name, username, is_group, start_time, force=False
         msg_count = len([l for l in lines if l.startswith('- [')])
         safe_print(f"  -> 📥 微信导出成功: 文件大小 {export_path.stat().st_size} 字节，拉取到约 {msg_count} 条消息")
         
-        # 导入 SQLite
-        safe_print(f"  -> 💾 正在写入本地 SQLite 数据库 (去重处理中)...")
-        db_ok = wechat_db.import_markdown_file(str(export_path), wxid_override=username)
-        if db_ok:
-            safe_print(f"  -> 💾 数据库写入成功。")
-        else:
-            safe_print(f"  -> ❌ 数据库写入失败！")
+        with db_lock:
+            # 导入 SQLite
+            safe_print(f"  -> 💾 正在写入本地 SQLite 数据库 (去重处理中)...")
+            db_ok = wechat_db.import_markdown_file(str(export_path), wxid_override=username)
+            if db_ok:
+                safe_print(f"  -> 💾 数据库写入成功。")
+                try:
+                    # 增量提取干货资源并写入数据库
+                    from chat_analytics import ChatAnalytics
+                    analytics = ChatAnalytics()
+                    res_count = analytics.extract_session_resources(username)
+                    safe_print(f"  -> 📦 自动提取新资源: 成功导入 {res_count} 个干货资源")
+                except Exception as e:
+                    safe_print(f"  [Warning] 自动提取干货资源失败: {e}")
+            else:
+                safe_print(f"  -> ❌ 数据库写入失败！")
+                
+            if do_merge:
+                safe_print(f"  -> 📝 正在与本地历史 Markdown 文件进行物理合并去重...")
+                merged_msg_count = merge_and_save_raw_md(raw_path, export_path, raw_path, chat_name, is_group)
+                safe_print(f"  -> 📝 合并完成！合并后总计 {merged_msg_count} 条聊天记录")
+                try: export_path.unlink()
+                except: pass
+                msg_count_history = merged_msg_count
+            else:
+                msg_count_history = msg_count
+                
+            # 转换格式 (转换合并后的完整 raw_path)
+            importer = WeChatCliImporter(output_dir=str(WECHAT_DIR))
+            std_output_path = importer.convert_to_standard_format(str(raw_path))
             
-        if do_merge:
-            safe_print(f"  -> 📝 正在与本地历史 Markdown 文件进行物理合并去重...")
-            merged_msg_count = merge_and_save_raw_md(raw_path, export_path, raw_path, chat_name, is_group)
-            safe_print(f"  -> 📝 合并完成！合并后总计 {merged_msg_count} 条聊天记录")
-            try: export_path.unlink()
-            except: pass
-            msg_count_history = merged_msg_count
-        else:
-            msg_count_history = msg_count
+            # 导入 KB
+            category = '微信聊天记录_wechat-cli-20260109'
+            delete_by_filename(chat_name, category=category)
+            safe_print(f"  -> 🧠 正在重新分块并索引至向量知识库...")
+            result = index_document(std_output_path, category=category, skip_msg_embeddings=skip_msg_embeddings)
+            safe_print(f"  -> 🧠 向量知识库更新成功: 块ID={result['doc_id'][:8]}, 生成切片={result['chunk_count']} 个")
             
-        # 转换格式 (转换合并后的完整 raw_path)
-        importer = WeChatCliImporter(output_dir=str(WECHAT_DIR))
-        std_output_path = importer.convert_to_standard_format(str(raw_path))
-        
-        # 导入 KB
-        category = '微信聊天记录_wechat-cli-20260109'
-        delete_by_filename(chat_name, category=category)
-        safe_print(f"  -> 🧠 正在重新分块并索引至向量知识库...")
-        result = index_document(std_output_path, category=category, skip_msg_embeddings=skip_msg_embeddings)
-        safe_print(f"  -> 🧠 向量知识库更新成功: 块ID={result['doc_id'][:8]}, 生成切片={result['chunk_count']} 个")
-        
-        # 记录历史
-        history[username] = {
-            "chat": chat_name,
-            "is_group": is_group,
-            "last_import_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "msg_count": msg_count_history
-        }
-        save_history(history)
+            # 记录历史
+            history[username] = {
+                "chat": chat_name,
+                "is_group": is_group,
+                "last_import_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "msg_count": msg_count_history
+            }
+            save_history(history)
         return True
         
     except subprocess.TimeoutExpired:
@@ -346,6 +360,7 @@ def main():
     parser.add_argument('--clear-kb', action='store_true', help="导入前清空向量知识库（慎用）")
     parser.add_argument('--force', action='store_true', help="强制重新导入，即便已经在历史记录中（重新拉取全量历史）")
     parser.add_argument('--update', action='store_true', help="【增量更新模式】对已有记录进行更新。默认从该会话上次导入时间前推 2 天拉取新消息，并在物理 Markdown 文件与 SQLite 数据库中进行去重合并")
+    parser.add_argument('--workers', type=int, default=1, help="并发工作线程数（针对批量导入，建议设为 4-8 以极速导出）")
     
     args = parser.parse_args()
     
@@ -378,54 +393,110 @@ def main():
         
         history = load_history()
         exclude_config = load_exclude_list()
-        imported_count = 0
         
-        for idx, s in enumerate(sessions):
-            chat_name = s.get('chat')
+        # 预先过滤真正需要导入的会话，以便应用 limit 限制和并行调度
+        sessions_to_import = []
+        for s in sessions:
             username = s.get('username')
-            is_group = s.get('is_group', False)
-            
-            # 检查是否在排除名单中
             if should_exclude(username, exclude_config):
                 continue
-                
-            # 检查是否已跳过或已导入
             if not args.force and not args.update and username in history:
                 continue
-                
-            if args.limit_sessions > 0 and imported_count >= args.limit_sessions:
-                safe_print(f"ℹ️ 已达到本次导入限制数 {args.limit_sessions}，停止导入。")
-                break
-                
-            # 计算起始时间与是否为增量模式
-            session_start_time = args.start_time
-            is_incremental = False
-            if args.update and username in history:
-                is_incremental = True
-                if args.start_time == "2026-01-09":  # 用户没有手动覆盖时间，自动推算
-                    last_time_str = history[username].get('last_import_time')
-                    if last_time_str:
-                        try:
-                            last_dt = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M:%S")
-                            session_start_time = (last_dt - timedelta(days=2)).strftime("%Y-%m-%d")
-                        except Exception:
-                            pass
+            sessions_to_import.append(s)
             
-            safe_print(f"\n进度: [{imported_count + 1} / {args.limit_sessions or '无限制'}]")
-            success = import_single_session(
-                chat_name=chat_name,
-                username=username,
-                is_group=is_group,
-                start_time=session_start_time,
-                force=args.force,
-                history=history,
-                export_limit=args.export_limit,
-                skip_msg_embeddings=args.skip_msg_db,
-                is_incremental=is_incremental
-            )
-            if success:
-                imported_count += 1
+        if args.limit_sessions > 0:
+            sessions_to_import = sessions_to_import[:args.limit_sessions]
+            
+        total_to_import = len(sessions_to_import)
+        safe_print(f"📄 本次排重过滤后，实际需要导入/更新的会话数: {total_to_import} 个")
+        
+        if total_to_import == 0:
+            safe_print("ℹ️ 所有会话均已导入，无需更新。")
+            return
+            
+        imported_count = 0
+        
+        if args.workers > 1:
+            safe_print(f"🚀 启用多线程模式，工作线程数: {args.workers}")
+            futures_map = {}
+            with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
+                for idx, s in enumerate(sessions_to_import):
+                    chat_name = s.get('chat')
+                    username = s.get('username')
+                    is_group = s.get('is_group', False)
+                    
+                    # 计算起始时间与是否为增量模式
+                    session_start_time = args.start_time
+                    is_incremental = False
+                    if args.update and username in history:
+                        is_incremental = True
+                        if args.start_time == "2026-01-09":
+                            last_time_str = history[username].get('last_import_time')
+                            if last_time_str:
+                                try:
+                                    last_dt = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M:%S")
+                                    session_start_time = (last_dt - timedelta(days=2)).strftime("%Y-%m-%d")
+                                except Exception:
+                                    pass
+                                    
+                    future = executor.submit(
+                        import_single_session,
+                        chat_name=chat_name,
+                        username=username,
+                        is_group=is_group,
+                        start_time=session_start_time,
+                        force=args.force,
+                        history=history,
+                        export_limit=args.export_limit,
+                        skip_msg_embeddings=args.skip_msg_db,
+                        is_incremental=is_incremental
+                    )
+                    futures_map[future] = chat_name
+                    
+                for idx, future in enumerate(concurrent.futures.as_completed(futures_map)):
+                    chat_name = futures_map[future]
+                    try:
+                        success = future.result()
+                        if success:
+                            imported_count += 1
+                        safe_print(f"  [{idx + 1} / {total_to_import}] 会话 '{chat_name}' 处理完成 (成功数={imported_count})")
+                    except Exception as e:
+                        safe_print(f"  [{idx + 1} / {total_to_import}] 会话 '{chat_name}' 出现未捕获异常: {e}")
+        else:
+            for idx, s in enumerate(sessions_to_import):
+                chat_name = s.get('chat')
+                username = s.get('username')
+                is_group = s.get('is_group', False)
                 
+                # 计算起始时间与是否为增量模式
+                session_start_time = args.start_time
+                is_incremental = False
+                if args.update and username in history:
+                    is_incremental = True
+                    if args.start_time == "2026-01-09":
+                        last_time_str = history[username].get('last_import_time')
+                        if last_time_str:
+                            try:
+                                last_dt = datetime.strptime(last_time_str, "%Y-%m-%d %H:%M:%S")
+                                session_start_time = (last_dt - timedelta(days=2)).strftime("%Y-%m-%d")
+                            except Exception:
+                                pass
+                
+                safe_print(f"\n进度: [{idx + 1} / {total_to_import}]")
+                success = import_single_session(
+                    chat_name=chat_name,
+                    username=username,
+                    is_group=is_group,
+                    start_time=session_start_time,
+                    force=args.force,
+                    history=history,
+                    export_limit=args.export_limit,
+                    skip_msg_embeddings=args.skip_msg_db,
+                    is_incremental=is_incremental
+                )
+                if success:
+                    imported_count += 1
+                    
         safe_print(f"\n=== 导入完成: 本次共导入 {imported_count} 个会话 ===")
         return
 

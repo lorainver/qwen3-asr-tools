@@ -19,6 +19,8 @@ web_app.py - 主 Web 服务（无 CUDA 依赖）
 
 import os
 import sys
+import re
+from datetime import datetime
 # 确保项目根目录在路径中
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if BASE_DIR not in sys.path:
@@ -572,6 +574,190 @@ async def delete_history(path: str):
     except Exception as e:
         logger.error(f"删除对话失败: {e}")
         return {"status": "error", "message": str(e)}
+
+# ========== 数据分析与资源提取 API ==========
+
+@app.get("/api/analytics/sessions")
+async def api_analytics_sessions():
+    """获取所有可分析的微信会话列表"""
+    try:
+        from chat_analytics import ChatAnalytics
+        analytics = ChatAnalytics()
+        cursor = analytics.conn.cursor()
+        cursor.execute("""
+            SELECT id, wxid, nickname, remark, message_count 
+            FROM sessions 
+            ORDER BY message_count DESC
+        """)
+        rows = cursor.fetchall()
+        sessions = []
+        for r in rows:
+            sessions.append({
+                "id": r['id'],
+                "wxid": r['wxid'],
+                "name": r['remark'] or r['nickname'] or "未知会话",
+                "message_count": r['message_count']
+            })
+        return {"sessions": sessions}
+    except Exception as e:
+        logger.error(f"获取分析会话列表失败: {e}")
+        return {"error": str(e)}
+
+@app.get("/api/analytics/resources")
+async def api_analytics_resources(
+    resource_type: Optional[str] = None,
+    session_id: Optional[int] = None,
+    search_query: Optional[str] = None,
+    limit: int = 50,
+    offset: int = 0
+):
+    """分页拉取已提取的干货资源列表"""
+    try:
+        from wechat_db import wechat_db
+        res_list = wechat_db.get_extracted_resources(
+            session_id=session_id,
+            resource_type=resource_type,
+            limit=limit,
+            offset=offset,
+            search_query=search_query
+        )
+        return {"resources": res_list}
+    except Exception as e:
+        logger.error(f"拉取资源列表失败: {e}")
+        return {"error": str(e)}
+
+@app.get("/api/analytics/topics")
+async def api_analytics_topics(
+    session_id: int,
+    month: Optional[str] = None,
+    top: int = 15
+):
+    """获取群聊词频/主题提取结果"""
+    try:
+        from chat_analytics import ChatAnalytics
+        import jieba.analyse
+        from collections import defaultdict
+        
+        analytics = ChatAnalytics()
+        cursor = analytics.conn.cursor()
+        query = "SELECT create_time, content FROM messages WHERE session_id = ? AND type = 'text'"
+        params = [session_id]
+        if month:
+            query += " AND strftime('%Y-%m', datetime(create_time, 'unixepoch')) = ?"
+            params.append(month)
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+        
+        if not rows:
+            return {"keywords": [], "monthly_trends": {}}
+            
+        monthly_text = defaultdict(list)
+        all_text = []
+        for r in rows:
+            content = r['content'] or ''
+            content = re.sub(r'\[\w+\]', '', content)
+            content = re.sub(r'>\s*@.*?\s*\n', '', content)
+            
+            dt = datetime.fromtimestamp(r['create_time'])
+            m_str = dt.strftime("%Y-%m")
+            monthly_text[m_str].append(content)
+            all_text.append(content)
+            
+        # 整体热词
+        combined_all = " ".join(all_text)
+        tags = jieba.analyse.extract_tags(combined_all, topK=top, withWeight=True, allowPOS=('n', 'nr', 'ns', 'nt'))
+        keywords = [{"word": w, "weight": wt} for w, wt in tags]
+        
+        # 月度热词演变
+        monthly_trends = {}
+        for m in sorted(monthly_text.keys()):
+            m_combined = " ".join(monthly_text[m])
+            m_tags = jieba.analyse.extract_tags(m_combined, topK=5, allowPOS=('n', 'nr', 'ns', 'nt'))
+            monthly_trends[m] = m_tags
+            
+        return {
+            "keywords": keywords,
+            "monthly_trends": monthly_trends
+        }
+    except Exception as e:
+        logger.error(f"获取主题分析失败: {e}")
+        return {"error": str(e)}
+
+@app.get("/api/analytics/network")
+async def api_analytics_network(session_id: int):
+    """获取群聊社交网络拓扑数据"""
+    try:
+        from chat_analytics import ChatAnalytics
+        import networkx as nx
+        
+        analytics = ChatAnalytics()
+        cursor = analytics.conn.cursor()
+        cursor.execute("""
+            SELECT sender_display_name, content 
+            FROM messages 
+            WHERE session_id = ? AND content LIKE '> @%'
+        """, (session_id,))
+        rows = cursor.fetchall()
+        
+        if not rows:
+            return {"nodes": [], "links": [], "influence": [], "bridges": []}
+            
+        reply_pattern = re.compile(r'^>\s*@([^\s：:]+)')
+        edges = []
+        for r in rows:
+            replier = r['sender_display_name']
+            content = r['content'] or ''
+            match = reply_pattern.match(content)
+            if match:
+                original_poster = match.group(1)
+                if replier and original_poster and replier != original_poster:
+                    edges.append((replier, original_poster))
+                    
+        if not edges:
+            return {"nodes": [], "links": [], "influence": [], "bridges": []}
+            
+        G = nx.DiGraph()
+        for u, v in edges:
+            if G.has_edge(u, v):
+                G[u][v]['weight'] += 1
+            else:
+                G.add_edge(u, v, weight=1)
+                
+        # 计算指标
+        in_degree = nx.in_degree_centrality(G)
+        betweenness = nx.betweenness_centrality(G)
+        
+        # 格式化关系图
+        nodes_data = []
+        for node in G.nodes():
+            deg = G.degree(node)
+            nodes_data.append({
+                "name": node,
+                "symbolSize": max(12, min(deg * 2.5, 70)),
+                "value": deg
+            })
+            
+        links_data = []
+        for u, v, d in G.edges(data=True):
+            links_data.append({
+                "source": u,
+                "target": v,
+                "weight": d['weight']
+            })
+            
+        # 排行榜
+        sorted_influence = [{"name": name, "score": round(score, 4)} for name, score in sorted(in_degree.items(), key=lambda x: x[1], reverse=True)[:10]]
+        sorted_bridges = [{"name": name, "score": round(score, 4)} for name, score in sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:10]]
+        
+        return {
+            "nodes": nodes_data,
+            "links": links_data,
+            "influence": sorted_influence,
+            "bridges": sorted_bridges
+        }
+    except Exception as e:
+        logger.error(f"构建社交网络图谱失败: {e}")
+        return {"error": str(e)}
 
 # ========== 页面端点 ==========
 

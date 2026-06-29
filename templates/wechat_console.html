@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -1565,6 +1565,7 @@
                         <div class="sub-tabs-container" style="display: flex; gap: 4px; background: rgba(0, 0, 0, 0.25); padding: 4px; border-radius: 8px; margin-bottom: 15px;">
                             <button id="tab-btn-message" class="sub-tab-btn active" onclick="switchConsoleTab('message')" style="flex: 1; border: none; outline: none; border-radius: 6px; padding: 6px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease;">💬 检索与 AI</button>
                             <button id="tab-btn-member" class="sub-tab-btn" onclick="switchConsoleTab('member')" style="flex: 1; border: none; outline: none; border-radius: 6px; padding: 6px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease;">👥 群友重叠分析</button>
+                            <button id="tab-btn-analytics" class="sub-tab-btn" onclick="switchConsoleTab('analytics')" style="flex: 1; border: none; outline: none; border-radius: 6px; padding: 6px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease;">📊 数据与干货洞察</button>
                         </div>
 
                         <div id="console-message-controls">
@@ -1691,6 +1692,38 @@
                             </div>
                             <span class="analysis-status" id="wechat-member-status"></span>
                         </div>
+
+                        <div id="console-analytics-controls" style="display: none;">
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">筛选分析会话</label>
+                                <input type="text" id="analytics-session-search" class="analysis-input" placeholder="输入关键字搜索会话..." style="width: 100%; box-sizing: border-box; margin-bottom: 4px;" oninput="renderAnalyticsSessionOptions()">
+                                <select id="analytics-session-select" class="analysis-select" style="width: 100%;" onchange="loadExtractedResources()">
+                                    <option value="all">📁 [全部会话提取]</option>
+                                </select>
+                            </div>
+                            
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">资源筛选类型</label>
+                                <select id="analytics-resource-type" class="analysis-select" style="width: 100%;" onchange="loadExtractedResources()">
+                                    <option value="all">📁 全部资源</option>
+                                    <option value="book">📚 推荐书籍/教辅</option>
+                                    <option value="url">🔗 网盘/干货链接</option>
+                                    <option value="school">🏫 提及学校/考点</option>
+                                    <option value="institution">🏢 培训机构/品牌</option>
+                                </select>
+                            </div>
+
+                            <div class="analysis-control-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <label style="font-weight: 500;">关键字检索资源</label>
+                                <input type="text" id="analytics-resource-search" class="analysis-input" placeholder="搜索书籍、学校或链接..." style="width: 100%; box-sizing: border-box;" oninput="loadExtractedResources()">
+                            </div>
+                            
+                            <div class="analysis-action-row" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                                <button class="kb-btn kb-btn-primary" onclick="loadExtractedResources(true)" style="width: 100%; background: linear-gradient(135deg, #0ea5e9, #38bdf8);">🔄 刷新提取结果</button>
+                                <button class="kb-btn kb-btn-secondary" onclick="runTopicsAnalysis()" style="width: 100%;">📈 运行词频热词演变</button>
+                                <button class="kb-btn kb-btn-secondary" onclick="runNetworkAnalysis()" style="width: 100%;">🌐 构建社交互动网络</button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Right Column: Interactive Output Display -->
@@ -1698,7 +1731,7 @@
                         <!-- Message / Bubble Feed Section -->
                         <div class="wechat-feed-card">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px;">
-                                <h5 style="margin: 0; font-size: 1rem; color: #38bdf8;">&#128172; 微信聊天气泡还原流</h5>
+                                <h5 id="wechat-feed-title" style="margin: 0; font-size: 1rem; color: #38bdf8;">&#128172; 微信聊天气泡还原流</h5>
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <button id="wechat-back-to-search-btn" class="kb-btn kb-btn-secondary" style="display: none; padding: 4px 10px; font-size: 0.8rem; min-height: 28px;" onclick="restoreWechatSearch()">🔙 返回检索结果</button>
                                     <span id="wechat-feed-stats" style="font-size: 0.8rem; color: var(--text-secondary, #94a3b8);">未加载数据</span>
@@ -1769,7 +1802,10 @@
                             
                             <!-- Detailed overlap members list -->
                             <div>
-                                <h5 style="margin: 0 0 10px 0; color: #e2e8f0; font-size: 0.9rem;">👤 重叠群成员详细名单</h5>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                                    <h5 style="margin: 0; color: #e2e8f0; font-size: 0.9rem;">👤 重叠群成员详细名单</h5>
+                                    <input type="text" id="overlap-member-search" class="analysis-input" placeholder="输入姓名、微信号或群聊名称检索名单..." style="width: 280px; font-size: 0.8rem; padding: 4px 10px; min-height: 30px; box-sizing: border-box;" oninput="onOverlapMemberSearchInput()">
+                                </div>
                                 <div style="max-height: 650px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.1);">
                                     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; color: #cbd5e1;">
                                         <thead>
@@ -1782,6 +1818,60 @@
                                         </thead>
                                         <tbody id="overlap-detailed-members-tbody">
                                             <!-- List of detailed overlap members -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Data Analytics & Insights Panel Section (Initially hidden) -->
+                        <div class="wechat-member-card" id="wechat-analytics-panel" style="display: none; background: var(--card-bg, rgba(255, 255, 255, 0.05)); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 20px; flex-direction: column; gap: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+                                <h4 style="margin: 0; color: #38bdf8; font-size: 1.1rem; display: flex; align-items: center; gap: 6px;">📊 会话数据洞察与干货提取</h4>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span id="wechat-analytics-stats" style="font-size: 0.85rem; color: var(--text-primary, #e2e8f0); font-weight: 500;">[ 目标群聊: 全部会话 ]</span>
+                                    <span id="wechat-analytics-status" style="font-size: 0.85rem; color: #38bdf8; background: rgba(56,189,248,0.1); padding: 2px 8px; border-radius: 4px;">已就绪</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Top row for analytics results: Word frequency & interaction charts -->
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                <!-- Left sub-box: Word cloud or frequency listing -->
+                                <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
+                                    <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #0ea5e9; padding-left: 8px;">📈 热词与词频分析</h5>
+                                    <div id="analytics-topics-result" style="flex: 1; max-height: 350px; overflow-y: auto; font-size: 0.85rem; color: #cbd5e1; line-height: 1.8;">
+                                        <div style="text-align: center; color: #94a3b8; padding: 40px 0;">点击左侧“运行词频热词演变”获取分析数据</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right sub-box: Social network graph -->
+                                <div style="flex: 1.2; min-width: 320px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
+                                    <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #8b5cf6; padding-left: 8px;">🌐 家长回复社交关系图</h5>
+                                    <div id="analytics-network-chart-container" style="width: 100%; height: 350px; position: relative;">
+                                        <div id="analytics-network-chart" style="width: 100%; height: 100%;"></div>
+                                        <div id="analytics-network-placeholder" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color: #94a3b8; text-align:center;">
+                                            点击左侧“构建社交互动网络”生成回复图谱
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom row for dry goods/resource extracted listing -->
+                            <div>
+                                <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #10b981; padding-left: 8px;">📦 提取出的干货资源库</h5>
+                                <div style="max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02);">
+                                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; color: #cbd5e1;">
+                                        <thead>
+                                            <tr style="background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid rgba(255,255,255,0.08);">
+                                                <th style="padding: 10px 14px; width: 120px;">类型</th>
+                                                <th style="padding: 10px 14px; width: 220px;">提取到的资源值</th>
+                                                <th style="padding: 10px 14px;">上下文内容</th>
+                                                <th style="padding: 10px 14px; width: 110px;">分享人</th>
+                                                <th style="padding: 10px 14px; width: 160px;">提取时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="analytics-resources-tbody">
+                                            <tr><td colspan="5" style="text-align:center;padding:40px;color:#64748b;">正在加载干货资源数据...</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2557,6 +2647,9 @@
 
             // 重置状态，防止消息混入
             wechatState.sessionId = sessionId;
+            if (typeof updateTargetGroupHeaders === 'function') {
+                updateTargetGroupHeaders();
+            }
             wechatState.isSearchMode = false;
             wechatState.messages = [];  // 清空消息数组
             wechatState.offset = 0;
@@ -3326,36 +3419,380 @@
             currentConsoleTab = tab;
             const messageTabBtn = document.getElementById('tab-btn-message');
             const memberTabBtn = document.getElementById('tab-btn-member');
+            const analyticsTabBtn = document.getElementById('tab-btn-analytics');
             const messageControls = document.getElementById('console-message-controls');
             const memberControls = document.getElementById('console-member-controls');
+            const analyticsControls = document.getElementById('console-analytics-controls');
             
             const wechatFeedCard = document.querySelector('.wechat-feed-card');
             const wechatAICard = document.querySelector('.wechat-ai-card');
             const memberOverlapPanel = document.getElementById('wechat-member-overlap-panel');
+            const analyticsPanel = document.getElementById('wechat-analytics-panel');
+
+            // Reset tabs active state
+            messageTabBtn.classList.remove('active');
+            memberTabBtn.classList.remove('active');
+            if (analyticsTabBtn) analyticsTabBtn.classList.remove('active');
+
+            // Hide all controls and panels
+            messageControls.style.display = 'none';
+            memberControls.style.display = 'none';
+            if (analyticsControls) analyticsControls.style.display = 'none';
+            wechatFeedCard.style.display = 'none';
+            wechatAICard.style.display = 'none';
+            memberOverlapPanel.style.display = 'none';
+            if (analyticsPanel) analyticsPanel.style.display = 'none';
 
             if (tab === 'message') {
                 messageTabBtn.classList.add('active');
-                memberTabBtn.classList.remove('active');
                 messageControls.style.display = 'block';
-                memberControls.style.display = 'none';
-                
                 wechatFeedCard.style.display = 'block';
                 wechatAICard.style.display = 'block';
-                memberOverlapPanel.style.display = 'none';
-            } else {
-                messageTabBtn.classList.remove('active');
+            } else if (tab === 'member') {
                 memberTabBtn.classList.add('active');
-                messageControls.style.display = 'none';
                 memberControls.style.display = 'block';
-                
-                wechatFeedCard.style.display = 'none';
-                wechatAICard.style.display = 'none';
                 memberOverlapPanel.style.display = 'flex';
                 
                 // Trigger auto analysis if a session is already selected
                 const sessionId = document.getElementById('wechat-session-select').value;
                 if (sessionId) {
                     runGroupOverlapAnalysis();
+                }
+            } else if (tab === 'analytics') {
+                if (analyticsTabBtn) analyticsTabBtn.classList.add('active');
+                if (analyticsControls) analyticsControls.style.display = 'block';
+                if (analyticsPanel) analyticsPanel.style.display = 'flex';
+                
+                // Sync select options
+                syncAnalyticsSessionSelect();
+                loadExtractedResources();
+            }
+        }
+
+        // 渲染分析会话选择列表
+        function renderAnalyticsSessionOptions() {
+            const select = document.getElementById('analytics-session-select');
+            if (!select) return;
+            
+            const searchQuery = (document.getElementById('analytics-session-search')?.value || '').toLowerCase().trim();
+            
+            // 过滤会话
+            const filtered = allWechatSessions.filter(session => {
+                return !searchQuery || 
+                    (session.display_name && session.display_name.toLowerCase().includes(searchQuery)) ||
+                    (session.wxid && session.wxid.toLowerCase().includes(searchQuery));
+            });
+
+            // 按类型分组
+            const groups = {
+                '群聊': [],
+                '私聊': [],
+                '公众号': [],
+                '未分类': []
+            };
+
+            filtered.forEach(session => {
+                const type = session.type || '未分类';
+                if (groups[type]) {
+                    groups[type].push(session);
+                } else {
+                    groups['未分类'].push(session);
+                }
+            });
+
+            const currentValue = select.value || 'all';
+            select.innerHTML = '<option value="all">📁 [全部会话提取]</option>';
+
+            const groupOrder = ['群聊', '私聊', '公众号', '未分类'];
+            groupOrder.forEach(groupName => {
+                const list = groups[groupName];
+                if (list && list.length > 0) {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = `${groupName} (${list.length})`;
+                    list.forEach(session => {
+                        const opt = document.createElement('option');
+                        opt.value = session.id;
+                        opt.textContent = `${session.display_name} (${session.message_count}条)`;
+                        optgroup.appendChild(opt);
+                    });
+                    select.appendChild(optgroup);
+                }
+            });
+
+            // 尽可能恢复选定值，或者选择all
+            select.value = currentValue;
+            if (select.value !== currentValue && select.options.length > 1) {
+                // 如果当前选中的不再列表中，可以根据情况默认选择第一个或者all
+            }
+        }
+
+        // 同步分析会话选择下拉框
+        function syncAnalyticsSessionSelect() {
+            // 清空搜索框
+            const searchInput = document.getElementById('analytics-session-search');
+            if (searchInput) searchInput.value = '';
+            
+            renderAnalyticsSessionOptions();
+            
+            const analyticSelect = document.getElementById('analytics-session-select');
+            if (!analyticSelect) return;
+            
+            // 默认选中主界面当前选中的会话
+            if (wechatState.sessionId) {
+                analyticSelect.value = wechatState.sessionId;
+            } else {
+                analyticSelect.value = 'all';
+            }
+            updateTargetGroupHeaders();
+        }
+
+        // 统一更新各个标签页头部目标群聊显示
+        function updateTargetGroupHeaders() {
+            const select = document.getElementById('wechat-session-select');
+            const selectedOpt = select ? select.options[select.selectedIndex] : null;
+            let groupName = '未选择';
+            if (selectedOpt && selectedOpt.value) {
+                groupName = selectedOpt.textContent.replace(/\s*\(\d+条\)\s*$/, '');
+            }
+            
+            // 还原流标题同步更新目标群聊名称
+            const feedTitle = document.getElementById('wechat-feed-title');
+            if (feedTitle) {
+                feedTitle.innerHTML = `&#128172; 微信聊天气泡还原流 <span style="font-size: 0.82rem; color: #94a3b8; margin-left: 10px; font-weight: normal; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 4px;">[ 当前会话: ${escapeHtml(groupName)} ]</span>`;
+            }
+            
+            // 数据与干货提取同步更新目标群聊名称
+            const analyticsStats = document.getElementById('wechat-analytics-stats');
+            if (analyticsStats) {
+                const analyticSelect = document.getElementById('analytics-session-select');
+                const analOpt = analyticSelect ? analyticSelect.options[analyticSelect.selectedIndex] : null;
+                let analGroupName = '全部会话';
+                if (analOpt && analOpt.value !== 'all' && analOpt.value !== '') {
+                    analGroupName = analOpt.textContent.replace(/\s*\(\d+条\)\s*$/, '');
+                }
+                analyticsStats.textContent = `[ 目标群聊: ${analGroupName} ]`;
+            }
+        }
+
+        // 加载提取到的干货资源
+        async function loadExtractedResources(refresh = false) {
+            updateTargetGroupHeaders();
+            const selectVal = document.getElementById('analytics-session-select')?.value;
+            const resType = document.getElementById('analytics-resource-type')?.value;
+            const searchVal = document.getElementById('analytics-resource-search')?.value || '';
+            const statusSpan = document.getElementById('wechat-analytics-status');
+            
+            if (statusSpan) {
+                statusSpan.textContent = '⏳ 正在加载资源...';
+            }
+            
+            let url = `/api/analytics/resources?limit=150&_t=${Date.now()}`;
+            if (selectVal && selectVal !== 'all') {
+                url += `&session_id=${selectVal}`;
+            }
+            if (resType && resType !== 'all') {
+                url += `&resource_type=${resType}`;
+            }
+            if (searchVal.trim()) {
+                url += `&search_query=${encodeURIComponent(searchVal.trim())}`;
+            }
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                const tbody = document.getElementById('analytics-resources-tbody');
+                if (!tbody) return;
+                
+                if (!data.resources || data.resources.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:#64748b;">📭 未提取到相关干货资源。您可以先进行微信导入以自动提取，或选择其他类型。</td></tr>';
+                    if (statusSpan) statusSpan.textContent = '未找到数据';
+                    return;
+                }
+                
+                const typeMap = {
+                    'book': '📚 书籍/教辅',
+                    'url': '🔗 云盘链接',
+                    'school': '🏫 学校/考点',
+                    'institution': '🏢 培训机构'
+                };
+                
+                tbody.innerHTML = data.resources.map((item, idx) => {
+                    const typeLabel = typeMap[item.resource_type] || item.resource_type;
+                    const valHtml = item.resource_type === 'url' 
+                        ? `<a href="${item.resource_value}" target="_blank" class="wechat-link-item">${item.resource_value}</a>`
+                        : `<b style="color:#38bdf8;">${escapeHtml(item.resource_value)}</b>`;
+                    const context = highlightKeyword(escapeHtml(item.raw_content), item.resource_value);
+                    const formattedTime = new Date(item.create_time * 1000).toLocaleString();
+                    
+                    return `<tr style="border-bottom:1px solid rgba(255,255,255,0.03);" onmouseenter="this.style.background='rgba(255,255,255,0.02)'" onmouseleave="this.style.background='transparent'">
+                        <td style="padding:10px 14px;color:#94a3b8;font-size:0.8rem;">${typeLabel}</td>
+                        <td style="padding:10px 14px;">${valHtml}</td>
+                        <td style="padding:10px 14px;color:#e2e8f0;font-size:0.8rem;max-width:350px;word-break:break-all;">${context}</td>
+                        <td style="padding:10px 14px;color:#38bdf8;">${escapeHtml(item.sender_name || '未知')}</td>
+                        <td style="padding:10px 14px;color:#64748b;font-family:monospace;font-size:0.75rem;">${formattedTime}</td>
+                    </tr>`;
+                }).join('');
+                
+                if (statusSpan) {
+                    statusSpan.textContent = `成功加载 ${data.resources.length} 个资源`;
+                }
+            } catch(e) {
+                console.error(e);
+                if (statusSpan) statusSpan.textContent = '❌ 加载失败';
+            }
+        }
+
+        // 运行词频话题演变分析
+        async function runTopicsAnalysis() {
+            const selectVal = document.getElementById('analytics-session-select')?.value;
+            if (!selectVal || selectVal === 'all') {
+                alert('请在左侧选择具体的群聊会话，全量暂不支持词频/关系分析');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('analytics-topics-result');
+            if (!resultDiv) return;
+            resultDiv.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px 0;">⏳ 正在运行分词与 TF-IDF 权重计算...</div>';
+            
+            try {
+                const res = await fetch(`/api/analytics/topics?session_id=${selectVal}&_t=${Date.now()}`);
+                const data = await res.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<div style="color:#ef4444;padding:20px;">❌ 分析错误: ${data.error}</div>`;
+                    return;
+                }
+                
+                if (!data.keywords || data.keywords.length === 0) {
+                    resultDiv.innerHTML = '<div style="color:#64748b;padding:20px;text-align:center;">该群聊无足够文本消息用于主题词提取。</div>';
+                    return;
+                }
+                
+                let html = '<h6>全期核心热词Top 15 (TF-IDF):</h6><div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;">';
+                data.keywords.forEach(item => {
+                    const size = Math.max(12, Math.min(22, 12 + item.weight * 20));
+                    const opac = Math.max(0.5, Math.min(1.0, 0.4 + item.weight));
+                    html += `<span style="font-size:${size}px;color:#38bdf8;opacity:${opac};font-weight:bold;margin:2px 5px;" title="重要性权重: ${item.weight.toFixed(4)}">${escapeHtml(item.word)}</span>`;
+                });
+                html += '</div>';
+                
+                if (data.monthly_trends && Object.keys(data.monthly_trends).length > 0) {
+                    html += '<h6>📅 月度关注主题演变雷达:</h6><div style="display:flex;flex-direction:column;gap:8px;">';
+                    Object.keys(data.monthly_trends).sort().forEach(month => {
+                        const words = data.monthly_trends[month].join(', ');
+                        html += `<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:6px;padding:8px 12px;display:flex;justify-content:space-between;">
+                            <span style="color:#a78bfa;font-weight:bold;">${month}月</span>
+                            <span style="color:#e2e8f0;text-align:right;">${escapeHtml(words)}</span>
+                        </div>`;
+                    });
+                    html += '</div>';
+                }
+                
+                resultDiv.innerHTML = html;
+            } catch(e) {
+                resultDiv.innerHTML = `<div style="color:#ef4444;padding:20px;">❌ 分析出错: ${e.message}</div>`;
+            }
+        }
+
+        // 构建并展示社交关系图
+        let analyticsChartInstance = null;
+        async function runNetworkAnalysis() {
+            const selectVal = document.getElementById('analytics-session-select')?.value;
+            if (!selectVal || selectVal === 'all') {
+                alert('请在左侧选择具体的群聊会话，全量暂不支持词频/关系分析');
+                return;
+            }
+            
+            const placeholder = document.getElementById('analytics-network-placeholder');
+            if (placeholder) {
+                placeholder.style.display = 'flex';
+                placeholder.textContent = '⏳ 正在构建 NetworkX 图谱拓扑结构并渲染中...';
+            }
+            
+            try {
+                const res = await fetch(`/api/analytics/network?session_id=${selectVal}&_t=${Date.now()}`);
+                const data = await res.json();
+                
+                if (data.error) {
+                    if (placeholder) {
+                        placeholder.style.display = 'flex';
+                        placeholder.textContent = '❌ 构建失败: ' + data.error;
+                    }
+                    return;
+                }
+                
+                if (!data.nodes || data.nodes.length === 0) {
+                    if (placeholder) {
+                        placeholder.style.display = 'flex';
+                        placeholder.textContent = 'ℹ️ 群聊中无引用 @ 回复关系数据';
+                    }
+                    return;
+                }
+                
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
+                
+                const chartDom = document.getElementById('analytics-network-chart');
+                if (analyticsChartInstance) {
+                    analyticsChartInstance.dispose();
+                }
+                
+                const isLight = document.body.classList.contains('light-mode');
+                analyticsChartInstance = echarts.init(chartDom, isLight ? null : 'dark', { backgroundColor: 'transparent' });
+                
+                const option = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: function(params) {
+                            if (params.dataType === 'node') {
+                                return `👤 家长: <b>${params.name}</b><br>度数(互动关联值): ${params.value}`;
+                            } else {
+                                return `💬 ${params.data.source} 回复了 ${params.data.target}: ${params.data.weight} 次`;
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            type: 'graph',
+                            layout: 'force',
+                            data: data.nodes,
+                            links: data.links,
+                            roam: true,
+                            label: {
+                                show: true,
+                                position: 'right',
+                                color: isLight ? '#0f172a' : '#cbd5e1'
+                            },
+                            force: {
+                                repulsion: 150,
+                                edgeLength: [40, 100],
+                                gravity: 0.1
+                            },
+                            lineStyle: {
+                                color: isLight ? '#94a3b8' : '#475569',
+                                curveness: 0.15,
+                                opacity: 0.7,
+                                width: 1.5
+                            },
+                            emphasis: {
+                                focus: 'adjacency',
+                                lineStyle: {
+                                    width: 4,
+                                    color: '#38bdf8'
+                                }
+                            }
+                        }
+                    ]
+                };
+                
+                analyticsChartInstance.setOption(option);
+            } catch(e) {
+                alert('渲染社交网络出错: ' + e.message);
+                if (placeholder) {
+                    placeholder.style.display = 'flex';
+                    placeholder.textContent = '渲染出错: ' + e.message;
                 }
             }
         }
@@ -3456,16 +3893,16 @@
             
             document.getElementById('overlap-num-total').textContent = data.total_members;
 
-    // 收集全量群友数据（重叠群友 + 仅在当前群的群友）
-    allMembersData = [];
-    if (data.members) {
-        data.members.forEach(m => { allMembersData.push({...m, type: "overlap"}); });
-    }
-    if (data.only_target_members) {
-        data.only_target_members.forEach(m => { allMembersData.push({...m, type: "only_target"}); });
-    }
-    // 按消息数降序排序
-    allMembersData.sort((a, b) => (b.message_count || 0) - (a.message_count || 0));
+            // 收集全量群友数据（重叠群友 + 仅在当前群的群友）
+            allMembersData = [];
+            if (data.members) {
+                data.members.forEach(m => { allMembersData.push({...m, type: "overlap"}); });
+            }
+            if (data.only_target_members) {
+                data.only_target_members.forEach(m => { allMembersData.push({...m, type: "only_target"}); });
+            }
+            // 按消息数降序排序
+            allMembersData.sort((a, b) => (b.message_count || 0) - (a.message_count || 0));
 
             document.getElementById('overlap-num-cross').textContent = data.members_in_other_groups;
             document.getElementById('overlap-num-only').textContent = data.members_only_in_target;
@@ -3498,7 +3935,7 @@
                 {bg:'rgba(250,204,21,0.12)', fg:'#facc15'},
                 {bg:'rgba(45,212,191,0.12)', fg:'#2dd4bf'},
                 {bg:'rgba(248,113,113,0.12)', fg:'#f87171'},
-                {bg:'rgba(168,162,158,0.12)', fg:'#a8a29e'},
+                {bg:'rgba(16,182,129,0.12)', fg:'#10b981'},
                 {bg:'rgba(129,140,248,0.12)', fg:'#818cf8'},
             ];
             const groupColorMap = {};
@@ -3512,9 +3949,12 @@
             overlapAllMembers = data.members;
             overlapGroupColorMap = groupColorMap;
             overlapFilteredGroup = null;
+            
+            // Reset search input value
+            const searchInput = document.getElementById('overlap-member-search');
+            if (searchInput) searchInput.value = '';
 
             renderOverlapMembersTable(data.members, groupColorMap, null);
-            // (table rendering moved to renderOverlapMembersTable function)
             
             // Render ECharts overlap chart
             renderOverlapEChart(data.group_distribution, data.members, groupColorMap);
@@ -3524,13 +3964,38 @@
             if (overlapFilteredGroup === groupName) {
                 // Toggle off: show all
                 overlapFilteredGroup = null;
-                renderOverlapMembersTable(overlapAllMembers, overlapGroupColorMap, null);
             } else {
                 // Filter to this group
                 overlapFilteredGroup = groupName;
-                const filtered = overlapAllMembers.filter(m => m.groups && m.groups.includes(groupName));
-                renderOverlapMembersTable(filtered, overlapGroupColorMap, groupName);
             }
+            onOverlapMemberSearchInput();
+        }
+
+        function onOverlapMemberSearchInput() {
+            const query = document.getElementById('overlap-member-search')?.value.toLowerCase().trim() || '';
+            let filtered = overlapAllMembers || [];
+            
+            if (overlapFilteredGroup) {
+                filtered = filtered.filter(m => m.groups && m.groups.includes(overlapFilteredGroup));
+            }
+            
+            if (query) {
+                filtered = filtered.filter(m => {
+                    const name = (m.wechat_name || '').toLowerCase();
+                    const nick = (m.nickname || '').toLowerCase();
+                    const remark = (m.custom_remark || '').toLowerCase();
+                    const wxid = (m.wxid || '').toLowerCase();
+                    const groupNames = (m.groups || []).map(g => g.toLowerCase()).join(' ');
+                    
+                    return name.includes(query) || 
+                           nick.includes(query) || 
+                           remark.includes(query) || 
+                           wxid.includes(query) || 
+                           groupNames.includes(query);
+                });
+            }
+            
+            renderOverlapMembersTable(filtered, overlapGroupColorMap, overlapFilteredGroup);
         }
 
         function renderOverlapMembersTable(members, colorMap, activeGroup) {
@@ -3604,10 +4069,10 @@
             const isLight = document.body.classList.contains('light-mode');
             overlapChartInstance = echarts.init(chartDom, isLight ? null : 'dark', { backgroundColor: 'transparent' });
             
-            const topData = distribution; // show all groups
-            // Dynamic height: ~28px per bar, min 200px, max 800px
-            const chartHeight = Math.max(300, Math.min(1600, topData.length * 38 + 60));
-            chartDom.style.height = chartHeight + 'px';
+            const topData = distribution || []; // show all groups
+            
+            // 设定固定的图表渲染高度 320px，彻底避免字体缩放变形
+            chartDom.style.height = '320px';
             
             const option = {
                 tooltip: {
@@ -3633,11 +4098,34 @@
                 },
                 grid: {
                     left: '3%',
-                    right: '6%',
+                    right: topData.length > 8 ? '10%' : '6%',
                     bottom: '3%',
-                    top: '10%',
+                    top: '8%',
                     containLabel: true
                 },
+                // 如果群聊多于 8 个，自动加入 ECharts 滚动条，防止文字拥挤
+                dataZoom: topData.length > 8 ? [
+                    {
+                        type: 'slider',
+                        show: true,
+                        yAxisIndex: [0],
+                        right: 15,
+                        start: 100 - Math.min(100, (8 / topData.length) * 100),
+                        end: 100,
+                        width: 12,
+                        borderColor: 'transparent',
+                        backgroundColor: 'rgba(255,255,255,0.02)',
+                        fillerColor: 'rgba(139,92,246,0.25)',
+                        handleSize: 0,
+                        showDetail: false
+                    },
+                    {
+                        type: 'inside',
+                        yAxisIndex: [0],
+                        start: 100 - Math.min(100, (8 / topData.length) * 100),
+                        end: 100
+                    }
+                ] : [],
                 xAxis: {
                     type: 'value',
                     splitLine: { lineStyle: { color: isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.05)' } }
