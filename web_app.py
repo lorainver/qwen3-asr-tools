@@ -1921,7 +1921,7 @@ async def api_analytics_digest(request: DigestRequest):
             formatted_time = r[2]
             sender_wxid = r[3]
             
-            time_str = formatted_time.split(" ")[-1][:5] if formatted_time else ""
+            time_str = formatted_time[:16] if formatted_time else ""
             sender_name = wxid_to_group_name.get(sender_wxid) or wechat_name_to_group_name.get(sender_display) or sender_display or "未知"
             chat_lines.append(f"[{time_str}] {sender_name}: {content}")
             
