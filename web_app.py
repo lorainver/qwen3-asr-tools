@@ -1940,13 +1940,18 @@ async def api_analytics_digest(request: DigestRequest):
         except Exception as e:
             logger.error(f"加载 AI 纪要模板失败，将使用默认模板: {e}")
 
-        prompt = f"""{base_prompt}
-
-以下为群聊对话记录：
+        prompt = f"""以下为微信群聊对话记录：
 ---
 {chat_text}
 ---
-请直接以结构化 Markdown 形式输出纪要，不要包含任何前导或后续多余的客套话。"""
+
+【分析与总结指令】
+{base_prompt}
+
+【格式要求】
+1. 请直接以结构化的 Markdown 格式输出纪要与总结。
+2. 严禁包含任何前导或后续多余的解释、废话、声明或客套话（如“以上是整理出的内容”）。
+3. 如果某项关注点在聊天记录中完全没有提及（如未推荐任何教辅或未提到机构），请直接跳过该板块，不要凑数或无中生有。"""
 
         # 5. 调用 AI Worker 的 /api/chat_stream
         chat_payload = {
