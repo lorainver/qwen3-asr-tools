@@ -708,6 +708,7 @@ async def api_analytics_network(session_id: int):
 
         wxid_to_group_name = {}
         wechat_name_to_group_name = {}
+        group_name_to_wxid = {}
         group_names = set()
 
         for row in member_rows:
@@ -721,11 +722,17 @@ async def api_analytics_network(session_id: int):
                 
             if group_name:
                 wxid_to_group_name[wxid] = group_name
+                group_name_to_wxid[group_name] = wxid
                 if wechat_name:
                     wechat_name_to_group_name[wechat_name] = group_name
                 # 只保留长度>=2的名称用作正则匹配，避免误触
                 if len(group_name) >= 2:
                     group_names.add(group_name)
+
+        # 获取所有自定义备注，以便附加在排行榜中显示
+        cursor.execute("SELECT wxid, remark FROM member_remarks WHERE remark IS NOT NULL AND remark != ''")
+        remark_rows = cursor.fetchall()
+        wxid_to_remark = {row[0]: row[1] for row in remark_rows}
 
         # 2. 获取包含 @ 符号的所有消息内容
         cursor.execute("""
@@ -788,7 +795,12 @@ async def api_analytics_network(session_id: int):
             display = r[1]
             cnt = r[2]
             group_name = wxid_to_group_name.get(wxid) or wechat_name_to_group_name.get(display) or display or wxid
-            active_speakers.append({"name": group_name, "count": cnt})
+            remark = wxid_to_remark.get(wxid)
+            if remark:
+                display_name = f"{group_name} ({remark})"
+            else:
+                display_name = group_name
+            active_speakers.append({"name": display_name, "count": cnt})
 
         if not edges:
             return {
@@ -828,9 +840,17 @@ async def api_analytics_network(session_id: int):
                 "weight": d['weight']
             })
             
+        def get_display_name_with_remark(node_name):
+            wxid = group_name_to_wxid.get(node_name)
+            if wxid:
+                remark = wxid_to_remark.get(wxid)
+                if remark:
+                    return f"{node_name} ({remark})"
+            return node_name
+
         # 排行榜
-        sorted_influence = [{"name": name, "score": round(score, 4)} for name, score in sorted(in_degree.items(), key=lambda x: x[1], reverse=True)[:10]]
-        sorted_bridges = [{"name": name, "score": round(score, 4)} for name, score in sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:10]]
+        sorted_influence = [{"name": get_display_name_with_remark(name), "score": round(score, 4)} for name, score in sorted(in_degree.items(), key=lambda x: x[1], reverse=True)[:10]]
+        sorted_bridges = [{"name": get_display_name_with_remark(name), "score": round(score, 4)} for name, score in sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:10]]
         
         return {
             "nodes": nodes_data,
