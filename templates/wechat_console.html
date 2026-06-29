@@ -1882,15 +1882,22 @@
 
                                 <!-- Right Panel: AI Digest -->
                                 <div style="flex: 1.2; min-width: 320px; display: flex; flex-direction: column; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; border: 1px solid rgba(255,255,255,0.08);">
-                                    <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #10b981; padding-left: 8px; display: flex; justify-content: space-between; align-items: center;">
-                                        <span>🤖 AI 智能每月群聊纪要与干货总结</span>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <input type="month" id="ai-digest-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary);">
+                                    <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #10b981; padding-left: 8px; display: flex; flex-direction: column; gap: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                            <span>🤖 AI 智能群聊纪要与干货总结</span>
                                             <button class="kb-btn kb-btn-primary" style="padding: 2px 10px; font-size: 0.75rem; min-height: 24px; background: linear-gradient(135deg, #10b981, #059669);" onclick="generateAiDigest()">⚡ 生成纪要</button>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: normal; font-size: 0.78rem; color: #94a3b8;">
+                                            <span>按月:</span>
+                                            <input type="month" id="ai-digest-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary); width: 110px;">
+                                            <span>或自定义区间:</span>
+                                            <input type="date" id="ai-digest-start-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary); width: 120px;">
+                                            <span>至</span>
+                                            <input type="date" id="ai-digest-end-date" class="kb-input" style="padding: 2px 6px; font-size: 0.75rem; min-height: 24px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-primary); width: 120px;">
                                         </div>
                                     </h5>
                                     <div id="ai-digest-result" style="flex: 1; max-height: 320px; min-height: 150px; overflow-y: auto; font-size: 0.85rem; color: var(--text-primary); line-height: 1.6; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
-                                        <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0;">选择上方月份（留空默认提取近期400条消息），点击右侧“生成纪要”按钮开启 AI 智能归纳。</div>
+                                        <div style="text-align: center; color: var(--text-muted, #94a3b8); padding: 40px 0;">选择上方月份或自定义区间（留空默认提取近期500条消息），点击“生成纪要”按钮开启 AI 智能归纳。</div>
                                     </div>
                                 </div>
                             </div>
@@ -3987,6 +3994,8 @@
             }
             
             const dateVal = document.getElementById('ai-digest-date').value;
+            const startDateVal = document.getElementById('ai-digest-start-date').value;
+            const endDateVal = document.getElementById('ai-digest-end-date').value;
             const resultBox = document.getElementById('ai-digest-result');
             if (!resultBox) return;
             
@@ -3996,7 +4005,12 @@
                 const response = await fetch('/api/analytics/digest', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ session_id: parseInt(selectVal), date: dateVal || null })
+                    body: JSON.stringify({ 
+                        session_id: parseInt(selectVal), 
+                        date: (startDateVal || endDateVal) ? null : (dateVal || null),
+                        start_date: startDateVal || null,
+                        end_date: endDateVal || null
+                    })
                 });
                 
                 if (!response.ok) {
@@ -5079,13 +5093,37 @@
                 });
             }
 
-            // 初始化 AI 纪要月份选择框为当前月份
+            // 初始化 AI 纪要月份选择框为当前月份并绑定互斥清空事件
             const digestMonthInput = document.getElementById('ai-digest-date');
+            const digestStartDate = document.getElementById('ai-digest-start-date');
+            const digestEndDate = document.getElementById('ai-digest-end-date');
+            
             if (digestMonthInput) {
                 const now = new Date();
                 const year = now.getFullYear();
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 digestMonthInput.value = `${year}-${month}`;
+                
+                digestMonthInput.addEventListener('change', function() {
+                    if (this.value && digestStartDate && digestEndDate) {
+                        digestStartDate.value = '';
+                        digestEndDate.value = '';
+                    }
+                });
+            }
+            if (digestStartDate) {
+                digestStartDate.addEventListener('change', function() {
+                    if (this.value && digestMonthInput) {
+                        digestMonthInput.value = '';
+                    }
+                });
+            }
+            if (digestEndDate) {
+                digestEndDate.addEventListener('change', function() {
+                    if (this.value && digestMonthInput) {
+                        digestMonthInput.value = '';
+                    }
+                });
             }
 
         });

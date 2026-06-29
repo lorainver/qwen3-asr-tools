@@ -440,6 +440,8 @@ class SummarizeRequest(BaseModel):
 class DigestRequest(BaseModel):
     session_id: int
     date: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
 
 class SwitchModelRequest(BaseModel):
     model_id: str
@@ -1813,6 +1815,8 @@ async def api_analytics_digest(request: DigestRequest):
         
         session_id = request.session_id
         date = request.date
+        start_date = request.start_date
+        end_date = request.end_date
         
         # 1. 获取群昵称映射
         cursor.execute("""
@@ -1836,7 +1840,23 @@ async def api_analytics_digest(request: DigestRequest):
                     wechat_name_to_group_name[wechat_name] = group_name
                     
         # 2. 查询消息记录
-        if date:
+        if start_date or end_date:
+            query = """
+                SELECT sender_display_name, content, formatted_time, sender_username 
+                FROM messages 
+                WHERE session_id = ? AND type IN ('text', '文本消息')
+            """
+            params = [session_id]
+            if start_date:
+                query += " AND formatted_time >= ?"
+                params.append(f"{start_date} 00:00:00")
+            if end_date:
+                query += " AND formatted_time <= ?"
+                params.append(f"{end_date} 23:59:59")
+            query += " ORDER BY create_time ASC"
+            cursor.execute(query, params)
+            rows = cursor.fetchall()
+        elif date:
             cursor.execute("""
                 SELECT sender_display_name, content, formatted_time, sender_username 
                 FROM messages 
@@ -1850,7 +1870,7 @@ async def api_analytics_digest(request: DigestRequest):
                 FROM messages 
                 WHERE session_id = ? AND type IN ('text', '文本消息')
                 ORDER BY create_time DESC 
-                LIMIT 400
+                LIMIT 500
             """, (session_id,))
             rows = cursor.fetchall()[::-1]
             
