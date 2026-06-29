@@ -734,6 +734,20 @@ async def api_analytics_network(session_id: int):
         cursor.execute("SELECT wxid, remark FROM member_remarks WHERE remark IS NOT NULL AND remark != ''")
         remark_rows = cursor.fetchall()
         wxid_to_remark = {row[0]: row[1] for row in remark_rows}
+        remark_to_wxid = {row[1]: row[0] for row in remark_rows}
+
+        # 从 sessions 表中拉取所有会话的微信备注/别名到 wxid 的映射，作为最强力的兜底映射
+        cursor.execute("SELECT wxid, nickname, display_name, remark FROM sessions")
+        session_rows = cursor.fetchall()
+        session_name_to_wxid = {}
+        for s_row in session_rows:
+            s_wxid = s_row[0]
+            s_nick = s_row[1]
+            s_disp = s_row[2]
+            s_rem = s_row[3]
+            for n in (s_nick, s_disp, s_rem):
+                if n and n.strip() not in ('-', ''):
+                    session_name_to_wxid[n] = s_wxid
 
         # 2. 获取包含 @ 符号的所有消息内容
         cursor.execute("""
@@ -790,18 +804,34 @@ async def api_analytics_network(session_id: int):
         """, (session_id,))
         active_counts = cursor.fetchall()
         
+        def get_real_wxid(name, display=None):
+            if name and name.startswith("wxid_"):
+                return name
+            mapped = (
+                group_name_to_wxid.get(name) or 
+                (group_name_to_wxid.get(display) if display else None) or
+                session_name_to_wxid.get(name) or 
+                (session_name_to_wxid.get(display) if display else None) or
+                remark_to_wxid.get(name) or 
+                (remark_to_wxid.get(display) if display else None)
+            )
+            return mapped or name
+
         active_speakers = []
         for r in active_counts:
             wxid = r[0]
             display = r[1]
             cnt = r[2]
-            group_name = wxid_to_group_name.get(wxid) or wechat_name_to_group_name.get(display) or display or wxid
-            remark = wxid_to_remark.get(wxid)
+            
+            real_wxid = get_real_wxid(wxid, display)
+            
+            group_name = wxid_to_group_name.get(real_wxid) or wechat_name_to_group_name.get(display) or display or wxid
+            remark = wxid_to_remark.get(real_wxid)
             if remark:
                 display_name = f"{group_name} ({remark})"
             else:
                 display_name = group_name
-            active_speakers.append({"name": display_name, "wxid": wxid, "count": cnt})
+            active_speakers.append({"name": display_name, "wxid": real_wxid, "count": cnt})
 
         if not edges:
             return {
@@ -842,7 +872,7 @@ async def api_analytics_network(session_id: int):
             })
             
         def get_display_name_with_remark(node_name):
-            wxid = group_name_to_wxid.get(node_name)
+            wxid = get_real_wxid(node_name)
             if wxid:
                 remark = wxid_to_remark.get(wxid)
                 if remark:
@@ -850,8 +880,8 @@ async def api_analytics_network(session_id: int):
             return node_name
 
         # 排行榜
-        sorted_influence = [{"name": get_display_name_with_remark(name), "wxid": group_name_to_wxid.get(name), "score": round(score, 4)} for name, score in sorted(in_degree.items(), key=lambda x: x[1], reverse=True)[:10]]
-        sorted_bridges = [{"name": get_display_name_with_remark(name), "wxid": group_name_to_wxid.get(name), "score": round(score, 4)} for name, score in sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:10]]
+        sorted_influence = [{"name": get_display_name_with_remark(name), "wxid": get_real_wxid(name), "score": round(score, 4)} for name, score in sorted(in_degree.items(), key=lambda x: x[1], reverse=True)[:10]]
+        sorted_bridges = [{"name": get_display_name_with_remark(name), "wxid": get_real_wxid(name), "score": round(score, 4)} for name, score in sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:10]]
         
         return {
             "nodes": nodes_data,
