@@ -3568,10 +3568,7 @@
 
         // 同步分析会话选择下拉框
         function syncAnalyticsSessionSelect() {
-            // 清空搜索框
-            const searchInput = document.getElementById('analytics-session-search');
-            if (searchInput) searchInput.value = '';
-            
+            // 保留搜索会话关键字，不在切换时清空
             renderAnalyticsSessionOptions();
             
             const analyticSelect = document.getElementById('analytics-session-select');
@@ -5061,6 +5058,20 @@
                     keywordInput.value = this.value;
                     // 同步完后触发提取结果的筛选重载
                     loadExtractedResources();
+                });
+            }
+
+            // 保持会话检索框输入同步
+            const wechatSessionSearch = document.getElementById('wechat-session-search');
+            const analyticsSessionSearch = document.getElementById('analytics-session-search');
+            if (wechatSessionSearch && analyticsSessionSearch) {
+                wechatSessionSearch.addEventListener('input', function() {
+                    analyticsSessionSearch.value = this.value;
+                    renderAnalyticsSessionOptions();
+                });
+                analyticsSessionSearch.addEventListener('input', function() {
+                    wechatSessionSearch.value = this.value;
+                    renderWechatSessionOptions();
                 });
             }
 
