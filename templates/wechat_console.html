@@ -1858,20 +1858,20 @@
                             
                             <!-- Bottom row for dry goods/resource extracted listing -->
                             <div>
-                                <h5 style="margin: 0 0 10px 0; color: var(--text-primary, #e2e8f0); font-size: 0.9rem; border-left: 3px solid #10b981; padding-left: 8px;">📦 提取出的干货资源库</h5>
-                                <div style="max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02);">
-                                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; color: #cbd5e1;">
+                                <h5 style="margin: 0 0 10px 0; color: #ffffff; font-size: 0.95rem; font-weight: 600; border-left: 3px solid #10b981; padding-left: 8px;">📦 提取出的干货资源库</h5>
+                                <div style="max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(56,189,248,0.5); background: #020617; box-shadow: inset 0 0 0 1px rgba(56,189,248,0.15);">
+                                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; color: #ffffff;">
                                         <thead>
-                                            <tr style="background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid rgba(255,255,255,0.08);">
-                                                <th style="padding: 10px 14px; width: 120px;">类型</th>
-                                                <th style="padding: 10px 14px; width: 220px;">提取到的资源值</th>
-                                                <th style="padding: 10px 14px;">上下文内容</th>
-                                                <th style="padding: 10px 14px; width: 110px;">分享人</th>
-                                                <th style="padding: 10px 14px; width: 160px;">提取时间</th>
+                                            <tr style="background: linear-gradient(180deg, #0369a1, #075985); border-bottom: 2px solid #38bdf8;">
+                                                <th style="padding: 13px 14px; width: 120px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">类型</th>
+                                                <th style="padding: 13px 14px; width: 220px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">提取到的资源值</th>
+                                                <th style="padding: 13px 14px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">上下文内容</th>
+                                                <th style="padding: 13px 14px; width: 110px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">分享人</th>
+                                                <th style="padding: 13px 14px; width: 160px; color: #ffffff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.8px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">提取时间</th>
                                             </tr>
                                         </thead>
                                         <tbody id="analytics-resources-tbody">
-                                            <tr><td colspan="5" style="text-align:center;padding:40px;color:#64748b;">正在加载干货资源数据...</td></tr>
+                                            <tr><td colspan="5" style="text-align:center;padding:40px;color:#e2e8f0;font-size:0.95rem;background:#0f172a;">正在加载干货资源数据...</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -3621,16 +3621,17 @@
                     const typeLabel = typeMap[item.resource_type] || item.resource_type;
                     const valHtml = item.resource_type === 'url' 
                         ? `<a href="${item.resource_value}" target="_blank" class="wechat-link-item">${item.resource_value}</a>`
-                        : `<b style="color:#38bdf8;">${escapeHtml(item.resource_value)}</b>`;
+                        : `<b style="color:#7dd3fc;font-size:0.95rem;">${escapeHtml(item.resource_value)}</b>`;
                     const context = highlightKeyword(escapeHtml(item.raw_content), item.resource_value);
                     const formattedTime = new Date(item.create_time * 1000).toLocaleString();
+                    const rowBg = idx % 2 === 0 ? '#020617' : '#0b1220';
                     
-                    return `<tr style="border-bottom:1px solid rgba(255,255,255,0.03);" onmouseenter="this.style.background='rgba(255,255,255,0.02)'" onmouseleave="this.style.background='transparent'">
-                        <td style="padding:10px 14px;color:#94a3b8;font-size:0.8rem;">${typeLabel}</td>
-                        <td style="padding:10px 14px;">${valHtml}</td>
-                        <td style="padding:10px 14px;color:#e2e8f0;font-size:0.8rem;max-width:350px;word-break:break-all;">${context}</td>
-                        <td style="padding:10px 14px;color:#38bdf8;">${escapeHtml(item.sender_name || '未知')}</td>
-                        <td style="padding:10px 14px;color:#64748b;font-family:monospace;font-size:0.75rem;">${formattedTime}</td>
+                    return `<tr style="border-bottom:1px solid rgba(56,189,248,0.15);background:${rowBg};" onmouseenter="this.style.background='rgba(56,189,248,0.18)'" onmouseleave="this.style.background='${rowBg}'">
+                        <td style="padding:13px 14px;color:#f8fafc;font-size:0.9rem;font-weight:600;">${typeLabel}</td>
+                        <td style="padding:13px 14px;">${valHtml}</td>
+                        <td style="padding:13px 14px;color:#ffffff;font-size:0.9rem;max-width:350px;word-break:break-all;line-height:1.7;font-weight:500;">${context}</td>
+                        <td style="padding:13px 14px;color:#bae6fd;font-weight:600;font-size:0.9rem;">${escapeHtml(item.sender_name || '未知')}</td>
+                        <td style="padding:13px 14px;color:#e2e8f0;font-family:monospace;font-size:0.85rem;font-weight:500;">${formattedTime}</td>
                     </tr>`;
                 }).join('');
                 
