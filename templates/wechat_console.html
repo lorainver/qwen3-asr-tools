@@ -4029,6 +4029,10 @@
                                 const parsed = JSON.parse(dataStr);
                                 if (parsed.error) {
                                     textContainer.innerHTML += `\n\n❌ <b>AI 生成出错:</b> ${escapeHtml(parsed.error)}`;
+                                } else if (parsed.token) {
+                                    markdownContent += parsed.token;
+                                    textContainer.textContent = markdownContent;
+                                    resultBox.scrollTop = resultBox.scrollHeight;
                                 } else if (parsed.content) {
                                     markdownContent += parsed.content;
                                     textContainer.textContent = markdownContent;
