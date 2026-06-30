@@ -762,7 +762,10 @@ class VectorStore:
                     ids_to_delete.append(results['ids'][i])
 
                 if ids_to_delete:
-                    coll.delete(ids=ids_to_delete)
+                    # 分批删除，每批最多 500 个以防止 SQLite too many SQL variables 报错
+                    batch_size = 500
+                    for i in range(0, len(ids_to_delete), batch_size):
+                        coll.delete(ids=ids_to_delete[i:i + batch_size])
                     label_full = f"'{filename}'"
                     if category:
                         label_full += f" (category={category})"

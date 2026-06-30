@@ -227,7 +227,7 @@ def merge_and_save_raw_md(old_path, new_path, output_path, chat_name, is_group):
             
     return len(merged_msgs)
 
-def import_single_session(chat_name, username, is_group, start_time, force=False, history=None, export_limit=100000, skip_msg_embeddings=False, is_incremental=False):
+def import_single_session(chat_name, username, is_group, start_time, force=False, history=None, export_limit=100000, skip_msg_embeddings=False, is_incremental=False, skip_kb=False):
     if history is None:
         history = {}
         
@@ -326,11 +326,14 @@ def import_single_session(chat_name, username, is_group, start_time, force=False
             std_output_path = importer.convert_to_standard_format(str(raw_path))
             
             # 导入 KB
-            category = '微信聊天记录_wechat-cli-20260109'
-            delete_by_filename(chat_name, category=category)
-            safe_print(f"  -> 🧠 正在重新分块并索引至向量知识库...")
-            result = index_document(std_output_path, category=category, skip_msg_embeddings=skip_msg_embeddings)
-            safe_print(f"  -> 🧠 向量知识库更新成功: 块ID={result['doc_id'][:8]}, 生成切片={result['chunk_count']} 个")
+            if not skip_kb:
+                category = '微信聊天记录_wechat-cli-20260109'
+                delete_by_filename(chat_name, category=category)
+                safe_print(f"  -> 🧠 正在重新分块并索引至向量知识库...")
+                result = index_document(std_output_path, category=category, skip_msg_embeddings=skip_msg_embeddings)
+                safe_print(f"  -> 🧠 向量知识库更新成功: 块ID={result['doc_id'][:8]}, 生成切片={result['chunk_count']} 个")
+            else:
+                safe_print(f"  -> 🧠 已选择跳过向量知识库导入。")
             
             # 记录历史
             history[username] = {
