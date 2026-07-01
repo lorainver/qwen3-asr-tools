@@ -4561,8 +4561,11 @@
                 const p = result.profile;
                 
                 let personalityHtml = '';
-                if (!p.personality_analyses || p.personality_analyses.length === 0) {
-                    personalityHtml = '<div style="color:#64748b;text-align:center;padding:15px;font-size:0.85rem;background:rgba(255,255,255,0.01);border-radius:8px;">暂无历史性格或画像研判记录。可在左侧控制面板进行分析，系统将自动保存。</div>';
+                const hasRecords = p.personality_analyses && p.personality_analyses.length > 0;
+                
+                let recordsAreaHtml = '';
+                if (!hasRecords) {
+                    recordsAreaHtml = '<div style="color:#64748b;text-align:center;padding:15px;font-size:0.85rem;background:rgba(255,255,255,0.01);border-radius:8px;">暂无历史性格或画像研判记录。可在下方直接点击生成，系统将自动保存。</div>';
                 } else {
                     let selectOptions = '';
                     p.personality_analyses.forEach((an, index) => {
@@ -4585,17 +4588,33 @@
                         `;
                     });
                     
-                    personalityHtml = `
-                        <div style="display:flex;flex-direction:column;gap:8px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-                                <select id="personality-record-select" class="analysis-select" style="margin:0;padding:4px 8px;font-size:0.8rem;flex:1;" onchange="switchPersonalityRecord(this.value)">
-                                    ${selectOptions}
-                                </select>
-                            </div>
-                            ${recordsHtml}
+                    recordsAreaHtml = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;">
+                            <select id="personality-record-select" class="analysis-select" style="margin:0;padding:4px 8px;font-size:0.8rem;flex:1;" onchange="switchPersonalityRecord(this.value)">
+                                ${selectOptions}
+                            </select>
                         </div>
+                        ${recordsHtml}
                     `;
                 }
+
+                const nameArg = escapeHtml((p.wechat_name || p.nickname || p.wxid).replace(/'/g, "\\'"));
+                const wxidArg = escapeHtml(p.wxid.replace(/'/g, "\\'"));
+                personalityHtml = `
+                    <div id="personality-section-wrapper" style="display:flex;flex-direction:column;gap:8px;">
+                        <div id="personality-records-area">
+                            ${recordsAreaHtml}
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:6px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:8px;">
+                            <button class="kb-btn kb-btn-secondary" onclick="generatePersonalityFromProfile('${nameArg}', '${wxidArg}', 'general')" style="flex:1;padding:6px;font-size:0.8rem;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:4px;">
+                                👤 发起画像研判
+                            </button>
+                            <button class="kb-btn kb-btn-secondary" onclick="generatePersonalityFromProfile('${nameArg}', '${wxidArg}', 'mbti')" style="flex:1;padding:6px;font-size:0.8rem;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:4px;border-color:rgba(16,185,129,0.3);color:#34d399;">
+                                🎭 发起 MBTI 研判
+                            </button>
+                        </div>
+                    </div>
+                `;
                 
                 let groupsHtml = '';
                 p.groups.forEach(g => {
@@ -4728,6 +4747,47 @@
             const target = document.getElementById(selectedId);
             if (target) {
                 target.style.display = 'block';
+            }
+        }
+
+        async function generatePersonalityFromProfile(username, wxid, type) {
+            const wrapper = document.getElementById('personality-section-wrapper');
+            if (!wrapper) return;
+            
+            const originalHtml = wrapper.innerHTML;
+            const typeText = type === 'mbti' ? 'MBTI性格' : '个人画像';
+            
+            wrapper.innerHTML = `
+                <div style="text-align:center;padding:25px;color:#38bdf8;font-size:0.82rem;background:rgba(56,189,248,0.02);border:1px solid rgba(56,189,248,0.1);border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+                    <div style="font-size:1.1rem;animation: spin 1.2s linear infinite;">⏳</div>
+                    <span>正在检索 <b>${escapeHtml(username)}</b> 的所有发言并生成最新 <b>${typeText}研判报告</b>...</span>
+                    <span style="font-size:0.75rem;color:#64748b;">可能需要 20-30 秒，完成后将自动刷新更新本页数据...</span>
+                </div>
+            `;
+            
+            try {
+                const endpoint = type === 'mbti' ? '/api/wechat/analyze/user_mbti' : '/api/wechat/analyze/user';
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username,
+                        use_cache: false
+                    })
+                });
+                
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    showToast(`✅ ${typeText}生成成功！`, 'success');
+                    await showMemberProfile(wxid);
+                } else {
+                    alert(`生成失败: ${result.detail || '未知错误'}`);
+                    wrapper.innerHTML = originalHtml;
+                }
+            } catch (err) {
+                console.error(err);
+                alert(`网络异常，生成失败: ${err.message}`);
+                wrapper.innerHTML = originalHtml;
             }
         }
 
