@@ -4658,9 +4658,9 @@
                     <!-- Top header basic stats -->
                     <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(56,189,248,0.05);border:1px solid rgba(56,189,248,0.1);padding:16px 20px;border-radius:8px;">
                          <div>
-                             <div style="font-size:1.3rem;font-weight:bold;color:#f8fafc;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                             <div style="font-size:1.3rem;font-weight:bold;color:var(--text-primary, #f8fafc);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                                  <span>${escapeHtml(p.wechat_name || '未知')} ${p.nickname ? `<span style="font-size:1rem;color:#64748b;font-weight:normal;">(${escapeHtml(p.nickname)})</span>` : ''}</span>
-                                 ${p.tags ? p.tags.split(',').map(t => `<span style="font-size:0.7rem;background:rgba(56,189,248,0.15);color:#38bdf8;padding:2px 6px;border-radius:4px;font-weight:normal;">${escapeHtml(t.trim())}</span>`).join('') : ''}
+                                 ${p.tags ? p.tags.split(/[\s,，]+/).filter(t => t.trim()).map(t => `<span style="font-size:0.7rem;background:rgba(56,189,248,0.15);color:#38bdf8;padding:2px 6px;border-radius:4px;font-weight:normal;">${escapeHtml(t.trim())}</span>`).join('') : ''}
                              </div>
                              <div style="margin-top:4px;color:#94a3b8;font-family:monospace;font-size:0.82rem;">微信ID (wxid): ${escapeHtml(p.wxid)}</div>
                          </div>
@@ -4679,12 +4679,12 @@
                     <!-- Custom remark edit section -->
                     <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:14px 20px;border-radius:8px;display:flex;flex-direction:column;gap:8px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;">
-                            <label style="font-weight:600;font-size:0.88rem;color:#f8fafc;display:flex;align-items:center;gap:6px;">✍️ 自定义群友备注与标签 (全局有效)</label>
+                            <label style="font-weight:600;font-size:0.88rem;color:var(--text-primary, #f8fafc);display:flex;align-items:center;gap:6px;">✍️ 自定义群友备注与标签 (全局有效)</label>
                             <span id="remark-save-status" style="font-size:0.75rem;color:#10b981;display:none;">✓ 已保存</span>
                         </div>
                         <div style="display:flex;gap:8px;">
                             <input type="text" id="member-custom-remark-input" class="analysis-input" style="flex:1.2;margin:0;" placeholder="设置备注（如：真实姓名等）..." value="${escapeHtml(p.custom_remark || '')}">
-                            <input type="text" id="member-custom-tags-input" class="analysis-input" style="flex:1;margin:0;" placeholder="标签 (多个逗号隔开，如：融三五班)..." value="${escapeHtml(p.tags || '')}">
+                            <input type="text" id="member-custom-tags-input" class="analysis-input" style="flex:1;margin:0;" placeholder="标签 (多个空格或逗号隔开，如：融三五班)..." value="${escapeHtml(p.tags || '')}">
                             <button class="kb-btn kb-btn-primary" onclick="saveMemberRemark('${escapeHtml(p.wxid.replace(/'/g, "\\'"))}')" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;">保存</button>
                         </div>
                         <div id="solicitation-suggestions-container" style="display:none;font-size:0.78rem;color:#94a3b8;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px;">
@@ -4695,13 +4695,13 @@
 
                     <!-- Personality & Portrait History -->
                     <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:14px 20px;border-radius:8px;display:flex;flex-direction:column;gap:8px;">
-                        <h5 style="margin:0;color:#f8fafc;font-size:0.9rem;border-left:3px solid #10b981;padding-left:8px;display:flex;align-items:center;gap:6px;">🔮 历史性格与 MBTI 研判记录 (${p.personality_analyses ? p.personality_analyses.length : 0})</h5>
+                        <h5 style="margin:0;color:var(--text-primary, #f8fafc);font-size:0.9rem;border-left:3px solid #10b981;padding-left:8px;display:flex;align-items:center;gap:6px;">🔮 历史性格与 MBTI 研判记录 (${p.personality_analyses ? p.personality_analyses.length : 0})</h5>
                         ${personalityHtml}
                     </div>
                     
                     <!-- Group footprint list -->
                     <div>
-                        <h5 style="margin:0 0 10px 0;color:#f8fafc;font-size:0.9rem;border-left:3px solid #38bdf8;padding-left:8px;">👣 全局入群足迹分布 (${p.group_count} 个群聊)</h5>
+                        <h5 style="margin:0 0 10px 0;color:var(--text-primary, #f8fafc);font-size:0.9rem;border-left:3px solid #38bdf8;padding-left:8px;">👣 全局入群足迹分布 (${p.group_count} 个群聊)</h5>
                         <div style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;padding-right:4px;">
                             ${groupsHtml}
                         </div>
@@ -4709,7 +4709,7 @@
                     
                     <!-- Closest members relations -->
                     <div>
-                        <h5 style="margin:0 0 10px 0;color:#f8fafc;font-size:0.9rem;border-left:3px solid #8b5cf6;padding-left:8px;">🔗 共同关联密接关系网 (Top 12 密接群友)</h5>
+                        <h5 style="margin:0 0 10px 0;color:var(--text-primary, #f8fafc);font-size:0.9rem;border-left:3px solid #8b5cf6;padding-left:8px;">🔗 共同关联密接关系网 (Top 12 密接群友)</h5>
                         <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:10px;">
                             ${relationHtml}
                         </div>
