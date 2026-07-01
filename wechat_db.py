@@ -170,6 +170,18 @@ class WechatDatabaseManager:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_extracted_resources_session_id ON extracted_resources(session_id)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_extracted_resources_type ON extracted_resources(resource_type)")
 
+        # 性格与画像研判持久化表
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS member_personality_analyses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                wxid TEXT NOT NULL,
+                analysis_type TEXT NOT NULL,
+                analysis_content TEXT NOT NULL,
+                analysis_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_member_personality_wxid ON member_personality_analyses(wxid)")
+
         self.conn.commit()
 
     def save_extracted_resource(self, session_id: int, message_id: int, resource_type: str, resource_value: str, raw_content: str, sender_name: str, create_time: int):
@@ -367,7 +379,7 @@ class WechatDatabaseManager:
         if only_sender:
             base_query = """
                 SELECT m.id, m.session_id, s.display_name as session_name, s.type as session_type, m.content, 
-                       m.sender_display_name, m.formatted_time, m.create_time
+                       m.sender_display_name, m.sender_username, m.formatted_time, m.create_time
                 FROM messages m
                 JOIN sessions s ON m.session_id = s.id
                 WHERE 1=1
@@ -379,7 +391,7 @@ class WechatDatabaseManager:
             if has_chinese:
                 base_query = """
                     SELECT m.id, m.session_id, s.display_name as session_name, s.type as session_type, m.content, 
-                           m.sender_display_name, m.formatted_time, m.create_time
+                           m.sender_display_name, m.sender_username, m.formatted_time, m.create_time
                     FROM messages m
                     JOIN sessions s ON m.session_id = s.id
                     WHERE m.content LIKE ?
@@ -388,7 +400,7 @@ class WechatDatabaseManager:
             else:
                 base_query = """
                     SELECT m.id, m.session_id, s.display_name as session_name, s.type as session_type, m.content, 
-                           m.sender_display_name, m.formatted_time, m.create_time
+                           m.sender_display_name, m.sender_username, m.formatted_time, m.create_time
                     FROM messages m
                     JOIN sessions s ON m.session_id = s.id
                     WHERE m.id IN (
@@ -634,7 +646,7 @@ class WechatDatabaseManager:
         cursor = self.conn.cursor()
         
         base_query = """
-            SELECT id, content, sender_display_name, formatted_time, is_send, type, create_time
+            SELECT id, content, sender_display_name, sender_username, formatted_time, is_send, type, create_time
             FROM messages
             WHERE session_id = ?
         """
@@ -1286,8 +1298,42 @@ class WechatDatabaseManager:
             "only_target_members": members_only_in_target
         }
 
-    def get_member_profile(self, wxid: str) -> Dict:
+    def get_member_profile(self, wxid: str, name: str = None) -> Dict:
         cursor = self.conn.cursor()
+        
+        # 如果传入的 wxid 并不是数据库里的真实 wxid，很可能是一个显示名称，我们把它当成 name 处理
+        if wxid:
+            cursor.execute("SELECT 1 FROM group_members WHERE wxid = ? LIMIT 1", (wxid,))
+            if not cursor.fetchone():
+                if not name:
+                    name = wxid
+                wxid = None
+
+        # 如果没有 wxid 但有名字，尝试解析 wxid
+        if not wxid and name:
+            # 先精确匹配
+            cursor.execute("""
+                SELECT wxid FROM group_members 
+                WHERE wechat_name = ? OR nickname = ? 
+                LIMIT 1
+            """, (name, name))
+            row = cursor.fetchone()
+            if row:
+                wxid = row["wxid"]
+            else:
+                # 尝试清洗名字中的括号或前缀后缀再匹配
+                clean_name = name.split('(')[0].split('（')[0].strip()
+                cursor.execute("""
+                    SELECT wxid FROM group_members 
+                    WHERE wechat_name LIKE ? OR nickname LIKE ? 
+                    LIMIT 1
+                """, (f"%{clean_name}%", f"%{clean_name}%"))
+                row = cursor.fetchone()
+                if row:
+                    wxid = row["wxid"]
+                    
+        if not wxid:
+            return {"error": f"未找到微信ID: {wxid or ''} (昵称: {name or ''}) 的群成员数据"}
         
         # Get all groups this member belongs to
         cursor.execute("""
@@ -1302,6 +1348,49 @@ class WechatDatabaseManager:
             return {"error": f"未找到微信ID: {wxid} 的群成员数据"}
             
         groups = [dict(row) for row in group_rows]
+        
+        # 动态查询 messages 表计算每个群的真实发言数，覆盖 group_members 中的静态数据
+        names = set()
+        for g in groups:
+            if g.get("nickname"):
+                names.add(g["nickname"])
+        cursor.execute("SELECT DISTINCT wechat_name, nickname FROM group_members WHERE wxid = ?", (wxid,))
+        for r in cursor.fetchall():
+            if r["wechat_name"]: names.add(r["wechat_name"])
+            if r["nickname"]: names.add(r["nickname"])
+        if name:
+            names.add(name)
+            clean_n = name.split('(')[0].split('（')[0].strip()
+            names.add(clean_n)
+            
+        names_list = list(names)
+        msg_counts = {}
+        if names_list:
+            placeholders = ",".join(["?"] * len(names_list))
+            cursor.execute(f"""
+                SELECT session_id, COUNT(*) as real_count 
+                FROM messages 
+                WHERE sender_username = ? OR sender_display_name IN ({placeholders})
+                GROUP BY session_id
+            """, [wxid] + names_list)
+            msg_counts = {r["session_id"]: r["real_count"] for r in cursor.fetchall()}
+        else:
+            cursor.execute("""
+                SELECT session_id, COUNT(*) as real_count 
+                FROM messages 
+                WHERE sender_username = ?
+                GROUP BY session_id
+            """, (wxid,))
+            msg_counts = {r["session_id"]: r["real_count"] for r in cursor.fetchall()}
+            
+        # 覆盖并更新真实发言数
+        for g in groups:
+            sid = g["session_id"]
+            if sid in msg_counts:
+                g["message_count"] = msg_counts[sid]
+                
+        # 按发言数重新排序
+        groups.sort(key=lambda x: x["message_count"], reverse=True)
         
         # Extract basic info
         cursor.execute("SELECT wechat_name, nickname FROM group_members WHERE wxid = ? LIMIT 1", (wxid,))
@@ -1362,6 +1451,9 @@ class WechatDatabaseManager:
         remark_row = cursor.fetchone()
         custom_remark = remark_row["remark"] if remark_row else ""
         tags = remark_row["tags"] if remark_row and remark_row["tags"] else ""
+        
+        # 获取历史性格/情感分析
+        personality_analyses = self.get_member_personality_analyses(wxid)
                 
         return {
             "wxid": wxid,
@@ -1375,7 +1467,8 @@ class WechatDatabaseManager:
             "join_times": join_times,
             "inviter_info": inviter_info,
             "related_members": related_members_info,
-            "group_member_counts": group_member_counts
+            "group_member_counts": group_member_counts,
+            "personality_analyses": personality_analyses
         }
 
     def search_group_members(self, keyword: str) -> List[Dict]:
@@ -1661,6 +1754,28 @@ class WechatDatabaseManager:
 
         final_suggestions = [s for s in suggestions if s not in names]
         return sorted(final_suggestions, key=len)[:5]
+
+    def save_member_personality_analysis(self, wxid: str, analysis_type: str, content: str) -> bool:
+        """保存性格或画像研判分析结果"""
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            INSERT INTO member_personality_analyses (wxid, analysis_type, analysis_content)
+            VALUES (?, ?, ?)
+        """, (wxid, analysis_type, content))
+        self.conn.commit()
+        return True
+
+    def get_member_personality_analyses(self, wxid: str) -> List[Dict]:
+        """获取某位群友的所有历史性格/画像研判分析"""
+        cursor = self.conn.cursor()
+        cursor.execute("""
+            SELECT id, analysis_type, analysis_content, analysis_time
+            FROM member_personality_analyses
+            WHERE wxid = ?
+            ORDER BY analysis_time DESC
+        """, (wxid,))
+        return [dict(row) for row in cursor.fetchall()]
+
     def close(self):
         if self.conn:
             self.conn.close()

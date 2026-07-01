@@ -244,6 +244,16 @@ async def analyze_user(req: UserAnalyzeRequest):
         return result
     raise HTTPException(status_code=500, detail=result.get("error", "AI 分析失败"))
 
+@router.post("/analyze/user_mbti")
+async def analyze_user_mbti(req: UserAnalyzeRequest):
+    result = wechat_ai_analyzer.analyze_user_mbti(
+        req.username, req.start_time, req.end_time, req.use_cache
+    )
+    if result["success"]:
+        return result
+    raise HTTPException(status_code=500, detail=result.get("error", "AI 分析失败"))
+
+
 @router.post("/analyze/theme")
 async def analyze_theme(req: ThemeAnalyzeRequest):
     result = wechat_ai_analyzer.analyze_group_theme(
@@ -325,9 +335,9 @@ async def get_members_overlap(
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/members/profile")
-async def get_members_profile(wxid: str):
+async def get_members_profile(wxid: str = "", name: str = ""):
     try:
-        res = wechat_db.get_member_profile(wxid)
+        res = wechat_db.get_member_profile(wxid, name=name)
         if "error" in res:
             raise HTTPException(status_code=400, detail=res["error"])
         return {"success": True, "profile": res}

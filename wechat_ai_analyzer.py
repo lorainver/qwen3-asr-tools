@@ -204,6 +204,161 @@ class WechatAIAnalyzer:
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
             
+            # 自动持久化保存研判结果
+            try:
+                resolved_wxid = None
+                cursor = wechat_db.conn.cursor()
+                cursor.execute("""
+                    SELECT wxid FROM group_members 
+                    WHERE wxid = ? OR wechat_name = ? OR nickname = ? 
+                    LIMIT 1
+                """, (username, username, username))
+                row = cursor.fetchone()
+                if row:
+                    resolved_wxid = row["wxid"]
+                else:
+                    cursor.execute("""
+                        SELECT sender_username FROM messages 
+                        WHERE sender_username = ? OR sender_display_name = ?
+                        LIMIT 1
+                    """, (username, username))
+                    m_row = cursor.fetchone()
+                    if m_row:
+                        resolved_wxid = m_row["sender_username"]
+                
+                if resolved_wxid:
+                    wechat_db.save_member_personality_analysis(resolved_wxid, "general", ai_analysis)
+            except Exception as db_err:
+                logger.error(f"保存历史画像研判失败: {db_err}")
+
+            self._save_to_cache(cache_key, result)
+            return {"success": True, "data": result, "from_cache": False}
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def analyze_user_mbti(self, username: str, start_time: Optional[int] = None, end_time: Optional[int] = None, use_cache: bool = True) -> Dict:
+        try:
+            cache_key = self._generate_cache_key("user_mbti", username, start_time, end_time)
+            if use_cache:
+                cached = self._get_from_cache(cache_key)
+                if cached:
+                    return {"success": True, "data": cached, "from_cache": True}
+            
+            search_result = wechat_db.search_by_username(username, limit=0)
+            if not search_result.get("results"):
+                return {"success": False, "error": "未找到该用户的聊天记录"}
+            
+            # 汇集该用户所有的消息
+            user_messages = []
+            for item in search_result["results"]:
+                session_name = item["session"]["display_name"]
+                for msg in item["messages"]:
+                    msg["session_name"] = session_name
+                    # 过滤时间段
+                    if start_time and msg.get("create_time", 0) < start_time:
+                        continue
+                    if end_time and msg.get("create_time", 0) > end_time:
+                        continue
+                    user_messages.append(msg)
+            
+            if not user_messages:
+                return {"success": False, "error": "该时间段内此用户无发言记录"}
+
+            # 计算跨群统计
+            session_stats = {}
+            for msg in user_messages:
+                sname = msg.get("session_name", "未知会话")
+                session_stats[sname] = session_stats.get(sname, 0) + 1
+            sorted_sessions = sorted(session_stats.items(), key=lambda x: x[1], reverse=True)
+            stats_text = "\n".join([f"- {name}: {count}条发言" for name, count in sorted_sessions])
+
+            system_prompt = """你是一个充满洞察力、擅长微表情与细节挖掘的性格分析专家与心理咨询师。
+你的任务是通过用户的微信聊天记录进行深度细节研判，并推导出其最契合的 MBTI（16种人格）类型。
+请根据提供的发言记录（包括语气助词、标点习惯、表达逻辑、讨论焦点、互动姿态等微观细节）进行推理，不要泛泛而谈，而是要专注并结合聊天细节。
+
+请按以下格式生成 Markdown 研判报告：
+
+# 🎭 微信群友性格与 MBTI 研判报告：[用户昵称]
+
+## 🌟 MBTI 人格类型定位
+**[推导出的 MBTI 类型，例如：INTJ - 建筑师]**
+（用一两句生动、有洞察力的话概括该用户在群聊中的性格底色）
+
+## 🔍 MBTI 四个维度的深度拆解与细节佐证
+1. **注意力方向：E（外倾） vs I（内倾）**
+   - **倾向判定**：[E 或 I]
+   - **聊天细节佐证**：结合其发言频率、是主动发起话题还是被动回应、分享日常多还是专注于特定话题、消息长短、是否频繁互动等细节分析。
+2. **信息获取：S（感觉） vs N（直觉）**
+   - **倾向判定**：[S 或 N]
+   - **聊天细节佐证**：分析其关注的是具体的实操细节、规则条文、真实数据（S倾向），还是宏观趋势、政策逻辑、概念推演、未来可能性（N倾向）。
+3. **决策方式：T（思考） vs F（情感）**
+   - **倾向判定**：[T 或 F]
+   - **聊天细节佐证**：分析其用词是理性、客观、讲逻辑、对事不对人（T倾向），还是温和、有同理心、关注群友感受、喜欢表达情绪共鸣（F倾向）。
+4. **生活态度：J（判断） vs P（感知）**
+   - **倾向判定**：[J 或 P]
+   - **聊天细节佐证**：分析其是否喜欢制定计划、给出明确结论/框架、追求条理与秩序（J倾向），还是随性、开放、保留多种可能性、喜欢随兴闲聊（P倾向）。
+
+## 💬 细节行为与表达风格微观研判
+- **语气与用词偏好**：例如常用口头禅、特殊标点（如大量感叹号、省略号、问号）、表情符号（Emoji）的使用习惯。
+- **互动姿态与心理防御机制**：在群里遇到意见冲突时的表现（是据理力争、默默潜水、打圆场还是冷嘲热讽），发言中透露出的底层心理诉求（如寻找掌控感、寻求认同、消除焦虑、展示权威等）。
+
+## 🤝 沟通与互动建议
+- **触达与说服策略**：如果需要与此人沟通或合作，最有效的表达方式和切入点是什么。
+- **潜在盲区与成长建议**：基于其性格特质，指出其在社群交往中可能存在的盲区，并给出温馨的成长建议。
+"""
+
+            user_prompt = f"""请分析以下用户的聊天记录，推导其 MBTI 性格类型并进行细节研判：
+
+用户名称：{username}
+消息总数：{len(user_messages)}
+跨群发言活跃度：
+{stats_text}
+
+具体发言记录（前150条）：
+{self._format_messages(user_messages, limit=150)}
+
+请提供详细的性格与 MBTI 研判报告。"""
+
+            ai_analysis = self._call_model(system_prompt, user_prompt)
+            result = {
+                "username": username,
+                "statistics": {
+                    "total_messages": len(user_messages),
+                    "total_sessions": len(sorted_sessions),
+                },
+                "top_sessions": [{"name": s[0], "count": s[1]} for s in sorted_sessions],
+                "ai_analysis": ai_analysis,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            
+            # 自动持久化保存研判结果
+            try:
+                resolved_wxid = None
+                cursor = wechat_db.conn.cursor()
+                cursor.execute("""
+                    SELECT wxid FROM group_members 
+                    WHERE wxid = ? OR wechat_name = ? OR nickname = ? 
+                    LIMIT 1
+                """, (username, username, username))
+                row = cursor.fetchone()
+                if row:
+                    resolved_wxid = row["wxid"]
+                else:
+                    cursor.execute("""
+                        SELECT sender_username FROM messages 
+                        WHERE sender_username = ? OR sender_display_name = ?
+                        LIMIT 1
+                    """, (username, username))
+                    m_row = cursor.fetchone()
+                    if m_row:
+                        resolved_wxid = m_row["sender_username"]
+                
+                if resolved_wxid:
+                    wechat_db.save_member_personality_analysis(resolved_wxid, "mbti", ai_analysis)
+            except Exception as db_err:
+                logger.error(f"保存历史性格研判失败: {db_err}")
+
             self._save_to_cache(cache_key, result)
             return {"success": True, "data": result, "from_cache": False}
             

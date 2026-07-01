@@ -4080,6 +4080,15 @@
                 }
                 endpoint = '/api/wechat/analyze/user';
                 bodyPayload.username = sender;
+            } else if (mode === 'user_mbti') {
+                const sender = document.getElementById('wechat-sender-input').value.trim();
+                if (!sender) {
+                    alert('个人性格与 MBTI 研判模式下必须在左侧输入"发言人筛选"的昵称');
+                    return;
+                }
+                endpoint = '/api/wechat/analyze/user_mbti';
+                bodyPayload.username = sender;
+
             } else if (mode === 'theme') {
                 // 针对群聊话题演进分析,使用当前选择的会话 display_name 或者直接输入
                 const sessionSelect = document.getElementById('wechat-session-select');

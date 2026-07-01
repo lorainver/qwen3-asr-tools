@@ -1657,9 +1657,11 @@
                                 <select id="wechat-ai-mode" class="analysis-select" style="width: 100%;">
                                     <option value="session">&#128201; 会话脉络分析 (Session)</option>
                                     <option value="user">&#128100; 个人画像研判 (User)</option>
+                                    <option value="user_mbti">🎭 个人性格与 MBTI 研判 (MBTI)</option>
                                     <option value="top5">👥 群内活跃前五研判 (Top 5 Active Senders)</option>
                                     <option value="theme">&#127991;&#65039; 话题演进分析 (Theme)</option>
                                     <option value="relations">&#128120;&#8205;&#9794;&#65039; 关系网图分析 (Relations)</option>
+
                                 </select>
                             </div>
                             <div class="analysis-control-row" style="align-items: center; gap: 8px;">
@@ -2337,7 +2339,7 @@
             div.innerHTML = `
                 <div class="wechat-avatar" style="background: ${avatarBg}; cursor: pointer;" onclick="filterBySender('${escapeHtml(senderName.replace(/'/g, "\\'"))}')" title="点击筛选该发言人的消息">${escapeHtml(avatarChar)}</div>
                 <div class="wechat-msg-content-wrapper">
-                    <span class="wechat-sender-name" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-color, #3b82f6)'" onmouseout="this.style.color=''" onclick="filterBySender('${escapeHtml(senderName.replace(/'/g, "\\'"))}')" title="点击筛选该发言人的消息">
+                    <span class="wechat-sender-name" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-color, #3b82f6)'" onmouseout="this.style.color=''" onclick="showMemberProfile('${escapeHtml((msg.sender_username || senderName).replace(/'/g, "\\'"))}')" title="点击查看全局足迹研判画像">
                         ${escapeHtml(senderName)}
                     </span>
                     ${jumpBtnHtml}
@@ -3170,7 +3172,7 @@
             div.innerHTML = `
                 <div class="search-hit-header">
                     <div>
-                        <span class="search-hit-sender">${escapeHtml(senderName)}</span>
+                        <span class="search-hit-sender" style="cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-color, #3b82f6)'" onmouseout="this.style.color=''" onclick="showMemberProfile('${escapeHtml((msg.sender_username || senderName).replace(/'/g, "\\'"))}')" title="点击查看全局足迹研判画像">${escapeHtml(senderName)}</span>
                         <span class="search-hit-time">${msg.formatted_time || ''}</span>
                     </div>
                     ${jumpBtnHtml}
@@ -4558,6 +4560,43 @@
                 
                 const p = result.profile;
                 
+                let personalityHtml = '';
+                if (!p.personality_analyses || p.personality_analyses.length === 0) {
+                    personalityHtml = '<div style="color:#64748b;text-align:center;padding:15px;font-size:0.85rem;background:rgba(255,255,255,0.01);border-radius:8px;">暂无历史性格或画像研判记录。可在左侧控制面板进行分析，系统将自动保存。</div>';
+                } else {
+                    let selectOptions = '';
+                    p.personality_analyses.forEach((an, index) => {
+                        const typeLabel = an.analysis_type === 'mbti' ? '🎭 性格与 MBTI 研判' : '👤 个人画像研判';
+                        selectOptions += `<option value="personality-an-${an.id}">${an.analysis_time} (${typeLabel})</option>`;
+                    });
+                    
+                    let recordsHtml = '';
+                    p.personality_analyses.forEach((an, index) => {
+                        const typeLabel = an.analysis_type === 'mbti' ? '🎭 性格与 MBTI 研判' : '👤 个人画像研判';
+                        const displayStyle = index === 0 ? 'block' : 'none';
+                        recordsHtml += `
+                            <div id="personality-an-${an.id}" class="personality-record-content" style="display:${displayStyle};background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:12px;max-height:280px;overflow-y:auto;font-size:0.85rem;line-height:1.5;color:#e2e8f0;word-break:break-all;">
+                                <div style="font-weight:bold;color:#38bdf8;margin-bottom:6px;font-size:0.9rem;border-bottom:1px solid rgba(56,189,248,0.15);padding-bottom:4px;display:flex;justify-content:space-between;align-items:center;">
+                                    <span>${typeLabel}</span>
+                                    <span style="font-size:0.75rem;color:#64748b;font-weight:normal;">时间: ${an.analysis_time}</span>
+                                </div>
+                                <div class="markdown-body-small">${kbRenderMarkdown(an.analysis_content)}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    personalityHtml = `
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                                <select id="personality-record-select" class="analysis-select" style="margin:0;padding:4px 8px;font-size:0.8rem;flex:1;" onchange="switchPersonalityRecord(this.value)">
+                                    ${selectOptions}
+                                </select>
+                            </div>
+                            ${recordsHtml}
+                        </div>
+                    `;
+                }
+                
                 let groupsHtml = '';
                 p.groups.forEach(g => {
                     const inviter = g.inviter && g.inviter !== '-' ? ` 由 <b>${escapeHtml(g.inviter)}</b> 邀请` : '';
@@ -4634,6 +4673,12 @@
                             <span id="suggestions-tags-list" style="display:flex;gap:6px;flex-wrap:wrap;"></span>
                         </div>
                     </div>
+
+                    <!-- Personality & Portrait History -->
+                    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:14px 20px;border-radius:8px;display:flex;flex-direction:column;gap:8px;">
+                        <h5 style="margin:0;color:#f8fafc;font-size:0.9rem;border-left:3px solid #10b981;padding-left:8px;display:flex;align-items:center;gap:6px;">🔮 历史性格与 MBTI 研判记录 (${p.personality_analyses ? p.personality_analyses.length : 0})</h5>
+                        ${personalityHtml}
+                    </div>
                     
                     <!-- Group footprint list -->
                     <div>
@@ -4673,6 +4718,16 @@
             } catch(e) {
                 console.error(e);
                 content.innerHTML = `<div style="padding:20px;color:#ef4444;">❌ 网络加载异常: ${e.message}</div>`;
+            }
+        }
+
+        function switchPersonalityRecord(selectedId) {
+            document.querySelectorAll('.personality-record-content').forEach(el => {
+                el.style.display = 'none';
+            });
+            const target = document.getElementById(selectedId);
+            if (target) {
+                target.style.display = 'block';
             }
         }
 
@@ -4842,6 +4897,14 @@
                     return;
                 }
                 endpoint = '/api/wechat/analyze/user';
+                bodyPayload.username = sender;
+            } else if (mode === 'user_mbti') {
+                const sender = document.getElementById('wechat-sender-input').value.trim();
+                if (!sender) {
+                    alert('个人性格与 MBTI 研判模式下必须在左侧输入"发言人筛选"的昵称');
+                    return;
+                }
+                endpoint = '/api/wechat/analyze/user_mbti';
                 bodyPayload.username = sender;
             } else if (mode === 'theme') {
                 // 针对群聊话题演进分析,使用当前选择 the session display_name 或者直接输入
